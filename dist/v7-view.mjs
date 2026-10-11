@@ -6,7 +6,7 @@ import {
   ACTIVITY_EFFECTS,
   partnerWeight,
   traitEffect,
-} from "./v7.mjs?v=0.7.1";
+} from "./v7.mjs?v=0.7.2";
 import {
   ACTIONS,
   SKILLS,
@@ -15,7 +15,7 @@ import {
   scores,
   stamp,
   relationship,
-} from "./engine.mjs?v=0.7.1";
+} from "./engine.mjs?v=0.7.2";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -92,5 +92,5 @@ export function exchangeTrace(e) {
 export function sessionHTML(s,p){
  const a=p.action,jam=a?.key==='jam'?s.jams.find(j=>j.id===a.sessionId):null,social=s.socialSessions.find(x=>!x.ended&&x.id===a?.socialSessionId);
  const group=s.groups.find(g=>g.id===a?.groupId),song=s.songs.find(x=>x.id===a?.songId),range=p.actionRanges?.[a?.key];
- return `<section data-stable="session-v7"><div class="section-head">SÉANCE ET PARTICIPATION</div><p>${a?ACTIONS[a.key].label:'Aucune activité'}${range?` · ${a.elapsed} min · fourchette ${range.min}–${range.max} min`:''}</p>${jam?`<p>Jam · ${jam.participants.length} inscrit(s) · solo possible · demandes de participation ouvertes.</p>`:''}${social?`<p>Admission acquise · ${social.members.length} membres · intensité ${Math.round(social.intensity||0)} · prochain échange ${stamp(social.nextExchange)}.</p>`:''}${group?`<p>Groupe : ${esc(group.name)}${song?` · Chanson « ${esc(song.title)} »`:''}</p>`:''}${a?.instrument?`<p>Instrument travaillé : ${esc(SKILLS[a.instrument]||a.instrument)} · ${a.content==='song'?'morceau':'technique'}.</p>`:''}<p>Les demandes utilisent les liens et l’acceptation du destinataire. Les échanges dans la séance ne redemandent pas l’admission.</p></section>`;
+ return `<section data-stable="session-v7"><div class="section-head">SÉANCE ET PARTICIPATION</div><p>${a?ACTIONS[a.key].label:'Aucune activité'}${range?` · ${a.elapsed} min · fourchette ${range.min}–${range.max} min`:''}</p>${jam?`<p>Jam · ${jam.participants.length} inscrit(s) · solo possible · demandes de participation ouvertes.</p>`:''}${social?`<p>Admission acquise · ${social.members.length} membres · intensité ${Math.round(social.intensity||0)} · prochain échange ${stamp(social.nextExchange)}.</p>`:''}${group?`<p>Groupe : ${esc(group.name)}${song?` · Chanson « ${esc(song.title)} »`:''}</p>`:''}${a?.instrument?`<p>Instrument travaillé : ${esc(SKILLS[a.instrument]||a.instrument)} · ${a.content==='song'?'morceau':'technique'}.</p>`:''}<details data-key="queue-${p.id}"><summary>File de pratique hors sac · ${p.invitationQueue.filter(x=>x.status==='pending').length}</summary>${p.invitationQueue.map(inv=>{const req=s.groupState.requests.find(r=>r.id===inv.requestId),g=s.groups.find(g=>g.id===req?.groupId);return `<p>${g?`<button data-group-select="${g.id}" class="text-button">Groupe · ${esc(g.name)}</button>`:'Groupe historique'} · ${esc(inv.status)} · échéance ${stamp(inv.expires)}${inv.reason?' · '+esc(inv.reason):''}</p>`;}).join('')||'<p>Aucune invitation.</p>'}</details><p>Les demandes utilisent les liens et l’acceptation du destinataire. Les échanges dans la séance ne redemandent pas l’admission.</p></section>`;
 }

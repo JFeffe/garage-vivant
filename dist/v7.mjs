@@ -1,3 +1,5 @@
+import { attachment } from './groups.mjs?v=0.7.2';
+import { GROUP_RULES } from './group-rules.mjs?v=0.7.2';
 // V7 rules shared by simulation, inspectors and documentation tests.
 export const BAG_ACTIONS = ["relax", "social", "practice", "jam", "write", "decadence"];
 export const BAG_SAMPLES = [
@@ -334,7 +336,7 @@ export function partnerWeight(s, p, q, relation) {
       g.members.includes(p.id) &&
       g.members.includes(q.id),
   );
-  const groupBonus = Math.max(0, ...shared.map((g) => 1 + g.development / 8));
+  const groupBonus = Math.max(0, ...shared.map((g) => 1 + attachment(s,p,g).value / 8));
   const close = relation.affinity >= 75 ? 6 : 0;
   return Math.max(
     0.1,
@@ -431,9 +433,13 @@ export function coolRelationV7(r) {
   const floor = Math.min(15, r.grief.strength * 0.45);
   r.tension = clamp(Math.max(floor, r.tension - (0.02 + 0.18 * friendship)));
   if (r.tension >= 30)
-    r.affinity = clamp(r.affinity - 0.0005 * (r.tension - 20), -100, 100);
+    r.affinity = clamp(r.affinity - GROUP_RULES.tensionErosion * (r.tension - 20), -100, 100);
 }
 export const DISCONNECTED = [
+ {id:"absence-drama",label:"Drame d’absence",reason:"Absence extrême journalisée ; aucune pénalité relationnelle particulière ajoutée."},
+ {id:"group-albums-fans",label:"Albums, diffusion et fans persistants",reason:"Réputation liée au catalogue et aux spectacles existants ; aucune mécanique d’album ou de palmarès."},
+ {id:"song-transfer",label:"Transfert des chansons",reason:"Propriété unique conservée après départ ou dissolution ; aucun transfert ni copie."},
+ {id:"group-social-meeting",label:"Réunions sociales du groupe",reason:"Échanges pendant pratiques et scènes ; aucune nouvelle activité de réunion."},
   {id:"social-search-pressure",label:"Surcroît de pression pendant la recherche sociale",reason:"La recherche conserve l’usure et les pressions normales ; aucun multiplicateur spécifique ni déprime supplémentaire automatique."},
   {id:"inspiration-resourcing",label:"Inspiration et ressourcement",reason:"Aucune jauge d’inspiration. La détente agit sur énergie, plaisir et détresse."},
   {id:"personal-agenda",label:"Agenda personnel général",reason:"Seuls les engagements de spectacle existent ; aucun rendez-vous général fictif."},

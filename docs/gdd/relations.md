@@ -1,6 +1,6 @@
 # DDD — Relations, lien amoureux et souvenirs
 
-Version 0.7.1. Les relations A → B sont un point de vue. La case inverse porte le point de vue de B et peut différer.
+Version 0.7.2. Les relations A → B sont un point de vue. La case inverse porte le point de vue de B et peut différer.
 
 ## Dimensions conservées
 
@@ -8,7 +8,6 @@ Version 0.7.1. Les relations A → B sont un point de vue. La case inverse porte
 |---|---|
 | Affinité `affinity`, −100 à 100 | Lien durable; évolue lentement, pondère rencontres et apaisement |
 | Tension `tension`, 0 à 100 | Friction rapide; freine rencontres et favorise les issues défavorables |
-| Confiance `trust`, 0 à 100 | Expériences de coopération; utilisée par musique, invitations et engagements |
 | Complicité `collaboration`, 0 à 100 | Coopération musicale vécue |
 | Lien amoureux `love`, 0 à 100 | Lien romantique orienté; distinct de l’amitié et de la musique |
 | Couple `couple`, booléen | Statut partagé entre les deux directions |
@@ -20,7 +19,7 @@ L’attirance séparée est retirée. Il n’existe pas de conversion d’affect
 
 À chaque minute, la force du grief baisse de 0,015. La tension baisse de `0,02 + 0,18 × max(0; affinité)/100`, sans passer sous le plancher `min(15; grief ×0,45)`. Le grief peut donc maintenir une friction après un conflit. Un échange favorable retire 2 de grief; les moments musicaux gardent leur réparation existante. Un désaccord ne produit pas d’excuses automatiques.
 
-Si la tension est encore au moins 30 après refroidissement, retirer `0,0005 × (tension−20)` d’affinité par minute. Un pic bref et une tension persistante n’ont pas le même coût cumulé. Les jauges ne sont pas inverses ni transférées point pour point. Après une journée sans interaction, affinité et lien amoureux sont multipliés par 0,999 chaque heure; la confiance ne remonte pas avec la distance.
+Si la tension est encore au moins 30 après refroidissement, retirer `0,0002 × (tension−20)` d’affinité par minute. Un pic bref et une tension persistante n’ont pas le même coût cumulé. Les jauges ne sont pas inverses ni transférées point pour point. Après une journée sans interaction, affinité et lien amoureux sont multipliés par 0,999 chaque heure.
 
 Les [échanges](./interactions.md) et moments musicaux appliquent leurs effets identifiés; les traits peuvent disparaître tandis que leurs conséquences relationnelles persistent.
 
@@ -42,6 +41,8 @@ Le champ historique `effect` est une intensité descriptive (Sensible et stabili
 
 ## Disponibilité et commandes de carrière
 
-Les invitations de groupe, confirmations de répétition et candidatures aux shows gardent leurs probabilités de carrière fondées sur affinité, confiance, tension, déchéance et coordination. Ces commandes ne passent pas par le tirage des trois interactions de quartier; cette frontière est explicitée dans les [raccords](./raccords-v7.md). Le sommeil et les engagements rendent certains partenaires indisponibles.
+Propositions de groupe et admissions utilisent leurs règles communes documentées dans [Groupes](./groupes.md). La pratique collective ajoute une file d’invitations, examinée à la fin d’une action. Les confirmations de spectacle gardent leur formule de carrière, sans confiance : borne 0,1–0,97 de `0,53 + affinité destinataire/250 − tension/250 − déchéance/500 + coordination×0,0015`.
+
+Confiance est supprimée de l’état courant, des effets, des poids, des réglages et de la matrice. La migration garde ses anciennes valeurs dans une archive inerte `legacyV71.trust`, sans les convertir en affinité. Les autres liens ne sont pas remis à zéro. Les anciennes traces peuvent encore mentionner cette dimension comme donnée historique.
 
 Liens : [interactions](./interactions.md), [musique](./musique.md), [traits](./traits.md), [sauvegardes](./technique.md).

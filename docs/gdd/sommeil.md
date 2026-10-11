@@ -1,6 +1,6 @@
 # DDD — Sommeil quotidien hors sac
 
-Version 0.7.1. Le sommeil est obligatoire selon l’horaire personnel. Il n’ajoute ni ne consomme de jeton.
+Version 0.7.2. Le sommeil est obligatoire selon l’horaire personnel. Il n’ajoute ni ne consomme de jeton.
 
 ## Horaire et besoin
 
@@ -12,7 +12,7 @@ Au coucher, interrompre l’action d’éveil et se déplacer à sa maison. Le t
 
 Chaque minute réellement dormie ajoute `100 / besoin en minutes` d’énergie, jusqu’à 100. Au réveil, l’énergie ne peut dépasser `100 × minutes obtenues / besoin`, borné à 100. Une durée de six heures pour un besoin de huit heures donne donc au maximum 75. Les autres besoins continuent à s’user et leurs pressions émotionnelles restent actives.
 
-L’action se termine après la durée habituelle réellement dormie. Elle incrémente son compteur hors sac; la prochaine action d’éveil est pigée au tick suivant. Le prochain coucher utilise la première occurrence future de l’heure habituelle. Un coucher différé après minuit ne saute pas la nuit suivante. Aucun ancien seuil d’énergie critique ne court-circuite le sac. Détente restaure un peu d’énergie et de détente pendant l’éveil; ce n’est pas une nuit.
+L’action se termine après la durée habituelle réellement dormie. Elle incrémente son compteur hors sac; la file de pratique est examinée avant la prochaine pige au tick suivant. Le prochain coucher utilise la première occurrence future de l’heure habituelle. Un coucher différé après minuit ne saute pas la nuit suivante. Aucun ancien seuil d’énergie critique ne court-circuite le sac. Détente restaure un peu d’énergie et de détente pendant l’éveil; ce n’est pas une nuit.
 
 ## Engagements nocturnes
 
@@ -27,3 +27,5 @@ En lecture active, quand tout le monde a l’action Dormir, l’interface avance
 Pause, onglet masqué et bouton +1 h conservent leur sens : +1 h avance au plus 60 minutes et ne lance pas le raccourci au-delà. Il n’existe pas de rattrapage pendant que la page est masquée.
 
 Liens : [temps](./temps.md), [actions](./actions.md), [personnages](./personnages.md), [shows](./shows.md).
+
+Le départ calculé vers un spectacle confirmé interrompt même le sommeil. Une invitation de pratique ordinaire attend la fin de l’action ; elle ne réveille pas le personnage. Voir [Groupes](./groupes.md) et [Shows](./shows.md).

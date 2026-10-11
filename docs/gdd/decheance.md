@@ -1,6 +1,6 @@
 # DDD — Déchéance, chaînes et paquets contaminés
 
-Version 0.7.1. La déchéance agit dans le quartier et pendant les spectacles. La jauge existante reste bornée de 0 à 100 ; l’historique des épisodes sert à mesurer les excès rapprochés.
+Version 0.7.2. La déchéance agit dans le quartier et pendant les spectacles. La jauge existante reste bornée de 0 à 100 ; l’historique des épisodes sert à mesurer les excès rapprochés.
 
 ## Action et chaînes
 
@@ -29,3 +29,7 @@ Sommeil réel −0,025/min ; Détente −0,006/min ; soutien favorable −2. Une
 La fiche montre la jauge, les cartes nuisibles réellement ajoutées, les jetons dans le sac/la défausse, les retraits en attente et les épisodes rapprochés. Les cartes conservant le même type ont des exemplaires distincts visibles dans le deck ; aucune carte musicale n’est effacée par leur ajout.
 
 Liens : [Actions et inventaire](./actions.md), [Shows](./shows.md), [Musique](./musique.md), [Raccords](./raccords-v7.md).
+
+## Absence exceptionnelle au spectacle
+
+À partir de 90 seulement, chance d’absence bornée à 20 % : `(déchéance−90)×0,02`, examinée une seule fois au départ d’un engagement confirmé. L’absence est journalisée ; les autres viennent sans refus ordinaire. Ce raccord n’ajoute pas de jeton, carte ni pénalité relationnelle de secours. Voir [Groupes](./groupes.md).

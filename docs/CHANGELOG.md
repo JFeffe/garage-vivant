@@ -1,3 +1,7 @@
+# V0.7.2 — 11 octobre 2026
+
+Groupes autonomes, propositions et acceptations, confiance retirée, attachement dérivé, agrégats, couleur/réputation, adoption exclusive, invitations hors sac, trajets prioritaires et dissolution terminale. Migration V7.1 avec archives de confiance et anciens répertoires partagés, setlists confirmées conservées. Fiches et libellés lisibles, quinze DDD et réception multi-graines. Voir [réalisation](./PLAN_V7_2.md) et [rapport](./BALANCE_V7_2.md). Publication après intégration de la PR.
+
 # Changements
 
 ## 0.7.0 — Personnages et relations

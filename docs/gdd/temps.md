@@ -12,8 +12,11 @@
 | Onglet masqué | Quartier et lecture suspendus. |
 | Sommeil collectif | En lecture active, avance minute par minute jusqu’au premier réveil; garde 1440 min et arrêt au début d’un show. |
 | Échanges | Une horloge par séance, cadence de 15 minutes; arrivée d’un membre sans réinitialisation. |
-| Séances V7.1 | Fourchettes personnelles ; pratique, composition, Jam et excès évaluent leur poursuite par cycles de 15 minutes. |
+| Séances V7.2 | Fourchettes personnelles ; pratique, composition, Jam et excès évaluent leur poursuite par cycles de 15 minutes. |
 | Projets et excès | Abandon après 14 jours sans travail ; chaînes de déchéance dans une fenêtre de 12 heures. |
+| Initiatives de groupe | Adoption et appel de pratique toutes les 6 h ; invitations valables 12 h ; attente sur place au plus 120 min. |
+| Départs de groupe | Première évaluation après 48 h, puis toutes les 12 h ; adhésion réussie : délai de 48 h ; proposition par paire : 24 h. |
+| Trajet de show | Position réelle à 12 unités/min + marge de 10 min ; interrompt action ou sommeil. |
 | Âge | Identité éditable; pas de vieillissement simulé. |
 
 Les jours mesurent la vie du quartier, pas des années compressées. Les paramètres d’usure, apprentissage et retour émotionnel modifient des taux simulés; la vitesse de lecture ne change pas leurs règles.

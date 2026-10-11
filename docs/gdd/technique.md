@@ -1,12 +1,14 @@
 # DDD — Architecture, sauvegardes et validation
 
-Version d’interface et format du monde : 0.7.1. L’application reste statique, sans dépendance de simulation à l’exécution ni compte serveur.
+Version d’interface et format du monde : 0.7.2. L’application reste statique, sans dépendance de simulation à l’exécution ni compte serveur.
 
 ## Modules et responsabilités
 
 | Source dans dist/ | Responsabilité |
 |---|---|
 | `v7.mjs` | Sacs, défausse, catalogue de traits, seuils, pressions et probabilités V7 |
+| `groups.mjs`, `group-rules.mjs` | Politiques, transitions et paramètres de groupe partagés ; migration et validation V7.2 |
+| `map-labels.mjs` | Placement pur des libellés de carte sans collision |
 | `v71.mjs` | Fourchettes, plateaux, choix instrumentaux, registre de noms, classement relatif, migration et validation V7.1 |
 | `catalogue.mjs` | Filtres et tris de projets/chansons, détails des auteurs, rattachements et maîtrises |
 | `engine.mjs` | Hasard du monde, activités, sommeil, séances, événements, projets, liens, orchestration minute et import |
@@ -21,7 +23,7 @@ Version d’interface et format du monde : 0.7.1. L’application reste statique
 
 Le monde utilise un générateur pseudoaléatoire sérialisé. Rendu, lecture et audio n’en consomment pas. Les spectacles possèdent leur propre graine et trace; leur vitesse de lecture ne change pas leur résultat.
 
-## Schéma V7.1
+## Schéma V7.2
 
 Chaque personnage conserve les besoins, émotions, traits, pressions et sommeil V7. Il ajoute `actionRanges`, `secondaryInstruments`, `learningWork`, `songMastery`, `drafts`, `excessEpisodes` et `decadenceTokens`. Les fourchettes et accumulations persistent ; aucun reroulage au rechargement.
 
@@ -39,11 +41,11 @@ Le format 0.7.0 est accepté. Il conserve personnages, compétences, seuils, ém
 
 Une action conserve son avancement et son temps restant. L’ancien Jam qui répétait explicitement un morceau de groupe devient Pratiquer avec ce morceau. Les nouvelles fourchettes sont attribuées une fois avec le hasard sérialisé. Les brouillons existants deviennent les premiers brouillons séparés ; les contributions historiques absentes ne sont pas inventées.
 
-Un monde 0.7.1 importé est validé directement. Aucun mécanisme de migration n’y masque un champ actuel manquant ou corrompu. Après export/import, le futur est exactement identique : tirages, projets, plateaux, séances et spectacles.
+Un monde 0.7.2 importé est validé directement. Aucun mécanisme de migration n’y masque un champ actuel manquant ou corrompu. Après export/import, le futur est exactement identique : tirages, projets, plateaux, séances et spectacles.
 
 ## Migration V1 à V6
 
-Les formats acceptés sont 0.1.0, 0.2.0, 0.3.0, 0.4.0, 0.5.0, 0.5.1 et 0.6.0, puis 0.7.0 et 0.7.1. Les étapes historiques ajoutent d’abord les champs nécessaires; le raccord V7 s’applique une fois.
+Les formats acceptés sont 0.1.0, 0.2.0, 0.3.0, 0.4.0, 0.5.0, 0.5.1 et 0.6.0, puis 0.7.0, 0.7.1 et 0.7.2. Les étapes historiques ajoutent d’abord les champs nécessaires; le raccord V7 s’applique une fois.
 
 | Donnée ancienne | Traitement |
 |---|---|
@@ -63,11 +65,11 @@ Les formats acceptés sont 0.1.0, 0.2.0, 0.3.0, 0.4.0, 0.5.0, 0.5.1 et 0.6.0, pu
 | Seuils, sommeil et associations | Attribués une fois avec le hasard sérialisé; persistants ensuite |
 | Sessions de proximité V6 | Retirées; pas de déclencheur social concurrent |
 
-La conversion préserve les productions; elle ne prétend pas reproduire les six nuances émotionnelles dans les nouvelles chansons. Le passage V7 consomme du hasard pour attribuer les champs nouveaux; un ancien monde ne doit pas continuer selon les anciennes règles. Un monde V7 reçoit ensuite le raccord V7.1 ; un monde V7.1 rechargé continue exactement le même futur.
+La conversion préserve les productions; elle ne prétend pas reproduire les six nuances émotionnelles dans les nouvelles chansons. Le passage V7 consomme du hasard pour attribuer les champs nouveaux; un ancien monde ne doit pas continuer selon les anciennes règles. Un monde V7 reçoit ensuite le raccord V7.1 ; un monde V7.2 rechargé continue exactement le même futur.
 
 ## Stockage et sauvegarde invalide
 
-La clé du monde reste `garage-vivant-v1`, pour reprendre les parties existantes. Avant migration dans l’interface, conserver une copie dans `garage-vivant-before-v7-1`. L’export JSON transporte le monde et ses archives; les préférences de modules et notes lues restent locales et séparées.
+La clé du monde reste `garage-vivant-v1`, pour reprendre les parties existantes. Avant migration dans l’interface, conserver une copie dans `garage-vivant-before-v7-2`. L’export JSON transporte le monde et ses archives; les préférences de modules et notes lues restent locales et séparées.
 
 L’import travaille sur une copie et valide avant adoption. Un monde actuel avec valeurs non numériques, cycle incohérent, retrait différé invalide, séance personnelle invalide, champs retirés, incompatibilité Alpha/Bêta, seuils invalides ou trace invalide est refusé. Une sauvegarde locale illisible n’est pas écrasée automatiquement : l’interface demande un import valide ou un nouveau quartier explicite. Les sauvegardes dépendent du navigateur et de l’origine; exporter/importer pour changer d’hébergement.
 
@@ -80,3 +82,17 @@ L’import travaille sur une copie et valide avant adoption. Un monde actuel ave
 La CI vérifie une PR sans déployer. `main` publie jeu et documentation ensemble après les mêmes gates. Contributions sur branche dédiée avec PR; le propriétaire décide l’intégration. Pas de multijoueur dans cette version.
 
 Liens : [architecture documentaire](./documentation.md), [raccords](./raccords-v7.md), [temps](./temps.md), [guide](../index.md).
+
+## Migration V7.1 vers V7.2
+
+Sur une copie du monde, sans formation offerte et sans remise à zéro des affinités : archiver `trust` dans `legacyV71.trust`, puis le supprimer de toutes les relations actuelles. Les traces historiques gardent leur vocabulaire original. Initialiser files et état d’initiatives ; affecter une seule fois leurs échéances avec le hasard sérialisé. Les dates d’adhésion historiques restent inconnues (null), sans inventer le passé.
+
+Ajouter `ownerGroupId` et `adoptedAt` aux chansons. Pour un ancien répertoire partagé, choisir le groupe avec la meilleure maîtrise collective ; égalité : date de création la plus ancienne, puis identifiant. Conserver sa maîtrise, archiver les autres entrées dans `legacyV71.sharedRepertoires` et enregistrer l’arbitrage dans `propertyResolutions`. Ne copier ni chanson ni maîtrise chez un nouveau propriétaire. Les auteurs, qualités, sources, titres et maîtrises personnelles sont conservés. Date d’adoption historique inconnue : null.
+
+Les setlists déjà confirmées reçoivent `legacySetlist`, avec leur identifiant enregistré dans `legacyV71.confirmedBookings`. Leur continuation garde les morceaux historiques ; les nouvelles réservations utilisent le propriétaire courant. Une pratique historique privée de son ancien répertoire partagé continue personnellement, sans crédit collectif. Une archive ou un groupe déjà à zéro/sous deux membres devient terminal, conserve son histoire et annule ses engagements futurs ; une prestation en cours garde son snapshot.
+
+La réputation historique est répartie : part spectacle = max(0 ; ancienne réputation − nouvelle part catalogue). Lorsque le catalogue dépasse l’ancienne réputation, le nouveau total reflète ce catalogue ; ce changement n’est pas un crédit répété. La couleur initiale historique est conservée, puis la couleur courante dérive des morceaux actifs.
+
+Le format actuel sérialise `groupState` (demandes, échéances, propositions récentes, compteurs), `invitationQueue`, `memberships`, état terminal, parts de réputation et propriété canonique. Validation stricte de compteurs, identifiants, files, lieux, timestamps, propriétaire/répertoire, états et participations. Aucun trust courant autorisé ; un monde corrompu n’est pas automatiquement migré ou rempli. Après rechargement 0.7.2, le futur et le hasard restent identiques.
+
+Les entités restent des données sérialisables, avec fonctions pures et transitions partagées ; pas de hiérarchie de classes imposée. `groupContext` fournit hasard, événements, début/fin d’activité et revalidation des engagements. Les commandes manuelles et initiatives autonomes utilisent les mêmes transitions d’adoption, appel, départ et dissolution. `npm run audit:groups` mesure formation et stabilité sur 20 graines, enregistre les étapes 3/5/10/30 jours, prolonge trois graines à 90 jours et vérifie la continuation des sauvegardes. [Rapport](../BALANCE_V7_2.md).

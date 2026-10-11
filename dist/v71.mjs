@@ -1,4 +1,4 @@
-import {editTokens} from './v7.mjs?v=0.7.1';
+import {editTokens} from './v7.mjs?v=0.7.2';
 // Rules chosen for V7.1, using the existing needs, emotions and musical records.
 export const ACTION_KEYS = ['relax','social','practice','jam','write','decadence'];
 export const V71_RULES = Object.freeze({cycleMinutes:15,searchMinutes:30,abandonMinutes:14*1440,chainMinutes:12*60,weakGap:12,referenceSongs:5,secondaryChance:.15,learningPlateau:2});
@@ -16,13 +16,19 @@ export function nameRegistry(s){
  return s.musicNames;
 }
 export function reserveMusicName(s,kind,name){
+ if(!availableMusicName(s,kind,name))return false;
  const registry=nameRegistry(s),key=normalizeName(name);
- if(!key||registry.some(x=>x.normalized===key))return false;
- if(kind==='group'&&registry.some(x=>x.kind==='group'&&normalizeName(x.name.split(' ').slice(0,4).join(' '))===normalizeName(name.split(' ').slice(0,4).join(' '))))return false;
  registry.push({name,normalized:key,kind});return true;
 }
-export function musicName(s,kind,random){
- const registry=nameRegistry(s),used=new Set(registry.map(x=>x.normalized));
+function existingNames(s){return [...(s.musicNames||[]),...(s.groups||[]).map(x=>({name:x.name,normalized:normalizeName(x.name),kind:'group'})),...[...(s.projects||[]),...(s.songs||[])].map(x=>({name:x.title,normalized:normalizeName(x.title),kind:'song'}))];}
+export function availableMusicName(s,kind,name){
+ const registry=existingNames(s),key=normalizeName(name);
+ if(!key||registry.some(x=>x.normalized===key))return false;
+ if(kind==='group'&&registry.some(x=>x.kind==='group'&&normalizeName(x.name.split(' ').slice(0,4).join(' '))===normalizeName(name.split(' ').slice(0,4).join(' '))))return false;
+ return true;
+}
+export function musicName(s,kind,random,{reserve=true}={}){
+ const registry=reserve?nameRegistry(s):existingNames(s),used=new Set(registry.map(x=>x.normalized));
  const identities=new Set(registry.filter(x=>x.kind==='group').map(x=>normalizeName(x.name.split(' ').slice(0,4).join(' '))));
  const total=kind==='group'?groupHeads.length*groupEnds.length*songPlaces.length:songSubjects.length*songVerbs.length*songPlaces.length*4;
  const start=Math.floor(random()*total);
@@ -33,7 +39,7 @@ export function musicName(s,kind,random){
   const identity=kind==='group'?name.split(' ').slice(0,4).join(' '):null;
   if(kind==='group'&&identities.has(normalizeName(identity)))continue;
   // Full registry uniqueness is global, including archives and abandoned works.
-  const key=normalizeName(name);if(!used.has(key)){s.musicNames.push({name,normalized:key,kind});return name;}
+  const key=normalizeName(name);if(!used.has(key)){if(reserve)s.musicNames.push({name,normalized:key,kind});return name;}
  }
  return null;
 }

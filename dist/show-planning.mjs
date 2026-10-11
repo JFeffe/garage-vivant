@@ -1,5 +1,5 @@
-import {pendingBooking} from './calendar.mjs?v=0.7.1';
-import {eligibleSongs,availability,performanceSong} from './life.mjs?v=0.7.1';
+import {pendingBooking} from './calendar.mjs?v=0.7.2';
+import {eligibleSongs,availability,performanceSong} from './life.mjs?v=0.7.2';
 
 // One shared preparation model for the screen and its commands. Viewing it never
 // changes the world: invitations, repertoire and bookings remain explicit commands.
@@ -7,7 +7,7 @@ export function resolveShowPlan(s,plan){
  const groups=s.groups.filter(g=>g.archivedAt===null&&g.members.length);
  if(!groups.some(g=>g.id===plan.groupId)){plan.groupId=groups.find(g=>g.members.includes(s.playerId))?.id||groups[0]?.id||null;plan.songId=undefined;plan.members=null;plan.actorId=null;}
  const group=groups.find(g=>g.id===plan.groupId);
- if(!group)return {groups,group:null,songs:[],openings:[],members:[],ready:false,reason:'Crée un band ou relance un groupe archivé pour jouer.'};
+ if(!group)return {groups,group:null,songs:[],openings:[],members:[],ready:false,reason:'Crée un groupe actif pour jouer.'};
  if(!group.members.includes(plan.actorId))plan.actorId=group.members.includes(s.playerId)?s.playerId:group.members[0];
  const songs=eligibleSongs(s,group).sort((a,b)=>Number(group.repertoire.some(r=>r.songId===b.id))-Number(group.repertoire.some(r=>r.songId===a.id))||b.quality-a.quality);
  if(plan.songId===undefined)plan.songId=songs[0]?.id??null;

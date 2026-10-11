@@ -1,6 +1,6 @@
 # DDD — Admission, échanges et activités communes
 
-Version 0.7.1. Demander à rejoindre une activité est une admission. Une fois admis, les échanges produisent directement un résultat. Les partenaires restent libres de quitter.
+Version 0.7.2. Demander à rejoindre une activité est une admission. Une fois admis, les échanges produisent directement un résultat. Les partenaires restent libres de quitter.
 
 ## Admission initiale
 
@@ -42,7 +42,7 @@ Les appels explicites d’interaction hors séance, comme les commandes de souti
 
 ## Conséquences communes
 
-Dans les deux directions, un échange résolu après admission ajoute +6 social, incrémente les rencontres et actualise leur date. Favorable : affinité +0,4 × Évolution des liens, confiance +1, tension −3 × Évolution des liens, grief −2, exaltation base +3. Défavorable : affinité −0,5 × Évolution des liens, confiance −1, tension +8 × Évolution des liens, grief +6, détresse base +5. Neutre : pas de changement d’affinité/confiance/tension.
+Dans les deux directions, un échange résolu après admission ajoute +6 social, incrémente les rencontres et actualise leur date. Favorable : affinité +1,2 × Évolution des liens, tension −3 × Évolution des liens, grief −2, exaltation base +3. Défavorable : affinité −0,4 × Évolution des liens, tension +8 × Évolution des liens, grief +6, détresse base +5. Neutre : pas de changement d’affinité/tension.
 
 En musique, un favorable ajoute à la base d’affinité `max(0; chimie−50)/100`, avant Évolution des liens. Chaque échange musical accepté ajoute +2 complicité, ou −1 s’il est défavorable. Un moment musical technique peut ensuite avoir ses effets propres, y compris un accrochage; son événement est distinct et identifiable.
 
@@ -52,4 +52,4 @@ Les liens sont orientés, les émotions passent par leurs réactions personnelle
 
 Journal et inspecteur exposent admission, membres, prochaine cadence, intensité, probabilité, tirage et effets. La lecture ne consomme pas de hasard. Les interactions musicales favorables ou neutres peuvent encore déclencher un des six moments techniques, séparément identifiable.
 
-Un échange favorable admissible peut toujours créer un groupe ou permettre une adhésion. Lien amoureux et couples gardent leurs règles. Voir [Relations](./relations.md), [Musique](./musique.md), [Actions](./actions.md).
+Un échange favorable admissible peut émettre une proposition de groupe, suivie d’une acceptation distincte ; il ne crée plus directement un groupe. Voir [Groupes](./groupes.md). Lien amoureux et couples gardent leurs règles. Voir [Relations](./relations.md), [Musique](./musique.md), [Actions](./actions.md).

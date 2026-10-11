@@ -1,0 +1,102 @@
+# DDD — Groupes autonomes, attachement et adoption
+
+Version 0.7.2. Le groupe est une entité persistante. Il prend des initiatives virtuelles ; ses membres réalisent les pratiques et spectacles avec leurs besoins et positions. Aucune personnalité, action de sac ou ressource fictive de groupe.
+
+## Identité et données
+
+`id`, nom unique, date de création, fondateurs permanents, membres actuels, anciens membres et motifs de départ. `state` vaut active ou dissolved ; une dissolution conserve date, raison et dernière formation (`finalMembers`). Les initiatives ont leurs prochaines dates sauvegardées. Les appartenances enregistrent date d’entrée, inconnue pour les anciennes sauvegardes, et prochain examen de départ.
+
+Coordination (`development`) : 0–100, initialement 18. Les [répétitions](./musique.md) et spectacles l’augmentent. Après 48 h sans travail collectif, −0,24/h. Tant qu’elle est supérieure à zéro, une activité peut la faire remonter. Zéro déclenche une dissolution définitive.
+
+Chaque compétence existante affiche moyenne, minimum et maximum des membres actuels sur une échelle commune 0–100. Les marqueurs coïncidents sont réunis ; les détails indiquent les ex æquo. Aucun cumul de talents ne remplace les musiciens réellement présents sur scène. Ces agrégats sont calculés, pas stockés comme des compétences nouvelles.
+
+## Formation et recrutement
+
+Une paire est admissible si affinité dans les deux sens ≥12 **ou** amour dans les deux sens ≥25, et tension dans les deux sens <60. La chimie aide l’acceptation ; elle n’est pas obligatoire. Le seuil d’affinité est un réglage de cette première passe, révisé après l’audit ; ce n’est pas une amitié maximale. Aucun champ confiance.
+
+Les partenaires doivent être éveillés, hors engagement et n’avoir ni créé ni rejoint de groupe depuis 48 h. Aucune attente initiale aux nouveaux personnages. Après un échange favorable admissible, choisir parmi nouvelle paire et groupes de chaque partenaire accessibles à l’autre. Poids : `1 + attrait/25` ; nouvelle paire utilise 18. Un groupe commun actif interdit de recréer ce même duo. Pour recruter, les mêmes liens doivent exister avec au moins la moitié des membres.
+
+Probabilité de proposition autonome : `0,22 / (1 + nombre de groupes de l’initiateur²) × max(0,05 ; 1 − meilleur attachement/100)`. Ce tirage ne crée rien à lui seul. Une paire reçoit au plus une proposition toutes les 24 h, refus compris.
+
+Probabilité d’acceptation :
+
+`borne(0,4 + affinité destinataire→initiateur/200 + amour/400 + chimie/1000 − tension/250 + attrait du groupe/500 ; 0,1 ; 0,95) / (1 + 0,75 × groupes actuels du destinataire) × max(0,1 ; 1 − son meilleur attachement/100)`.
+
+L’attrait utilise le calcul d’attachement au groupe proposé ; pour un duo neuf, Coordination 18 et réputation 0. Une acceptation ajoute le membre ou crée le groupe, puis fixe le délai de 48 h chez les deux partenaires. Les chances, tirages et décisions sont journalisés. Un refus donne détresse base +3 à l’initiateur. Les invitations manuelles utilisent les mêmes règles et acceptations ; seul le tirage pour émettre une proposition est omis. La création directe de laboratoire reste une intervention explicite et distincte.
+
+Ces freins rendent l’expérimentation possible et le multigroupe moins probable lorsqu’un groupe fonctionne. Il n’existe ni plafond arbitraire d’appartenances, ni quota de groupes, ni formation forcée au jour 10.
+
+## Attachement individuel
+
+Valeur calculée par personnage et groupe, bornée 0–100 :
+
+`Coordination + 0,3 × (F−50) + 0,1 × (S−50) + 0,1 × (H−50) + 0,2 × Réputation − 0,15 × T`.
+
+- F : moyenne des affinités du personnage vers les autres membres, chaque valeur ramenée à 0–100.
+- T : moyenne de ses tensions vers ces membres.
+- H : moyenne de la chimie potentielle avec eux, issue des profils existants.
+- S : pourcentage des morceaux actifs du groupe correspondant au genre du personnage ; sans morceau, styles des fondateurs disponibles, ou 50 si aucune donnée.
+
+Coordination et réputation sont communes, les autres composantes sont personnelles. Le calcul exclut le personnage de ses propres relations. Une bonne réputation peut compenser une entente médiocre. Il n’y a pas une deuxième jauge de coordination personnelle qui dériverait du groupe.
+
+Consommateurs : propositions/acceptations, invitations de pratique, départs et choix des partenaires. Le bonus de partenaire commun est désormais `1 + attachement/8`, maximum parmi les groupes partagés. La fiche expose le résultat et ses facteurs ; elle n’affiche pas une valeur exacte de chimie inconnue comme observation acquise.
+
+## Couleur musicale
+
+À la création, choisir uniformément le genre d’un des deux fondateurs avec le hasard du monde. Conserver cette couleur initiale. Dès que des chansons actives sont adoptées, le genre le plus représenté colore le groupe. En cas d’égalité, garder le genre courant s’il est à égalité ; sinon ordre alphabétique. Sans chanson active, revenir au genre initial. Les morceaux mis de côté restent possédés sans compter dans cette couleur.
+
+Cette couleur utilise styles existants, adoption, attachement et calendrier. Aucun vote supplémentaire, album ou nouveau score de genre.
+
+## Réputation et moral de scène
+
+Réputation = borne à 100 de `showReputation + catalogueReputation`. La part catalogue est `0,2 × moyenne des trois meilleures qualités possédées × min(1 ; nombre de ces chansons/3)` ; maximum 20. Les morceaux possédés mis de côté comptent encore. Cette part est recalculée, jamais créditée chaque heure.
+
+La part spectacle garde les gains/pertes existants : score au moins égal à l’exigence → +score×0,12 ; sinon −min(10 ; écart×0,18). Elle est bornée 0–100 et appliquée une seule fois. Le moral conserve ses règles V7.1 : base 60, effets temporaires de réussite/déception/refus sur 48 h, consommateurs de calendrier et scène. Réputation, nombre de spectateurs conquis et nombre de spectacles sont distincts. Aucun système de fans persistants ou diffusion n’est ajouté.
+
+## Adoption exclusive et répertoire
+
+Une chanson terminée garde ses auteurs, noms et sources. `groupId` reste son contexte de création ; `ownerGroupId` indique son propriétaire actuel, ou null. Une chanson a un seul propriétaire et un seul objet canonique. Le catalogue personnel montre toujours les compositions de l’auteur, même adoptées.
+
+Adoption admissible : groupe actif, chanson sans propriétaire, au moins un auteur membre actuel. L’adoption fixe propriétaire et date, conserve les maîtrises personnelles et crée une seule entrée de répertoire avec maîtrise collective 0, compteur de cycles 0 et active=true.
+
+Le groupe garde chanson, auteurs et maîtrise collective après départ d’un auteur ou dissolution. Aucun transfert automatique, copie, retour à l’auteur ou seconde adoption. Mettre de côté désactive l’utilisation dans les nouveaux choix de pratique et setlist ; cela conserve propriété et maîtrise. Réactiver réutilise la même entrée. Une setlist déjà confirmée conserve ses morceaux possédés même s’ils sont ensuite mis de côté.
+
+Toutes les six heures, un groupe actif examine une adoption. S’il existe des chansons non faibles admissibles, écarter les faibles de ce choix. Poids : `1 + qualité/10 + 2 si genre compatible`. Chance d’adopter la candidate : borne 0,15–0,8 de `0,15 + qualité/200 + 0,15 si genre compatible`. L’ordre des groupes ayant une décision due est mélangé, pour éviter un avantage permanent du premier identifiant. Aucun plafond de trois chansons. Les groupes du joueur participent à cette autonomie.
+
+Les commandes manuelles adoptent une œuvre admissible sans tirage de décision, ou désactivent/réactivent un morceau possédé. Le catalogue filtre le propriétaire, distingue le contexte du projet, donne auteurs et maîtrises, et propose des liens cliquables vers chansons et groupes. [Compositions](./compositions.md).
+
+## Appels de pratique et file hors sac
+
+Toutes les six heures, chance 50 % de lancer une pratique si un morceau actif existe. Favoriser ceux peu maîtrisés avec poids `1 + (100−maîtrise)/20`. Choisir un garage existant. Au plus une demande ouverte ou en cours par groupe. La commande Répéter crée exactement la même demande ; elle ne termine pas l’action des membres.
+
+Chaque membre reçoit une invitation dans sa file personnelle, extérieure au sac, datée et valable 12 h. À la fin d’une action et avant la prochaine pige, examiner les invitations en ordre d’arrivée. Sommeil obligatoire et spectacle confirmé restent prioritaires. Une invalidité, expiration, départ du groupe ou énergie <15 produit un motif ; pas de jeton consommé ni remboursé.
+
+Avant acceptation, vérifier qu’approche + attente maximale + fourchette maximale de pratique + trajet depuis le garage permet encore le départ vers le prochain show confirmé. Les trajets de préparation utilisent les portes existantes à 12 unités/min, avec une estimation conservatrice de segments. Une invitation incompatible est déclinée.
+
+Chance de participer : borne 0,1–0,95 de `0,55 + attachement/250 + (énergie−50)/300 − détresse/700`. Le tirage et le motif sont conservés. Un refus permet d’examiner l’invitation suivante ; une acceptation lance Pratiquer hors sac avec groupe, morceau, demande et destination explicites. Elle conserve le prochain jeton du sac.
+
+Le premier arrivé attend au plus 120 minutes sur place, sans effets de pratique, apprentissage ni maîtrise. Deux membres présents démarrent la séance. Besoins et émotions continuent leur évolution normale pendant trajet et attente. Chaque membre suit ensuite ses cycles personnels ; le contenu de morceau peut varier collectivement. Une personne seule après le départ des autres peut poursuivre la pratique personnelle, sans gain collectif.
+
+Un membre ayant pigé Pratiquer peut aussi demander à rejoindre une pratique de morceau compatible, avec l’admission existante. Ce participant est enregistré dans la demande lorsqu’il rejoint un appel. Aucun bonus collectif avant le démarrage à deux. Expiration, morceau désactivé, dissolution ou fin de tous les participants ferme la demande et termine les participations correspondantes. Les invitations résolues restent inspectables un jour, puis sont retirées ; les demandes restent tant que référencées. Ces nettoyages n’ajoutent ni ne retirent aucun jeton.
+
+## Départs et dissolution
+
+Chaque appartenance reçoit un délai initial de 48 h, puis un examen toutes les 12 h. Chance 8 % si attachement <20 ; ajouter 15 % si un autre groupe **déjà rejoint** dépasse cet attachement d’au moins 25. Plafond 30 %. Pas de groupe potentiel inventé pour justifier le départ. L’examen est reporté si un spectacle confirmé de ce groupe a lieu dans les prochaines six heures. Au plus un départ autonome par personnage et par minute.
+
+Départ : historique et motif, retrait de l’appartenance, annulation de ses invitations pendantes de ce groupe et fin de sa pratique associée. Les confirmations futures sont revalidées : retirer le membre, ou annuler explicitement si moins de deux participants restent. Le départ manuel utilise la même transition sans tirage.
+
+Dissolution : Coordination zéro ou moins de deux membres. Transition terminale et idempotente ; conserver histoire, fondateurs, dernière formation, morceaux, maîtrise, réputation et spectacles. Les membres restants deviennent anciens membres. Fermer demandes, annuler invitations et réservations futures ; aucune initiative ni reprise. Un ancien auteur peut créer un nouveau groupe, mais les chansons déjà possédées ne changent pas de propriétaire.
+
+## Spectacles et exceptions
+
+Les candidatures utilisent le calendrier existant ; adoption et inscription ne nécessitent pas de réunion physique. Une réservation confirmée devient un engagement prioritaire. Chaque départ est calculé depuis la position réelle, avec marge d’arrivée de 10 minutes, et interrompt action ou sommeil. Pas de deuxième refus ordinaire au départ, ni filtre d’énergie bloquant la présence. L’énergie compte dans la performance ; aucune recharge d’attente. [Shows](./shows.md).
+
+Seule exception nouvelle de présence : déchéance ≥90, chance `min(0,2 ; (déchéance−90)×0,02)` d’absence, examinée une seule fois par engagement et personnage. Absence conservée et journalisée ; pas de remplaçant fictif. Moins de deux présents rend le créneau manqué, sans annuler toute la soirée. Les pénalités relationnelles spécifiques du drame d’absence restent reportées, sans perte cachée.
+
+## Sauvegardes, interface et validation
+
+La [migration](./technique.md) archive confiance, résout les anciens répertoires partagés sans copier une œuvre, et protège les setlists historiques confirmées. Le format courant valide strictement propriétaire/répertoire, demandes, files, appartenances et état terminal ; il ne répare pas silencieusement une sauvegarde 0.7.2 corrompue.
+
+La fiche personnelle montre la file, son ordre, les échéances, les réponses et motifs ; les liens d’auteur et de propriétaire ouvrent leur fiche. Les fiches de groupe donnent identité, compétences, attachement, détail de réputation, répertoire possédé/actif, appels, dates des prochaines décisions et historique. Le quartier distingue le nombre de groupes actifs des archives. Les libellés d’activité du quartier sont dessinés après les effets, dans des rectangles distincts des cubes, noms, bulles et autres libellés. Des traits de liaison gardent leur association lorsque la foule oblige à les décaler. La bande d’activités sous la carte garde chaque nom et activité en texte lisible à la taille de l’écran, y compris sur mobile. Aucun texte essentiel n’est uniquement au survol.
+
+Les coefficients sont réunis dans `group-rules.mjs`, les politiques et transitions dans `groups.mjs`, les raccords de moteur dans `groupContext`. `npm run audit:groups` rejoue 20 graines sur 30 jours et en prolonge trois à 90 jours, vérifie les sauvegardes aux jours 3/5/10/30 et la continuation. Les résultats et limites se trouvent dans le [rapport d’équilibrage](../BALANCE_V7_2.md). Ces mesures ne garantissent pas toute partie, population ou configuration.

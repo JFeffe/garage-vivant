@@ -5,6 +5,8 @@ import {RELEASE_VERSION} from '../dist/release.mjs';
 execFileSync(process.execPath,['node_modules/vitepress/bin/vitepress.js','build','docs'],{stdio:'inherit'});
 await mkdir('dist/docs',{recursive:true});
 await cp('docs/.vitepress/dist','dist/docs',{recursive:true});
+// VitePress keeps this explicit download link; publish the report beside the page.
+await cp('docs/BALANCE_V7_2.json','dist/docs/BALANCE_V7_2.json');
 const files=['docs/index.md',...(await readdir('docs/gdd')).filter(x=>x.endsWith('.md')).map(x=>'docs/gdd/'+x)];
 const entries=[];
 for(const file of files)entries.push(...indexDocument(file,await readFile(file,'utf8')));

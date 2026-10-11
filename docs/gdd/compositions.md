@@ -1,6 +1,6 @@
 # DDD — Compositions, chansons et catalogue
 
-Version 0.7.1. Les séances de composition développent des projets persistants. Le catalogue conserve les œuvres et permet de masquer les productions peu utiles sans les supprimer.
+Version 0.7.2. Les séances de composition développent des projets persistants. Le catalogue conserve les œuvres et permet de masquer les productions peu utiles sans les supprimer.
 
 ## Plusieurs projets et coauteurs
 
@@ -51,3 +51,9 @@ La comparaison normalise casse, accents et ponctuation. Les groupes générés n
 Les noms historiques ne sont pas réécrits ; les nouvelles créations ne les réutilisent pas. Aucun suffixe numérique automatique. Banque finie : son épuisement doit refuser explicitement la création, jamais livrer un doublon ou boucler sans fin. Groupe et Chanson sont identifiés par libellés et guillemets dans les points d’entrée, au-delà de la couleur.
 
 Liens : [Actions](./actions.md), [Musique](./musique.md), [Shows](./shows.md), [Technique](./technique.md).
+
+## Auteurs et propriétaire du morceau
+
+Les individus restent les auteurs permanents. Le contexte `groupId` de création ne transfère rien automatiquement. Une chanson finalisée commence avec `ownerGroupId: null`, puis un groupe peut l’adopter. Le groupe devient son seul propriétaire, conserve sa maîtrise et la garde après départ d’un auteur ou dissolution. L’auteur la voit encore dans son catalogue, avec le groupe propriétaire cliquable.
+
+Filtres de groupe et de rattachement utilisent le propriétaire pour les chansons terminées ; les projets gardent leur contexte de création. La maîtrise personnelle dépend du musicien sélectionné, la maîtrise collective du propriétaire. Mettre un morceau de côté conserve propriété et maîtrise. Aucune copie ni deuxième adoption. Le [DDD Groupes](./groupes.md) décrit admissibilité, choix autonome, commandes et migration des anciens répertoires partagés.
