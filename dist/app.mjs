@@ -1,5 +1,5 @@
-import { placeActivityLabels } from './map-labels.mjs?v=0.7.2';
-import {DEFAULT_FILTERS,catalogueControls,catalogueHTML as musicCatalogueHTML,songDetailsHTML} from "./catalogue.mjs?v=0.7.2";
+import { placeActivityLabels } from './map-labels.mjs?v=0.7.3';
+import {DEFAULT_FILTERS,catalogueControls,catalogueHTML as musicCatalogueHTML,songDetailsHTML} from "./catalogue.mjs?v=0.7.3";
 let catalogueFilters={...DEFAULT_FILTERS};
 import {
   thresholdsHTML,
@@ -8,13 +8,13 @@ import {
   exchangeTrace,
   sessionHTML,
   rapinHTML,
-} from "./v7-view.mjs?v=0.7.2";
+} from "./v7-view.mjs?v=0.7.3";
 import {
   effectiveTraits,
   updateTraits,
   TRAIT_CATALOG,
   BAG_ACTIONS,
-} from "./v7.mjs?v=0.7.2";
+} from "./v7.mjs?v=0.7.3";
 import {
   createShowClock,
   advanceShowClock,
@@ -24,22 +24,22 @@ import {
   songKey,
   stageGeometry,
   showBeat,
-} from "./show-playback.mjs?v=0.7.2";
+} from "./show-playback.mjs?v=0.7.3";
 import {
   showOverlayHTML,
   showResourcesHTML,
   deckInspectionHTML,
   cardInspectionHTML,
-} from "./show-view.mjs?v=0.7.2";
-import { setupDocSearch } from "./doc-search.mjs?v=0.7.2";
-import { calendarHTML } from "./v6-view.mjs?v=0.7.2";
-import { pendingBooking, eventById } from "./calendar.mjs?v=0.7.2";
-import { editBag } from "./social.mjs?v=0.7.2";
+} from "./show-view.mjs?v=0.7.3";
+import { setupDocSearch } from "./doc-search.mjs?v=0.7.3";
+import { calendarHTML } from "./v6-view.mjs?v=0.7.3";
+import { pendingBooking, eventById } from "./calendar.mjs?v=0.7.3";
+import { editBag } from "./social.mjs?v=0.7.3";
 import {
   profileMarkup,
   changeModule,
   resetLayout,
-} from "./profile-layout.mjs?v=0.7.2";
+} from "./profile-layout.mjs?v=0.7.3";
 import {
   VERSION,
   NEEDS,
@@ -78,7 +78,7 @@ import {
   compositionProject,
   journalEntries,
   chemistryKnowledge,
-} from "./engine.mjs?v=0.7.2";
+} from "./engine.mjs?v=0.7.3";
 import {
   command,
   bandStage,
@@ -93,20 +93,20 @@ import {
   newSeason,
   nextSlot,
   skipShow,
-} from "./life.mjs?v=0.7.2";
+} from "./life.mjs?v=0.7.3";
 import {
   CARDS,
   CURSES,
   INTENTIONS,
   SHOW_TICKS,
   createPerformance,
-} from "./stage.mjs?v=0.7.2";
-import { resolveShowPlan } from "./show-planning.mjs?v=0.7.2";
+} from "./stage.mjs?v=0.7.3";
+import { resolveShowPlan } from "./show-planning.mjs?v=0.7.3";
 import {
   reconcile,
   createViewPositions,
   withReadingAnchor,
-} from "./ui-state.mjs?v=0.7.2";
+} from "./ui-state.mjs?v=0.7.3";
 import {
   quickHTML,
   skillHTML,
@@ -122,14 +122,14 @@ import {
   drawStage,
   enableAudio,
   playSound,
-} from "./v5-view.mjs?v=0.7.2";
+} from "./v5-view.mjs?v=0.7.3";
 import {
   createPlayback,
   snapSpeed,
   setPlaybackSpeed,
   advancePlayback,
   updatePositions,
-} from "./runtime.mjs?v=0.7.2";
+} from "./runtime.mjs?v=0.7.3";
 const playback = createPlayback();
 const $ = (q) => document.querySelector(q),
   $$ = (q) => [...document.querySelectorAll(q)],
@@ -154,8 +154,8 @@ try {
     const input = JSON.parse(saved);
     if (input.version !== VERSION) {
       try {
-        if (!localStorage.getItem("garage-vivant-before-v7-2"))
-          localStorage.setItem("garage-vivant-before-v7-2", saved);
+        if (!localStorage.getItem("garage-vivant-before-v7-3"))
+          localStorage.setItem("garage-vivant-before-v7-3", saved);
       } catch {}
     }
     world = restore(input);
@@ -1904,7 +1904,7 @@ function launchPreview(replay = false) {
 }
 $("#version").onclick = (e) => {
   e.stopPropagation();
-  window.open("docs/versions.html#v072", "_blank", "noopener");
+  window.open("docs/versions.html#v073", "_blank", "noopener");
 };
 $("#brand-home").onclick = (e) => {
   e.preventDefault();

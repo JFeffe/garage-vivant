@@ -1,6 +1,6 @@
 # DDD — Shows, calendrier et public
 
-Version 0.7.2.
+Version 0.7.3.
 
 ## Quatre occasions continues
 

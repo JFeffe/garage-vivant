@@ -1,5 +1,5 @@
 import {writeFileSync} from 'node:fs';
-import {createWorld,step,restore} from '../dist/engine.mjs';
+import {createWorld,step,restore,VERSION} from '../dist/engine.mjs';
 import {skipShow,nextSlot} from '../dist/life.mjs';
 import {activeGroups,attachment} from '../dist/groups.mjs';
 import {GROUP_RULES} from '../dist/group-rules.mjs';
@@ -29,6 +29,6 @@ for(const seed of seeds){
  runs.push({seed,firstGroup:first,checkpoints});console.log(seed,first?.toFixed(2),checkpoints.at(-1).active);
 }
 const formed10=runs.filter(r=>r.firstGroup!==null&&r.firstGroup<=10).length,last=runs.map(r=>r.checkpoints.at(-1)),mature=last.reduce((n,r)=>n+r.mature,0),matureSingle=last.reduce((n,r)=>n+r.matureSingle,0);
-const result={version:'0.7.2',seeds,rules:GROUP_RULES,protocol:'8 personnages, paramètres par défaut, 30 jours écoulés et prolongement à 90 jours des graines 2040, 1 et 2 ; commandes de saut des spectacles existantes, aucune intervention sur groupes ou relations.',summary:{formedBy3:runs.filter(r=>r.firstGroup!==null&&r.firstGroup<=3).length,formedBy5:runs.filter(r=>r.firstGroup!==null&&r.firstGroup<=5).length,formedBy10:formed10,total:runs.length,failedSeeds:runs.filter(r=>r.firstGroup===null||r.firstGroup>10).map(r=>r.seed),active30:last.reduce((n,r)=>n+r.active,0),survivors7d:last.reduce((n,r)=>n+r.survivors7d,0),mature,matureSingle,maxMembership:Math.max(...last.map(r=>r.maxMembership)),practiceStarts:last.reduce((n,r)=>n+r.metrics.practices,0),departures:last.reduce((n,r)=>n+r.metrics.departures,0)},runs,extended};
-writeFileSync('docs/BALANCE_V7_2.json',JSON.stringify(result,null,2)+'\n');console.log(result.summary);
+const result={version:VERSION,seeds,rules:GROUP_RULES,protocol:'8 personnages, paramètres par défaut, 30 jours écoulés et prolongement à 90 jours des graines 2040, 1 et 2 ; commandes de saut des spectacles existantes, aucune intervention sur groupes ou relations.',summary:{formedBy3:runs.filter(r=>r.firstGroup!==null&&r.firstGroup<=3).length,formedBy5:runs.filter(r=>r.firstGroup!==null&&r.firstGroup<=5).length,formedBy10:formed10,total:runs.length,failedSeeds:runs.filter(r=>r.firstGroup===null||r.firstGroup>10).map(r=>r.seed),active30:last.reduce((n,r)=>n+r.active,0),survivors7d:last.reduce((n,r)=>n+r.survivors7d,0),mature,matureSingle,maxMembership:Math.max(...last.map(r=>r.maxMembership)),practiceStarts:last.reduce((n,r)=>n+r.metrics.practices,0),departures:last.reduce((n,r)=>n+r.metrics.departures,0)},runs,extended};
+writeFileSync('docs/BALANCE_V7_3.json',JSON.stringify(result,null,2)+'\n');console.log(result.summary);
 if(formed10<16||mature===0||matureSingle<=mature/2)process.exitCode=1;

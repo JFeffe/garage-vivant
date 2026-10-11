@@ -1,6 +1,6 @@
 # DDD — Architecture, sauvegardes et validation
 
-Version d’interface et format du monde : 0.7.2. L’application reste statique, sans dépendance de simulation à l’exécution ni compte serveur.
+Version d’interface et format du monde : 0.7.3. L’application reste statique, sans dépendance de simulation à l’exécution ni compte serveur.
 
 ## Modules et responsabilités
 
@@ -41,11 +41,11 @@ Le format 0.7.0 est accepté. Il conserve personnages, compétences, seuils, ém
 
 Une action conserve son avancement et son temps restant. L’ancien Jam qui répétait explicitement un morceau de groupe devient Pratiquer avec ce morceau. Les nouvelles fourchettes sont attribuées une fois avec le hasard sérialisé. Les brouillons existants deviennent les premiers brouillons séparés ; les contributions historiques absentes ne sont pas inventées.
 
-Un monde 0.7.2 importé est validé directement. Aucun mécanisme de migration n’y masque un champ actuel manquant ou corrompu. Après export/import, le futur est exactement identique : tirages, projets, plateaux, séances et spectacles.
+Un monde 0.7.3 importé est validé directement. Un monde 0.7.2 ne change que son champ version avant cette même validation. Aucun mécanisme de migration n’y masque un champ actuel manquant ou corrompu. Après export/import, le futur est exactement identique : tirages, projets, plateaux, séances et spectacles.
 
 ## Migration V1 à V6
 
-Les formats acceptés sont 0.1.0, 0.2.0, 0.3.0, 0.4.0, 0.5.0, 0.5.1 et 0.6.0, puis 0.7.0, 0.7.1 et 0.7.2. Les étapes historiques ajoutent d’abord les champs nécessaires; le raccord V7 s’applique une fois.
+Les formats acceptés sont 0.1.0, 0.2.0, 0.3.0, 0.4.0, 0.5.0, 0.5.1 et 0.6.0, puis 0.7.0, 0.7.1, 0.7.2 et 0.7.3. Les étapes historiques ajoutent d’abord les champs nécessaires; le raccord V7 s’applique une fois.
 
 | Donnée ancienne | Traitement |
 |---|---|
@@ -65,11 +65,11 @@ Les formats acceptés sont 0.1.0, 0.2.0, 0.3.0, 0.4.0, 0.5.0, 0.5.1 et 0.6.0, pu
 | Seuils, sommeil et associations | Attribués une fois avec le hasard sérialisé; persistants ensuite |
 | Sessions de proximité V6 | Retirées; pas de déclencheur social concurrent |
 
-La conversion préserve les productions; elle ne prétend pas reproduire les six nuances émotionnelles dans les nouvelles chansons. Le passage V7 consomme du hasard pour attribuer les champs nouveaux; un ancien monde ne doit pas continuer selon les anciennes règles. Un monde V7 reçoit ensuite le raccord V7.1 ; un monde V7.2 rechargé continue exactement le même futur.
+La conversion préserve les productions; elle ne prétend pas reproduire les six nuances émotionnelles dans les nouvelles chansons. Le passage V7 consomme du hasard pour attribuer les champs nouveaux; un ancien monde ne doit pas continuer selon les anciennes règles. Un monde V7 reçoit ensuite le raccord V7.1 ; un monde V7.3 rechargé continue exactement le même futur.
 
 ## Stockage et sauvegarde invalide
 
-La clé du monde reste `garage-vivant-v1`, pour reprendre les parties existantes. Avant migration dans l’interface, conserver une copie dans `garage-vivant-before-v7-2`. L’export JSON transporte le monde et ses archives; les préférences de modules et notes lues restent locales et séparées.
+La clé du monde reste `garage-vivant-v1`, pour reprendre les parties existantes. Avant migration dans l’interface, conserver une copie dans `garage-vivant-before-v7-3`. L’export JSON transporte le monde et ses archives; les préférences de modules et notes lues restent locales et séparées.
 
 L’import travaille sur une copie et valide avant adoption. Un monde actuel avec valeurs non numériques, cycle incohérent, retrait différé invalide, séance personnelle invalide, champs retirés, incompatibilité Alpha/Bêta, seuils invalides ou trace invalide est refusé. Une sauvegarde locale illisible n’est pas écrasée automatiquement : l’interface demande un import valide ou un nouveau quartier explicite. Les sauvegardes dépendent du navigateur et de l’origine; exporter/importer pour changer d’hébergement.
 
@@ -93,6 +93,12 @@ Les setlists déjà confirmées reçoivent `legacySetlist`, avec leur identifian
 
 La réputation historique est répartie : part spectacle = max(0 ; ancienne réputation − nouvelle part catalogue). Lorsque le catalogue dépasse l’ancienne réputation, le nouveau total reflète ce catalogue ; ce changement n’est pas un crédit répété. La couleur initiale historique est conservée, puis la couleur courante dérive des morceaux actifs.
 
-Le format actuel sérialise `groupState` (demandes, échéances, propositions récentes, compteurs), `invitationQueue`, `memberships`, état terminal, parts de réputation et propriété canonique. Validation stricte de compteurs, identifiants, files, lieux, timestamps, propriétaire/répertoire, états et participations. Aucun trust courant autorisé ; un monde corrompu n’est pas automatiquement migré ou rempli. Après rechargement 0.7.2, le futur et le hasard restent identiques.
+Le format actuel sérialise `groupState` (demandes, échéances, propositions récentes, compteurs), `invitationQueue`, `memberships`, état terminal, parts de réputation et propriété canonique. Validation stricte de compteurs, identifiants, files, lieux, timestamps, propriétaire/répertoire, états et participations. Aucun trust courant autorisé ; un monde corrompu n’est pas automatiquement migré ou rempli. Après rechargement courant, le futur et le hasard restent identiques.
 
 Les entités restent des données sérialisables, avec fonctions pures et transitions partagées ; pas de hiérarchie de classes imposée. `groupContext` fournit hasard, événements, début/fin d’activité et revalidation des engagements. Les commandes manuelles et initiatives autonomes utilisent les mêmes transitions d’adoption, appel, départ et dissolution. `npm run audit:groups` mesure formation et stabilité sur 20 graines, enregistre les étapes 3/5/10/30 jours, prolonge trois graines à 90 jours et vérifie la continuation des sauvegardes. [Rapport](../BALANCE_V7_2.md).
+
+## Passage V7.2 vers V7.3
+
+Aucun champ de simulation ajouté. Sur une copie, changer seulement `version` de 0.7.2 à 0.7.3, puis valider strictement : RNG, seuils, sacs, dates, projets, répertoires, maîtrises, files et historiques sont conservés. Aucun tirage de migration, compensation ni réparation de donnée corrompue. Les anciennes copies `garage-vivant-before-v7-2` restent en place ; l’interface utilise une copie distincte `garage-vivant-before-v7-3`. La fixture `v072-world.json` a été générée et validée avec le moteur publié V7.2 (`c13b861088347ffcc2508eb54d285499b8278093`), avant les corrections.
+
+Les corrections s’appliquent à la prochaine transition : l’appel garde son morceau avant travail ; un auteur encore associé à un projet terminé ferme sa séance avant trajet ou nouveau travail. Les gains historiques restent inchangés. Le futur sous les nouvelles règles peut diverger de V7.2 ; deux continuations V7.3 du même monde sont identiques. `tests/v73.test.mjs` reproduit les quatre défauts et vérifie la vraie sauvegarde V7.2. `npm run audit:simulation` observe seize parties de quinze jours, vérifie chaque sauvegarde quotidienne, puis compare 240 minutes de continuation. Il échoue sur blocage, rechargement divergent ou invariant observé violé. [Protocole et résultats](../AUDIT_V7_3.md).

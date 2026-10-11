@@ -1,5 +1,18 @@
 # Notes de version
 
+## V0.7.3 — Correctif après seize parties simulées {#v073}
+
+11 octobre 2026. [Bilan, protocole et résultats avant/après](./AUDIT_V7_3.md) et [plan de test V7 complet actualisé](./PLAN_TEST_V7.md).
+
+- Une répétition sur invitation garde le morceau annoncé.
+- Les participants conservent leur propre cycle de départ ; le meneur ne réinitialise plus ceux des autres.
+- Une demande expirée ferme aussi la répétition déjà commencée, sans gain collectif après échéance.
+- La fin d’une composition ferme les séances des coauteurs encore associés, y compris en trajet, avant le choix normal suivant.
+- Import V7.2 : seul le numéro de format change ; hasard et données conservés. Copies préalables distinctes.
+- Seize parties de quinze jours, validation quotidienne et continuation de sauvegarde ; vingt graines de stabilité, dont trois à quatre-vingt-dix jours. Rapports avant/après séparés, intégrés à la CI.
+
+Aucune nouvelle mécanique ni retouche globale des coefficients. Plaisir très haut, pression sociale des petits quartiers, rythme d’apprentissage et raccords débranchés restent des points explicites du bilan et des essais humains.
+
 ## V0.7.2 — Groupes autonomes et répertoire adopté {#v072}
 
 Version du 11 octobre 2026 ; publication de main après validation de la CI. [Plan et réalisation](./PLAN_V7_2.md), [audit V7.1](./AUDIT_V7_1_RELATIONS.md), [rapport reproductible](./BALANCE_V7_2.md).

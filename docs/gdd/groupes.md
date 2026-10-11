@@ -1,6 +1,6 @@
 # DDD — Groupes autonomes, attachement et adoption
 
-Version 0.7.2. Le groupe est une entité persistante. Il prend des initiatives virtuelles ; ses membres réalisent les pratiques et spectacles avec leurs besoins et positions. Aucune personnalité, action de sac ou ressource fictive de groupe.
+Version 0.7.3. Le groupe est une entité persistante. Il prend des initiatives virtuelles ; ses membres réalisent les pratiques et spectacles avec leurs besoins et positions. Aucune personnalité, action de sac ou ressource fictive de groupe.
 
 ## Identité et données
 
@@ -75,9 +75,9 @@ Avant acceptation, vérifier qu’approche + attente maximale + fourchette maxim
 
 Chance de participer : borne 0,1–0,95 de `0,55 + attachement/250 + (énergie−50)/300 − détresse/700`. Le tirage et le motif sont conservés. Un refus permet d’examiner l’invitation suivante ; une acceptation lance Pratiquer hors sac avec groupe, morceau, demande et destination explicites. Elle conserve le prochain jeton du sac.
 
-Le premier arrivé attend au plus 120 minutes sur place, sans effets de pratique, apprentissage ni maîtrise. Deux membres présents démarrent la séance. Besoins et émotions continuent leur évolution normale pendant trajet et attente. Chaque membre suit ensuite ses cycles personnels ; le contenu de morceau peut varier collectivement. Une personne seule après le départ des autres peut poursuivre la pratique personnelle, sans gain collectif.
+Le premier arrivé attend au plus 120 minutes sur place, sans effets de pratique, apprentissage ni maîtrise. Deux membres présents démarrent la séance. Besoins et émotions continuent leur évolution normale pendant trajet et attente. Chaque membre suit ensuite ses cycles personnels ; le morceau annoncé reste celui effectivement travaillé. Le choix instrumental peut varier sans changer ce morceau ni le compteur de départ des autres membres. Une personne seule après le départ des autres peut poursuivre la pratique personnelle, sans gain collectif.
 
-Un membre ayant pigé Pratiquer peut aussi demander à rejoindre une pratique de morceau compatible, avec l’admission existante. Ce participant est enregistré dans la demande lorsqu’il rejoint un appel. Aucun bonus collectif avant le démarrage à deux. Expiration, morceau désactivé, dissolution ou fin de tous les participants ferme la demande et termine les participations correspondantes. Les invitations résolues restent inspectables un jour, puis sont retirées ; les demandes restent tant que référencées. Ces nettoyages n’ajoutent ni ne retirent aucun jeton.
+Un membre ayant pigé Pratiquer peut aussi demander à rejoindre une pratique de morceau compatible, avec l’admission existante. Ce participant est enregistré dans la demande lorsqu’il rejoint un appel. Aucun bonus collectif avant le démarrage à deux. Expiration (y compris après le démarrage de la répétition), morceau désactivé, dissolution ou fin de tous les participants ferme la demande et termine les participations correspondantes. Les invitations résolues restent inspectables un jour, puis sont retirées ; les demandes restent tant que référencées. Ces nettoyages n’ajoutent ni ne retirent aucun jeton.
 
 ## Départs et dissolution
 
@@ -95,8 +95,12 @@ Seule exception nouvelle de présence : déchéance ≥90, chance `min(0,2 ; (d�
 
 ## Sauvegardes, interface et validation
 
-La [migration](./technique.md) archive confiance, résout les anciens répertoires partagés sans copier une œuvre, et protège les setlists historiques confirmées. Le format courant valide strictement propriétaire/répertoire, demandes, files, appartenances et état terminal ; il ne répare pas silencieusement une sauvegarde 0.7.2 corrompue.
+La [migration](./technique.md) archive confiance, résout les anciens répertoires partagés sans copier une œuvre, et protège les setlists historiques confirmées. Le format courant valide strictement propriétaire/répertoire, demandes, files, appartenances et état terminal ; il ne répare pas silencieusement une sauvegarde actuelle corrompue.
 
 La fiche personnelle montre la file, son ordre, les échéances, les réponses et motifs ; les liens d’auteur et de propriétaire ouvrent leur fiche. Les fiches de groupe donnent identité, compétences, attachement, détail de réputation, répertoire possédé/actif, appels, dates des prochaines décisions et historique. Le quartier distingue le nombre de groupes actifs des archives. Les libellés d’activité du quartier sont dessinés après les effets, dans des rectangles distincts des cubes, noms, bulles et autres libellés. Des traits de liaison gardent leur association lorsque la foule oblige à les décaler. La bande d’activités sous la carte garde chaque nom et activité en texte lisible à la taille de l’écran, y compris sur mobile. Aucun texte essentiel n’est uniquement au survol.
 
 Les coefficients sont réunis dans `group-rules.mjs`, les politiques et transitions dans `groups.mjs`, les raccords de moteur dans `groupContext`. `npm run audit:groups` rejoue 20 graines sur 30 jours et en prolonge trois à 90 jours, vérifie les sauvegardes aux jours 3/5/10/30 et la continuation. Les résultats et limites se trouvent dans le [rapport d’équilibrage](../BALANCE_V7_2.md). Ces mesures ne garantissent pas toute partie, population ou configuration.
+
+## Réception V7.3
+
+L’admissibilité de l’appel est partagée entre admission, travail et entretien des demandes. À son échéance, aucune minute supplémentaire de maîtrise collective n’est attribuée ; les participants terminent cette action, sans remboursement de jeton. Une ancienne action V7.2 qui a changé de morceau reprend la cible de sa demande avant le prochain travail ; les gains historiques ne sont pas réécrits. Le [bilan des simulations V7.3](../AUDIT_V7_3.md) couvre seize parties de quinze jours et le contrôle de stabilité sur vingt graines.
