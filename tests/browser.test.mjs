@@ -95,6 +95,8 @@ for(const viewport of [{width:1440,height:960},{width:390,height:844}]){
  await capture(page,viewport.width===390?'v72-map-mobile':'v72-map-desktop');
  await page.locator('[data-view="groups"]').click();await page.locator(`.band-row[data-group-select="${demo.g.id}"]`).click();
  assert((await page.locator('.band-detail').textContent()).includes('Attachement'));assert((await page.locator('.band-detail').textContent()).includes('Compétences des membres'));assert.equal(await page.locator('[data-revive]').count(),0);
+ // Pause precedes the snapshot; flush the real current world rather than the older autosave.
+ await page.locator('[data-view="settings"]').click();const snapshotDownload=page.waitForEvent('download');await page.locator('#export').click();await(await snapshotDownload).delete();await page.locator('[data-view="groups"]').click();
  const before=await page.evaluate(()=>JSON.parse(localStorage.getItem('garage-vivant-v1')));
  await page.locator(`[data-rehearse="${demo.g.id}:1"]`).click();
  const after=await page.evaluate(()=>JSON.parse(localStorage.getItem('garage-vivant-v1')));
