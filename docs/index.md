@@ -10,7 +10,7 @@ La fiche montre sac, défausse, retraits en attente, fourchettes et séance. Une
 
 Pratiquer prépare la technique et les morceaux sans combler l’expression. Ensemble, il faut un morceau et un groupe commun. Jam commence solo, accueille d’autres musiciens et peut continuer seul ; il n’avance pas directement le répertoire ni la coordination. Composer développe plusieurs projets sur plusieurs séances. Déchéance lie excès rapprochés, jetons nuisibles et cartes ajoutées aux shows.
 
-Les [quinze DDD](./gdd/documentation.md) décrivent les règles effectivement codées. Commence par [Actions](./gdd/actions.md), [Interactions](./gdd/interactions.md), [Musique](./gdd/musique.md) ou [Déchéance](./gdd/decheance.md). Les [raccords débranchés](./gdd/raccords-v7.md) sont aussi visibles dans Réglages.
+Les [quinze DDD](./gdd/documentation.md) décrivent les règles effectivement codées. Commence par [Actions](./gdd/actions.md), [Interactions](./gdd/interactions.md), [Musique](./gdd/musique.md) ou [Déchéance](./gdd/decheance.md). Les [raccords débranchés](./gdd/raccords-v7.md) sont aussi visibles dans Réglages. Le [plan de test complet V7 à V7.2](./PLAN_TEST_V7.md) propose un parcours rapide puis la réception de tous les systèmes, avec preuves et limites.
 
 ## Groupes autonomes
 

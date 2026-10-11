@@ -2,7 +2,7 @@
 
 ## V0.7.2 — Groupes autonomes et répertoire adopté {#v072}
 
-Réalisation du 11 octobre 2026, sur branche et PR ; le site reçoit la version après intégration. [Plan et réalisation](./PLAN_V7_2.md), [audit V7.1](./AUDIT_V7_1_RELATIONS.md), [rapport reproductible](./BALANCE_V7_2.md).
+Version du 11 octobre 2026 ; publication de main après validation de la CI. [Plan et réalisation](./PLAN_V7_2.md), [audit V7.1](./AUDIT_V7_1_RELATIONS.md), [rapport reproductible](./BALANCE_V7_2.md).
 
 - Confiance réellement retirée, relations et formation calibrées ensemble ; propositions/acceptations et freins au multigroupe.
 - Attachement personnel dérivé, compétences moyennes/minimales/maximales, couleur musicale et réputation catalogue/spectacles.
@@ -10,6 +10,7 @@ Réalisation du 11 octobre 2026, sur branche et PR ; le site reçoit la version 
 - Pratiques autonomes et manuelles : file hors sac, déplacements, attente sans gains, participation, expiration et départs.
 - Spectacles prioritaires, trajet individuel calculé, absence uniquement en déchéance extrême ; dissolution définitive.
 - Fiches, catalogue et libellés lisibles ; quinze DDD dans l’architecture et les recherches VitePress/jeu.
+- [Plan de test complet V7 à V7.2](./PLAN_TEST_V7.md) : cas par système, réception automatisée, essais humains et publication.
 - Sans album, diffusion, transfert de morceau, agenda inventé, retour de groupe dissous ou pénalité de secours ; limites dans les [raccords](./gdd/raccords-v7.md).
 
 ## V0.7.1 — Actions et identité musicale {#v071}

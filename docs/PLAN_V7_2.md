@@ -1,6 +1,6 @@
 # V7.2 — Groupes autonomes, attachement et répertoire
 
-**Statut : réalisé sur la branche V7.2 ; publication après intégration de la PR.** Décisions du 10 octobre 2026. Base examinée : V0.7.1, commit `75f60044a68d4602cf4ebc5d9f3f9b9aaaa3fd03`.
+**Statut : réalisé en V0.7.2 ; publication de main après validation.** Décisions du 10 octobre 2026. Base examinée : V0.7.1, commit `75f60044a68d4602cf4ebc5d9f3f9b9aaaa3fd03`.
 
 Ce document distingue les décisions du concepteur des arbitrages proposés dans son mandat de design simple. Les formules et nombres nouveaux ci-dessous sont une première configuration exécutable, à éprouver : ils ne sont ni des paramètres déjà validés en simulation, ni des nombres dictés par le concepteur. L’exécutant doit consigner tout ajustement dans une section Réalisation.
 
@@ -459,3 +459,5 @@ Aucun album, palmarès, diffusion, nouveau compteur de fans, transfert ou litige
 ### Réception
 
 `npm test` comprend migrations V1–V7.1 réelles, ownership et auteurs, état terminal, attente sans gains, file FIFO sans effet sur sac, arrivées et absence unique, sauvegarde/continuation, disposition de libellés et formation sur vingt graines. `npm run audit:groups` mesure la boucle entière sur trente jours avec rechargements, puis trois graines jusqu’à quatre-vingt-dix jours. `npm run docs:build` construit les règles et les index. Chromium vérifie interface ordinateur/tactile, recherches, catalogue, fiches, commandes et spectacles. Le rapport et la PR donnent les résultats effectifs de ces commandes ; les tests ne prétendent pas à un équilibre définitif.
+
+Le [plan de test de la V7 complète](./PLAN_TEST_V7.md) donne les cas et résultats attendus pour les règles conservées, actions, groupes, scène et migrations. Il sépare les automatisations réussies des essais humains restant à consigner.

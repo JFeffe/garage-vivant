@@ -26,7 +26,13 @@ Le guide est une entrée joueur. Les notes de versions racontent les changements
 
 Le [plan V7.1](../PLAN_V7_1.md) conserve les décisions et propositions de conception ; sa section Réalisation 0.7.1 indique les arbitrages effectivement codés et les limites. Les DDD décrivent les règles actuelles. Une proposition historique n’est pas une mécanique active simplement parce qu’elle figure dans le plan.
 
-Le [plan V7.2](../PLAN_V7_2.md) conserve les décisions et les hypothèses d’avant réalisation. Sa section Réalisation décrit les paramètres effectivement retenus et les écarts. L’[audit V7.1](../AUDIT_V7_1_RELATIONS.md) est la référence avant correction ; le [rapport d’équilibrage V7.2](../BALANCE_V7_2.md) consigne les résultats reproductibles. Les DDD décrivent la branche livrée ; la publication du site attend l’intégration de la PR.
+Le [plan V7.2](../PLAN_V7_2.md) conserve les décisions et les hypothèses d’avant réalisation. Sa section Réalisation décrit les paramètres effectivement retenus et les écarts. L’[audit V7.1](../AUDIT_V7_1_RELATIONS.md) est la référence avant correction ; le [rapport d’équilibrage V7.2](../BALANCE_V7_2.md) consigne les résultats reproductibles. Les DDD décrivent la version livrée ; jeu et documentation sont publiés ensemble après validation de `main`.
+
+## Plan de test de la V7 complète
+
+Le [plan de test V7 à V7.2](../PLAN_TEST_V7.md) regroupe vérification rapide, règles isolées, boucles de jeu, migrations, expérience multi-graines, interface, audio et publication. Chaque cas donne identifiant, priorité, conditions et résultat attendu. Il distingue réception automatisée déjà effectuée, essais manuels à consigner et quatorze raccords volontairement débranchés. Les suites couvrent le moteur ; les appareils réels et le plaisir de jeu demandent leur propre réception. Le plan n’ajoute aucune mécanique.
+
+La navigation VitePress donne une entrée directe. Sa recherche indexe le plan complet ; celle du jeu trouve cette rubrique « plan de test » et le lien vers le plan.
 
 ## VitePress et index du jeu
 

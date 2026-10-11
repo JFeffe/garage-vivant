@@ -24,7 +24,7 @@ Version 0.7.2. Ce registre décrit les consommateurs réellement actifs et ceux 
 | Scène et carrière | Calendrier, répertoire, coordination, réputation, replay | Versions historiques et récompenses uniques conservées |
 | Besoins, émotions et traits | Quatre besoins et deux axes V7 | Aucun retour de l’humeur, du confort ou des scores de pige |
 
-## Dix raccords débranchés visibles dans le jeu
+## Dix raccords débranchés hérités, visibles dans le jeu
 
 | Identifiant | Limite exacte | Ce qui reste branché |
 |---|---|---|
@@ -53,7 +53,7 @@ L’équilibrage doit encore être éprouvé par des parties jouées. Les tests 
 
 Liens : [Actions](./actions.md), [Musique](./musique.md), [Compositions](./compositions.md), [Déchéance](./decheance.md), [Technique](./technique.md).
 
-## Limites explicites de la passe groupes
+## Quatre raccords débranchés supplémentaires de la passe groupes
 
 - `absence-drama` : absence extrême journalisée et présence revalidée ; pénalités relationnelles particulières reportées.
 - `group-albums-fans` : couleur et réputation utilisent chansons/spectacles existants ; aucun album, palmarès, diffusion ou compteur de fans persistants.

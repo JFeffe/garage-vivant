@@ -6,7 +6,7 @@ Une simulation autonome de musiciens dans une banlieue. Les personnages sont des
 
 [Documentation du jeu](https://jutrasimon.github.io/garage-vivant/docs/) · [Notes de version](https://jutrasimon.github.io/garage-vivant/docs/versions.html#v072) · [Contribuer](CONTRIBUTING.md)
 
-**V7.2 — réalisée sur branche :** [plan et réalisation](docs/PLAN_V7_2.md), [audit précédent](docs/AUDIT_V7_1_RELATIONS.md) et [réception sur 20 graines](docs/BALANCE_V7_2.md). Le site public reçoit cette version après intégration de la PR. Les règles, coefficients et raccords débranchés sont documentés dans les quinze DDD.
+**V7.2 — groupes autonomes :** [plan et réalisation](docs/PLAN_V7_2.md), [audit précédent](docs/AUDIT_V7_1_RELATIONS.md) et [réception sur 20 graines](docs/BALANCE_V7_2.md). Jeu et documentation sont publiés ensemble après les contrôles de main. Les règles, coefficients et raccords débranchés sont documentés dans les quinze DDD.
 
 ## Prendre la scène
 
@@ -32,7 +32,7 @@ Composer développe plusieurs projets séparés, sur plusieurs séances, avec co
 
 Déchéance cumule des épisodes rapprochés et lie la quantité de jetons nuisibles aux cartes ajoutées au paquet de show. La récupération ne retire pas secrètement les jetons encore dans le sac.
 
-Quatre besoins et deux axes V7 restent actifs. Quatorze raccords sont explicitement débranchés : inspiration, agenda général, souvenirs et chimie vers les plateaux, pression supplémentaire en recherche, ancien seuil absolu d’archivage et quatre limites héritées. [Registre complet](docs/gdd/raccords-v7.md). Aucun remplacement caché. Les [quinze DDD](docs/gdd/documentation.md) décrivent règles, formules, migrations et limites ; le jeu et VitePress cherchent les mêmes contenus.
+Quatre besoins et deux axes V7 restent actifs. Quatorze raccords sont explicitement débranchés, dont inspiration, agenda général, souvenirs/chimie vers les plateaux, albums/fans, transferts et drame relationnel d’absence. [Registre complet](docs/gdd/raccords-v7.md). Aucun remplacement caché. Les [quinze DDD](docs/gdd/documentation.md) décrivent règles, formules, migrations et limites ; le jeu et VitePress cherchent les mêmes contenus.
 
 ## Groupes V7.2
 
@@ -45,6 +45,10 @@ Une invitation de pratique attend dans la file personnelle hors sac, puis est ex
 À ×1, une seconde réelle vaut huit minutes de quartier. Le sommeil collectif avance jusqu’au premier réveil en conservant tous les effets minute par minute. Une chanson se présente en 30 secondes à ×1 sur une horloge distincte. Le quartier attend la fin de la soirée; masquer le navigateur suspend les horloges sans rattrapage. L’âge reste une identité.
 
 Sauvegarde locale, export/import et migration V1–V7. Chansons, projets, compétences, groupes, engagements et shows historiques sont conservés. Les anciens compteurs gardent une archive; l’humeur historique n’est pas maintenue comme calcul caché. Une copie avant migration se trouve dans `garage-vivant-before-v7-2`; une sauvegarde invalide n’est pas écrasée automatiquement. Un rechargement V7.2 ne reroule pas les seuils ou sacs et poursuit le même futur.
+
+## Plan de test de la V7 complète
+
+[Plan de test V7 à V7.2](docs/PLAN_TEST_V7.md) : parcours rapide de 20–30 minutes, cas prioritaires par système, migrations, expérience multi-graines, interface/son et publication. Il distingue les résultats automatisés et les essais humains encore à consigner.
 
 ## Développement et validation
 
@@ -60,7 +64,7 @@ npx playwright install --with-deps chromium
 npm run test:browser
 ```
 
-Pour jouer localement : `python3 -m http.server 8000 --directory dist`, puis `http://localhost:8000/`. `npm run audit:groups` rejoue les 20 graines sur 30 jours, dont trois prolongées à 90 jours et produit le rapport JSON. Le build crée la documentation et son index de recherche. Les douze suites couvrent les règles V7.2, imports réels V1–V7, déterminisme, compositions, engagements, setlists, skip/replay, récompenses uniques, 100 jours de calendrier et cohérence documentaire. Chromium couvre ordinateur et tactile, rendu, recherche VitePress et parcours de jeu. Le viewport tactile ne remplace pas un test sur appareil réel.
+Pour jouer localement : `python3 -m http.server 8000 --directory dist`, puis `http://localhost:8000/`. `npm run audit:groups` rejoue les 20 graines sur 30 jours, dont trois prolongées à 90 jours, et produit le rapport JSON. Le build crée la documentation et son index de recherche. Les douze suites couvrent les règles V7.2, imports réels V1–V7, déterminisme, compositions, engagements, setlists, skip/replay, récompenses uniques, 100 jours de calendrier et cohérence documentaire. Chromium couvre ordinateur et tactile, rendu, recherche VitePress et parcours de jeu. Le viewport tactile ne remplace pas un test sur appareil réel.
 
 La CI vérifie les PR sans publier; `main` publie jeu et doc après validation. Captures dans `interface-v7`. Voir [PLAN_V7_1](docs/PLAN_V7_1.md), [PLAN_V7](docs/PLAN_V7.md), [DDD](docs/gdd/documentation.md), [historique](docs/CHANGELOG.md) et [contribution](CONTRIBUTING.md). L’équilibrage des profils et probabilités reste provisoire et demande un essai avec joueurs.
 

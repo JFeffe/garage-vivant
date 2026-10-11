@@ -32,7 +32,7 @@ Les premières 75 minutes créatives échantillonnées gardent l’origine émot
 
 Le classement faible est automatique et réévaluable. L’archive manuelle reste distincte et conservée dans `songArchive`. Restaurer une chanson la rend active et la marque `keepActive`, pour ne pas la remasquer immédiatement par classement automatique. Le seuil absolu historique `archiveThreshold` n’a plus de consommateur actif.
 
-Les chansons faibles restent jouables. Le choix autonome de répertoire préfère les œuvres actives avec la pénalité de priorité −1000 pour faibles/archives ; à défaut, il peut adopter un morceau écarté. Aucun classement ne supprime une setlist confirmée ou un spectacle historique.
+Les chansons faibles restent jouables. L’adoption autonome écarte les faibles si des œuvres non faibles sont admissibles, puis pondère qualité et genre selon [Groupes](./groupes.md). Elle ne possède pas de filtre supplémentaire pour l’archive manuelle. L’archive du catalogue masque l’œuvre sans désactiver une entrée de répertoire ni retirer la propriété ; mettre de côté au répertoire exclut le morceau des nouveaux choix de pratique et setlist. Aucun classement ne supprime une setlist confirmée ou un spectacle historique.
 
 ## Catalogue et maîtrise
 

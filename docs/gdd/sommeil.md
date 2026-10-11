@@ -18,7 +18,7 @@ L’action se termine après la durée habituelle réellement dormie. Elle incr�
 
 Un engagement confirmé et son trajet ont priorité. Le coucher attendu est différé pendant l’engagement. Si le départ pour le show interrompt un sommeil, le prochain coucher est rendu exigible après l’engagement pour permettre une nouvelle nuit. Les jetons déjà pigés ne retournent pas au sac au départ.
 
-Le show fige l’horloge du quartier. Son énergie dépensée et ses conséquences sont appliquées à la fin; un musicien trop épuisé peut manquer un créneau selon les règles de disponibilité existantes. Ce risque est affiché; aucune récupération secrète n’est ajoutée pour le faire jouer.
+Le show fige l’horloge du quartier. Son énergie dépensée et ses conséquences sont appliquées à la fin. Après confirmation, l’énergie ne provoque pas un nouveau refus de présence ; elle affecte la performance. L’exception d’absence concerne la déchéance extrême et reste distincte de la fatigue. Aucune récupération secrète n’est ajoutée pour faire jouer un membre. Voir [Shows](./shows.md).
 
 ## Accélération lorsque tous dorment
 
