@@ -1,4 +1,5 @@
 import { placeActivityLabels } from './map-labels.mjs?v=0.7.2';
+import { createBandLiveModule } from './bandlive-view.mjs?v=3';
 import {DEFAULT_FILTERS,catalogueControls,catalogueHTML as musicCatalogueHTML,songDetailsHTML} from "./catalogue.mjs?v=0.7.2";
 let catalogueFilters={...DEFAULT_FILTERS};
 import {
@@ -228,6 +229,16 @@ try {
       journalTypes = new Set(settings.journalTypes);
   }
 } catch {}
+const bandLive = createBandLiveModule({
+  getWorld: () => world,
+  getPlan: () => showPlan,
+  onOpen: () => changeView('bandlive'),
+  onReturn: () => { changeView('map'); setSpeed(playback.resumeSpeed); },
+  onDisable: () => { if (view === 'bandlive') changeView('shows'); renderShows(); renderGroups(); },
+  canStart: () => world.performance?.status !== 'playing' && !world.showEventId,
+  notify,
+  getReducedEffects: () => reducedEffects,
+});
 function saveUI() {
   try {
     localStorage.setItem(
@@ -910,9 +921,13 @@ const titles = {
     "Change les règles du quotidien.",
     "Observe les conséquences. Ajuste. Recommence.",
   ],
+  bandlive: ['BandLive · le show est entre tes mains.', 'Une pioche commune. De trois à douze spectateurs. Six tours pour les conquérir.'],
 };
 function changeView(v) {
   if (!titles[v]) return;
+  if (v === 'bandlive' && !bandLive.enabled()) return;
+  bandLive.leave();
+  if (v === 'bandlive') setPlaybackSpeed(playback, 0);
   if (v === "shows" && !liveEvent && world.performance?.status !== "playing")
     setPlaybackSpeed(playback, 0);
   if (liveEvent) showPaused = v !== "shows";
@@ -927,6 +942,8 @@ function changeView(v) {
     "show-mode",
     v === "shows" && showingPerformance && !!world.performance,
   );
+  document.body.classList.toggle('bandlive-mode', v === 'bandlive');
+  $('.workspace').classList.toggle('bandlive-layout', v === 'bandlive');
   for (const el of $$(".view")) el.hidden = el.id !== v + "-view";
   for (const el of $$("nav button"))
     el.classList.toggle("active", el.dataset.view === v);
@@ -943,6 +960,7 @@ function changeView(v) {
   if (v === "settings") renderSettings();
   if (v === "groups") renderGroups();
   if (v === "actions") renderActions();
+  if (v === 'bandlive') { bandLive.refresh(); renderTransport(); }
   if (v === "shows") {
     if (liveEvent) showingPerformance = true;
     renderShows();
@@ -1352,7 +1370,7 @@ function renderActions() {
 function renderGroups() {
   replacePreserving(
     "#group-list",
-    bandsHTML(world, selectedGroup, bandQuery, bandArchives),
+    bandsHTML(world, selectedGroup, bandQuery, bandArchives, bandLive.enabled()),
   );
 }
 
@@ -1754,7 +1772,7 @@ function renderShows() {
   renderTransport();
   replacePreserving(
     "#show-setup",
-    showSetupHTML(world, showPlan, showFeedback),
+    showSetupHTML(world, showPlan, showFeedback) + bandLive.entryHTML(),
   );
   replacePreserving("#season-report", seasonHTML(world));
   const show = world.performance;
@@ -2475,7 +2493,7 @@ function frame(now) {
   const dt = advancePlayback(
     playback,
     now,
-    !tabInactive && !liveEvent && world.performance?.status !== "playing",
+    !tabInactive && view !== 'bandlive' && !liveEvent && world.performance?.status !== "playing",
     (minutes) => {
       step(world, minutes);
       if (world.people.every((p) => p.action?.key === "sleep"))
