@@ -1,12 +1,12 @@
 [▶ Jouer à Garage vivant](https://jutrasimon.github.io/garage-vivant/)
 
-# Garage vivant · v0.7.1
+# Garage vivant · v0.7.2
 
 Une simulation autonome de musiciens dans une banlieue. Les personnages sont des cubes avec personnalité, émotions, compétences et relations. Ils composent, montent des bands et tentent leur chance devant un public physique. Le joueur peut observer, régler leurs sacs ou intervenir.
 
-[Documentation du jeu](https://jutrasimon.github.io/garage-vivant/docs/) · [Notes de version](https://jutrasimon.github.io/garage-vivant/docs/versions.html#v071) · [Contribuer](CONTRIBUTING.md)
+[Documentation du jeu](https://jutrasimon.github.io/garage-vivant/docs/) · [Notes de version](https://jutrasimon.github.io/garage-vivant/docs/versions.html#v072) · [Contribuer](CONTRIBUTING.md)
 
-**V7.1 — réalisée :** [plan et arbitrages de réalisation](docs/PLAN_V7_1.md). Les règles, coefficients et raccords débranchés sont documentés dans les quatorze DDD.
+**V7.2 — groupes autonomes :** [plan et réalisation](docs/PLAN_V7_2.md), [audit précédent](docs/AUDIT_V7_1_RELATIONS.md) et [réception sur 20 graines](docs/BALANCE_V7_2.md). Jeu et documentation sont publiés ensemble après les contrôles de main. Les règles, coefficients et raccords débranchés sont documentés dans les quinze DDD.
 
 ## Prendre la scène
 
@@ -20,11 +20,11 @@ Les dates se renouvellent continuellement. Un gros événement revient toutes le
 
 **Essayer maintenant** est une répétition générale sans récompense. Un replay reproduit le tirage et n’ajoute aucune conséquence; les douze dernières prestations gardent la trace de leur dernière chanson. **Interrompre** un vrai show ne donne pas de récompense et coûte de l’énergie.
 
-## Quartier V7.1
+## Quartier V7.2
 
 Six actions d’éveil : Détente, Socialiser, Pratiquer, Jam, Composer et Déchéance. Le jeton est défaussé dès la pige ; aucun remboursement après refus ou interruption. Les acquisitions arrivent dans le sac ; les retraits se font depuis la défausse, en attendant la pige des exemplaires encore dans le sac. Fourchettes personnelles et cycles remplacent les durées fixes. Le sommeil reste quotidien et hors sac.
 
-Une admission sociale initiale ouvre la séance. Les échanges donnent ensuite directement un résultat favorable, neutre ou défavorable ; le destinataire décide de rester ou partir. La proposition rare d’une activité utilise les actions existantes. Formation de groupes et romance restent possibles selon leurs règles V7.
+Une admission sociale initiale ouvre la séance. Les échanges donnent ensuite directement un résultat favorable, neutre ou défavorable ; le destinataire décide de rester ou partir. La proposition rare d’une activité utilise les actions existantes. Les groupes passent par proposition et acceptation, avec freins au multigroupe. La confiance est retirée ; la romance conserve ses règles.
 
 Pratiquer développe technique, instruments et maîtrise de morceaux sans expression par défaut. La pratique collective demande un morceau et un groupe commun. L’apprentissage progresse par petits gains et percées. Jam commence solo, accueille d’autres musiciens et continue après leurs départs ; aucun gain direct de répertoire, coordination ou réputation.
 
@@ -32,13 +32,23 @@ Composer développe plusieurs projets séparés, sur plusieurs séances, avec co
 
 Déchéance cumule des épisodes rapprochés et lie la quantité de jetons nuisibles aux cartes ajoutées au paquet de show. La récupération ne retire pas secrètement les jetons encore dans le sac.
 
-Quatre besoins et deux axes V7 restent actifs. Dix raccords sont explicitement débranchés : inspiration, agenda général, souvenirs et chimie vers les plateaux, pression supplémentaire en recherche, ancien seuil absolu d’archivage et quatre limites héritées. [Registre complet](docs/gdd/raccords-v7.md). Aucun remplacement caché. Les [quatorze DDD](docs/gdd/documentation.md) décrivent règles, formules, migrations et limites ; le jeu et VitePress cherchent les mêmes contenus.
+Quatre besoins et deux axes V7 restent actifs. Quatorze raccords sont explicitement débranchés, dont inspiration, agenda général, souvenirs/chimie vers les plateaux, albums/fans, transferts et drame relationnel d’absence. [Registre complet](docs/gdd/raccords-v7.md). Aucun remplacement caché. Les [quinze DDD](docs/gdd/documentation.md) décrivent règles, formules, migrations et limites ; le jeu et VitePress cherchent les mêmes contenus.
+
+## Groupes V7.2
+
+Entités autonomes : adoption des compositions des membres, appels de pratique et réservations. Auteurs permanents, propriétaire unique ; maîtrise conservée après départ ou dissolution. Attachement individuel calculé, compétences moyennes/minimales/maximales, couleur issue du répertoire et réputation catalogue/spectacles.
+
+Une invitation de pratique attend dans la file personnelle hors sac, puis est examinée avant la prochaine pige. Trajet et attente ne produisent pas de travail. Un spectacle confirmé interrompt l’action selon le trajet nécessaire ; absence seulement en déchéance extrême. Coordination zéro ou moins de deux membres : dissolution définitive, historique conservé. La carte place les libellés après les effets et évite leur recouvrement.
 
 ## Temps et sauvegardes
 
 À ×1, une seconde réelle vaut huit minutes de quartier. Le sommeil collectif avance jusqu’au premier réveil en conservant tous les effets minute par minute. Une chanson se présente en 30 secondes à ×1 sur une horloge distincte. Le quartier attend la fin de la soirée; masquer le navigateur suspend les horloges sans rattrapage. L’âge reste une identité.
 
-Sauvegarde locale, export/import et migration V1–V7. Chansons, projets, compétences, groupes, engagements et shows historiques sont conservés. Les anciens compteurs gardent une archive; l’humeur historique n’est pas maintenue comme calcul caché. Une copie avant migration se trouve dans `garage-vivant-before-v7-1`; une sauvegarde invalide n’est pas écrasée automatiquement. Un rechargement V7.1 ne reroule pas les seuils ou sacs et poursuit le même futur.
+Sauvegarde locale, export/import et migration V1–V7. Chansons, projets, compétences, groupes, engagements et shows historiques sont conservés. Les anciens compteurs gardent une archive; l’humeur historique n’est pas maintenue comme calcul caché. Une copie avant migration se trouve dans `garage-vivant-before-v7-2`; une sauvegarde invalide n’est pas écrasée automatiquement. Un rechargement V7.2 ne reroule pas les seuils ou sacs et poursuit le même futur.
+
+## Plan de test de la V7 complète
+
+[Plan de test V7 à V7.2](docs/PLAN_TEST_V7.md) : parcours rapide de 20–30 minutes, cas prioritaires par système, migrations, expérience multi-graines, interface/son et publication. Il distingue les résultats automatisés et les essais humains encore à consigner.
 
 ## Développement et validation
 
@@ -54,7 +64,7 @@ npx playwright install --with-deps chromium
 npm run test:browser
 ```
 
-Pour jouer localement : `python3 -m http.server 8000 --directory dist`, puis `http://localhost:8000/`. Le build crée la documentation et son index de recherche. Les onze suites couvrent les règles V7.1, imports réels V1–V7, déterminisme, compositions, engagements, setlists, skip/replay, récompenses uniques, 100 jours de calendrier et cohérence documentaire. Chromium couvre ordinateur et tactile, rendu, recherche VitePress et parcours de jeu. Le viewport tactile ne remplace pas un test sur appareil réel.
+Pour jouer localement : `python3 -m http.server 8000 --directory dist`, puis `http://localhost:8000/`. `npm run audit:groups` rejoue les 20 graines sur 30 jours, dont trois prolongées à 90 jours, et produit le rapport JSON. Le build crée la documentation et son index de recherche. Les douze suites couvrent les règles V7.2, imports réels V1–V7, déterminisme, compositions, engagements, setlists, skip/replay, récompenses uniques, 100 jours de calendrier et cohérence documentaire. Chromium couvre ordinateur et tactile, rendu, recherche VitePress et parcours de jeu. Le viewport tactile ne remplace pas un test sur appareil réel.
 
 La CI vérifie les PR sans publier; `main` publie jeu et doc après validation. Captures dans `interface-v7`. Voir [PLAN_V7_1](docs/PLAN_V7_1.md), [PLAN_V7](docs/PLAN_V7.md), [DDD](docs/gdd/documentation.md), [historique](docs/CHANGELOG.md) et [contribution](CONTRIBUTING.md). L’équilibrage des profils et probabilités reste provisoire et demande un essai avec joueurs.
 

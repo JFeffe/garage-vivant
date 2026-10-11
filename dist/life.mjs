@@ -1,6 +1,8 @@
-import { plateauGain, decadenceCount } from "./v71.mjs?v=0.7.1";
-import { editTokens } from "./v7.mjs?v=0.7.1";
-import { initializeV6Person } from "./social.mjs?v=0.7.1";
+import { GROUP_RULES as R } from './group-rules.mjs?v=0.7.2';
+import { initializeGroupState, proposeMembership, requestRehearsal, adoptSong, refreshGroup, groupsMinute, leaveGroup, dissolveGroup, activeGroup } from './groups.mjs?v=0.7.2';
+import { plateauGain, decadenceCount, availableMusicName, musicName } from "./v71.mjs?v=0.7.2";
+import { editTokens } from "./v7.mjs?v=0.7.2";
+import { initializeV6Person } from "./social.mjs?v=0.7.2";
 import {
   initializeCalendar,
   upgradeCalendar,
@@ -12,7 +14,7 @@ import {
   morale,
   moraleEffect,
   validateCalendar,
-} from "./calendar.mjs?v=0.7.1";
+} from "./calendar.mjs?v=0.7.2";
 import {
   clamp,
   round,
@@ -20,6 +22,7 @@ import {
   log,
   feel,
   decide,
+  interruptActivity,
   relationship,
   createGroup,
   formationEligible,
@@ -28,7 +31,7 @@ import {
   ACTIONS,
   step,
   refreshReputation,
-} from "./engine.mjs?v=0.7.1";
+} from "./engine.mjs?v=0.7.2";
 import {
   CARDS,
   CURSES,
@@ -38,7 +41,7 @@ import {
   createPerformance,
   advancePerformance,
   validatePerformance,
-} from "./stage.mjs?v=0.7.1";
+} from "./stage.mjs?v=0.7.2";
 
 export function initializePerson(p) {
   initializeV6Person(p);
@@ -63,6 +66,7 @@ export function initializePerson(p) {
   p.showFame = 0;
   p.invitationCooldown = {};
   p.engagement = null;
+  p.invitationQueue = [];
 }
 export function initializeGroup(g, time) {
   Object.assign(g, {
@@ -90,6 +94,7 @@ export function initializeLife(s) {
   s.encounters = {};
   s.nextTogetherId = 1;
   initializeCalendar(s);
+  initializeGroupState(s);
 }
 export function upgradeLife(s) {
   for (const p of s.people) initializePerson(p);
@@ -155,15 +160,31 @@ export function archiveSong(s, song) {
 export function isArchivedSong(s, id) {
   return s.songArchive.some((x) => x.id === id) || !!s.songs.find(x=>x.id===id)?.weak;
 }
-export function eligibleSongs(s, g) {
-  return s.songs.filter((song) =>
-    song.authors.some((id) => g.members.includes(id)),
-  );
+export function eligibleSongs(s,g){return s.songs.filter(song=>song.ownerGroupId===g.id&&g.repertoire.some(r=>r.songId===song.id&&r.active!==false));}
+export function groupContext(s){
+ return {
+  validPlace:id=>PLACES.some(x=>x.id===id&&x.kind==='garage'),
+  canCreate:name=>name?availableMusicName(s,'group',name):!!musicName(s,'group',()=>0,{reserve:false}),
+  random:()=>rand(s),emit:(...args)=>log(s,...args),create:(ids,options)=>createGroup(s,ids,options),
+  close:(p,status)=>interruptActivity(s,p,status),
+  start:(p,req)=>decide(s,p,'practice',{groupId:req.groupId,songId:req.songId,rehearsalId:req.id,place:req.place}),
+  place:()=>PLACES.filter(x=>x.kind==='garage')[Math.floor(rand(s)*PLACES.filter(x=>x.kind==='garage').length)].id,
+  nearShow:(p,req)=>s.bookings.some(b=>{
+   if(!['booked','assembling','playing'].includes(b.status)||!b.members.includes(p.id)||b.time<s.time)return false;
+   const place=PLACES.find(x=>x.id===req.place),journey=showJourney(s,{...p,x:place.door.x,y:place.door.y},b);
+   const approach=Math.ceil((Math.abs(p.y-340)+Math.abs(p.x-place.door.x)+Math.abs(place.door.y-340))/12)+3;
+   return journey&&s.time+approach+R.waitMinutes+p.actionRanges.practice.max>=journey.departure;
+  }),
+  closeShow:(p,g)=>s.bookings.some(b=>b.groupId===g.id&&['booked','assembling','playing'].includes(b.status)&&b.members.includes(p.id)&&b.time-s.time<=R.nearShow),
+  refused:p=>feel(s,p,{distress:3}),joined:p=>feel(s,p,{exaltation:12}),
+  cancelMember:(g,p)=>{for(const b of s.bookings.filter(b=>b.groupId===g.id&&['applied','booked','assembling'].includes(b.status))){const remaining=b.members.filter(id=>id!==p.id);if(p.engagement?.bookingId===b.id)p.engagement=null;if(remaining.length<2)cancelBooking(s,b);else b.members=remaining;}},
+  cancelGroup:g=>{for(const b of s.bookings.filter(b=>b.groupId===g.id&&['applied','booked','assembling'].includes(b.status)))cancelBooking(s,b);}
+ };
 }
 export function groupRehearsal(s, j, present) {
   const g=s.groups.find(g=>g.id===j.groupId&&g.archivedAt===null);
   const row=g?.repertoire.find(r=>r.songId===j.songId);
-  if(!g||!row||present.length<2||present.some(p=>!g.members.includes(p.id)))return;
+  if(!g||!row||row.active===false||present.length<2||present.some(p=>!g.members.includes(p.id)))return;
   g.lastWorked=s.time;
   g.development=clamp(g.development+0.07*Math.min(1,present.length/4));
   row.mastery=clamp(row.mastery+0.12*(0.65+g.development/200)*Math.min(1,present.length/g.members.length));
@@ -188,7 +209,6 @@ export function acceptance(s, host, target, group = null) {
   return clamp(
     0.53 +
       r.affinity * 0.004 +
-      r.trust * 0.002 -
       r.tension * 0.004 -
       target.decadence * 0.002 +
       (group?.development || 0) * 0.0015,
@@ -228,131 +248,15 @@ export function availability(
             : "Disponible",
       };
 }
-function invite(s, cmd) {
-  const host = s.people.find((p) => p.id === cmd.actorId),
-    target = s.people.find((p) => p.id === cmd.targetId),
-    g = cmd.groupId
-      ? s.groups.find((g) => g.id === cmd.groupId && g.archivedAt === null)
-      : null;
-  if (
-    !host ||
-    !target ||
-    host === target ||
-    (cmd.groupId && (!g || !g.members.includes(host.id)))
-  )
-    return result(false, "Invitation impossible.");
-  if (g?.members.includes(target.id))
-    return result(false, "Ce musicien est déjà membre.");
-  const key = g?.id || host.id,
-    until = target.invitationCooldown[key] || 0;
-  if (until > s.time)
-    return result(
-      false,
-      `Nouvelle invitation possible dans ${round(((until - s.time) / 60) * 10) / 10} h.`,
-    );
-  const chance = acceptance(s, host, target, g),
-    accepted = rand(s) < chance;
-  const ev = log(
-    s,
-    "group",
-    accepted
-      ? `${target.name} accepte de jouer avec ${host.name}.`
-      : `${target.name} décline l’invitation de ${host.name}.`,
-    [host.id, target.id],
-    {
-      outcome: accepted ? "accepted" : "rejected",
-      explanation: `Affinité, confiance, tensions et fiabilité : ${round(chance * 100)} % de chances.`,
-      chance,
-    },
-  );
-  if (!accepted) {
-    target.invitationCooldown[key] = s.time + 360;
-    feel(s, host, { distress: 5 }, ev);
-    return result(
-      false,
-      "Invitation déclinée. Délai de 6 h avant de réinviter.",
-      { chance },
-    );
-  }
-  let group = g;
-  if (group) group.members.push(target.id);
-  else {
-    group = createGroup(s, [host.id, target.id], {
-      manual: true,
-      name: cmd.name || null,
-    });
-    group.origin = "player";
-  }
-  feel(s, target, { exaltation: 12 }, ev);
-  return result(true, `${target.name} rejoint ${group.name}.`, {
-    groupId: group.id,
-    chance,
-  });
+function invite(s,cmd){
+ const host=s.people.find(p=>p.id===cmd.actorId),target=s.people.find(p=>p.id===cmd.targetId),g=cmd.groupId?s.groups.find(g=>g.id===cmd.groupId):null;
+ if(cmd.groupId&&!g)return result(false,'Groupe introuvable.');
+ return proposeMembership(s,host,target,g,groupContext(s),{manual:true,name:cmd.name||null});
 }
-function rehearse(s, cmd) {
-  const g = s.groups.find((g) => g.id === cmd.groupId && g.archivedAt === null),
-    host = s.people.find((p) => p.id === cmd.actorId);
-  if (!g || !host || !g.members.includes(host.id))
-    return result(false, "Choisis un band dont tu fais partie.");
-  if (
-    cmd.songId !== null &&
-    !g.repertoire.some((r) => r.songId === Number(cmd.songId))
-  )
-    return result(false, "Cette chanson ne fait pas partie du répertoire.");
-  if(cmd.songId===null)return result(false,"La pratique collective demande un morceau du répertoire. Choisis Jam pour improviser.");
-  const partners = g.members
-    .map((id) => s.people.find((p) => p.id === id))
-    .filter(
-      (p) =>
-        p &&
-        p.id !== host.id &&
-        p.needs.energy >= 25 &&
-        !p.engagement &&
-        p.action?.key !== "sleep" &&
-        (!p.action ||
-          ["practice", "social", "relax", "jam"].includes(p.action.key)),
-    );
-  if (
-    host.action?.key === "sleep" ||
-    host.needs.energy < 15 ||
-    host.engagement ||
-    !partners.length
-  )
-    return result(false, "Pas de partenaire disponible et reposé.");
-  const chosen = partners.filter((p) => rand(s) < acceptance(s, host, p, g));
-  if (!chosen.length)
-    return result(
-      false,
-      "Les membres disponibles préfèrent poursuivre leur activité.",
-    );
-  decide(s, host, "practice", {
-    newSession: true,
-    groupId: g.id,
-    songId: cmd.songId === null ? null : Number(cmd.songId),
-    noInvite: true,
-  });
-  const sid = host.action.activityId,
-    j = host.action;
-  j.groupId = g.id;
-  j.songId = cmd.songId === null ? null : Number(cmd.songId);
-  for (const p of chosen) {
-    decide(s, p, "practice", { groupId:g.id, songId:j.songId, noInvite: true });
-    p.action.dest=host.action.dest;
-    p.action.route=host.action.route.map(x=>({...x}));
-    p.action.why = `Répétition acceptée avec ${g.name}`;
-  }
-  host.action.why = `Répétition de ${g.name}`;
-  log(
-    s,
-    "jam",
-    `${g.name} se donne rendez-vous : ${chosen.length + 1} musiciens, ${j.songId ? s.songs.find((x) => x.id === j.songId)?.title : "jam libre"}.`,
-    [host.id, ...chosen.map((p) => p.id)],
-    { activityId: sid, groupId: g.id },
-  );
-  return result(
-    true,
-    "Rendez-vous lancé. La répétition commence avec deux membres sur place.",
-  );
+function rehearse(s,cmd){
+ const g=s.groups.find(g=>g.id===cmd.groupId),host=s.people.find(p=>p.id===cmd.actorId);
+ if(!activeGroup(g)||!host||!g.members.includes(host.id))return result(false,'Choisis un groupe dont tu fais partie.');
+ return requestRehearsal(s,g,Number(cmd.songId),groupContext(s).place(),groupContext(s));
 }
 export function performanceSong(s, g, id) {
   if (id !== null) return s.songs.find((song) => song.id === Number(id));
@@ -436,30 +340,16 @@ export function command(s, cmd) {
     case "modifyBooking":
       return modifyBooking(s, cmd, acceptance, availability);
     case "repertoire": {
-      const g = s.groups.find(
-          (g) => g.id === cmd.groupId && g.archivedAt === null,
-        ),
-        song = s.songs.find((x) => x.id === Number(cmd.songId));
-      if (
-        !g ||
-        !g.members.includes(actor.id) ||
-        !song ||
-        !song.authors.some((id) => g.members.includes(id))
-      )
-        return result(
-          false,
-          "Seules les compositions des membres peuvent entrer au répertoire.",
-        );
-      if (cmd.remove)
-        g.repertoire = g.repertoire.filter((r) => r.songId !== song.id);
-      else if (!g.repertoire.some((r) => r.songId === song.id))
-        g.repertoire.push({ songId: song.id, mastery: 0, rehearsals: 0 });
-      return result(
-        true,
-        cmd.remove
-          ? "Chanson retirée du répertoire."
-          : "Chanson ajoutée. Sa maîtrise collective commence à zéro.",
-      );
+      const g=s.groups.find(g=>g.id===cmd.groupId),song=s.songs.find(x=>x.id===Number(cmd.songId));
+      if(!activeGroup(g)||!g.members.includes(actor.id)||!song)return result(false,'Groupe ou chanson indisponible.');
+      const row=g.repertoire.find(r=>r.songId===song.id);
+      if(row){row.active=!cmd.remove;refreshGroup(s,g);return result(true,cmd.remove?'Morceau mis de côté. Propriété et maîtrise conservées.':'Morceau réactivé.');}
+      if(cmd.remove)return result(false,'Morceau absent du répertoire.');
+      return adoptSong(s,g,song,groupContext(s));
+    }
+    case "leaveGroup": {
+      const g=s.groups.find(g=>g.id===cmd.groupId);
+      return result(!!g&&leaveGroup(s,g,actor,'Départ manuel.',groupContext(s)),'Départ du groupe demandé.');
     }
     case "deck": {
       if (
@@ -519,20 +409,8 @@ export function command(s, cmd) {
           : "Chanson archivée, sans suppression.",
       );
     }
-    case "revive": {
-      const g = s.groups.find(
-        (g) => g.id === cmd.groupId && g.members.includes(actor.id),
-      );
-      if (!g) return result(false, "Band introuvable.");
-      g.archivedAt = null;
-      g.development = 10;
-      g.lastWorked = s.time;
-      log(s, "group", `${g.name} reprend vie.`, g.members);
-      return result(
-        true,
-        "Band relancé. Il faudra entretenir sa coordination.",
-      );
-    }
+    case "revive": return result(false,'Une dissolution est définitive.');
+
     case "cancelBooking": {
       const b = s.bookings.find(
         (b) =>
@@ -607,7 +485,7 @@ export function command(s, cmd) {
         !g ||
         g.archivedAt !== null ||
         !song ||
-        (song.id !== null && !g.repertoire.some((r) => r.songId === song.id))
+        (song.id !== null && !g.repertoire.some((r) => r.songId === song.id&&r.active!==false))
       )
         return result(false, "Choisis une chanson du répertoire de ton band.");
       const members = (cmd.members || g.members)
@@ -673,50 +551,22 @@ function cancelBooking(s, b) {
     { bookingId: b.id },
   );
 }
-function assemble(s, b) {
-  b.status = "assembling";
-  const o = eventById(s, b.opportunityId),
-    place = PLACES.find((p) => p.id === o.venue);
-  for (const id of b.members) {
-    const p = s.people.find((p) => p.id === id);
-    if (!p) continue;
-    const old = p.action;
-    if (old) {
-      const row = s.activities.find((a) => a.id === old.activityId);
-      if (row && old.key !== "jam") {
-        row.end = s.time;
-        row.status = "interrupted";
-      }
-      if (old.elapsed > 0) p.actionCounts[old.key].interrupted++;
-    }
-
-    if (old?.key === "sleep") {
-      p.sleep.nextBedtime = s.time;
-      p.sleep.wakeAt = null;
-      p.sleep.started = null;
-    }
-    p.action = null;
-    p.engagement = {
-      bookingId: b.id,
-      dest: place.id,
-      route: [
-        { x: p.x, y: 340 },
-        { x: place.door.x, y: 340 },
-        {
-          x: place.door.x + ((b.members.indexOf(id) % 6) - 2.5) * 25,
-          y: place.door.y,
-        },
-      ],
-      arrived: false,
-    };
-  }
-  log(
-    s,
-    "booking",
-    `${s.groups.find((g) => g.id === b.groupId)?.name} se met en route pour ${o.name}.`,
-    b.members,
-    { bookingId: b.id },
-  );
+export function showJourney(s,p,b){
+ const o=eventById(s,b.opportunityId),place=PLACES.find(x=>x.id===o?.venue);if(!place)return null;
+ const route=[{x:p.x,y:340},{x:place.door.x,y:340},{x:place.door.x+((b.members.indexOf(p.id)%6)-2.5)*25,y:place.door.y}];
+ let previous=p,minutes=0;for(const point of route){minutes+=Math.max(1,Math.ceil(Math.hypot(point.x-previous.x,point.y-previous.y)/12));previous=point;}
+ return {dest:place.id,route,minutes,departure:b.time-R.arrivalMargin-minutes};
+}
+export function departForShow(s,p){
+ if(p.engagement||s.performance?.status==='playing')return false;
+ const b=s.bookings.filter(b=>['booked','assembling'].includes(b.status)&&b.members.includes(p.id)&&!b.absences?.[p.id]).sort((a,b)=>a.time-b.time)[0];
+ if(!b)return false;const journey=showJourney(s,p,b);if(!journey||s.time<journey.departure)return false;
+ b.absences||={};const chance=p.decadence>=R.absenceThreshold?Math.min(.2,(p.decadence-R.absenceThreshold)*R.absenceSlope):0;
+ if(chance&&rand(s)<chance){b.absences[p.id]={time:s.time,reason:'Déchéance extrême',chance};log(s,'conflict',`${p.name} manque son spectacle : déchéance extrême.`,b.members,{bookingId:b.id,groupId:b.groupId});return false;}
+ const sleeping=p.action?.key==='sleep';interruptActivity(s,p);
+ if(sleeping){p.sleep.wakeAt=null;p.sleep.started=null;p.sleep.nextBedtime=s.time;}
+ p.engagement={bookingId:b.id,dest:journey.dest,route:journey.route,arrived:false};b.status='assembling';
+ log(s,'booking',`${p.name} part au spectacle (${journey.minutes} min de trajet).`,[p.id],{bookingId:b.id,groupId:b.groupId,departure:true,travelMinutes:journey.minutes});return true;
 }
 export function travelEngagement(s, p) {
   const a = p.engagement;
@@ -736,7 +586,6 @@ export function travelEngagement(s, p) {
   if (!a.route.length) {
     p.place = a.dest;
     a.arrived = true;
-    p.needs.energy = clamp(p.needs.energy + 0.1);
   }
   return true;
 }
@@ -786,59 +635,8 @@ export function lifeMinute(s) {
     )
       changeDecadence(s, p, 0.025, "Nuit sacrifiée malgré la fatigue");
   }
-  if (s.time % 60 === 0)
-    for (const g of s.groups)
-      if (
-        g.archivedAt === null &&
-        !g.members.includes(s.playerId) &&
-        g.repertoire.length < 3
-      ) {
-        const candidate = eligibleSongs(s, g)
-          .filter(
-            (song) =>
-              !g.repertoire.some((r) => r.songId === song.id),
-          )
-          .sort(
-            (a, b) =>
-              (isArchivedSong(s,b.id)?-1000:0)+b.quality +
-              (b.genre === g.genre ? 20 : 0) -
-              ((isArchivedSong(s,a.id)?-1000:0)+a.quality + (a.genre === g.genre ? 20 : 0)),
-          )[0];
-        if (candidate) {
-          g.repertoire.push({
-            songId: candidate.id,
-            mastery: 0,
-            rehearsals: 0,
-          });
-          log(
-            s,
-            "group",
-            `${g.name} retient « ${candidate.title} » dans son répertoire.`,
-            g.members,
-            {
-              groupId: g.id,
-              explanation:
-                "Choix autonome selon le style et la qualité; seules les compositions des membres sont admissibles.",
-            },
-          );
-        }
-      }
-  if (s.time % 60 === 0)
-    for (const g of s.groups)
-      if (g.archivedAt === null && s.time - g.lastWorked > 2880) {
-        const before = g.development;
-        g.development = clamp(g.development - 0.24);
-        if (before > 0 && g.development === 0) {
-          g.archivedAt = s.time;
-          log(
-            s,
-            "group",
-            `${g.name} s’éteint faute d’activités communes. Son histoire est conservée.`,
-            g.members,
-            { groupId: g.id },
-          );
-        }
-      }
+  if(s.time%60===0)for(const g of s.groups.filter(activeGroup))if(s.time-g.lastWorked>2880)g.development=clamp(g.development-.24);
+  groupsMinute(s,groupContext(s));
   // Everyone travels before selecting the first ready slot. Booking order must
   // never put the headliner ahead of an opening act or strand a shared member.
   const scheduled = [...s.bookings].sort(
@@ -851,15 +649,8 @@ export function lifeMinute(s) {
           (x) => x.id === b.slotId,
         ) ?? 0),
   );
-  for (const b of scheduled)
-    if (
-      b.status === "booked" &&
-      s.time >= b.time - 180 &&
-      s.performance?.status !== "playing"
-    )
-      assemble(s, b);
   for (const b of scheduled) {
-    if (b.status === "assembling" && s.time >= b.time) {
+    if (["booked","assembling"].includes(b.status) && s.time >= b.time) {
       const g = s.groups.find((g) => g.id === b.groupId),
         song = g && performanceSong(s, g, b.songId),
         o = eventById(s, b.opportunityId);
@@ -868,13 +659,12 @@ export function lifeMinute(s) {
         .filter(
           (p) =>
             p?.engagement?.arrived &&
-            p.needs.energy >= 8 &&
             s.bookings.find((x) => x.id === p.engagement.bookingId)
               ?.opportunityId === b.opportunityId,
         );
       if (present.length < 2 && g && song && s.time < b.time + 20) break;
       if (!g || !song || present.length < 2) {
-        cancelAtDoor(s, b, "moins de deux musiciens présents et fonctionnels");
+        cancelAtDoor(s, b, "moins de deux musiciens présents");
         continue;
       }
       g.stageMorale = morale(g, s.time);
@@ -940,15 +730,16 @@ export function completePerformance(s) {
         morale: morale(g, s.time),
       }
     : null;
-  if (g) {
+  if (activeGroup(g)) {
     g.development = clamp(g.development + 2 + r.score * 0.055);
     const expected = o?.organizer?.exigence || 30;
-    g.reputation = clamp(
-      g.reputation +
+    g.showReputation = clamp(
+      g.showReputation +
         (r.score >= expected
           ? r.score * 0.12
           : -Math.min(10, (expected - r.score) * 0.18)),
     );
+    refreshGroup(s,g);
     moraleEffect(
       s,
       g,
@@ -1009,7 +800,6 @@ export function completePerformance(s) {
       const q = s.people.find((p) => p.id === partner.id);
       if (!q) continue;
       const relation = relationship(s, p, q);
-      relation.trust = clamp(relation.trust + (r.score >= 45 ? 2 : -1));
       relation.collaboration = clamp(relation.collaboration + 2);
       if (actor.errors >= 2) relation.tension = clamp(relation.tension + 3);
     }
@@ -1108,7 +898,6 @@ export function nextSlot(s, previous = s.performance) {
         .filter(
           (p) =>
             p &&
-            p.needs.energy >= 8 &&
             (p.engagement?.arrived ||
               s.showHistory.some(
                 (r) =>

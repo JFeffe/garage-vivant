@@ -1,6 +1,6 @@
-# DDD — Raccords et limites V7.1
+# DDD — Raccords et limites V7.2
 
-Version 0.7.1. Ce registre décrit les consommateurs réellement actifs et ceux qui restent débranchés. Le mandat autorise ces limites lorsqu’elles sont identifiées et ne cassent pas la partie ; aucune mécanique de remplacement ne les masque.
+Version 0.7.2. Ce registre décrit les consommateurs réellement actifs et ceux qui restent débranchés. Le mandat autorise ces limites lorsqu’elles sont identifiées et ne cassent pas la partie ; aucune mécanique de remplacement ne les masque.
 
 ## Carte des raccords actifs
 
@@ -16,18 +16,22 @@ Version 0.7.1. Ce registre décrit les consommateurs réellement actifs et ceux 
 | Catalogue | Qualité relative, archives manuelles, maîtrise et filtres | Faibles restent utilisables ; pas d’effacement des œuvres |
 | Noms | Banques distinctes et registre commun persistant | Anciens noms préservés, pas de suffixe numérique de secours |
 | Déchéance | Chaînes, jauge existante, quantité liée de cartes/jetons | Cartes ajoutées ; retrait en défausse pour les jetons |
-| Groupes et romance | Conséquences sociales favorables et commandes existantes | Aucun jeton de formation ni nouvelle mécanique amoureuse |
+| Groupes | Propositions/acceptations, attachement, couleur, réputation et compétences | Fonctions partagées, variance ; aucun quota de création |
+| Répertoire | Adoption exclusive, crédits permanents et maîtrise préservée | Aucun transfert ni copie de morceau |
+| Appels de pratique | File hors sac, trajets, attente et participation | Seuls les appels de pratique ; pas d’agenda général |
+| Départs et dissolution | Attachement, autre groupe réel, état terminal | Aucun retour de groupe dissous |
+| Romance | Règles de lien et couples existantes | Aucune nouvelle mécanique amoureuse |
 | Scène et carrière | Calendrier, répertoire, coordination, réputation, replay | Versions historiques et récompenses uniques conservées |
 | Besoins, émotions et traits | Quatre besoins et deux axes V7 | Aucun retour de l’humeur, du confort ou des scores de pige |
 
-## Dix raccords débranchés visibles dans le jeu
+## Dix raccords débranchés hérités, visibles dans le jeu
 
 | Identifiant | Limite exacte | Ce qui reste branché |
 |---|---|---|
 | `inspiration-resourcing` | Aucune jauge d’inspiration ou de ressourcement | Détente : énergie, plaisir et réduction de détresse |
 | `personal-agenda` | Aucun agenda général ni obligation quotidienne fictive | Engagements de spectacle, sommeil, besoins et départs |
 | `memory-learning` | Pas de bonus direct des souvenirs aux percées d’apprentissage | Souvenirs, archives et sources de composition |
-| `chemistry-learning` | Pas de multiplicateur de plateau lié à la chimie en répétition | Chimie des échanges de jam, confiance et maîtrise collective |
+| `chemistry-learning` | Pas de multiplicateur de plateau lié à la chimie en répétition | Chimie des échanges musicaux et maîtrise collective |
 | `social-search-pressure` | Pas de multiplicateur propre à la recherche sociale ni déprime automatique supplémentaire | Usure normale du lien social et pressions V7 pendant la recherche |
 | `absolute-archive` | L’ancien paramètre `archiveThreshold` est conservé sans consommateur | Classement relatif aux autres chansons des auteurs ; archives manuelles |
 | `memory-mood` | Le poids historique `effect` des souvenirs n’agit plus sur l’humeur supprimée | Dates, descriptions et provenance musicale |
@@ -41,10 +45,20 @@ Le panneau Réglages reprend ces identifiants depuis le moteur. Le test document
 
 Une pratique collective sans morceau du répertoire est refusée. Jam reste une action distincte à choisir. Aucun nom libre après parcours de la banque : création refusée et journalisée ; pas de doublon, de titre inventé hors banque ou de boucle infinie. Les noms historiques similaires ne sont pas renommés.
 
-Un groupe sans coordination s’archive selon les règles existantes. Un projet abandonné reste consultable mais ne reprend pas automatiquement. Les répétitions ne donnent pas de nouvelles exceptions de traits à l’expression. L’extension du quartier et les personnalités spécialiste/généraliste restent reportées.
+Un groupe à coordination zéro se dissout définitivement. Un projet abandonné reste consultable mais ne reprend pas automatiquement. Les répétitions ne donnent pas de nouvelles exceptions de traits à l’expression. L’extension du quartier et les personnalités spécialiste/généraliste restent reportées.
 
 Les acquisitions peuvent modifier le sac pendant son cycle ; les retraits attendent les jetons défaussés. Une récupération de déchéance peut donc laisser des jetons encore à rencontrer. L’inspecteur expose ce délai ; il ne retire pas secrètement les jetons du sac.
 
 L’équilibrage doit encore être éprouvé par des parties jouées. Les tests attestent déterminisme, sauvegardes, contraintes, recherches et affichage, pas un équilibre définitif. Le viewport tactile ne remplace pas un appareil réel.
 
 Liens : [Actions](./actions.md), [Musique](./musique.md), [Compositions](./compositions.md), [Déchéance](./decheance.md), [Technique](./technique.md).
+
+## Quatre raccords débranchés supplémentaires de la passe groupes
+
+- `absence-drama` : absence extrême journalisée et présence revalidée ; pénalités relationnelles particulières reportées.
+- `group-albums-fans` : couleur et réputation utilisent chansons/spectacles existants ; aucun album, palmarès, diffusion ou compteur de fans persistants.
+- `song-transfer` : propriété terminale conservée ; pas de transfert après départ/dissolution, litige, licence ou copie.
+- `group-social-meeting` : répétitions et scènes utilisent leurs interactions ; aucune nouvelle réunion sociale propre au groupe.
+- Le moral de scène reste celui de V7.1 ; cette passe ne refond ni sa physique ni ses cartes.
+
+Ces éléments apparaissent dans Réglages et dans les DDD propriétaires. La confiance est retirée sans jauge de remplacement ; seuls ses champs archivés et traces historiques subsistent. Les simulations attestent la cible de première passe sur les graines choisies, pas un équilibre définitif.

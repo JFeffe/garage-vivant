@@ -1,4 +1,5 @@
-import {DEFAULT_FILTERS,catalogueControls,catalogueHTML as musicCatalogueHTML,songDetailsHTML} from "./catalogue.mjs?v=0.7.1";
+import { placeActivityLabels } from './map-labels.mjs?v=0.7.2';
+import {DEFAULT_FILTERS,catalogueControls,catalogueHTML as musicCatalogueHTML,songDetailsHTML} from "./catalogue.mjs?v=0.7.2";
 let catalogueFilters={...DEFAULT_FILTERS};
 import {
   thresholdsHTML,
@@ -7,13 +8,13 @@ import {
   exchangeTrace,
   sessionHTML,
   rapinHTML,
-} from "./v7-view.mjs?v=0.7.1";
+} from "./v7-view.mjs?v=0.7.2";
 import {
   effectiveTraits,
   updateTraits,
   TRAIT_CATALOG,
   BAG_ACTIONS,
-} from "./v7.mjs?v=0.7.1";
+} from "./v7.mjs?v=0.7.2";
 import {
   createShowClock,
   advanceShowClock,
@@ -23,22 +24,22 @@ import {
   songKey,
   stageGeometry,
   showBeat,
-} from "./show-playback.mjs?v=0.7.1";
+} from "./show-playback.mjs?v=0.7.2";
 import {
   showOverlayHTML,
   showResourcesHTML,
   deckInspectionHTML,
   cardInspectionHTML,
-} from "./show-view.mjs?v=0.7.1";
-import { setupDocSearch } from "./doc-search.mjs?v=0.7.1";
-import { calendarHTML } from "./v6-view.mjs?v=0.7.1";
-import { pendingBooking, eventById } from "./calendar.mjs?v=0.7.1";
-import { editBag } from "./social.mjs?v=0.7.1";
+} from "./show-view.mjs?v=0.7.2";
+import { setupDocSearch } from "./doc-search.mjs?v=0.7.2";
+import { calendarHTML } from "./v6-view.mjs?v=0.7.2";
+import { pendingBooking, eventById } from "./calendar.mjs?v=0.7.2";
+import { editBag } from "./social.mjs?v=0.7.2";
 import {
   profileMarkup,
   changeModule,
   resetLayout,
-} from "./profile-layout.mjs?v=0.7.1";
+} from "./profile-layout.mjs?v=0.7.2";
 import {
   VERSION,
   NEEDS,
@@ -77,7 +78,7 @@ import {
   compositionProject,
   journalEntries,
   chemistryKnowledge,
-} from "./engine.mjs?v=0.7.1";
+} from "./engine.mjs?v=0.7.2";
 import {
   command,
   bandStage,
@@ -92,20 +93,20 @@ import {
   newSeason,
   nextSlot,
   skipShow,
-} from "./life.mjs?v=0.7.1";
+} from "./life.mjs?v=0.7.2";
 import {
   CARDS,
   CURSES,
   INTENTIONS,
   SHOW_TICKS,
   createPerformance,
-} from "./stage.mjs?v=0.7.1";
-import { resolveShowPlan } from "./show-planning.mjs?v=0.7.1";
+} from "./stage.mjs?v=0.7.2";
+import { resolveShowPlan } from "./show-planning.mjs?v=0.7.2";
 import {
   reconcile,
   createViewPositions,
   withReadingAnchor,
-} from "./ui-state.mjs?v=0.7.1";
+} from "./ui-state.mjs?v=0.7.2";
 import {
   quickHTML,
   skillHTML,
@@ -121,14 +122,14 @@ import {
   drawStage,
   enableAudio,
   playSound,
-} from "./v5-view.mjs?v=0.7.1";
+} from "./v5-view.mjs?v=0.7.2";
 import {
   createPlayback,
   snapSpeed,
   setPlaybackSpeed,
   advancePlayback,
   updatePositions,
-} from "./runtime.mjs?v=0.7.1";
+} from "./runtime.mjs?v=0.7.2";
 const playback = createPlayback();
 const $ = (q) => document.querySelector(q),
   $$ = (q) => [...document.querySelectorAll(q)],
@@ -153,8 +154,8 @@ try {
     const input = JSON.parse(saved);
     if (input.version !== VERSION) {
       try {
-        if (!localStorage.getItem("garage-vivant-before-v7-1"))
-          localStorage.setItem("garage-vivant-before-v7-1", saved);
+        if (!localStorage.getItem("garage-vivant-before-v7-2"))
+          localStorage.setItem("garage-vivant-before-v7-2", saved);
       } catch {}
     }
     world = restore(input);
@@ -808,7 +809,6 @@ function renderPair() {
         let r = relationship(world, p, q);
         return `<div><h3>${esc(p.name)} → ${esc(q.name)}</h3>${Object.entries({
           affinity: "Affinité",
-          trust: "Confiance",
           tension: "Tension",
           collaboration: "Complicité musicale",
           love: "Lien amoureux",
@@ -980,6 +980,7 @@ function render() {
   renderPeople();
   renderProfile();
   renderMetrics();
+  replacePreserving('#activity-labels',world.people.map(p=>`<button data-person="${p.id}" data-key="activity-label-${p.id}"><i style="background:${p.color}"></i><span><b>${esc(p.name)}</b><small>${esc(actionLabel(p))}${p.action?.rehearsalId&&world.groupState.requests.find(r=>r.id===p.action.rehearsalId)?.status==='open'&&!p.action.route.length?' · attente':''}</small></span></button>`).join(''));
   if (view === "groups") renderGroups();
   if (view === "actions") renderActions();
   if (view === "relations") {
@@ -1111,7 +1112,7 @@ $("#event-filter").onchange = (e) => {
 };
 document.addEventListener("click", (e) => {
   const person = e.target.closest("[data-person]");
-  if (person) select(person.dataset.person);
+  if (person) { if (person.closest('#dialog')) $('#dialog').close(); select(person.dataset.person); }
   const cell = e.target.closest("[data-pair]");
   if (cell) {
     pair = cell.dataset.pair.split(",");
@@ -1318,10 +1319,10 @@ document.addEventListener("click", (e) => {
   }
 });
 function renderGroupStrip() {
-  const sessions = liveSessions(world);
+  const sessions = liveSessions(world), active = world.groups.filter(g => g.archivedAt === null).length, archives = world.groups.length - active;
   replacePreserving(
     "#band-strip",
-    `<div><span class="eyebrow">LE QUARTIER ENSEMBLE</span><strong>${world.groups.length} groupe${world.groups.length > 1 ? "s" : ""} · ${sessions.filter((x) => x.type === "jam").length} jam${sessions.filter((x) => x.type === "jam").length > 1 ? "s" : ""} en cours</strong><small>${sessions.length ? sessions.map((x) => `${esc(x.label)} (${x.participants.length})`).join(" · ") : "Les rencontres font naître les projets."}</small></div>${world.performance?.status === "playing" || liveEvent ? '<button data-open-shows class="primary">Le show est en cours ↗</button>' : "<button data-open-groups>Voir les groupes ↗</button>"}`,
+    `<div><span class="eyebrow">LE QUARTIER ENSEMBLE</span><strong>${active} groupe${active > 1 ? "s" : ""} actif${active > 1 ? "s" : ""}${archives ? ` · ${archives} dissous` : ""} · ${sessions.filter((x) => x.type === "jam").length} jam${sessions.filter((x) => x.type === "jam").length > 1 ? "s" : ""} en cours</strong><small>${sessions.length ? sessions.map((x) => `${esc(x.label)} (${x.participants.length})`).join(" · ") : "Les rencontres font naître les projets."}</small></div>${world.performance?.status === "playing" || liveEvent ? '<button data-open-shows class="primary">Le show est en cours ↗</button>' : "<button data-open-groups>Voir les groupes ↗</button>"}`,
   );
 }
 function renderActions() {
@@ -1530,6 +1531,7 @@ function draw() {
   rect(340, 276, 40, 7, "#9f9f83", 3);
   rect(690, 400, 40, 7, "#9f9f83", 3);
   label("QUARTIER DES MUSICIENS", 550, 625, "#8f9c80", 9);
+  const activityLabels=[];
   // Shared activity highlights represent actual concurrent activity, not mere proximity.
   for (const session of liveSessions(world)) {
     const positions = session.participants
@@ -1554,12 +1556,9 @@ function draw() {
     );
     ctx.stroke();
     ctx.setLineDash([]);
-    const text = session.label + " · " + positions.length,
-      center = (minX + maxX) / 2;
-    ctx.font = "11px ui-sans-serif, system-ui";
-    const w = Math.min(275, ctx.measureText(text).width + 18);
-    rect(center - w / 2, minY - 24, w, 19, "#fffef4eb", 5);
-    label(text, center, minY - 11, color, 10);
+    const text=session.label+" · "+positions.length;
+    ctx.font="11px ui-sans-serif, system-ui";
+    activityLabels.push({id:'session-'+session.id,text,w:ctx.measureText(text).width+18,h:20,anchor:{x:(minX+maxX)/2,y:minY},color});
   }
   if ($("#links").checked) {
     for (let i = 0; i < world.people.length; i++)
@@ -1698,6 +1697,16 @@ function draw() {
         : hour < 18
           ? "☀ Le quartier prend son rythme"
           : "◐ La fin de journée s’étire";
+  for(const p of world.people){const pos=displayPos.get(p.id),a=p.action;
+   const req=world.groupState.requests.find(r=>r.id===a?.rehearsalId);
+   const text=p.engagement?'Spectacle · '+(p.engagement.arrived?'Sur place':'Trajet'):a?(a.route.length?'Trajet · ':'')+(req?.status==='open'&&!a.route.length?'Attente · pratique':ACTIONS[a.key].label):'Disponible';
+   ctx.font='10px ui-sans-serif, system-ui';activityLabels.push({id:p.id,text,w:ctx.measureText(text).width+16,h:18,anchor:pos,color:'#365740'});
+  }
+  const obstacles=world.people.map(p=>{const v=displayPos.get(p.id);return {x:v.x-40,y:v.y-50,w:90,h:84};});
+  const laidOut=placeActivityLabels(activityLabels,obstacles);
+  for(const badge of laidOut){ctx.strokeStyle='#78907788';ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(badge.anchor.x,badge.anchor.y-48);ctx.lineTo(badge.x+badge.w/2,badge.y+badge.h);ctx.stroke();}
+  for(const badge of laidOut){rect(badge.x,badge.y,badge.w,badge.h,'#fffef8',5);label(badge.text,badge.x+badge.w/2,badge.y+badge.h-5,badge.color,10);}
+
 }
 canvas.addEventListener("click", (e) => {
   const r = canvas.getBoundingClientRect(),
@@ -1895,7 +1904,7 @@ function launchPreview(replay = false) {
 }
 $("#version").onclick = (e) => {
   e.stopPropagation();
-  window.open("docs/versions.html#v064", "_blank", "noopener");
+  window.open("docs/versions.html#v072", "_blank", "noopener");
 };
 $("#brand-home").onclick = (e) => {
   e.preventDefault();
@@ -2079,7 +2088,10 @@ document.addEventListener("click", (e) => {
   const el = e.target.closest("button");
   if (!el) return;
   if (el.dataset.groupSelect) {
+    if($("#dialog").open)$("#dialog").close();
     selectedGroup = el.dataset.groupSelect;
+    if(world.groups.find(g=>g.id===selectedGroup)?.archivedAt!==null)bandArchives=true;
+    changeView("groups");
     renderGroups();
   }
   if (el.dataset.inviteBand)
@@ -2203,6 +2215,7 @@ document.addEventListener("click", (e) => {
     if (r.ok) $("#dialog").close();
   }
   if (el.dataset.excess) submit({ type: "excess", actorId: el.dataset.excess });
+  if(el.dataset.leaveGroup)submit({type:"leaveGroup",groupId:el.dataset.leaveGroup});
   if (el.dataset.rehearse) {
     const [groupId, songId] = el.dataset.rehearse.split(":"),
       g = world.groups.find((g) => g.id === groupId);
@@ -2210,7 +2223,7 @@ document.addEventListener("click", (e) => {
       type: "rehearse",
       actorId: g?.members[0],
       groupId,
-      songId: songId ? Number(songId) : (g?.repertoire[0]?.songId ?? null),
+      songId: songId ? Number(songId) : (g?.repertoire.find(r=>r.active!==false)?.songId ?? null),
     });
   }
   if (el.dataset.addSong) {

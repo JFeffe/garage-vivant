@@ -23,6 +23,13 @@ jobs:
         run: |
           for file in dist/*.mjs; do node --check "$file"; done
           npm test
+      - name: Vérifier la formation et la stabilité sur vingt graines
+        run: npm run audit:groups
+      - name: Conserver les mesures des groupes
+        uses: actions/upload-artifact@v4
+        with:
+          name: equilibrage-v72
+          path: docs/BALANCE_V7_2.json
       - name: Installer le navigateur de validation
         run: |
           npm ci --ignore-scripts

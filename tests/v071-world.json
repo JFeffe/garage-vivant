@@ -1,0 +1,2593 @@
+{
+  "version": "0.7.1",
+  "time": 481,
+  "rng": 436668395,
+  "seed": 711,
+  "nextId": 5,
+  "eventId": 19,
+  "nextSongId": 2,
+  "nextGroupId": 3,
+  "nextJamId": 1,
+  "nextActivityId": 11,
+  "nextProjectId": 2,
+  "activities": [
+    {
+      "id": "a10",
+      "key": "social",
+      "time": 481,
+      "end": null,
+      "place": "park",
+      "ids": [
+        "p1"
+      ],
+      "status": "travel",
+      "activeMinutes": 0,
+      "events": [
+        {
+          "id": 18,
+          "time": 481,
+          "type": "decision",
+          "text": "Alex : socialiser. Jeton Socialiser défaussé sans remise · cycle 1.",
+          "ids": [
+            "p1"
+          ],
+          "activityId": "a10"
+        }
+      ]
+    },
+    {
+      "id": "a8",
+      "key": "relax",
+      "time": 480,
+      "end": null,
+      "place": "park",
+      "ids": [
+        "p4"
+      ],
+      "status": "travel",
+      "activeMinutes": 0,
+      "events": [
+        {
+          "id": 12,
+          "time": 480,
+          "type": "decision",
+          "text": "Charlie : détente. Intervention manuelle hors sac.",
+          "ids": [
+            "p4"
+          ],
+          "activityId": "a8"
+        }
+      ]
+    },
+    {
+      "id": "a7",
+      "key": "relax",
+      "time": 480,
+      "end": null,
+      "place": "park",
+      "ids": [
+        "p3"
+      ],
+      "status": "travel",
+      "activeMinutes": 0,
+      "events": [
+        {
+          "id": 11,
+          "time": 480,
+          "type": "decision",
+          "text": "Jo : détente. Intervention manuelle hors sac.",
+          "ids": [
+            "p3"
+          ],
+          "activityId": "a7"
+        }
+      ]
+    },
+    {
+      "id": "a6",
+      "key": "relax",
+      "time": 480,
+      "end": null,
+      "place": "park",
+      "ids": [
+        "p2"
+      ],
+      "status": "travel",
+      "activeMinutes": 0,
+      "events": [
+        {
+          "id": 10,
+          "time": 480,
+          "type": "decision",
+          "text": "Sam : détente. Intervention manuelle hors sac.",
+          "ids": [
+            "p2"
+          ],
+          "activityId": "a6"
+        }
+      ]
+    },
+    {
+      "id": "a9",
+      "key": "write",
+      "time": 480,
+      "end": 481,
+      "place": "g1",
+      "ids": [
+        "p1"
+      ],
+      "status": "completed",
+      "activeMinutes": 1,
+      "events": [
+        {
+          "id": 15,
+          "time": 480,
+          "type": "decision",
+          "text": "Alex : composer. Intervention manuelle hors sac.",
+          "ids": [
+            "p1"
+          ],
+          "activityId": "a9"
+        },
+        {
+          "id": 16,
+          "time": 481,
+          "type": "project",
+          "text": "Alex avance « Là où la mémoire nous attend sans un mot » : 100 %, 1 séance.",
+          "ids": [
+            "p1"
+          ],
+          "projectId": "c1",
+          "activityId": "a9"
+        }
+      ]
+    },
+    {
+      "id": "a5",
+      "key": "relax",
+      "time": 480,
+      "end": 480,
+      "place": "park",
+      "ids": [
+        "p1"
+      ],
+      "status": "cancelled",
+      "activeMinutes": 0,
+      "events": [
+        {
+          "id": 9,
+          "time": 480,
+          "type": "decision",
+          "text": "Alex : détente. Intervention manuelle hors sac.",
+          "ids": [
+            "p1"
+          ],
+          "activityId": "a5"
+        }
+      ]
+    },
+    {
+      "id": "a4",
+      "key": "relax",
+      "time": 480,
+      "end": 480,
+      "place": "park",
+      "ids": [
+        "p4"
+      ],
+      "status": "cancelled",
+      "activeMinutes": 0,
+      "events": [
+        {
+          "id": 8,
+          "time": 480,
+          "type": "decision",
+          "text": "Charlie : détente. Jeton Détente défaussé sans remise · cycle 1.",
+          "ids": [
+            "p4"
+          ],
+          "activityId": "a4"
+        }
+      ]
+    },
+    {
+      "id": "a3",
+      "key": "practice",
+      "time": 480,
+      "end": 480,
+      "place": "g1",
+      "ids": [
+        "p3"
+      ],
+      "status": "cancelled",
+      "activeMinutes": 0,
+      "events": [
+        {
+          "id": 7,
+          "time": 480,
+          "type": "decision",
+          "text": "Jo : pratiquer. Jeton Pratiquer défaussé sans remise · cycle 1.",
+          "ids": [
+            "p3"
+          ],
+          "activityId": "a3"
+        }
+      ]
+    },
+    {
+      "id": "a2",
+      "key": "relax",
+      "time": 480,
+      "end": 480,
+      "place": "park",
+      "ids": [
+        "p2"
+      ],
+      "status": "cancelled",
+      "activeMinutes": 0,
+      "events": [
+        {
+          "id": 6,
+          "time": 480,
+          "type": "decision",
+          "text": "Sam : détente. Jeton Détente défaussé sans remise · cycle 1.",
+          "ids": [
+            "p2"
+          ],
+          "activityId": "a2"
+        }
+      ]
+    },
+    {
+      "id": "a1",
+      "key": "relax",
+      "time": 480,
+      "end": 480,
+      "place": "park",
+      "ids": [
+        "p1"
+      ],
+      "status": "cancelled",
+      "activeMinutes": 0,
+      "events": [
+        {
+          "id": 5,
+          "time": 480,
+          "type": "decision",
+          "text": "Alex : détente. Jeton Détente défaussé sans remise · cycle 1.",
+          "ids": [
+            "p1"
+          ],
+          "activityId": "a1"
+        }
+      ]
+    }
+  ],
+  "socialSessions": [],
+  "projects": [
+    {
+      "id": "c1",
+      "author": "p1",
+      "authorNames": {
+        "p1": "Alex"
+      },
+      "authors": [
+        "p1"
+      ],
+      "groupId": null,
+      "minutes": 1,
+      "contributions": {
+        "p1": 1
+      },
+      "title": "Là où la mémoire nous attend sans un mot",
+      "genre": "Électro",
+      "created": 480,
+      "updated": 481,
+      "work": 367.5,
+      "target": 367.5,
+      "sessions": 1,
+      "status": "finished",
+      "emotion": "exaltation",
+      "tone": "exaltée",
+      "intensity": 59,
+      "sources": [
+        {
+          "id": 14,
+          "time": 480,
+          "text": "Intervention : Alex, Jo forment « Les Courants de porcelaine au bord du jour ».",
+          "emotion": "exaltation"
+        },
+        {
+          "id": 13,
+          "time": 480,
+          "text": "Intervention : Alex, Sam forment « Les Lucioles des aurores sur le quai ».",
+          "emotion": "exaltation"
+        }
+      ],
+      "potential": 19,
+      "songId": 1,
+      "quality": 30
+    }
+  ],
+  "musicNames": [
+    {
+      "name": "Les Lucioles des aurores sur le quai",
+      "normalized": "lesluciolesdesauroressurlequai",
+      "kind": "group"
+    },
+    {
+      "name": "Les Courants de porcelaine au bord du jour",
+      "normalized": "lescourantsdeporcelaineauborddujour",
+      "kind": "group"
+    },
+    {
+      "name": "Là où la mémoire nous attend sans un mot",
+      "normalized": "laoulamemoirenousattendsansunmot",
+      "kind": "song"
+    }
+  ],
+  "people": [
+    {
+      "id": "p1",
+      "name": "Alex",
+      "color": "#d67753",
+      "age": 30,
+      "instrument": "bass",
+      "genre": "Électro",
+      "personality": {
+        "creative": 53,
+        "outgoing": 70,
+        "kind": 62,
+        "discipline": 84,
+        "stable": 36,
+        "ambition": 36
+      },
+      "traits": [
+        "lazy",
+        "night"
+      ],
+      "skills": {
+        "guitar": 13,
+        "bass": 36.000836280054784,
+        "drums": 6,
+        "voice": 6,
+        "keys": 14,
+        "sax": 7,
+        "trumpet": 10,
+        "percussion": 4,
+        "writing": 5.002328881165218
+      },
+      "needs": {
+        "energy": 94.905,
+        "social": 62.95275,
+        "fun": 61.160000000000004,
+        "expression": 71.60000000000001
+      },
+      "x": 868.2055079918355,
+      "y": 253,
+      "home": "home1",
+      "place": "g2",
+      "action": {
+        "key": "social",
+        "dest": "park",
+        "remaining": 123,
+        "elapsed": 0,
+        "started": 481,
+        "why": "Jeton Socialiser défaussé sans remise · cycle 1",
+        "route": [
+          {
+            "x": 868.2055079918355,
+            "y": 340
+          },
+          {
+            "x": 455,
+            "y": 340
+          },
+          {
+            "x": 455,
+            "y": 403
+          }
+        ],
+        "quality": 0,
+        "partners": [],
+        "solo": false,
+        "decision": [
+          {
+            "key": "relax",
+            "score": 1,
+            "base": 2,
+            "remaining": 1,
+            "consumed": 1,
+            "chance": 11.11111111111111,
+            "why": "1 dans le sac · 1 défaussés · 0 retraits en attente",
+            "blocked": null
+          },
+          {
+            "key": "social",
+            "score": 2,
+            "base": 2,
+            "remaining": 2,
+            "consumed": 1,
+            "chance": 22.22222222222222,
+            "why": "2 dans le sac · 1 défaussés · 0 retraits en attente",
+            "blocked": null
+          },
+          {
+            "key": "practice",
+            "score": 2,
+            "base": 2,
+            "remaining": 2,
+            "consumed": 0,
+            "chance": 22.22222222222222,
+            "why": "2 dans le sac · 0 défaussés · 0 retraits en attente",
+            "blocked": null
+          },
+          {
+            "key": "jam",
+            "score": 2,
+            "base": 2,
+            "remaining": 2,
+            "consumed": 0,
+            "chance": 22.22222222222222,
+            "why": "2 dans le sac · 0 défaussés · 0 retraits en attente",
+            "blocked": null
+          },
+          {
+            "key": "write",
+            "score": 2,
+            "base": 2,
+            "remaining": 2,
+            "consumed": 0,
+            "chance": 22.22222222222222,
+            "why": "2 dans le sac · 0 défaussés · 0 retraits en attente",
+            "blocked": null
+          },
+          {
+            "key": "decadence",
+            "score": 0,
+            "base": 0,
+            "remaining": 0,
+            "consumed": 0,
+            "chance": 0,
+            "why": "0 dans le sac · 0 défaussés · 0 retraits en attente",
+            "blocked": "Épuisé pour ce cycle"
+          }
+        ],
+        "mode": "bag",
+        "waited": 0,
+        "sessionId": null,
+        "recovery": null,
+        "target": "p4",
+        "tokenStarted": true,
+        "duration": 123,
+        "cycleRemaining": 15,
+        "cycles": 0,
+        "instrument": "bass",
+        "groupId": null,
+        "songId": null,
+        "content": "technique",
+        "admitted": false,
+        "admissionAttempts": [],
+        "activityId": "a10"
+      },
+      "candidates": [
+        {
+          "key": "relax",
+          "score": 1,
+          "base": 2,
+          "remaining": 1,
+          "consumed": 1,
+          "chance": 11.11111111111111,
+          "why": "1 dans le sac · 1 défaussés · 0 retraits en attente",
+          "blocked": null
+        },
+        {
+          "key": "social",
+          "score": 2,
+          "base": 2,
+          "remaining": 2,
+          "consumed": 1,
+          "chance": 22.22222222222222,
+          "why": "2 dans le sac · 1 défaussés · 0 retraits en attente",
+          "blocked": null
+        },
+        {
+          "key": "practice",
+          "score": 2,
+          "base": 2,
+          "remaining": 2,
+          "consumed": 0,
+          "chance": 22.22222222222222,
+          "why": "2 dans le sac · 0 défaussés · 0 retraits en attente",
+          "blocked": null
+        },
+        {
+          "key": "jam",
+          "score": 2,
+          "base": 2,
+          "remaining": 2,
+          "consumed": 0,
+          "chance": 22.22222222222222,
+          "why": "2 dans le sac · 0 défaussés · 0 retraits en attente",
+          "blocked": null
+        },
+        {
+          "key": "write",
+          "score": 2,
+          "base": 2,
+          "remaining": 2,
+          "consumed": 0,
+          "chance": 22.22222222222222,
+          "why": "2 dans le sac · 0 défaussés · 0 retraits en attente",
+          "blocked": null
+        },
+        {
+          "key": "decadence",
+          "score": 0,
+          "base": 0,
+          "remaining": 0,
+          "consumed": 0,
+          "chance": 0,
+          "why": "0 dans le sac · 0 défaussés · 0 retraits en attente",
+          "blocked": "Épuisé pour ce cycle"
+        }
+      ],
+      "memories": [
+        {
+          "id": "p1-memory-1",
+          "created": 481,
+          "text": "Une chanson terminée",
+          "effect": 5.6,
+          "until": 841,
+          "sourceId": 17
+        }
+      ],
+      "history": [],
+      "songProgress": 0,
+      "emotions": {
+        "exaltation": 70.69659999999999,
+        "distress": 0
+      },
+      "emotionSources": {
+        "exaltation": [
+          {
+            "id": 17,
+            "time": 481,
+            "text": "« Là où la mémoire nous attend sans un mot » : une chanson exaltée de Alex. Qualité 30/100."
+          },
+          {
+            "id": 14,
+            "time": 480,
+            "text": "Intervention : Alex, Jo forment « Les Courants de porcelaine au bord du jour »."
+          },
+          {
+            "id": 13,
+            "time": 480,
+            "text": "Intervention : Alex, Sam forment « Les Lucioles des aurores sur le quai »."
+          }
+        ]
+      },
+      "priorities": {
+        "relax": 2,
+        "social": 2,
+        "practice": 2,
+        "jam": 2,
+        "write": 2,
+        "decadence": 2,
+        "sleep": 2
+      },
+      "draft": {
+        "projectId": null,
+        "samples": 0,
+        "emotions": {
+          "exaltation": 0,
+          "distress": 0
+        },
+        "sources": [],
+        "authors": [],
+        "jamQuality": 0,
+        "jamSamples": 0
+      },
+      "lastFormation": 480,
+      "actionCounts": {
+        "relax": {
+          "started": 2,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "social": {
+          "started": 1,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "practice": {
+          "started": 0,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "jam": {
+          "started": 0,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "write": {
+          "started": 1,
+          "completed": 1,
+          "interrupted": 0
+        },
+        "decadence": {
+          "started": 0,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "sleep": {
+          "started": 0,
+          "completed": 0,
+          "interrupted": 0
+        }
+      },
+      "countsSince": 480,
+      "reputation": {
+        "score": 14,
+        "skill": 9,
+        "catalogue": 4,
+        "recognition": 1,
+        "collaboration": 0
+      },
+      "bag": {
+        "composition": {
+          "relax": 2,
+          "social": 2,
+          "practice": 2,
+          "jam": 2,
+          "write": 2,
+          "decadence": 0
+        },
+        "cycleComposition": {
+          "relax": 2,
+          "social": 2,
+          "practice": 2,
+          "jam": 2,
+          "write": 2,
+          "decadence": 0
+        },
+        "remaining": {
+          "relax": 1,
+          "social": 1,
+          "practice": 2,
+          "jam": 2,
+          "write": 2,
+          "decadence": 0
+        },
+        "consumed": {
+          "relax": 1,
+          "social": 1,
+          "practice": 0,
+          "jam": 0,
+          "write": 0,
+          "decadence": 0
+        },
+        "reserved": null,
+        "pendingRemoval": {
+          "relax": 0,
+          "social": 0,
+          "practice": 0,
+          "jam": 0,
+          "write": 0,
+          "decadence": 0
+        },
+        "cycle": 1
+      },
+      "memoryArchive": [
+        {
+          "id": "p1-memory-1",
+          "created": 481,
+          "text": "Une chanson terminée",
+          "effect": 5.6,
+          "until": 841,
+          "sourceId": 17
+        }
+      ],
+      "nextMemoryId": 2,
+      "togetherId": null,
+      "identity": {
+        "accessory": "glasses",
+        "accent": null,
+        "movement": "flamboyant"
+      },
+      "decadence": 0,
+      "decadenceHistory": [],
+      "deck": [
+        "pulse",
+        "accent",
+        "breath",
+        "listen",
+        "crescendo",
+        "bass-0",
+        "bass-1",
+        "bass-2",
+        "steady"
+      ],
+      "showFame": 0,
+      "invitationCooldown": {},
+      "engagement": null,
+      "needThresholds": {
+        "energy": {
+          "low": 31,
+          "critical": 16,
+          "high": 91,
+          "lowRate": 0.04,
+          "criticalRate": 0.1,
+          "highRate": 0.035
+        },
+        "social": {
+          "low": 29,
+          "critical": 14,
+          "high": 93,
+          "lowRate": 0.04,
+          "criticalRate": 0.1,
+          "highRate": 0.035
+        },
+        "fun": {
+          "low": 31,
+          "critical": 16,
+          "high": 85,
+          "lowRate": 0.04,
+          "criticalRate": 0.1,
+          "highRate": 0.035
+        },
+        "expression": {
+          "low": 29,
+          "critical": 14,
+          "high": 90,
+          "lowRate": 0.04,
+          "criticalRate": 0.1,
+          "highRate": 0.035
+        }
+      },
+      "emotionalThresholds": [
+        {
+          "axis": "distress",
+          "threshold": 46,
+          "trait": "stubborn"
+        },
+        {
+          "axis": "distress",
+          "threshold": 78,
+          "trait": "fragile"
+        }
+      ],
+      "sleep": {
+        "bedtime": 120,
+        "required": 360,
+        "habitual": 360,
+        "nextBedtime": 1000000000000,
+        "wakeAt": null,
+        "started": null,
+        "minutes": 0
+      },
+      "pressures": [
+        {
+          "need": "energy",
+          "axis": "exaltation",
+          "rate": 0.035,
+          "threshold": 91
+        }
+      ],
+      "waitUntil": 0,
+      "activeTraits": [],
+      "actionRanges": {
+        "relax": {
+          "min": 31,
+          "max": 68
+        },
+        "social": {
+          "min": 69,
+          "max": 148
+        },
+        "practice": {
+          "min": 45,
+          "max": 97
+        },
+        "jam": {
+          "min": 63,
+          "max": 136
+        },
+        "write": {
+          "min": 1,
+          "max": 1
+        },
+        "decadence": {
+          "min": 28,
+          "max": 61
+        }
+      },
+      "secondaryInstruments": [],
+      "learningWork": {
+        "guitar": 0,
+        "bass": 0.0075265204930434785,
+        "drums": 0,
+        "voice": 0,
+        "keys": 0,
+        "sax": 0,
+        "trumpet": 0,
+        "percussion": 0,
+        "writing": 0.020959930486956525
+      },
+      "songMastery": {
+        "1": 44
+      },
+      "excessEpisodes": [],
+      "decadenceTokens": 0,
+      "drafts": {},
+      "emotionDecay": 0.0484,
+      "nextPartner": "p4"
+    },
+    {
+      "id": "p2",
+      "name": "Sam",
+      "color": "#7192b3",
+      "age": 33,
+      "instrument": "bass",
+      "genre": "Indie",
+      "personality": {
+        "creative": 32,
+        "outgoing": 25,
+        "kind": 74,
+        "discipline": 79,
+        "stable": 37,
+        "ambition": 39
+      },
+      "traits": [
+        "sensitive",
+        "lazy"
+      ],
+      "skills": {
+        "guitar": 9,
+        "bass": 24,
+        "drums": 9,
+        "voice": 13,
+        "keys": 13,
+        "sax": 13,
+        "trumpet": 16,
+        "percussion": 9,
+        "writing": 9
+      },
+      "needs": {
+        "energy": 94.935,
+        "social": 57.960625,
+        "fun": 63.96,
+        "expression": 57.95
+      },
+      "x": 228.1827929802239,
+      "y": 265,
+      "home": "home1",
+      "place": "g1",
+      "action": {
+        "key": "relax",
+        "dest": "park",
+        "remaining": 100000,
+        "elapsed": 0,
+        "started": 480,
+        "why": "Intervention manuelle hors sac",
+        "route": [
+          {
+            "x": 228.1827929802239,
+            "y": 340
+          },
+          {
+            "x": 483,
+            "y": 340
+          },
+          {
+            "x": 483,
+            "y": 403
+          }
+        ],
+        "quality": 0,
+        "partners": [],
+        "solo": false,
+        "decision": [],
+        "mode": "manual",
+        "waited": 0,
+        "sessionId": null,
+        "recovery": "pause",
+        "target": null,
+        "tokenStarted": true,
+        "duration": 49,
+        "cycleRemaining": 15,
+        "cycles": 0,
+        "instrument": "bass",
+        "groupId": null,
+        "songId": null,
+        "content": "technique",
+        "admitted": false,
+        "admissionAttempts": [],
+        "activityId": "a6"
+      },
+      "candidates": [],
+      "memories": [],
+      "history": [],
+      "songProgress": 0,
+      "emotions": {
+        "exaltation": 42.68328333333333,
+        "distress": 0
+      },
+      "emotionSources": {
+        "exaltation": [
+          {
+            "id": 13,
+            "time": 480,
+            "text": "Intervention : Alex, Sam forment « Les Lucioles des aurores sur le quai »."
+          }
+        ]
+      },
+      "priorities": {
+        "relax": 2,
+        "social": 2,
+        "practice": 2,
+        "jam": 2,
+        "write": 2,
+        "decadence": 2,
+        "sleep": 2
+      },
+      "draft": {
+        "projectId": null,
+        "samples": 0,
+        "emotions": {
+          "exaltation": 0,
+          "distress": 0
+        },
+        "sources": [],
+        "authors": [],
+        "jamQuality": 0,
+        "jamSamples": 0
+      },
+      "lastFormation": 480,
+      "actionCounts": {
+        "relax": {
+          "started": 2,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "social": {
+          "started": 0,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "practice": {
+          "started": 0,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "jam": {
+          "started": 0,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "write": {
+          "started": 0,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "decadence": {
+          "started": 0,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "sleep": {
+          "started": 0,
+          "completed": 0,
+          "interrupted": 0
+        }
+      },
+      "countsSince": 480,
+      "reputation": {
+        "score": 6,
+        "skill": 6,
+        "catalogue": 0,
+        "recognition": 0,
+        "collaboration": 0
+      },
+      "bag": {
+        "composition": {
+          "relax": 2,
+          "social": 7,
+          "practice": 2,
+          "jam": 3,
+          "write": 1,
+          "decadence": 0
+        },
+        "cycleComposition": {
+          "relax": 2,
+          "social": 7,
+          "practice": 2,
+          "jam": 3,
+          "write": 1,
+          "decadence": 0
+        },
+        "remaining": {
+          "relax": 1,
+          "social": 7,
+          "practice": 2,
+          "jam": 3,
+          "write": 1,
+          "decadence": 0
+        },
+        "consumed": {
+          "relax": 1,
+          "social": 0,
+          "practice": 0,
+          "jam": 0,
+          "write": 0,
+          "decadence": 0
+        },
+        "reserved": null,
+        "pendingRemoval": {
+          "relax": 0,
+          "social": 0,
+          "practice": 0,
+          "jam": 0,
+          "write": 0,
+          "decadence": 0
+        },
+        "cycle": 1
+      },
+      "memoryArchive": [],
+      "nextMemoryId": 1,
+      "togetherId": null,
+      "identity": {
+        "accessory": "cap",
+        "accent": null,
+        "movement": "nervous"
+      },
+      "decadence": 0,
+      "decadenceHistory": [],
+      "deck": [
+        "pulse",
+        "accent",
+        "breath",
+        "listen",
+        "crescendo",
+        "bass-0",
+        "bass-1",
+        "bass-2",
+        "steady"
+      ],
+      "showFame": 0,
+      "invitationCooldown": {},
+      "engagement": null,
+      "needThresholds": {
+        "energy": {
+          "low": 20,
+          "critical": 5,
+          "high": 92,
+          "lowRate": 0.04,
+          "criticalRate": 0.1,
+          "highRate": 0.035
+        },
+        "social": {
+          "low": 23,
+          "critical": 8,
+          "high": 93,
+          "lowRate": 0.04,
+          "criticalRate": 0.1,
+          "highRate": 0.035
+        },
+        "fun": {
+          "low": 23,
+          "critical": 8,
+          "high": 87,
+          "lowRate": 0.04,
+          "criticalRate": 0.1,
+          "highRate": 0.035
+        },
+        "expression": {
+          "low": 28,
+          "critical": 13,
+          "high": 91,
+          "lowRate": 0.04,
+          "criticalRate": 0.1,
+          "highRate": 0.035
+        }
+      },
+      "emotionalThresholds": [
+        {
+          "axis": "distress",
+          "threshold": 54,
+          "trait": "withdrawn"
+        },
+        {
+          "axis": "exaltation",
+          "threshold": 25,
+          "trait": "generous"
+        }
+      ],
+      "sleep": {
+        "bedtime": 1380,
+        "required": 360,
+        "habitual": 360,
+        "nextBedtime": 1000000000000,
+        "wakeAt": null,
+        "started": null,
+        "minutes": 0
+      },
+      "pressures": [
+        {
+          "need": "energy",
+          "axis": "exaltation",
+          "rate": 0.035,
+          "threshold": 92
+        }
+      ],
+      "waitUntil": 0,
+      "activeTraits": [
+        "generous"
+      ],
+      "actionRanges": {
+        "relax": {
+          "min": 29,
+          "max": 63
+        },
+        "social": {
+          "min": 65,
+          "max": 141
+        },
+        "practice": {
+          "min": 35,
+          "max": 76
+        },
+        "jam": {
+          "min": 52,
+          "max": 112
+        },
+        "write": {
+          "min": 56,
+          "max": 120
+        },
+        "decadence": {
+          "min": 26,
+          "max": 57
+        }
+      },
+      "secondaryInstruments": [],
+      "learningWork": {
+        "guitar": 0,
+        "bass": 0,
+        "drums": 0,
+        "voice": 0,
+        "keys": 0,
+        "sax": 0,
+        "trumpet": 0,
+        "percussion": 0,
+        "writing": 0
+      },
+      "songMastery": {},
+      "excessEpisodes": [],
+      "decadenceTokens": 0,
+      "drafts": {},
+      "emotionDecay": 0.049049999999999996
+    },
+    {
+      "id": "p3",
+      "name": "Jo",
+      "color": "#9a79ad",
+      "age": 32,
+      "instrument": "voice",
+      "genre": "Punk",
+      "personality": {
+        "creative": 72,
+        "outgoing": 70,
+        "kind": 55,
+        "discipline": 73,
+        "stable": 55,
+        "ambition": 69
+      },
+      "traits": [
+        "hot",
+        "shy",
+        "beta"
+      ],
+      "skills": {
+        "guitar": 5,
+        "bass": 17,
+        "drums": 13,
+        "voice": 14,
+        "keys": 10,
+        "sax": 11,
+        "trumpet": 11,
+        "percussion": 16,
+        "writing": 19
+      },
+      "needs": {
+        "energy": 94.935,
+        "social": 56.95275,
+        "fun": 53.96,
+        "expression": 64.95
+      },
+      "x": 861.7780898306519,
+      "y": 265,
+      "home": "home1",
+      "place": "g2",
+      "action": {
+        "key": "relax",
+        "dest": "park",
+        "remaining": 100000,
+        "elapsed": 0,
+        "started": 480,
+        "why": "Intervention manuelle hors sac",
+        "route": [
+          {
+            "x": 861.7780898306519,
+            "y": 340
+          },
+          {
+            "x": 511,
+            "y": 340
+          },
+          {
+            "x": 511,
+            "y": 403
+          }
+        ],
+        "quality": 0,
+        "partners": [],
+        "solo": false,
+        "decision": [],
+        "mode": "manual",
+        "waited": 0,
+        "sessionId": null,
+        "recovery": "pause",
+        "target": null,
+        "tokenStarted": true,
+        "duration": 44,
+        "cycleRemaining": 15,
+        "cycles": 0,
+        "instrument": "voice",
+        "groupId": null,
+        "songId": null,
+        "content": "technique",
+        "admitted": false,
+        "admissionAttempts": [],
+        "activityId": "a7"
+      },
+      "candidates": [],
+      "memories": [],
+      "history": [],
+      "songProgress": 0,
+      "emotions": {
+        "exaltation": 34.20758333333333,
+        "distress": 0
+      },
+      "emotionSources": {
+        "exaltation": [
+          {
+            "id": 14,
+            "time": 480,
+            "text": "Intervention : Alex, Jo forment « Les Courants de porcelaine au bord du jour »."
+          }
+        ]
+      },
+      "priorities": {
+        "relax": 2,
+        "social": 2,
+        "practice": 2,
+        "jam": 2,
+        "write": 2,
+        "decadence": 2,
+        "sleep": 2
+      },
+      "draft": {
+        "projectId": null,
+        "samples": 0,
+        "emotions": {
+          "exaltation": 0,
+          "distress": 0
+        },
+        "sources": [],
+        "authors": [],
+        "jamQuality": 0,
+        "jamSamples": 0
+      },
+      "lastFormation": 480,
+      "actionCounts": {
+        "relax": {
+          "started": 1,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "social": {
+          "started": 0,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "practice": {
+          "started": 1,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "jam": {
+          "started": 0,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "write": {
+          "started": 0,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "decadence": {
+          "started": 0,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "sleep": {
+          "started": 0,
+          "completed": 0,
+          "interrupted": 0
+        }
+      },
+      "countsSince": 480,
+      "reputation": {
+        "score": 4,
+        "skill": 4,
+        "catalogue": 0,
+        "recognition": 0,
+        "collaboration": 0
+      },
+      "bag": {
+        "composition": {
+          "relax": 3,
+          "social": 2,
+          "practice": 10,
+          "jam": 3,
+          "write": 2,
+          "decadence": 0
+        },
+        "cycleComposition": {
+          "relax": 3,
+          "social": 2,
+          "practice": 10,
+          "jam": 3,
+          "write": 2,
+          "decadence": 0
+        },
+        "remaining": {
+          "relax": 3,
+          "social": 2,
+          "practice": 9,
+          "jam": 3,
+          "write": 2,
+          "decadence": 0
+        },
+        "consumed": {
+          "relax": 0,
+          "social": 0,
+          "practice": 1,
+          "jam": 0,
+          "write": 0,
+          "decadence": 0
+        },
+        "reserved": null,
+        "pendingRemoval": {
+          "relax": 0,
+          "social": 0,
+          "practice": 0,
+          "jam": 0,
+          "write": 0,
+          "decadence": 0
+        },
+        "cycle": 1
+      },
+      "memoryArchive": [],
+      "nextMemoryId": 1,
+      "togetherId": null,
+      "identity": {
+        "accessory": "brows",
+        "accent": "scarf",
+        "movement": "flamboyant"
+      },
+      "decadence": 0,
+      "decadenceHistory": [],
+      "deck": [
+        "pulse",
+        "accent",
+        "breath",
+        "listen",
+        "crescendo",
+        "voice-0",
+        "voice-1",
+        "voice-2",
+        "steady"
+      ],
+      "showFame": 0,
+      "invitationCooldown": {},
+      "engagement": null,
+      "needThresholds": {
+        "energy": {
+          "low": 31,
+          "critical": 16,
+          "high": 92,
+          "lowRate": 0.04,
+          "criticalRate": 0.1,
+          "highRate": 0.035
+        },
+        "social": {
+          "low": 31,
+          "critical": 16,
+          "high": 89,
+          "lowRate": 0.04,
+          "criticalRate": 0.1,
+          "highRate": 0.035
+        },
+        "fun": {
+          "low": 20,
+          "critical": 5,
+          "high": 90,
+          "lowRate": 0.04,
+          "criticalRate": 0.1,
+          "highRate": 0.035
+        },
+        "expression": {
+          "low": 32,
+          "critical": 17,
+          "high": 95,
+          "lowRate": 0.04,
+          "criticalRate": 0.1,
+          "highRate": 0.035
+        }
+      },
+      "emotionalThresholds": [
+        {
+          "axis": "distress",
+          "threshold": 58,
+          "trait": "inspired"
+        }
+      ],
+      "sleep": {
+        "bedtime": 1380,
+        "required": 420,
+        "habitual": 420,
+        "nextBedtime": 1000000000000,
+        "wakeAt": null,
+        "started": null,
+        "minutes": 0
+      },
+      "pressures": [
+        {
+          "need": "energy",
+          "axis": "exaltation",
+          "rate": 0.035,
+          "threshold": 92
+        }
+      ],
+      "waitUntil": 0,
+      "activeTraits": [],
+      "actionRanges": {
+        "relax": {
+          "min": 24,
+          "max": 52
+        },
+        "social": {
+          "min": 64,
+          "max": 138
+        },
+        "practice": {
+          "min": 39,
+          "max": 84
+        },
+        "jam": {
+          "min": 47,
+          "max": 101
+        },
+        "write": {
+          "min": 40,
+          "max": 85
+        },
+        "decadence": {
+          "min": 36,
+          "max": 78
+        }
+      },
+      "secondaryInstruments": [],
+      "learningWork": {
+        "guitar": 0,
+        "bass": 0,
+        "drums": 0,
+        "voice": 0,
+        "keys": 0,
+        "sax": 0,
+        "trumpet": 0,
+        "percussion": 0,
+        "writing": 0
+      },
+      "songMastery": {},
+      "excessEpisodes": [],
+      "decadenceTokens": 0,
+      "drafts": {},
+      "emotionDecay": 0.06075
+    },
+    {
+      "id": "p4",
+      "name": "Charlie",
+      "color": "#c0a646",
+      "age": 39,
+      "instrument": "guitar",
+      "genre": "Ska",
+      "personality": {
+        "creative": 54,
+        "outgoing": 40,
+        "kind": 30,
+        "discipline": 25,
+        "stable": 29,
+        "ambition": 66
+      },
+      "traits": [
+        "hot",
+        "lazy",
+        "beta"
+      ],
+      "skills": {
+        "guitar": 30,
+        "bass": 15,
+        "drums": 6,
+        "voice": 8,
+        "keys": 7,
+        "sax": 14,
+        "trumpet": 13,
+        "percussion": 11,
+        "writing": 19
+      },
+      "needs": {
+        "energy": 94.935,
+        "social": 80.958,
+        "fun": 88.96,
+        "expression": 55.95
+      },
+      "x": 539.9945670273155,
+      "y": 265,
+      "home": "home1",
+      "place": "cafe",
+      "action": {
+        "key": "relax",
+        "dest": "park",
+        "remaining": 100000,
+        "elapsed": 0,
+        "started": 480,
+        "why": "Intervention manuelle hors sac",
+        "route": [
+          {
+            "x": 539.9945670273155,
+            "y": 340
+          },
+          {
+            "x": 539,
+            "y": 340
+          },
+          {
+            "x": 539,
+            "y": 403
+          }
+        ],
+        "quality": 0,
+        "partners": [],
+        "solo": false,
+        "decision": [],
+        "mode": "manual",
+        "waited": 0,
+        "sessionId": null,
+        "recovery": "pause",
+        "target": null,
+        "tokenStarted": true,
+        "duration": 49,
+        "cycleRemaining": 15,
+        "cycles": 0,
+        "instrument": "guitar",
+        "groupId": null,
+        "songId": null,
+        "content": "technique",
+        "admitted": false,
+        "admissionAttempts": [],
+        "activityId": "a8"
+      },
+      "candidates": [],
+      "memories": [],
+      "history": [],
+      "songProgress": 0,
+      "emotions": {
+        "exaltation": 12.02615,
+        "distress": 0
+      },
+      "emotionSources": {},
+      "priorities": {
+        "relax": 2,
+        "social": 2,
+        "practice": 2,
+        "jam": 2,
+        "write": 2,
+        "decadence": 2,
+        "sleep": 2
+      },
+      "draft": {
+        "projectId": null,
+        "samples": 0,
+        "emotions": {
+          "exaltation": 0,
+          "distress": 0
+        },
+        "sources": [],
+        "authors": [],
+        "jamQuality": 0,
+        "jamSamples": 0
+      },
+      "lastFormation": -1440,
+      "actionCounts": {
+        "relax": {
+          "started": 2,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "social": {
+          "started": 0,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "practice": {
+          "started": 0,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "jam": {
+          "started": 0,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "write": {
+          "started": 0,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "decadence": {
+          "started": 0,
+          "completed": 0,
+          "interrupted": 0
+        },
+        "sleep": {
+          "started": 0,
+          "completed": 0,
+          "interrupted": 0
+        }
+      },
+      "countsSince": 480,
+      "reputation": {
+        "score": 8,
+        "skill": 8,
+        "catalogue": 0,
+        "recognition": 0,
+        "collaboration": 0
+      },
+      "bag": {
+        "composition": {
+          "relax": 4,
+          "social": 3,
+          "practice": 5,
+          "jam": 5,
+          "write": 13,
+          "decadence": 0
+        },
+        "cycleComposition": {
+          "relax": 4,
+          "social": 3,
+          "practice": 5,
+          "jam": 5,
+          "write": 13,
+          "decadence": 0
+        },
+        "remaining": {
+          "relax": 3,
+          "social": 3,
+          "practice": 5,
+          "jam": 5,
+          "write": 13,
+          "decadence": 0
+        },
+        "consumed": {
+          "relax": 1,
+          "social": 0,
+          "practice": 0,
+          "jam": 0,
+          "write": 0,
+          "decadence": 0
+        },
+        "reserved": null,
+        "pendingRemoval": {
+          "relax": 0,
+          "social": 0,
+          "practice": 0,
+          "jam": 0,
+          "write": 0,
+          "decadence": 0
+        },
+        "cycle": 1
+      },
+      "memoryArchive": [],
+      "nextMemoryId": 1,
+      "togetherId": null,
+      "identity": {
+        "accessory": "moustache",
+        "accent": null,
+        "movement": "nervous"
+      },
+      "decadence": 0,
+      "decadenceHistory": [],
+      "deck": [
+        "pulse",
+        "accent",
+        "breath",
+        "listen",
+        "crescendo",
+        "guitar-0",
+        "guitar-1",
+        "guitar-2",
+        "spark"
+      ],
+      "showFame": 0,
+      "invitationCooldown": {},
+      "engagement": null,
+      "needThresholds": {
+        "energy": {
+          "low": 25,
+          "critical": 10,
+          "high": 94,
+          "lowRate": 0.04,
+          "criticalRate": 0.1,
+          "highRate": 0.035
+        },
+        "social": {
+          "low": 31,
+          "critical": 16,
+          "high": 88,
+          "lowRate": 0.04,
+          "criticalRate": 0.1,
+          "highRate": 0.035
+        },
+        "fun": {
+          "low": 33,
+          "critical": 18,
+          "high": 86,
+          "lowRate": 0.04,
+          "criticalRate": 0.1,
+          "highRate": 0.035
+        },
+        "expression": {
+          "low": 32,
+          "critical": 17,
+          "high": 90,
+          "lowRate": 0.04,
+          "criticalRate": 0.1,
+          "highRate": 0.035
+        }
+      },
+      "emotionalThresholds": [
+        {
+          "axis": "exaltation",
+          "threshold": 84,
+          "trait": "distracted"
+        },
+        {
+          "axis": "distress",
+          "threshold": 30,
+          "trait": "demanding"
+        }
+      ],
+      "sleep": {
+        "bedtime": 1380,
+        "required": 540,
+        "habitual": 540,
+        "nextBedtime": 1000000000000,
+        "wakeAt": null,
+        "started": null,
+        "minutes": 0
+      },
+      "pressures": [
+        {
+          "need": "energy",
+          "axis": "exaltation",
+          "rate": 0.035,
+          "threshold": 94
+        },
+        {
+          "need": "fun",
+          "axis": "exaltation",
+          "rate": 0.035,
+          "threshold": 86
+        }
+      ],
+      "waitUntil": 0,
+      "activeTraits": [],
+      "actionRanges": {
+        "relax": {
+          "min": 24,
+          "max": 51
+        },
+        "social": {
+          "min": 60,
+          "max": 129
+        },
+        "practice": {
+          "min": 48,
+          "max": 103
+        },
+        "jam": {
+          "min": 60,
+          "max": 129
+        },
+        "write": {
+          "min": 40,
+          "max": 87
+        },
+        "decadence": {
+          "min": 29,
+          "max": 62
+        }
+      },
+      "secondaryInstruments": [],
+      "learningWork": {
+        "guitar": 0,
+        "bass": 0,
+        "drums": 0,
+        "voice": 0,
+        "keys": 0,
+        "sax": 0,
+        "trumpet": 0,
+        "percussion": 0,
+        "writing": 0
+      },
+      "songMastery": {},
+      "excessEpisodes": [],
+      "decadenceTokens": 0,
+      "drafts": {},
+      "emotionDecay": 0.04385
+    }
+  ],
+  "rels": {
+    "p2>p1": {
+      "affinity": 80,
+      "trust": 70,
+      "tension": 0,
+      "collaboration": 0,
+      "couple": false,
+      "love": 0,
+      "meetings": 0,
+      "last": 0,
+      "lastAdvance": -1440,
+      "musicSessions": 0,
+      "grief": {
+        "strength": 0,
+        "time": 480,
+        "cause": null
+      }
+    },
+    "p1>p2": {
+      "affinity": 80,
+      "trust": 70,
+      "tension": 0,
+      "collaboration": 0,
+      "couple": false,
+      "love": 0,
+      "meetings": 0,
+      "last": 0,
+      "lastAdvance": -1440,
+      "musicSessions": 0,
+      "grief": {
+        "strength": 0,
+        "time": 480,
+        "cause": null
+      }
+    },
+    "p3>p1": {
+      "affinity": 80,
+      "trust": 70,
+      "tension": 0,
+      "collaboration": 0,
+      "couple": false,
+      "love": 0,
+      "meetings": 0,
+      "last": 0,
+      "lastAdvance": -1440,
+      "musicSessions": 0,
+      "grief": {
+        "strength": 0,
+        "time": 480,
+        "cause": null
+      }
+    },
+    "p1>p3": {
+      "affinity": 80,
+      "trust": 70,
+      "tension": 0,
+      "collaboration": 0,
+      "couple": false,
+      "love": 0,
+      "meetings": 0,
+      "last": 0,
+      "lastAdvance": -1440,
+      "musicSessions": 0,
+      "grief": {
+        "strength": 0,
+        "time": 480,
+        "cause": null
+      }
+    },
+    "p3>p2": {
+      "affinity": 80,
+      "trust": 70,
+      "tension": 0,
+      "collaboration": 0,
+      "couple": false,
+      "love": 0,
+      "meetings": 0,
+      "last": 0,
+      "lastAdvance": -1440,
+      "musicSessions": 0,
+      "grief": {
+        "strength": 0,
+        "time": 480,
+        "cause": null
+      }
+    },
+    "p2>p3": {
+      "affinity": 80,
+      "trust": 70,
+      "tension": 0,
+      "collaboration": 0,
+      "couple": false,
+      "love": 0,
+      "meetings": 0,
+      "last": 0,
+      "lastAdvance": -1440,
+      "musicSessions": 0,
+      "grief": {
+        "strength": 0,
+        "time": 480,
+        "cause": null
+      }
+    },
+    "p4>p1": {
+      "affinity": 80,
+      "trust": 70,
+      "tension": 0,
+      "collaboration": 0,
+      "couple": false,
+      "love": 0,
+      "meetings": 0,
+      "last": 0,
+      "lastAdvance": -1440,
+      "musicSessions": 0,
+      "grief": {
+        "strength": 0,
+        "time": 480,
+        "cause": null
+      }
+    },
+    "p1>p4": {
+      "affinity": 80,
+      "trust": 70,
+      "tension": 0,
+      "collaboration": 0,
+      "couple": false,
+      "love": 0,
+      "meetings": 0,
+      "last": 0,
+      "lastAdvance": -1440,
+      "musicSessions": 0,
+      "grief": {
+        "strength": 0,
+        "time": 480,
+        "cause": null
+      }
+    },
+    "p4>p2": {
+      "affinity": 80,
+      "trust": 70,
+      "tension": 0,
+      "collaboration": 0,
+      "couple": false,
+      "love": 0,
+      "meetings": 0,
+      "last": 0,
+      "lastAdvance": -1440,
+      "musicSessions": 0,
+      "grief": {
+        "strength": 0,
+        "time": 480,
+        "cause": null
+      }
+    },
+    "p2>p4": {
+      "affinity": 80,
+      "trust": 70,
+      "tension": 0,
+      "collaboration": 0,
+      "couple": false,
+      "love": 0,
+      "meetings": 0,
+      "last": 0,
+      "lastAdvance": -1440,
+      "musicSessions": 0,
+      "grief": {
+        "strength": 0,
+        "time": 480,
+        "cause": null
+      }
+    },
+    "p4>p3": {
+      "affinity": 80,
+      "trust": 70,
+      "tension": 0,
+      "collaboration": 0,
+      "couple": false,
+      "love": 0,
+      "meetings": 0,
+      "last": 0,
+      "lastAdvance": -1440,
+      "musicSessions": 0,
+      "grief": {
+        "strength": 0,
+        "time": 480,
+        "cause": null
+      }
+    },
+    "p3>p4": {
+      "affinity": 80,
+      "trust": 70,
+      "tension": 0,
+      "collaboration": 0,
+      "couple": false,
+      "love": 0,
+      "meetings": 0,
+      "last": 0,
+      "lastAdvance": -1440,
+      "musicSessions": 0,
+      "grief": {
+        "strength": 0,
+        "time": 480,
+        "cause": null
+      }
+    }
+  },
+  "events": [
+    {
+      "id": 19,
+      "time": 481,
+      "type": "booking",
+      "text": "Les Courants de porcelaine au bord du jour réserve La cour des voisins · 1.",
+      "ids": [
+        "p1",
+        "p3"
+      ],
+      "bookingId": "b1",
+      "groupId": "g2",
+      "explanation": "Public peu familier du Électro · Coordination 18 · énergie 95"
+    },
+    {
+      "id": 18,
+      "time": 481,
+      "type": "decision",
+      "text": "Alex : socialiser. Jeton Socialiser défaussé sans remise · cycle 1.",
+      "ids": [
+        "p1"
+      ],
+      "activityId": "a10"
+    },
+    {
+      "id": 17,
+      "time": 481,
+      "type": "song",
+      "text": "« Là où la mémoire nous attend sans un mot » : une chanson exaltée de Alex. Qualité 30/100.",
+      "ids": [
+        "p1"
+      ],
+      "causes": [
+        {
+          "id": 14,
+          "time": 480,
+          "text": "Intervention : Alex, Jo forment « Les Courants de porcelaine au bord du jour ».",
+          "emotion": "exaltation"
+        },
+        {
+          "id": 13,
+          "time": 480,
+          "text": "Intervention : Alex, Sam forment « Les Lucioles des aurores sur le quai ».",
+          "emotion": "exaltation"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "time": 481,
+      "type": "project",
+      "text": "Alex avance « Là où la mémoire nous attend sans un mot » : 100 %, 1 séance.",
+      "ids": [
+        "p1"
+      ],
+      "projectId": "c1",
+      "activityId": "a9"
+    },
+    {
+      "id": 15,
+      "time": 480,
+      "type": "decision",
+      "text": "Alex : composer. Intervention manuelle hors sac.",
+      "ids": [
+        "p1"
+      ],
+      "activityId": "a9"
+    },
+    {
+      "id": 14,
+      "time": 480,
+      "type": "group",
+      "text": "Intervention : Alex, Jo forment « Les Courants de porcelaine au bord du jour ».",
+      "ids": [
+        "p1",
+        "p3"
+      ],
+      "groupId": "g2"
+    },
+    {
+      "id": 13,
+      "time": 480,
+      "type": "group",
+      "text": "Intervention : Alex, Sam forment « Les Lucioles des aurores sur le quai ».",
+      "ids": [
+        "p1",
+        "p2"
+      ],
+      "groupId": "g1"
+    },
+    {
+      "id": 12,
+      "time": 480,
+      "type": "decision",
+      "text": "Charlie : détente. Intervention manuelle hors sac.",
+      "ids": [
+        "p4"
+      ],
+      "activityId": "a8"
+    },
+    {
+      "id": 11,
+      "time": 480,
+      "type": "decision",
+      "text": "Jo : détente. Intervention manuelle hors sac.",
+      "ids": [
+        "p3"
+      ],
+      "activityId": "a7"
+    },
+    {
+      "id": 10,
+      "time": 480,
+      "type": "decision",
+      "text": "Sam : détente. Intervention manuelle hors sac.",
+      "ids": [
+        "p2"
+      ],
+      "activityId": "a6"
+    },
+    {
+      "id": 9,
+      "time": 480,
+      "type": "decision",
+      "text": "Alex : détente. Intervention manuelle hors sac.",
+      "ids": [
+        "p1"
+      ],
+      "activityId": "a5"
+    },
+    {
+      "id": 8,
+      "time": 480,
+      "type": "decision",
+      "text": "Charlie : détente. Jeton Détente défaussé sans remise · cycle 1.",
+      "ids": [
+        "p4"
+      ],
+      "activityId": "a4"
+    },
+    {
+      "id": 7,
+      "time": 480,
+      "type": "decision",
+      "text": "Jo : pratiquer. Jeton Pratiquer défaussé sans remise · cycle 1.",
+      "ids": [
+        "p3"
+      ],
+      "activityId": "a3"
+    },
+    {
+      "id": 6,
+      "time": 480,
+      "type": "decision",
+      "text": "Sam : détente. Jeton Détente défaussé sans remise · cycle 1.",
+      "ids": [
+        "p2"
+      ],
+      "activityId": "a2"
+    },
+    {
+      "id": 5,
+      "time": 480,
+      "type": "decision",
+      "text": "Alex : détente. Jeton Détente défaussé sans remise · cycle 1.",
+      "ids": [
+        "p1"
+      ],
+      "activityId": "a1"
+    },
+    {
+      "id": 4,
+      "time": 480,
+      "type": "system",
+      "text": "Charlie s’installe dans le quartier.",
+      "ids": [
+        "p4"
+      ]
+    },
+    {
+      "id": 3,
+      "time": 480,
+      "type": "system",
+      "text": "Jo s’installe dans le quartier.",
+      "ids": [
+        "p3"
+      ]
+    },
+    {
+      "id": 2,
+      "time": 480,
+      "type": "system",
+      "text": "Sam s’installe dans le quartier.",
+      "ids": [
+        "p2"
+      ]
+    },
+    {
+      "id": 1,
+      "time": 480,
+      "type": "system",
+      "text": "Alex s’installe dans le quartier.",
+      "ids": [
+        "p1"
+      ]
+    }
+  ],
+  "songs": [
+    {
+      "id": 1,
+      "projectId": "c1",
+      "title": "Là où la mémoire nous attend sans un mot",
+      "time": 481,
+      "emotion": "exaltation",
+      "intensity": 59,
+      "tone": "exaltée",
+      "quality": 30,
+      "resonance": 34,
+      "breakdown": {
+        "craft": 11,
+        "expression": 7,
+        "ensemble": 0,
+        "perfection": 0,
+        "overwhelm": 0,
+        "variance": 11
+      },
+      "genre": "Électro",
+      "authors": [
+        "p1"
+      ],
+      "authorNames": {
+        "p1": "Alex"
+      },
+      "groupId": null,
+      "sources": [
+        {
+          "id": 14,
+          "time": 480,
+          "text": "Intervention : Alex, Jo forment « Les Courants de porcelaine au bord du jour ».",
+          "emotion": "exaltation"
+        },
+        {
+          "id": 13,
+          "time": 480,
+          "text": "Intervention : Alex, Sam forment « Les Lucioles des aurores sur le quai ».",
+          "emotion": "exaltation"
+        }
+      ],
+      "hit": false,
+      "qualityReference": null,
+      "weak": false
+    }
+  ],
+  "groups": [
+    {
+      "id": "g1",
+      "name": "Les Lucioles des aurores sur le quai",
+      "members": [
+        "p1",
+        "p2"
+      ],
+      "founders": [
+        "p1",
+        "p2"
+      ],
+      "created": 480,
+      "genre": "Électro",
+      "origin": "laboratoire",
+      "development": 18,
+      "reputation": 0,
+      "lastWorked": 480,
+      "archivedAt": null,
+      "repertoire": [
+        {
+          "songId": 1,
+          "mastery": 60,
+          "rehearsals": 0
+        }
+      ],
+      "moments": [],
+      "shows": [],
+      "alumni": [],
+      "nextBookingAttempt": 1000000000000
+    },
+    {
+      "id": "g2",
+      "name": "Les Courants de porcelaine au bord du jour",
+      "members": [
+        "p1",
+        "p3"
+      ],
+      "founders": [
+        "p1",
+        "p3"
+      ],
+      "created": 480,
+      "genre": "Électro",
+      "origin": "laboratoire",
+      "development": 18,
+      "reputation": 0,
+      "lastWorked": 480,
+      "archivedAt": null,
+      "repertoire": [
+        {
+          "songId": 1,
+          "mastery": 30,
+          "rehearsals": 0
+        }
+      ],
+      "moments": [],
+      "shows": [],
+      "alumni": [],
+      "nextBookingAttempt": 1000000000000
+    }
+  ],
+  "jams": [],
+  "params": {
+    "drain": 1,
+    "music": 1,
+    "social": 1,
+    "conflict": 1,
+    "learning": 1,
+    "randomness": 0.3,
+    "relations": 1,
+    "emotionDecay": 1,
+    "romance": 1,
+    "compositionPace": 1
+  },
+  "scenario": "Équilibre",
+  "history": [],
+  "decisionMode": "bag",
+  "playerId": "p1",
+  "bookings": [
+    {
+      "id": "b1",
+      "groupId": "g2",
+      "opportunityId": "event-1",
+      "slotId": "event-1-slot-0",
+      "role": "Première partie",
+      "duration": 10,
+      "setlist": [
+        1
+      ],
+      "songId": 1,
+      "time": 4800,
+      "created": 481,
+      "intention": "tight",
+      "members": [
+        "p1",
+        "p3"
+      ],
+      "refused": [],
+      "status": "booked",
+      "performanceId": null
+    }
+  ],
+  "nextBookingId": 2,
+  "nextPerformanceId": 1,
+  "performance": null,
+  "showHistory": [],
+  "archiveThreshold": 25,
+  "songArchive": [],
+  "showEventId": null,
+  "together": [],
+  "encounters": {},
+  "nextTogetherId": 1,
+  "calendarVersion": 1,
+  "eventArchive": [],
+  "nextEventOrdinal": 5,
+  "season": {
+    "started": 480,
+    "ended": false,
+    "opportunities": [
+      {
+        "id": "event-1",
+        "ordinal": 1,
+        "name": "La cour des voisins · 1",
+        "venue": "g1",
+        "day": 4,
+        "time": 4800,
+        "styles": [
+          "Indie",
+          "Folk",
+          "Pop"
+        ],
+        "crowd": 12,
+        "final": false,
+        "status": "booked",
+        "bookingId": "b1",
+        "opened": 480,
+        "selectionAt": 1920,
+        "selected": false,
+        "slots": [
+          {
+            "id": "event-1-slot-0",
+            "role": "Première partie",
+            "duration": 10,
+            "bookingId": "b1"
+          },
+          {
+            "id": "event-1-slot-1",
+            "role": "Tête d’affiche",
+            "duration": 20,
+            "bookingId": null
+          }
+        ],
+        "organizer": {
+          "discovery": false,
+          "exigence": 30
+        }
+      },
+      {
+        "id": "event-2",
+        "ordinal": 2,
+        "name": "Les Amplis au parc · 2",
+        "venue": "park",
+        "day": 6,
+        "time": 7680,
+        "styles": [
+          "Ska",
+          "Jazz",
+          "Électro"
+        ],
+        "crowd": 12,
+        "final": false,
+        "status": "open",
+        "bookingId": null,
+        "opened": 480,
+        "selectionAt": 4800,
+        "selected": false,
+        "slots": [
+          {
+            "id": "event-2-slot-0",
+            "role": "Première partie",
+            "duration": 10,
+            "bookingId": null
+          },
+          {
+            "id": "event-2-slot-1",
+            "role": "Tête d’affiche",
+            "duration": 20,
+            "bookingId": null
+          }
+        ],
+        "organizer": {
+          "discovery": true,
+          "exigence": 30
+        }
+      },
+      {
+        "id": "event-3",
+        "ordinal": 3,
+        "name": "Une nuit au Canal · 3",
+        "venue": "g2",
+        "day": 8,
+        "time": 10560,
+        "styles": [
+          "Punk",
+          "Métal",
+          "Indie"
+        ],
+        "crowd": 12,
+        "final": false,
+        "status": "open",
+        "bookingId": null,
+        "opened": 480,
+        "selectionAt": 7680,
+        "selected": false,
+        "slots": [
+          {
+            "id": "event-3-slot-0",
+            "role": "Première partie",
+            "duration": 10,
+            "bookingId": null
+          },
+          {
+            "id": "event-3-slot-1",
+            "role": "Tête d’affiche",
+            "duration": 20,
+            "bookingId": null
+          }
+        ],
+        "organizer": {
+          "discovery": false,
+          "exigence": 30
+        }
+      },
+      {
+        "id": "event-4",
+        "ordinal": 4,
+        "name": "★ Fête des Érables · 4",
+        "venue": "g1",
+        "day": 10,
+        "time": 13440,
+        "styles": [
+          "Pop",
+          "Indie",
+          "Ska",
+          "Folk"
+        ],
+        "crowd": 24,
+        "final": true,
+        "status": "open",
+        "bookingId": null,
+        "opened": 480,
+        "selectionAt": 10560,
+        "selected": false,
+        "slots": [
+          {
+            "id": "event-4-slot-0",
+            "role": "Première partie",
+            "duration": 10,
+            "bookingId": null
+          },
+          {
+            "id": "event-4-slot-1",
+            "role": "Première partie",
+            "duration": 10,
+            "bookingId": null
+          },
+          {
+            "id": "event-4-slot-2",
+            "role": "Tête d’affiche",
+            "duration": 20,
+            "bookingId": null
+          }
+        ],
+        "organizer": {
+          "discovery": true,
+          "exigence": 60
+        }
+      }
+    ]
+  }
+}

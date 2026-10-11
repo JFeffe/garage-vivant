@@ -1,6 +1,6 @@
 # DDD — Admission, échanges et activités communes
 
-Version 0.7.1. Demander à rejoindre une activité est une admission. Une fois admis, les échanges produisent directement un résultat. Les partenaires restent libres de quitter.
+Version 0.7.2. Demander à rejoindre une activité est une admission. Une fois admis, les échanges produisent directement un résultat. Les partenaires restent libres de quitter.
 
 ## Admission initiale
 
@@ -22,9 +22,9 @@ Après l’échange, le destinataire décide de rester ou partir selon [Actions]
 
 Poids d’initiative : `max(0,05; 1 + somme des modificateurs initiative)`. Alpha, Bêta et les traits sociaux modifient ce poids; aucun ne garantit l’initiative. L’initiateur est tiré parmi les participants admissibles, puis le destinataire parmi les partenaires disponibles.
 
-Poids d’un partenaire : `max(0,1; 1 + max(0, affinité)/20 − tension/30 + groupe + inséparables)`, selon le point de vue de l’initiateur. Un groupe commun actif ajoute `1 + développement/8`; si plusieurs sont communs, prendre le maximum. Inséparables ajoute 6 à partir de 75 d’affinité dans cette direction. Ce qualificatif porte sur la relation ciblée, pas sur tous les voisins.
+Poids d’un partenaire : `max(0,1; 1 + max(0, affinité)/20 − tension/30 + groupe + inséparables)`, selon le point de vue de l’initiateur. Un groupe commun actif ajoute `1 + attachement de l’initiateur au groupe/8`; si plusieurs sont communs, prendre le maximum. Inséparables ajoute 6 à partir de 75 d’affinité dans cette direction. Ce qualificatif porte sur la relation ciblée, pas sur tous les voisins.
 
-Pour choisir une jam ouverte, utiliser la moyenne des poids vers ses membres. La chimie ne pondère pas la sélection; elle reste musicale et peut renforcer les gains d’affinité d’un échange musical favorable. `development` est bien la Coordination affichée; aucune seconde jauge n’a été créée. L’attachement individuel aux groupes reste reporté.
+Pour choisir une jam ouverte, utiliser la moyenne des poids vers ses membres. La chimie ne pondère pas directement la sélection; elle reste musicale et peut renforcer les gains d’affinité d’un échange musical favorable. Elle contribue aussi au calcul d’attachement qui fournit le bonus de groupe. `development` est bien la Coordination commune affichée ; l’attachement individuel est calculé selon [Groupes](./groupes.md), sans seconde jauge de coordination.
 
 ## Interactions et propositions
 
@@ -42,7 +42,7 @@ Les appels explicites d’interaction hors séance, comme les commandes de souti
 
 ## Conséquences communes
 
-Dans les deux directions, un échange résolu après admission ajoute +6 social, incrémente les rencontres et actualise leur date. Favorable : affinité +0,4 × Évolution des liens, confiance +1, tension −3 × Évolution des liens, grief −2, exaltation base +3. Défavorable : affinité −0,5 × Évolution des liens, confiance −1, tension +8 × Évolution des liens, grief +6, détresse base +5. Neutre : pas de changement d’affinité/confiance/tension.
+Dans les deux directions, un échange résolu après admission ajoute +6 social, incrémente les rencontres et actualise leur date. Favorable : affinité +1,2 × Évolution des liens, tension −3 × Évolution des liens, grief −2, exaltation base +3. Défavorable : affinité −0,4 × Évolution des liens, tension +8 × Évolution des liens, grief +6, détresse base +5. Neutre : pas de changement d’affinité/tension.
 
 En musique, un favorable ajoute à la base d’affinité `max(0; chimie−50)/100`, avant Évolution des liens. Chaque échange musical accepté ajoute +2 complicité, ou −1 s’il est défavorable. Un moment musical technique peut ensuite avoir ses effets propres, y compris un accrochage; son événement est distinct et identifiable.
 
@@ -52,4 +52,4 @@ Les liens sont orientés, les émotions passent par leurs réactions personnelle
 
 Journal et inspecteur exposent admission, membres, prochaine cadence, intensité, probabilité, tirage et effets. La lecture ne consomme pas de hasard. Les interactions musicales favorables ou neutres peuvent encore déclencher un des six moments techniques, séparément identifiable.
 
-Un échange favorable admissible peut toujours créer un groupe ou permettre une adhésion. Lien amoureux et couples gardent leurs règles. Voir [Relations](./relations.md), [Musique](./musique.md), [Actions](./actions.md).
+Un échange favorable admissible peut émettre une proposition de groupe, suivie d’une acceptation distincte ; il ne crée plus directement un groupe. Voir [Groupes](./groupes.md). Lien amoureux et couples gardent leurs règles. Voir [Relations](./relations.md), [Musique](./musique.md), [Actions](./actions.md).

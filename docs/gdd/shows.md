@@ -1,6 +1,6 @@
 # DDD — Shows, calendrier et public
 
-Version 0.7.1.
+Version 0.7.2.
 
 ## Quatre occasions continues
 
@@ -51,16 +51,26 @@ Le bouton **Son : ON/OFF** est visible à côté de la pause, sans ouvrir Option
 
 ## Raccord V7 des émotions et du sommeil
 
-Les effets du bilan sur les personnages utilisent exaltation base +22 à partir d’un score de 45, détresse base +14 sinon, avec réaction personnelle. L’énergie perd 15 plus les erreurs cumulées des morceaux; confiance ajoute +2 ou −1 entre partenaires, complicité +2, et au moins deux erreurs ajoutent tension +3. Les coûts Tout donner et le moral collectif restent conservés.
+Les effets du bilan sur les personnages utilisent exaltation base +22 à partir d’un score de 45, détresse base +14 sinon, avec réaction personnelle. L’énergie perd 15 plus les erreurs cumulées des morceaux; complicité +2, et au moins deux erreurs ajoutent tension +3. Les coûts Tout donner et le moral collectif restent conservés.
 
 Les cartes émotionnelles gardent leur puissance liée à l’intensité de la chanson. Pour les nouvelles prestations `rulesVersion:71` (et 7 pour les anciennes prestations V7), la compatibilité ×1,20 reconnaît explicitement exaltation avec les sensibilités musicales joie, enthousiasme ou affection du public, et détresse avec tristesse, colère ou peur. C’est une correspondance de deux axes larges, pas une reconstitution des six émotions du personnage. Une chanson historique garde sa compatibilité exacte. Une prestation sauvegardée de règles antérieures conserve son calcul exact et son résultat; le replay historique reste identique.
 
 Le public et ses sensibilités ne sont pas le moteur émotionnel des voisins. Les exemplaires nuisibles réutilisent les types de cartes existants ; aucun nouveau fan ou récompense. Le moteur de trajectoires et la présentation V0.6.4 sont conservés.
 
-Un engagement nocturne prend priorité sur le coucher. Les jetons déjà pigés restent défaussés au départ ; un sommeil interrompu peut reprendre après l’engagement. Les seuils de musiciens présents et fonctionnels restent actifs, sans récupération cachée. Les confirmations de candidature et de pratique collective conservent leur probabilité de carrière, distincte du tirage social du quartier.
+Un engagement nocturne prend priorité sur le coucher. Les jetons déjà pigés restent défaussés au départ ; un sommeil interrompu peut reprendre après l’engagement. La présence demande deux musiciens arrivés ; l’énergie ne provoque pas de nouveau refus au départ. Les confirmations de candidature utilisent leur formule de carrière sans confiance. Les appels de pratique utilisent la file hors sac du groupe.
 
 ## Préparer les morceaux en V7.1
 
 Pratiquer ensemble travaille un morceau du répertoire d’un même groupe. Jam reste expression libre et n’ajoute ni maîtrise de morceau ni Coordination. La préparation de setlist peut encore inclure une improvisation de scène ; cela ne transforme pas Jam du quartier en répétition. Une demande de répétition sans morceau est refusée explicitement.
 
 La qualité finale, la maîtrise personnelle et la maîtrise du répertoire sont consultables dans [Compositions et catalogue](./compositions.md). Les cartes ajoutées, leurs répétitions et les versions historiques sont détaillées dans [Déchéance](./decheance.md).
+
+## Engagement prioritaire et présence V7.2
+
+Chaque musicien part depuis sa position réelle pour arriver dix minutes avant l’heure confirmée. Le trajet suit trois segments vers la rue, la porte de scène puis sa place, à 12 unités/min ; chaque segment prend au moins une minute et les distances sont arrondies vers le haut. Le départ est recalculé tant qu’il n’est pas engagé, pour suivre sa position réelle. Il termine son action, même dormir ; aucun jeton n’est remboursé. Les musiciens peuvent partir séparément, sans délai collectif fixe de 180 minutes.
+
+Après confirmation, aucun nouveau refus ordinaire. L’énergie influence la scène, sans filtre d’arrivée ni recharge d’attente. À déchéance ≥90 seulement, une chance d’absence existe, au maximum 20 %, une fois par engagement/personnage ; voir [Groupes](./groupes.md). L’absence est enregistrée et journalisée. Les pénalités relationnelles particulières du drame restent reportées.
+
+À l’heure prévue, attendre au plus vingt minutes si moins de deux membres sont arrivés, puis marquer ce créneau manqué. Aucun remplaçant ou musicien fantôme ; les autres créneaux continuent. Un départ de membre revalide les engagements futurs ; une dissolution les annule. Une prestation déjà en cours et son replay conservent leur snapshot versionné.
+
+Les nouveaux choix de setlist utilisent uniquement les morceaux possédés actifs, ou une improvisation. Un morceau mis de côté après confirmation reste disponible dans cette setlist. Les anciennes setlists confirmées migrées bénéficient d’une exception enregistrée, même si leur ancien répertoire partagé change de propriétaire. Les nouvelles réservations n’obtiennent pas cette exception.

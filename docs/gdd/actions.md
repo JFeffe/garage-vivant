@@ -1,10 +1,10 @@
 # DDD — Six actions, sac et défausse
 
-Version 0.7.1. Six intentions d’éveil : Détente, Socialiser, Pratiquer, Jam, Composer et Déchéance. Dormir est hors sac. Former un groupe reste une conséquence d’échanges favorables admissibles.
+Version 0.7.2. Six intentions d’éveil : Détente, Socialiser, Pratiquer, Jam, Composer et Déchéance. Dormir est hors sac. Former un groupe passe par proposition et acceptation après un échange favorable admissible, sans jeton dédié.
 
 ## Pige et inventaire
 
-Chaque personnage pige quand une action se termine. Aucune cadence périodique, aucun tirage pendant le trajet ou pour changer de contenu dans une séance. La fin normale choisit immédiatement la suite ; après annulation d’une recherche ou réveil, la boucle minute reprend le choix suivant. Sommeil, commandes manuelles et laboratoire peuvent interrompre une action ; leurs actions imposées restent hors sac.
+Chaque personnage choisit quand une action se termine : sommeil prioritaire, puis invitations de pratique hors sac en ordre d’arrivée, puis pige si aucune invitation n’est acceptée. Aucune cadence périodique, aucun tirage pendant le trajet ou pour changer de contenu dans une séance. La fin normale choisit immédiatement la suite ; après annulation d’une recherche ou réveil, la boucle minute reprend le choix suivant. Sommeil, départ calculé vers un spectacle confirmé, commandes manuelles et laboratoire peuvent interrompre une action ; leurs actions imposées restent hors sac.
 
 Le jeton pigé va immédiatement en défausse, y compris si l’activité échoue ou est interrompue. Aucun remboursement. Une acquisition entre directement dans le sac courant. Un retrait n’est possible qu’en défausse. Si la quantité à retirer dépasse la défausse disponible, le reste est enregistré dans `pendingRemoval`. Le prochain jeton concerné est d’abord pigé, défaussé puis retiré : son action se réalise quand même.
 
@@ -61,3 +61,7 @@ Les huit premiers identifiants reçoivent les sacs ci-dessous; les identifiants 
 Ces profils V7 sont conservés ; la sixième quantité Déchéance commence à zéro et augmente selon ses règles. Les cycles mesurent des occurrences, pas des parts égales de temps.
 
 Liens : [Interactions](./interactions.md), [Musique](./musique.md), [Compositions et catalogue](./compositions.md), [Déchéance](./decheance.md), [Sommeil](./sommeil.md), [Technique](./technique.md).
+
+## Invitations hors sac
+
+Les appels de groupe ne sont pas des jetons, ne modifient pas le sac et n’interrompent pas l’activité courante. Une participation acceptée démarre Pratiquer hors sac ; son trajet, attente, cycles et expiration suivent le [DDD Groupes](./groupes.md). Les refus ou expirations laissent la pige normale disponible. Le spectacle confirmé prend priorité même sur le sommeil.

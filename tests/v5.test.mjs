@@ -1,3 +1,4 @@
+import {songsPreserved} from './migration-helpers.mjs';
 import {mergedCounts,oldFields,fourNeeds,projectsPreserved,draftPreserved} from './migration-helpers.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -12,7 +13,7 @@ const copy=x=>JSON.parse(JSON.stringify(x));
 // A real V4 save preserves skills, project progress, music-session knowledge and history.
 const legacy=JSON.parse(readFileSync(new URL('./v04-world.json',import.meta.url)));
 const migrated=restore(legacy);assert.equal(migrated.version,VERSION);assert.equal(migrated.time,legacy.time);
-assert.deepEqual(migrated.songs,legacy.songs);projectsPreserved(migrated.projects,legacy.projects);assert.deepEqual(migrated.activities,legacy.activities);for(const [key,r] of Object.entries(legacy.rels))assert.deepEqual(oldFields(migrated.rels[key],r),oldFields(r,r));
+songsPreserved(migrated.songs,legacy.songs);projectsPreserved(migrated.projects,legacy.projects);assert.deepEqual(migrated.activities,legacy.activities);for(const [key,r] of Object.entries(legacy.rels))assert.deepEqual(oldFields(migrated.rels[key],r),oldFields(r,r));
 for(let i=0;i<legacy.people.length;i++){const a=migrated.people[i],b=legacy.people[i];assert.deepEqual(a.skills,b.skills);assert.deepEqual(a.actionCounts,mergedCounts(b.actionCounts));draftPreserved(a.draft,b.draft);assert.deepEqual(a.needs,fourNeeds(b.needs));assert.deepEqual(a.memories.map((m,i)=>oldFields(m,b.memories[i])),b.memories);}
 assert.equal(migrated.groups[0].name,legacy.groups[0].name);assert.equal(migrated.groups[0].repertoire.length,0);
 const future=restore(copy(migrated));step(migrated,350);step(future,350);assert.deepEqual(migrated,future);
@@ -23,7 +24,7 @@ function prepared(seed=205,count=4){
  const p=s.people[0];let id;
  for(let n=0;n<20&&!s.songs.length;n++){p.needs.energy=100;decide(s,p,'write',{projectId:p.draft.projectId});id=compositionProject(s,p).id;const completed=p.actionCounts.write.completed;for(let t=0;t<220&&p.actionCounts.write.completed===completed;t++)step(s);}
  assert(s.songs.length);const song=s.songs[0],g=createGroup(s,s.people.map(p=>p.id),{manual:true});
- for(const a of s.people)for(const b of s.people)if(a!==b)Object.assign(relationship(s,a,b),{affinity:80,trust:85,tension:0});
+ for(const a of s.people)for(const b of s.people)if(a!==b)Object.assign(relationship(s,a,b),{affinity:80,tension:0});
  assert(command(s,{type:'repertoire',groupId:g.id,songId:song.id}).ok);
  for(const p of s.people){decide(s,p,'relax');p.action.remaining=100000;p.bag=newBag();for(const field of ['composition','cycleComposition','remaining'])p.bag[field]={relax:10,social:0,practice:0,jam:0,write:0,decadence:0};}
  return {s,g,song};
@@ -49,14 +50,14 @@ for(let i=0;i<6&&!reservation?.ok;i++)reservation=command(booked.s,{type:'book',
 assert(reservation.ok);assert(advanceToBooking(booked.s,reservation.bookingId).ok);assert.equal(booked.s.performance.status,'playing');const clock=booked.s.time;step(booked.s,500);assert.equal(booked.s.time,clock);playTicks(booked.s,480);const restored=restore(copy(booked.s));playTicks(booked.s,SHOW_TICKS);playTicks(restored,SHOW_TICKS);assert.deepEqual(booked.s,restored);assert.equal(booked.s.showHistory.length,1);const fame=booked.s.people[0].showFame;assert(!completePerformance(booked.s));assert.equal(booked.s.people[0].showFame,fame);assert.equal(booked.s.bookings[0].status,'played');assert.equal(booked.g.reputation,booked.s.showHistory[0].effects.after.reputation);assert.equal(op.status,'played');assert(booked.s.people.every(p=>!p.engagement));restore(booked.s);
 
 // Real incompatible commitments produce a refusal and tension, rather than penalizing membership.
-const overlap=prepared(222,4),[a,b,c,d]=overlap.s.people;const other=createGroup(overlap.s,[a.id,c.id,d.id],{manual:true});command(overlap.s,{type:'repertoire',groupId:other.id,songId:overlap.song.id});const occasion=overlap.s.season.opportunities.find(o=>o.time>overlap.s.time);let first;
+const overlap=prepared(222,4),[a,b,c,d]=overlap.s.people;const other=createGroup(overlap.s,[a.id,c.id,d.id],{manual:true});command(overlap.s,{type:'repertoire',groupId:other.id,songId:null});const occasion=overlap.s.season.opportunities.find(o=>o.time>overlap.s.time);let first;
 for(let n=0;n<8&&!first?.ok;n++)first=command(overlap.s,{type:'book',groupId:overlap.g.id,songId:overlap.song.id,opportunityId:occasion.id,intention:'tight',members:[a.id,b.id]});assert(first.ok);
-const incompatible=overlap.s.season.opportunities.find(o=>o!==occasion);incompatible.time=occasion.time;const refused=command(overlap.s,{type:'book',groupId:other.id,songId:overlap.song.id,opportunityId:incompatible.id,intention:'tight',members:[a.id,c.id]});assert(!refused.ok);assert(refused.refused.some(r=>r.id===a.id&&r.reason.includes('engagé')));assert(overlap.s.events.some(e=>e.type==='conflict'&&e.text.includes('incompatible')));
+const incompatible=overlap.s.season.opportunities.find(o=>o!==occasion);incompatible.time=occasion.time;const refused=command(overlap.s,{type:'book',groupId:other.id,songId:null,opportunityId:incompatible.id,intention:'tight',members:[a.id,c.id]});assert(!refused.ok);assert(refused.refused.some(r=>r.id===a.id&&r.reason.includes('engagé')));assert(overlap.s.events.some(e=>e.type==='conflict'&&e.text.includes('incompatible')));
 
 // Several independent bands share a local bill. A first set cannot close the season
 // or erase another band's confirmed booking; departures preserve that same bill.
 assert(command(overlap.s,{type:'avatar',actorId:c.id}).ok);let second;
-for(let n=0;n<8&&!second?.ok;n++)second=command(overlap.s,{type:'book',groupId:other.id,songId:overlap.song.id,opportunityId:occasion.id,intention:'tight',members:[c.id,d.id]});assert(second.ok);
+for(let n=0;n<8&&!second?.ok;n++)second=command(overlap.s,{type:'book',groupId:other.id,songId:null,opportunityId:occasion.id,intention:'tight',members:[c.id,d.id]});assert(second.ok);
 const departure=restore(copy(overlap.s));removePerson(departure,a.id);assert.equal(departure.bookings.find(b=>b.id===first.bookingId).status,'cancelled');assert.equal(departure.season.opportunities.find(o=>o.id===occasion.id).status,'booked');restore(departure);
 for(const o of overlap.s.season.opportunities)if(o!==occasion)o.status='missed';
 assert(advanceToBooking(overlap.s,first.bookingId).ok);playTicks(overlap.s,SHOW_TICKS);assert.equal(occasion.status,'booked');assert.equal(overlap.s.season.ended,false);assert(newSeason(overlap.s).ok);
@@ -66,7 +67,7 @@ const emptyBand=createWorld(63,3),former=emptyBand.people.slice(0,2).map(p=>p.id
 
 // Group credit needs actual presence and an unambiguous group. A multi-band pair cannot credit both.
 const rehearsal=prepared(555,3),pair=rehearsal.s.people.slice(0,2),band2=createGroup(rehearsal.s,pair.map(p=>p.id),{manual:true});const j={id:'isolated',groupId:null,songId:null,elapsed:1};const before=rehearsal.g.development;groupRehearsal(rehearsal.s,j,pair);assert.equal(rehearsal.g.development,before);assert.equal(j.groupId,null);j.groupId=rehearsal.g.id;j.songId=rehearsal.song.id;groupRehearsal(rehearsal.s,j,pair);assert(rehearsal.g.development>before);assert(rehearsal.g.repertoire[0].mastery>0);const mastery=rehearsal.g.repertoire[0].mastery;groupRehearsal(rehearsal.s,j,pair.slice(0,1));assert.equal(rehearsal.g.repertoire[0].mastery,mastery);
-rehearsal.g.development=.1;rehearsal.g.lastWorked=0;rehearsal.s.time=60*100;lifeMinute(rehearsal.s);assert(rehearsal.g.archivedAt!==null);assert(rehearsal.s.groups.includes(rehearsal.g));assert(command(rehearsal.s,{type:'revive',groupId:rehearsal.g.id}).ok);assert.equal(rehearsal.g.archivedAt,null);
+rehearsal.g.development=.1;rehearsal.g.lastWorked=0;rehearsal.s.time=60*100;lifeMinute(rehearsal.s);assert(rehearsal.g.archivedAt!==null);assert(rehearsal.s.groups.includes(rehearsal.g));assert(!command(rehearsal.s,{type:'revive',groupId:rehearsal.g.id}).ok);assert(rehearsal.g.archivedAt!==null);
 
 // Deck curses occupy slots and cannot be removed by equipment edits; recovery removes them.
 const musician=s.people[0];musician.decadence=90;assert.equal(activeDeck(musician).filter(id=>CARDS[id].tag==='curse').length,4);const count=activeDeck(musician).length;assert(!command(s,{type:'deck',cards:['absent']}).ok);assert.equal(activeDeck(musician).length,count);musician.decadence=20.01;musician.needs.energy=100;decide(s,musician,'sleep');musician.action.route=[];step(s,10);assert(musician.decadence<20);assert(!activeDeck(musician).some(id=>CARDS[id].tag==='curse'));
@@ -82,7 +83,7 @@ for(const o of archive.season.opportunities)o.status='missed';archive.season.end
 const broken=copy(archive);broken.people[0].decadence=101;assert.throws(()=>restore(broken));const badHand=copy(booked.s);badHand.performance.actors[0].hand[1]=badHand.performance.actors[0].hand[0];assert.throws(()=>restore(badHand));
 // V5.1: the complete preparation path works without a finished song, for an NPC band.
 const fresh=createWorld(705,4),npcBand=createGroup(fresh,fresh.people.slice(1,3).map(p=>p.id),{manual:true});npcBand.nextBookingAttempt=1e12;for(const p of fresh.people)p.priorities.form=0;
-for(const a of fresh.people)for(const b of fresh.people)if(a!==b)Object.assign(relationship(fresh,a,b),{affinity:90,trust:90,tension:0});
+for(const a of fresh.people)for(const b of fresh.people)if(a!==b)Object.assign(relationship(fresh,a,b),{affinity:90,tension:0});
 const plan={groupId:npcBand.id,songId:undefined,members:null,intention:'tight',opportunityId:null};
 let prep=resolveShowPlan(fresh,plan);assert(prep.ready);assert.equal(plan.songId,null);assert.notEqual(plan.actorId,fresh.playerId);assert(showSetupHTML(fresh,plan).includes('Jam libre'));assert(showSetupHTML(fresh,plan).includes('data-opportunity="event-1"'));
 assert(command(fresh,{type:'preview',...plan}).ok);playTicks(fresh,100);const fameBefore=fresh.people.map(p=>p.showFame);assert(command(fresh,{type:'cancelPerformance'}).ok);assert.equal(fresh.performance,null);assert.deepEqual(fresh.people.map(p=>p.showFame),fameBefore);assert.equal(fresh.showHistory.length,0);
@@ -90,7 +91,7 @@ let freeBooking;for(let n=0;n<10&&!freeBooking?.ok;n++)freeBooking=command(fresh
 step(fresh,fresh.bookings[0].time-fresh.time-45);assert.equal(fresh.bookings[0].status,'assembling');assert(fresh.people.some(p=>p.engagement));assert(command(fresh,{type:'cancelBooking',actorId:plan.actorId,bookingId:freeBooking.bookingId}).ok);assert(fresh.people.every(p=>p.engagement?.bookingId!==freeBooking.bookingId));assert.notEqual(fresh.bookings.find(b=>b.id===freeBooking.bookingId).status,'booked');restore(fresh);
 prep=resolveShowPlan(fresh,plan);assert(prep.ready);freeBooking=null;for(let n=0;n<10&&!freeBooking?.ok;n++)freeBooking=command(fresh,{type:'book',...plan});assert(freeBooking.ok);assert(advanceToBooking(fresh,freeBooking.bookingId).ok);assert.equal(fresh.performance.status,'playing');const catalogueBeforeShow=fresh.songs.length;playTicks(fresh,SHOW_TICKS);assert.equal(fresh.showHistory.length,1);assert.equal(fresh.songs.length,catalogueBeforeShow,'Improvisation must not manufacture catalogue songs');restore(fresh);
 // A band at the far end of town must have time to walk to the venue.
-const far=createWorld(9,2),farBand=createGroup(far,far.people.map(p=>p.id),{manual:true});for(const a of far.people)for(const b of far.people)if(a!==b)Object.assign(relationship(far,a,b),{affinity:90,trust:90,tension:0});let farBooking;
+const far=createWorld(9,2),farBand=createGroup(far,far.people.map(p=>p.id),{manual:true});for(const a of far.people)for(const b of far.people)if(a!==b)Object.assign(relationship(far,a,b),{affinity:90,tension:0});let farBooking;
 for(let n=0;n<10&&!farBooking?.ok;n++)farBooking=command(far,{type:'book',groupId:farBand.id,songId:null,opportunityId:far.season.opportunities[0].id,intention:'tight'});assert(farBooking.ok);const fb=far.bookings[0];far.time=fb.time-181;for(const p of far.people){p.x=1090;p.y=650;p.needs.energy=95;decide(far,p,'sleep');p.action.route=[];}assert(advanceToBooking(far,fb.id).ok);assert.equal(far.performance.status,'playing');assert(far.people.every(p=>p.engagement.arrived));playTicks(far,180);assert(command(far,{type:'cancelPerformance'}).ok);assert.equal(far.performance,null);assert.equal(far.showHistory.length,0);assert.equal(fb.status,'cancelled');assert(far.people.every(p=>!p.engagement));restore(far);
 // Current V7 reload must preserve every field and not reroll its model.
 assert.deepEqual(restore(copy(fresh)),fresh);

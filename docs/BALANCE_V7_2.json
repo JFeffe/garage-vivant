@@ -1,0 +1,2843 @@
+{
+  "version": "0.7.2",
+  "seeds": [
+    2040,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    713
+  ],
+  "rules": {
+    "affinity": 12,
+    "love": 25,
+    "tension": 60,
+    "membershipDelay": 2880,
+    "pairDelay": 1440,
+    "proposal": 0.22,
+    "decisionMinutes": 360,
+    "rehearsalChance": 0.5,
+    "invitationMinutes": 720,
+    "waitMinutes": 120,
+    "departureMinutes": 720,
+    "departureGrace": 2880,
+    "lowAttachment": 20,
+    "departureChance": 0.08,
+    "alternativeGap": 25,
+    "alternativeChance": 0.15,
+    "nearShow": 360,
+    "arrivalMargin": 10,
+    "absenceThreshold": 90,
+    "absenceSlope": 0.02,
+    "positiveAffinity": 1.2,
+    "negativeAffinity": 0.4,
+    "tensionErosion": 0.0002,
+    "attachment": {
+      "affinity": 0.3,
+      "style": 0.1,
+      "chemistry": 0.1,
+      "reputation": 0.2,
+      "tension": 0.15
+    }
+  },
+  "protocol": "8 personnages, paramètres par défaut, 30 jours écoulés et prolongement à 90 jours des graines 2040, 1 et 2 ; commandes de saut des spectacles existantes, aucune intervention sur groupes ou relations.",
+  "summary": {
+    "formedBy3": 3,
+    "formedBy5": 11,
+    "formedBy10": 20,
+    "total": 20,
+    "failedSeeds": [],
+    "active30": 48,
+    "survivors7d": 39,
+    "mature": 77,
+    "matureSingle": 71,
+    "maxMembership": 2,
+    "practiceStarts": 700,
+    "departures": 65
+  },
+  "runs": [
+    {
+      "seed": 2040,
+      "firstGroup": 4.2131944444444445,
+      "checkpoints": [
+        {
+          "day": 3,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 2.78447510828399,
+          "tension": 0.4223587075241806,
+          "metrics": {
+            "eligible": 2,
+            "proposed": 0,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 165,
+              "admitted": 165,
+              "favorable": 79,
+              "neutral": 36,
+              "unfavorable": 50,
+              "gained": 194.28099999999964,
+              "lost": 39.99999999999992,
+              "erosion": 4.604504663538359
+            }
+          }
+        },
+        {
+          "day": 5,
+          "formed": 1,
+          "active": 1,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 4.865587748825176,
+          "tension": 0.05150892857142154,
+          "metrics": {
+            "eligible": 13,
+            "proposed": 1,
+            "accepted": 1,
+            "adoptions": 1,
+            "practiceRequests": 1,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 245,
+              "admitted": 245,
+              "favorable": 127,
+              "neutral": 56,
+              "unfavorable": 62,
+              "gained": 315.4369999999989,
+              "lost": 49.59999999999989,
+              "erosion": 4.604504663538359
+            }
+          }
+        },
+        {
+          "day": 10,
+          "formed": 2,
+          "active": 2,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 9.629791532001425,
+          "tension": 0.481046787171418,
+          "metrics": {
+            "eligible": 38,
+            "proposed": 4,
+            "accepted": 2,
+            "adoptions": 2,
+            "practiceRequests": 10,
+            "practices": 6,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 482,
+              "admitted": 482,
+              "favorable": 263,
+              "neutral": 74,
+              "unfavorable": 145,
+              "gained": 662.2930000000014,
+              "lost": 116.00000000000057,
+              "erosion": 4.608504807143091
+            }
+          }
+        },
+        {
+          "day": 30,
+          "formed": 7,
+          "active": 3,
+          "survivors7d": 2,
+          "mature": 4,
+          "matureSingle": 4,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 23.503309993985575,
+          "tension": 0.6413167857142602,
+          "metrics": {
+            "eligible": 186,
+            "proposed": 13,
+            "accepted": 7,
+            "adoptions": 23,
+            "practiceRequests": 83,
+            "practices": 50,
+            "departures": 3,
+            "dissolutions": 4,
+            "relations": {
+              "attempts": 1407,
+              "admitted": 1407,
+              "favorable": 789,
+              "neutral": 209,
+              "unfavorable": 409,
+              "gained": 1838.7003382011028,
+              "lost": 327.19999999999857,
+              "erosion": 23.51501941127738
+            }
+          }
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "firstGroup": 3.30625,
+      "checkpoints": [
+        {
+          "day": 3,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 2.9911678632665146,
+          "tension": 0.0224999999999941,
+          "metrics": {
+            "eligible": 0,
+            "proposed": 0,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 150,
+              "admitted": 150,
+              "favorable": 74,
+              "neutral": 45,
+              "unfavorable": 31,
+              "gained": 181.42199999999977,
+              "lost": 24.799999999999976,
+              "erosion": 0
+            }
+          }
+        },
+        {
+          "day": 5,
+          "formed": 1,
+          "active": 1,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 5.722161921679544,
+          "tension": 0.49506025232526635,
+          "metrics": {
+            "eligible": 4,
+            "proposed": 1,
+            "accepted": 1,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 251,
+              "admitted": 251,
+              "favorable": 144,
+              "neutral": 58,
+              "unfavorable": 49,
+              "gained": 352.2739999999985,
+              "lost": 39.199999999999925,
+              "erosion": 1.3390630223588653
+            }
+          }
+        },
+        {
+          "day": 10,
+          "formed": 3,
+          "active": 2,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 1,
+          "maxMembership": 2,
+          "affinity": 10.155440062627685,
+          "tension": 0.06299999999999809,
+          "metrics": {
+            "eligible": 27,
+            "proposed": 5,
+            "accepted": 3,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 1,
+            "dissolutions": 1,
+            "relations": {
+              "attempts": 458,
+              "admitted": 458,
+              "favorable": 263,
+              "neutral": 104,
+              "unfavorable": 91,
+              "gained": 643.0100000000008,
+              "lost": 72.79999999999995,
+              "erosion": 1.3390630223588653
+            }
+          }
+        },
+        {
+          "day": 30,
+          "formed": 7,
+          "active": 3,
+          "survivors7d": 3,
+          "mature": 4,
+          "matureSingle": 4,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 29.52799763074342,
+          "tension": 0,
+          "metrics": {
+            "eligible": 249,
+            "proposed": 23,
+            "accepted": 9,
+            "adoptions": 15,
+            "practiceRequests": 102,
+            "practices": 34,
+            "departures": 6,
+            "dissolutions": 4,
+            "relations": {
+              "attempts": 1347,
+              "admitted": 1347,
+              "favorable": 850,
+              "neutral": 241,
+              "unfavorable": 256,
+              "gained": 2030.214627232618,
+              "lost": 204.80000000000183,
+              "erosion": 1.3390630223588653
+            }
+          }
+        }
+      ]
+    },
+    {
+      "seed": 2,
+      "firstGroup": 5.279166666666667,
+      "checkpoints": [
+        {
+          "day": 3,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 3.662123065100596,
+          "tension": 0.11346428571427421,
+          "metrics": {
+            "eligible": 0,
+            "proposed": 0,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 148,
+              "admitted": 148,
+              "favorable": 87,
+              "neutral": 38,
+              "unfavorable": 23,
+              "gained": 215.05799999999948,
+              "lost": 18.4,
+              "erosion": 0
+            }
+          }
+        },
+        {
+          "day": 5,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 6.383458942568564,
+          "tension": 0.05207142857142784,
+          "metrics": {
+            "eligible": 18,
+            "proposed": 3,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 260,
+              "admitted": 260,
+              "favorable": 156,
+              "neutral": 59,
+              "unfavorable": 45,
+              "gained": 384.21199999999834,
+              "lost": 35.999999999999936,
+              "erosion": 1.777209227875272
+            }
+          }
+        },
+        {
+          "day": 10,
+          "formed": 2,
+          "active": 2,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 13.287992816971874,
+          "tension": 0.010285714285710843,
+          "metrics": {
+            "eligible": 64,
+            "proposed": 6,
+            "accepted": 2,
+            "adoptions": 4,
+            "practiceRequests": 6,
+            "practices": 1,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 536,
+              "admitted": 536,
+              "favorable": 334,
+              "neutral": 98,
+              "unfavorable": 104,
+              "gained": 822.346000000005,
+              "lost": 83.2000000000001,
+              "erosion": 2.2791575960621797
+            }
+          }
+        },
+        {
+          "day": 30,
+          "formed": 4,
+          "active": 2,
+          "survivors7d": 2,
+          "mature": 6,
+          "matureSingle": 6,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 33.784379312172426,
+          "tension": 0.06950892857142377,
+          "metrics": {
+            "eligible": 288,
+            "proposed": 17,
+            "accepted": 6,
+            "adoptions": 22,
+            "practiceRequests": 85,
+            "practices": 54,
+            "departures": 2,
+            "dissolutions": 2,
+            "relations": {
+              "attempts": 1530,
+              "admitted": 1530,
+              "favorable": 1027,
+              "neutral": 217,
+              "unfavorable": 286,
+              "gained": 2318.2995920642397,
+              "lost": 228.80000000000217,
+              "erosion": 2.449309587897715
+            }
+          }
+        }
+      ]
+    },
+    {
+      "seed": 3,
+      "firstGroup": 4.086111111111111,
+      "checkpoints": [
+        {
+          "day": 3,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 2.7761891572833077,
+          "tension": 1.1314282584920774,
+          "metrics": {
+            "eligible": 10,
+            "proposed": 0,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 133,
+              "admitted": 133,
+              "favorable": 77,
+              "neutral": 27,
+              "unfavorable": 29,
+              "gained": 191.47699999999975,
+              "lost": 23.19999999999998,
+              "erosion": 17.194483622255035
+            }
+          }
+        },
+        {
+          "day": 5,
+          "formed": 2,
+          "active": 2,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 5.183801312120073,
+          "tension": 0,
+          "metrics": {
+            "eligible": 20,
+            "proposed": 3,
+            "accepted": 2,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 225,
+              "admitted": 225,
+              "favorable": 138,
+              "neutral": 37,
+              "unfavorable": 50,
+              "gained": 341.97999999999837,
+              "lost": 39.99999999999992,
+              "erosion": 17.55437133134926
+            }
+          }
+        },
+        {
+          "day": 10,
+          "formed": 3,
+          "active": 1,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 10.823016882123657,
+          "tension": 0,
+          "metrics": {
+            "eligible": 29,
+            "proposed": 4,
+            "accepted": 3,
+            "adoptions": 3,
+            "practiceRequests": 8,
+            "practices": 1,
+            "departures": 2,
+            "dissolutions": 2,
+            "relations": {
+              "attempts": 456,
+              "admitted": 456,
+              "favorable": 283,
+              "neutral": 75,
+              "unfavorable": 98,
+              "gained": 702.4180000000015,
+              "lost": 78.40000000000003,
+              "erosion": 17.55437133134926
+            }
+          }
+        },
+        {
+          "day": 30,
+          "formed": 4,
+          "active": 2,
+          "survivors7d": 2,
+          "mature": 4,
+          "matureSingle": 3,
+          "multi": 1,
+          "maxMembership": 2,
+          "affinity": 26.704230760550413,
+          "tension": 0.01494642857142661,
+          "metrics": {
+            "eligible": 341,
+            "proposed": 12,
+            "accepted": 5,
+            "adoptions": 13,
+            "practiceRequests": 75,
+            "practices": 33,
+            "departures": 2,
+            "dissolutions": 2,
+            "relations": {
+              "attempts": 1292,
+              "admitted": 1292,
+              "favorable": 839,
+              "neutral": 198,
+              "unfavorable": 255,
+              "gained": 1915.991791499665,
+              "lost": 204.00000000000182,
+              "erosion": 17.91488506326759
+            }
+          }
+        }
+      ]
+    },
+    {
+      "seed": 4,
+      "firstGroup": 6.427777777777778,
+      "checkpoints": [
+        {
+          "day": 3,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 1.9399979193868262,
+          "tension": 0.4229086597624129,
+          "metrics": {
+            "eligible": 0,
+            "proposed": 0,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 134,
+              "admitted": 134,
+              "favorable": 54,
+              "neutral": 40,
+              "unfavorable": 40,
+              "gained": 133.27300000000014,
+              "lost": 31.99999999999995,
+              "erosion": 0.22086213743865346
+            }
+          }
+        },
+        {
+          "day": 5,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 3.3366189654814384,
+          "tension": 0,
+          "metrics": {
+            "eligible": 4,
+            "proposed": 0,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 213,
+              "admitted": 213,
+              "favorable": 91,
+              "neutral": 63,
+              "unfavorable": 59,
+              "gained": 223.6369999999995,
+              "lost": 47.199999999999896,
+              "erosion": 0.22086213743865346
+            }
+          }
+        },
+        {
+          "day": 10,
+          "formed": 2,
+          "active": 2,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 6.188542022851613,
+          "tension": 1.1545611274672045,
+          "metrics": {
+            "eligible": 9,
+            "proposed": 2,
+            "accepted": 2,
+            "adoptions": 2,
+            "practiceRequests": 8,
+            "practices": 2,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 428,
+              "admitted": 428,
+              "favorable": 183,
+              "neutral": 114,
+              "unfavorable": 131,
+              "gained": 449.1249999999979,
+              "lost": 104.80000000000041,
+              "erosion": 8.122422127859176
+            }
+          }
+        },
+        {
+          "day": 30,
+          "formed": 5,
+          "active": 3,
+          "survivors7d": 2,
+          "mature": 4,
+          "matureSingle": 4,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 18.293511394141493,
+          "tension": 0.4491164711982395,
+          "metrics": {
+            "eligible": 96,
+            "proposed": 11,
+            "accepted": 6,
+            "adoptions": 11,
+            "practiceRequests": 104,
+            "practices": 45,
+            "departures": 3,
+            "dissolutions": 2,
+            "relations": {
+              "attempts": 1228,
+              "admitted": 1228,
+              "favorable": 593,
+              "neutral": 280,
+              "unfavorable": 355,
+              "gained": 1424.9177760301416,
+              "lost": 284.000000000001,
+              "erosion": 10.778786393705008
+            }
+          }
+        }
+      ]
+    },
+    {
+      "seed": 5,
+      "firstGroup": 4.122916666666667,
+      "checkpoints": [
+        {
+          "day": 3,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 2.1104305104210117,
+          "tension": 0.12849107142856192,
+          "metrics": {
+            "eligible": 0,
+            "proposed": 0,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 116,
+              "admitted": 116,
+              "favorable": 54,
+              "neutral": 35,
+              "unfavorable": 27,
+              "gained": 133.08100000000013,
+              "lost": 21.599999999999987,
+              "erosion": 0
+            }
+          }
+        },
+        {
+          "day": 5,
+          "formed": 1,
+          "active": 1,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 4.689570485173749,
+          "tension": 0,
+          "metrics": {
+            "eligible": 2,
+            "proposed": 2,
+            "accepted": 1,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 217,
+              "admitted": 217,
+              "favorable": 115,
+              "neutral": 63,
+              "unfavorable": 39,
+              "gained": 282.0879999999989,
+              "lost": 31.199999999999953,
+              "erosion": 0
+            }
+          }
+        },
+        {
+          "day": 10,
+          "formed": 4,
+          "active": 3,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 1,
+          "maxMembership": 2,
+          "affinity": 10.948597244682633,
+          "tension": 0,
+          "metrics": {
+            "eligible": 32,
+            "proposed": 8,
+            "accepted": 4,
+            "adoptions": 3,
+            "practiceRequests": 9,
+            "practices": 2,
+            "departures": 1,
+            "dissolutions": 1,
+            "relations": {
+              "attempts": 458,
+              "admitted": 458,
+              "favorable": 272,
+              "neutral": 108,
+              "unfavorable": 78,
+              "gained": 665.791000000001,
+              "lost": 62.39999999999984,
+              "erosion": 0
+            }
+          }
+        },
+        {
+          "day": 30,
+          "formed": 5,
+          "active": 2,
+          "survivors7d": 2,
+          "mature": 5,
+          "matureSingle": 4,
+          "multi": 1,
+          "maxMembership": 2,
+          "affinity": 27.38513415205801,
+          "tension": 0,
+          "metrics": {
+            "eligible": 319,
+            "proposed": 18,
+            "accepted": 7,
+            "adoptions": 17,
+            "practiceRequests": 112,
+            "practices": 53,
+            "departures": 3,
+            "dissolutions": 3,
+            "relations": {
+              "attempts": 1241,
+              "admitted": 1241,
+              "favorable": 798,
+              "neutral": 246,
+              "unfavorable": 197,
+              "gained": 1852.7340686444404,
+              "lost": 157.60000000000116,
+              "erosion": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "seed": 6,
+      "firstGroup": 6.252083333333333,
+      "checkpoints": [
+        {
+          "day": 3,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 2.6432272982777283,
+          "tension": 0,
+          "metrics": {
+            "eligible": 0,
+            "proposed": 0,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 137,
+              "admitted": 137,
+              "favorable": 67,
+              "neutral": 38,
+              "unfavorable": 32,
+              "gained": 165.34599999999978,
+              "lost": 25.599999999999973,
+              "erosion": 0
+            }
+          }
+        },
+        {
+          "day": 5,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 4.564222316172055,
+          "tension": 0.31644642857141025,
+          "metrics": {
+            "eligible": 5,
+            "proposed": 3,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 232,
+              "admitted": 232,
+              "favorable": 122,
+              "neutral": 46,
+              "unfavorable": 64,
+              "gained": 298.9329999999987,
+              "lost": 51.19999999999988,
+              "erosion": 0.06476712881547975
+            }
+          }
+        },
+        {
+          "day": 10,
+          "formed": 2,
+          "active": 2,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 9.48806615856935,
+          "tension": 0.1652142857142754,
+          "metrics": {
+            "eligible": 20,
+            "proposed": 6,
+            "accepted": 2,
+            "adoptions": 1,
+            "practiceRequests": 3,
+            "practices": 1,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 470,
+              "admitted": 470,
+              "favorable": 257,
+              "neutral": 86,
+              "unfavorable": 127,
+              "gained": 634.4360000000001,
+              "lost": 101.60000000000036,
+              "erosion": 0.4031363434169152
+            }
+          }
+        },
+        {
+          "day": 30,
+          "formed": 5,
+          "active": 2,
+          "survivors7d": 2,
+          "mature": 4,
+          "matureSingle": 4,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 32.50556281731437,
+          "tension": 0.1371696428571373,
+          "metrics": {
+            "eligible": 216,
+            "proposed": 18,
+            "accepted": 7,
+            "adoptions": 24,
+            "practiceRequests": 51,
+            "practices": 34,
+            "departures": 2,
+            "dissolutions": 3,
+            "relations": {
+              "attempts": 1557,
+              "admitted": 1557,
+              "favorable": 1015,
+              "neutral": 231,
+              "unfavorable": 311,
+              "gained": 2224.935119558333,
+              "lost": 248.80000000000246,
+              "erosion": 0.4031363434169152
+            }
+          }
+        }
+      ]
+    },
+    {
+      "seed": 7,
+      "firstGroup": 9.229166666666666,
+      "checkpoints": [
+        {
+          "day": 3,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 2.9042197138851367,
+          "tension": 0.5171438501951824,
+          "metrics": {
+            "eligible": 4,
+            "proposed": 0,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 155,
+              "admitted": 155,
+              "favorable": 79,
+              "neutral": 37,
+              "unfavorable": 39,
+              "gained": 190.6409999999997,
+              "lost": 31.19999999999996,
+              "erosion": 1.3450171337400851
+            }
+          }
+        },
+        {
+          "day": 5,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 3.8310759807879244,
+          "tension": 0.9850446428571057,
+          "metrics": {
+            "eligible": 8,
+            "proposed": 2,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 222,
+              "admitted": 222,
+              "favorable": 108,
+              "neutral": 49,
+              "unfavorable": 65,
+              "gained": 265.08999999999946,
+              "lost": 51.999999999999886,
+              "erosion": 3.7138171337399966
+            }
+          }
+        },
+        {
+          "day": 10,
+          "formed": 1,
+          "active": 1,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 8.53088758837625,
+          "tension": 0,
+          "metrics": {
+            "eligible": 29,
+            "proposed": 9,
+            "accepted": 1,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 447,
+              "admitted": 447,
+              "favorable": 235,
+              "neutral": 93,
+              "unfavorable": 119,
+              "gained": 575.7989999999991,
+              "lost": 95.20000000000027,
+              "erosion": 3.7138171337399966
+            }
+          }
+        },
+        {
+          "day": 30,
+          "formed": 6,
+          "active": 3,
+          "survivors7d": 3,
+          "mature": 1,
+          "matureSingle": 0,
+          "multi": 2,
+          "maxMembership": 2,
+          "affinity": 20.11297489947051,
+          "tension": 0.050946428571422994,
+          "metrics": {
+            "eligible": 186,
+            "proposed": 24,
+            "accepted": 7,
+            "adoptions": 21,
+            "practiceRequests": 57,
+            "practices": 23,
+            "departures": 3,
+            "dissolutions": 3,
+            "relations": {
+              "attempts": 1289,
+              "admitted": 1289,
+              "favorable": 689,
+              "neutral": 250,
+              "unfavorable": 350,
+              "gained": 1545.4138477419315,
+              "lost": 280.00000000000125,
+              "erosion": 10.458282858196615
+            }
+          }
+        }
+      ]
+    },
+    {
+      "seed": 8,
+      "firstGroup": 3.9715277777777778,
+      "checkpoints": [
+        {
+          "day": 3,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 2.4743184573313477,
+          "tension": 0.050383928571423944,
+          "metrics": {
+            "eligible": 3,
+            "proposed": 0,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 135,
+              "admitted": 135,
+              "favorable": 64,
+              "neutral": 37,
+              "unfavorable": 34,
+              "gained": 156.31599999999992,
+              "lost": 27.199999999999974,
+              "erosion": 0
+            }
+          }
+        },
+        {
+          "day": 5,
+          "formed": 1,
+          "active": 1,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 4.62613609834053,
+          "tension": 0.11539285714285279,
+          "metrics": {
+            "eligible": 13,
+            "proposed": 1,
+            "accepted": 1,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 235,
+              "admitted": 235,
+              "favorable": 121,
+              "neutral": 60,
+              "unfavorable": 54,
+              "gained": 293.6269999999987,
+              "lost": 43.19999999999992,
+              "erosion": 0
+            }
+          }
+        },
+        {
+          "day": 10,
+          "formed": 3,
+          "active": 1,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 10.275546253025086,
+          "tension": 0.07481249999999842,
+          "metrics": {
+            "eligible": 20,
+            "proposed": 4,
+            "accepted": 3,
+            "adoptions": 2,
+            "practiceRequests": 5,
+            "practices": 2,
+            "departures": 2,
+            "dissolutions": 2,
+            "relations": {
+              "attempts": 484,
+              "admitted": 484,
+              "favorable": 269,
+              "neutral": 99,
+              "unfavorable": 116,
+              "gained": 658.7240000000021,
+              "lost": 92.80000000000024,
+              "erosion": 3.2833787918260704
+            }
+          }
+        },
+        {
+          "day": 30,
+          "formed": 7,
+          "active": 3,
+          "survivors7d": 2,
+          "mature": 4,
+          "matureSingle": 3,
+          "multi": 1,
+          "maxMembership": 2,
+          "affinity": 29.543244913321534,
+          "tension": 0,
+          "metrics": {
+            "eligible": 362,
+            "proposed": 25,
+            "accepted": 8,
+            "adoptions": 21,
+            "practiceRequests": 77,
+            "practices": 36,
+            "departures": 4,
+            "dissolutions": 4,
+            "relations": {
+              "attempts": 1499,
+              "admitted": 1499,
+              "favorable": 948,
+              "neutral": 267,
+              "unfavorable": 284,
+              "gained": 2016.7281775564484,
+              "lost": 227.20000000000215,
+              "erosion": 3.303565822829393
+            }
+          }
+        }
+      ]
+    },
+    {
+      "seed": 9,
+      "firstGroup": 4.127083333333333,
+      "checkpoints": [
+        {
+          "day": 3,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 2.220940062903051,
+          "tension": 0.3264285714285827,
+          "metrics": {
+            "eligible": 1,
+            "proposed": 1,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 127,
+              "admitted": 127,
+              "favorable": 61,
+              "neutral": 32,
+              "unfavorable": 34,
+              "gained": 148.75300000000004,
+              "lost": 27.199999999999974,
+              "erosion": 4.401957672282752
+            }
+          }
+        },
+        {
+          "day": 5,
+          "formed": 1,
+          "active": 1,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 3.952652980005766,
+          "tension": 0,
+          "metrics": {
+            "eligible": 3,
+            "proposed": 2,
+            "accepted": 1,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 191,
+              "admitted": 191,
+              "favorable": 102,
+              "neutral": 44,
+              "unfavorable": 45,
+              "gained": 250.45899999999938,
+              "lost": 35.99999999999994,
+              "erosion": 4.401957672282752
+            }
+          }
+        },
+        {
+          "day": 10,
+          "formed": 2,
+          "active": 2,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 6.872957461638566,
+          "tension": 0.4835105900038445,
+          "metrics": {
+            "eligible": 7,
+            "proposed": 4,
+            "accepted": 3,
+            "adoptions": 2,
+            "practiceRequests": 3,
+            "practices": 0,
+            "departures": 1,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 392,
+              "admitted": 392,
+              "favorable": 193,
+              "neutral": 87,
+              "unfavorable": 112,
+              "gained": 474.50599999999815,
+              "lost": 89.6000000000002,
+              "erosion": 5.61061056593813
+            }
+          }
+        },
+        {
+          "day": 30,
+          "formed": 4,
+          "active": 2,
+          "survivors7d": 1,
+          "mature": 4,
+          "matureSingle": 4,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 23.33030927454147,
+          "tension": 0.31749107142855887,
+          "metrics": {
+            "eligible": 96,
+            "proposed": 15,
+            "accepted": 7,
+            "adoptions": 16,
+            "practiceRequests": 57,
+            "practices": 35,
+            "departures": 3,
+            "dissolutions": 2,
+            "relations": {
+              "attempts": 1238,
+              "admitted": 1238,
+              "favorable": 680,
+              "neutral": 203,
+              "unfavorable": 355,
+              "gained": 1727.255000000026,
+              "lost": 284.000000000001,
+              "erosion": 8.049277594739378
+            }
+          }
+        }
+      ]
+    },
+    {
+      "seed": 10,
+      "firstGroup": 2.5770833333333334,
+      "checkpoints": [
+        {
+          "day": 3,
+          "formed": 1,
+          "active": 1,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 2.3085506534025533,
+          "tension": 0.06669642857142534,
+          "metrics": {
+            "eligible": 1,
+            "proposed": 1,
+            "accepted": 1,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 109,
+              "admitted": 109,
+              "favorable": 55,
+              "neutral": 35,
+              "unfavorable": 19,
+              "gained": 136.12800000000013,
+              "lost": 15.200000000000008,
+              "erosion": 0
+            }
+          }
+        },
+        {
+          "day": 5,
+          "formed": 2,
+          "active": 2,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 1,
+          "maxMembership": 2,
+          "affinity": 4.185972674289618,
+          "tension": 0.02394642857142289,
+          "metrics": {
+            "eligible": 2,
+            "proposed": 2,
+            "accepted": 2,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 192,
+              "admitted": 192,
+              "favorable": 104,
+              "neutral": 50,
+              "unfavorable": 38,
+              "gained": 255.41699999999915,
+              "lost": 30.399999999999956,
+              "erosion": 0.5888582968458789
+            }
+          }
+        },
+        {
+          "day": 10,
+          "formed": 3,
+          "active": 2,
+          "survivors7d": 1,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 1,
+          "maxMembership": 2,
+          "affinity": 8.35908109225018,
+          "tension": 0,
+          "metrics": {
+            "eligible": 18,
+            "proposed": 3,
+            "accepted": 3,
+            "adoptions": 4,
+            "practiceRequests": 15,
+            "practices": 1,
+            "departures": 1,
+            "dissolutions": 1,
+            "relations": {
+              "attempts": 412,
+              "admitted": 412,
+              "favorable": 222,
+              "neutral": 91,
+              "unfavorable": 99,
+              "gained": 548.9169999999983,
+              "lost": 79.20000000000005,
+              "erosion": 0.6170811596690682
+            }
+          }
+        },
+        {
+          "day": 30,
+          "formed": 6,
+          "active": 2,
+          "survivors7d": 2,
+          "mature": 3,
+          "matureSingle": 3,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 24.548649247778105,
+          "tension": 0,
+          "metrics": {
+            "eligible": 155,
+            "proposed": 16,
+            "accepted": 8,
+            "adoptions": 29,
+            "practiceRequests": 64,
+            "practices": 26,
+            "departures": 4,
+            "dissolutions": 4,
+            "relations": {
+              "attempts": 1304,
+              "admitted": 1304,
+              "favorable": 726,
+              "neutral": 258,
+              "unfavorable": 320,
+              "gained": 1782.7627000124266,
+              "lost": 256.00000000000256,
+              "erosion": 6.90073589730474
+            }
+          }
+        }
+      ]
+    },
+    {
+      "seed": 11,
+      "firstGroup": 6.465277777777778,
+      "checkpoints": [
+        {
+          "day": 3,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 0.8668787682857112,
+          "tension": 1.311842629580092,
+          "metrics": {
+            "eligible": 0,
+            "proposed": 0,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 132,
+              "admitted": 132,
+              "favorable": 34,
+              "neutral": 51,
+              "unfavorable": 47,
+              "gained": 85.10700000000007,
+              "lost": 37.59999999999993,
+              "erosion": 2.078613066438163
+            }
+          }
+        },
+        {
+          "day": 5,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 2.0784973244227154,
+          "tension": 0.16931249999998882,
+          "metrics": {
+            "eligible": 3,
+            "proposed": 0,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 228,
+              "admitted": 228,
+              "favorable": 73,
+              "neutral": 70,
+              "unfavorable": 85,
+              "gained": 181.17299999999972,
+              "lost": 67.99999999999989,
+              "erosion": 2.3104930664381635
+            }
+          }
+        },
+        {
+          "day": 10,
+          "formed": 1,
+          "active": 1,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 5.652862410417137,
+          "tension": 0.11015569786532763,
+          "metrics": {
+            "eligible": 12,
+            "proposed": 2,
+            "accepted": 1,
+            "adoptions": 2,
+            "practiceRequests": 6,
+            "practices": 3,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 457,
+              "admitted": 457,
+              "favorable": 184,
+              "neutral": 114,
+              "unfavorable": 159,
+              "gained": 451.15699999999777,
+              "lost": 127.20000000000073,
+              "erosion": 4.946407298762493
+            }
+          }
+        },
+        {
+          "day": 30,
+          "formed": 2,
+          "active": 1,
+          "survivors7d": 1,
+          "mature": 4,
+          "matureSingle": 4,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 21.387640114519268,
+          "tension": 0.5739225098043936,
+          "metrics": {
+            "eligible": 93,
+            "proposed": 8,
+            "accepted": 4,
+            "adoptions": 9,
+            "practiceRequests": 36,
+            "practices": 27,
+            "departures": 1,
+            "dissolutions": 1,
+            "relations": {
+              "attempts": 1387,
+              "admitted": 1387,
+              "favorable": 688,
+              "neutral": 224,
+              "unfavorable": 475,
+              "gained": 1694.7979404202647,
+              "lost": 379.99999999999557,
+              "erosion": 10.610321981214092
+            }
+          }
+        }
+      ]
+    },
+    {
+      "seed": 12,
+      "firstGroup": 3.2631944444444443,
+      "checkpoints": [
+        {
+          "day": 3,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 3.693726614617893,
+          "tension": 0.02290178571428348,
+          "metrics": {
+            "eligible": 4,
+            "proposed": 0,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 153,
+              "admitted": 153,
+              "favorable": 90,
+              "neutral": 33,
+              "unfavorable": 30,
+              "gained": 221.95599999999934,
+              "lost": 23.99999999999998,
+              "erosion": 0
+            }
+          }
+        },
+        {
+          "day": 5,
+          "formed": 2,
+          "active": 2,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 6.319098661999631,
+          "tension": 0.09859821428571323,
+          "metrics": {
+            "eligible": 13,
+            "proposed": 2,
+            "accepted": 2,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 261,
+              "admitted": 261,
+              "favorable": 157,
+              "neutral": 47,
+              "unfavorable": 57,
+              "gained": 388.2749999999983,
+              "lost": 45.5999999999999,
+              "erosion": 0
+            }
+          }
+        },
+        {
+          "day": 10,
+          "formed": 4,
+          "active": 2,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 12.337486041328532,
+          "tension": 1.0163638823666619,
+          "metrics": {
+            "eligible": 51,
+            "proposed": 11,
+            "accepted": 4,
+            "adoptions": 4,
+            "practiceRequests": 3,
+            "practices": 1,
+            "departures": 2,
+            "dissolutions": 2,
+            "relations": {
+              "attempts": 514,
+              "admitted": 514,
+              "favorable": 313,
+              "neutral": 79,
+              "unfavorable": 122,
+              "gained": 780.2810000000056,
+              "lost": 97.6000000000003,
+              "erosion": 1.849469088971322
+            }
+          }
+        },
+        {
+          "day": 30,
+          "formed": 12,
+          "active": 4,
+          "survivors7d": 1,
+          "mature": 2,
+          "matureSingle": 1,
+          "multi": 2,
+          "maxMembership": 2,
+          "affinity": 31.93110971429,
+          "tension": 0.08075892857142426,
+          "metrics": {
+            "eligible": 244,
+            "proposed": 29,
+            "accepted": 12,
+            "adoptions": 21,
+            "practiceRequests": 45,
+            "practices": 10,
+            "departures": 6,
+            "dissolutions": 8,
+            "relations": {
+              "attempts": 1452,
+              "admitted": 1452,
+              "favorable": 903,
+              "neutral": 229,
+              "unfavorable": 320,
+              "gained": 2211.055192337487,
+              "lost": 256.00000000000256,
+              "erosion": 9.158489716175918
+            }
+          }
+        }
+      ]
+    },
+    {
+      "seed": 13,
+      "firstGroup": 5.33125,
+      "checkpoints": [
+        {
+          "day": 3,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 2.1129604994627065,
+          "tension": 0.555214965137962,
+          "metrics": {
+            "eligible": 0,
+            "proposed": 0,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 122,
+              "admitted": 122,
+              "favorable": 57,
+              "neutral": 30,
+              "unfavorable": 35,
+              "gained": 140.84500000000003,
+              "lost": 27.99999999999997,
+              "erosion": 0.4824461327257692
+            }
+          }
+        },
+        {
+          "day": 5,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 4.633821429932012,
+          "tension": 0,
+          "metrics": {
+            "eligible": 9,
+            "proposed": 3,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 225,
+              "admitted": 225,
+              "favorable": 121,
+              "neutral": 44,
+              "unfavorable": 60,
+              "gained": 299.072999999999,
+              "lost": 47.9999999999999,
+              "erosion": 0.4824461327257692
+            }
+          }
+        },
+        {
+          "day": 10,
+          "formed": 3,
+          "active": 2,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 9.123913351910222,
+          "tension": 0.051026785714282326,
+          "metrics": {
+            "eligible": 20,
+            "proposed": 6,
+            "accepted": 3,
+            "adoptions": 3,
+            "practiceRequests": 6,
+            "practices": 2,
+            "departures": 1,
+            "dissolutions": 1,
+            "relations": {
+              "attempts": 463,
+              "admitted": 463,
+              "favorable": 245,
+              "neutral": 88,
+              "unfavorable": 130,
+              "gained": 606.3769999999986,
+              "lost": 104.0000000000004,
+              "erosion": 0.5228061327257689
+            }
+          }
+        },
+        {
+          "day": 30,
+          "formed": 4,
+          "active": 2,
+          "survivors7d": 2,
+          "mature": 5,
+          "matureSingle": 5,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 26.335161140646335,
+          "tension": 0,
+          "metrics": {
+            "eligible": 204,
+            "proposed": 12,
+            "accepted": 5,
+            "adoptions": 18,
+            "practiceRequests": 74,
+            "practices": 40,
+            "departures": 2,
+            "dissolutions": 2,
+            "relations": {
+              "attempts": 1349,
+              "admitted": 1349,
+              "favorable": 809,
+              "neutral": 182,
+              "unfavorable": 358,
+              "gained": 1864.9077640196824,
+              "lost": 286.4000000000009,
+              "erosion": 1.7430440640709965
+            }
+          }
+        }
+      ]
+    },
+    {
+      "seed": 14,
+      "firstGroup": 4.374305555555556,
+      "checkpoints": [
+        {
+          "day": 3,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 1.9025442992422137,
+          "tension": 0.7711575000000254,
+          "metrics": {
+            "eligible": 0,
+            "proposed": 0,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 134,
+              "admitted": 134,
+              "favorable": 58,
+              "neutral": 33,
+              "unfavorable": 43,
+              "gained": 141.2170000000001,
+              "lost": 34.39999999999995,
+              "erosion": 3.6056879999998492
+            }
+          }
+        },
+        {
+          "day": 5,
+          "formed": 1,
+          "active": 1,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 4.22652198350925,
+          "tension": 0.5508288397607881,
+          "metrics": {
+            "eligible": 2,
+            "proposed": 2,
+            "accepted": 1,
+            "adoptions": 1,
+            "practiceRequests": 1,
+            "practices": 1,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 250,
+              "admitted": 250,
+              "favorable": 120,
+              "neutral": 55,
+              "unfavorable": 75,
+              "gained": 292.8369999999991,
+              "lost": 59.99999999999986,
+              "erosion": 4.648593398751958
+            }
+          }
+        },
+        {
+          "day": 10,
+          "formed": 2,
+          "active": 2,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 7.818653981680037,
+          "tension": 0.2656249972399468,
+          "metrics": {
+            "eligible": 7,
+            "proposed": 4,
+            "accepted": 3,
+            "adoptions": 2,
+            "practiceRequests": 14,
+            "practices": 7,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 431,
+              "admitted": 431,
+              "favorable": 219,
+              "neutral": 87,
+              "unfavorable": 125,
+              "gained": 537.6929999999983,
+              "lost": 100.00000000000034,
+              "erosion": 6.429926033445209
+            }
+          }
+        },
+        {
+          "day": 30,
+          "formed": 6,
+          "active": 2,
+          "survivors7d": 1,
+          "mature": 3,
+          "matureSingle": 3,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 26.807920660114636,
+          "tension": 0.04379464285713964,
+          "metrics": {
+            "eligible": 159,
+            "proposed": 19,
+            "accepted": 7,
+            "adoptions": 22,
+            "practiceRequests": 67,
+            "practices": 45,
+            "departures": 4,
+            "dissolutions": 4,
+            "relations": {
+              "attempts": 1374,
+              "admitted": 1374,
+              "favorable": 806,
+              "neutral": 216,
+              "unfavorable": 352,
+              "gained": 1921.3213619737255,
+              "lost": 281.60000000000116,
+              "erosion": 6.5961660334452095
+            }
+          }
+        }
+      ]
+    },
+    {
+      "seed": 15,
+      "firstGroup": 6.176388888888889,
+      "checkpoints": [
+        {
+          "day": 3,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 2.601200489669409,
+          "tension": 0.11999999999995645,
+          "metrics": {
+            "eligible": 2,
+            "proposed": 2,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 131,
+              "admitted": 131,
+              "favorable": 69,
+              "neutral": 33,
+              "unfavorable": 29,
+              "gained": 170.18899999999977,
+              "lost": 23.19999999999998,
+              "erosion": 4.703279999999717
+            }
+          }
+        },
+        {
+          "day": 5,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 5.024086657702918,
+          "tension": 0,
+          "metrics": {
+            "eligible": 20,
+            "proposed": 4,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 240,
+              "admitted": 240,
+              "favorable": 132,
+              "neutral": 53,
+              "unfavorable": 55,
+              "gained": 326.23299999999875,
+              "lost": 43.99999999999991,
+              "erosion": 4.703279999999717
+            }
+          }
+        },
+        {
+          "day": 10,
+          "formed": 3,
+          "active": 2,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 10.019223804541769,
+          "tension": 0.0016874999999989973,
+          "metrics": {
+            "eligible": 32,
+            "proposed": 7,
+            "accepted": 3,
+            "adoptions": 2,
+            "practiceRequests": 1,
+            "practices": 0,
+            "departures": 1,
+            "dissolutions": 1,
+            "relations": {
+              "attempts": 470,
+              "admitted": 470,
+              "favorable": 268,
+              "neutral": 85,
+              "unfavorable": 117,
+              "gained": 663.6620000000005,
+              "lost": 93.60000000000025,
+              "erosion": 4.775058316143397
+            }
+          }
+        },
+        {
+          "day": 30,
+          "formed": 6,
+          "active": 2,
+          "survivors7d": 2,
+          "mature": 3,
+          "matureSingle": 3,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 24.40775327563805,
+          "tension": 0.13620535714285156,
+          "metrics": {
+            "eligible": 161,
+            "proposed": 25,
+            "accepted": 10,
+            "adoptions": 20,
+            "practiceRequests": 48,
+            "practices": 20,
+            "departures": 6,
+            "dissolutions": 4,
+            "relations": {
+              "attempts": 1224,
+              "admitted": 1224,
+              "favorable": 752,
+              "neutral": 178,
+              "unfavorable": 294,
+              "gained": 1797.0712016446405,
+              "lost": 235.20000000000226,
+              "erosion": 5.001441512568518
+            }
+          }
+        }
+      ]
+    },
+    {
+      "seed": 16,
+      "firstGroup": 2.0652777777777778,
+      "checkpoints": [
+        {
+          "day": 3,
+          "formed": 1,
+          "active": 1,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 3.8160130969032697,
+          "tension": 0.11699999999999319,
+          "metrics": {
+            "eligible": 4,
+            "proposed": 1,
+            "accepted": 1,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 162,
+              "admitted": 162,
+              "favorable": 95,
+              "neutral": 26,
+              "unfavorable": 41,
+              "gained": 234.88799999999932,
+              "lost": 32.79999999999995,
+              "erosion": 0
+            }
+          }
+        },
+        {
+          "day": 5,
+          "formed": 1,
+          "active": 1,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 6.712318775026875,
+          "tension": 0.14777678571427905,
+          "metrics": {
+            "eligible": 8,
+            "proposed": 1,
+            "accepted": 1,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 268,
+              "admitted": 268,
+              "favorable": 167,
+              "neutral": 46,
+              "unfavorable": 55,
+              "gained": 410.76899999999785,
+              "lost": 43.99999999999991,
+              "erosion": 0
+            }
+          }
+        },
+        {
+          "day": 10,
+          "formed": 4,
+          "active": 3,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 11.923063544381119,
+          "tension": 0.3704025197185215,
+          "metrics": {
+            "eligible": 37,
+            "proposed": 6,
+            "accepted": 4,
+            "adoptions": 3,
+            "practiceRequests": 3,
+            "practices": 0,
+            "departures": 1,
+            "dissolutions": 1,
+            "relations": {
+              "attempts": 478,
+              "admitted": 478,
+              "favorable": 301,
+              "neutral": 74,
+              "unfavorable": 103,
+              "gained": 744.2890000000037,
+              "lost": 82.40000000000009,
+              "erosion": 0
+            }
+          }
+        },
+        {
+          "day": 30,
+          "formed": 6,
+          "active": 3,
+          "survivors7d": 3,
+          "mature": 6,
+          "matureSingle": 6,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 28.22978338111438,
+          "tension": 0,
+          "metrics": {
+            "eligible": 179,
+            "proposed": 15,
+            "accepted": 10,
+            "adoptions": 38,
+            "practiceRequests": 110,
+            "practices": 45,
+            "departures": 6,
+            "dissolutions": 3,
+            "relations": {
+              "attempts": 1393,
+              "admitted": 1393,
+              "favorable": 904,
+              "neutral": 199,
+              "unfavorable": 290,
+              "gained": 1995.2920964578016,
+              "lost": 232.00000000000222,
+              "erosion": 0.07357152618974361
+            }
+          }
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "firstGroup": 2.5194444444444444,
+      "checkpoints": [
+        {
+          "day": 3,
+          "formed": 1,
+          "active": 1,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 2.523055941606158,
+          "tension": 0.16666071428570134,
+          "metrics": {
+            "eligible": 7,
+            "proposed": 2,
+            "accepted": 1,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 117,
+              "admitted": 117,
+              "favorable": 68,
+              "neutral": 19,
+              "unfavorable": 30,
+              "gained": 164.19699999999986,
+              "lost": 23.99999999999998,
+              "erosion": 0
+            }
+          }
+        },
+        {
+          "day": 5,
+          "formed": 1,
+          "active": 1,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 3.4318158804775294,
+          "tension": 0.4062237259868823,
+          "metrics": {
+            "eligible": 7,
+            "proposed": 2,
+            "accepted": 1,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 186,
+              "admitted": 186,
+              "favorable": 95,
+              "neutral": 39,
+              "unfavorable": 52,
+              "gained": 232.4549999999994,
+              "lost": 41.599999999999916,
+              "erosion": 1.432489022531085
+            }
+          }
+        },
+        {
+          "day": 10,
+          "formed": 3,
+          "active": 1,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 7.698114628592116,
+          "tension": 0.09120535714284014,
+          "metrics": {
+            "eligible": 29,
+            "proposed": 7,
+            "accepted": 3,
+            "adoptions": 2,
+            "practiceRequests": 4,
+            "practices": 0,
+            "departures": 2,
+            "dissolutions": 2,
+            "relations": {
+              "attempts": 415,
+              "admitted": 415,
+              "favorable": 223,
+              "neutral": 81,
+              "unfavorable": 111,
+              "gained": 545.3979999999987,
+              "lost": 88.80000000000018,
+              "erosion": 21.38593881814768
+            }
+          }
+        },
+        {
+          "day": 30,
+          "formed": 5,
+          "active": 2,
+          "survivors7d": 2,
+          "mature": 4,
+          "matureSingle": 4,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 19.579766987684106,
+          "tension": 0.049821428571410566,
+          "metrics": {
+            "eligible": 150,
+            "proposed": 14,
+            "accepted": 5,
+            "adoptions": 8,
+            "practiceRequests": 63,
+            "practices": 22,
+            "departures": 2,
+            "dissolutions": 3,
+            "relations": {
+              "attempts": 1193,
+              "admitted": 1193,
+              "favorable": 653,
+              "neutral": 211,
+              "unfavorable": 329,
+              "gained": 1520.7459225066627,
+              "lost": 263.20000000000215,
+              "erosion": 26.74587117873044
+            }
+          }
+        }
+      ]
+    },
+    {
+      "seed": 18,
+      "firstGroup": 6.061111111111111,
+      "checkpoints": [
+        {
+          "day": 3,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 2.318655028806628,
+          "tension": 0.21052985502468705,
+          "metrics": {
+            "eligible": 5,
+            "proposed": 1,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 137,
+              "admitted": 137,
+              "favorable": 62,
+              "neutral": 39,
+              "unfavorable": 36,
+              "gained": 155.04099999999988,
+              "lost": 28.799999999999965,
+              "erosion": 3.774439999999783
+            }
+          }
+        },
+        {
+          "day": 5,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 4.497397982381358,
+          "tension": 0.1651489571428544,
+          "metrics": {
+            "eligible": 15,
+            "proposed": 2,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 249,
+              "admitted": 249,
+              "favorable": 119,
+              "neutral": 65,
+              "unfavorable": 65,
+              "gained": 297.7109999999987,
+              "lost": 51.999999999999886,
+              "erosion": 3.774439999999783
+            }
+          }
+        },
+        {
+          "day": 10,
+          "formed": 2,
+          "active": 1,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 9.435482546796267,
+          "tension": 0,
+          "metrics": {
+            "eligible": 38,
+            "proposed": 6,
+            "accepted": 2,
+            "adoptions": 2,
+            "practiceRequests": 4,
+            "practices": 3,
+            "departures": 1,
+            "dissolutions": 1,
+            "relations": {
+              "attempts": 475,
+              "admitted": 475,
+              "favorable": 247,
+              "neutral": 110,
+              "unfavorable": 118,
+              "gained": 624.1380000000001,
+              "lost": 94.40000000000026,
+              "erosion": 3.774439999999783
+            }
+          }
+        },
+        {
+          "day": 30,
+          "formed": 4,
+          "active": 3,
+          "survivors7d": 3,
+          "mature": 5,
+          "matureSingle": 4,
+          "multi": 1,
+          "maxMembership": 2,
+          "affinity": 24.839468602453895,
+          "tension": 0.24291964285712536,
+          "metrics": {
+            "eligible": 241,
+            "proposed": 19,
+            "accepted": 5,
+            "adoptions": 22,
+            "practiceRequests": 90,
+            "practices": 46,
+            "departures": 1,
+            "dissolutions": 1,
+            "relations": {
+              "attempts": 1450,
+              "admitted": 1450,
+              "favorable": 846,
+              "neutral": 273,
+              "unfavorable": 331,
+              "gained": 1789.5793055869005,
+              "lost": 264.8000000000021,
+              "erosion": 6.8544754413918785
+            }
+          }
+        }
+      ]
+    },
+    {
+      "seed": 713,
+      "firstGroup": 8.103472222222223,
+      "checkpoints": [
+        {
+          "day": 3,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 1.3658767534182863,
+          "tension": 0.23769642857141782,
+          "metrics": {
+            "eligible": 0,
+            "proposed": 0,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 131,
+              "admitted": 131,
+              "favorable": 44,
+              "neutral": 42,
+              "unfavorable": 45,
+              "gained": 107.88100000000016,
+              "lost": 35.999999999999936,
+              "erosion": 0
+            }
+          }
+        },
+        {
+          "day": 5,
+          "formed": 0,
+          "active": 0,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 0,
+          "affinity": 2.433524017445641,
+          "tension": 0.4420446428571149,
+          "metrics": {
+            "eligible": 0,
+            "proposed": 0,
+            "accepted": 0,
+            "adoptions": 0,
+            "practiceRequests": 0,
+            "practices": 0,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 215,
+              "admitted": 215,
+              "favorable": 81,
+              "neutral": 58,
+              "unfavorable": 76,
+              "gained": 199.96499999999972,
+              "lost": 60.79999999999985,
+              "erosion": 4.507812388056746
+            }
+          }
+        },
+        {
+          "day": 10,
+          "formed": 1,
+          "active": 1,
+          "survivors7d": 0,
+          "mature": 0,
+          "matureSingle": 0,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 5.74890455934041,
+          "tension": 0.18540464285714586,
+          "metrics": {
+            "eligible": 10,
+            "proposed": 1,
+            "accepted": 1,
+            "adoptions": 2,
+            "practiceRequests": 4,
+            "practices": 2,
+            "departures": 0,
+            "dissolutions": 0,
+            "relations": {
+              "attempts": 415,
+              "admitted": 415,
+              "favorable": 178,
+              "neutral": 95,
+              "unfavorable": 142,
+              "gained": 445.1239999999981,
+              "lost": 113.60000000000053,
+              "erosion": 4.678001225610763
+            }
+          }
+        },
+        {
+          "day": 30,
+          "formed": 4,
+          "active": 2,
+          "survivors7d": 1,
+          "mature": 2,
+          "matureSingle": 2,
+          "multi": 0,
+          "maxMembership": 1,
+          "affinity": 17.65303480350225,
+          "tension": 0.12993749999999343,
+          "metrics": {
+            "eligible": 124,
+            "proposed": 14,
+            "accepted": 5,
+            "adoptions": 16,
+            "practiceRequests": 56,
+            "practices": 22,
+            "departures": 2,
+            "dissolutions": 2,
+            "relations": {
+              "attempts": 1201,
+              "admitted": 1201,
+              "favorable": 569,
+              "neutral": 243,
+              "unfavorable": 389,
+              "gained": 1410.8920109893807,
+              "lost": 311.1999999999995,
+              "erosion": 21.01136214032034
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "extended": [
+    {
+      "seed": 2040,
+      "day": 90,
+      "active": 3,
+      "survivors30d": 3,
+      "mature": 6,
+      "matureSingle": 6,
+      "maxMembership": 1,
+      "metrics": {
+        "eligible": 934,
+        "proposed": 30,
+        "accepted": 9,
+        "adoptions": 61,
+        "practiceRequests": 375,
+        "practices": 232,
+        "departures": 5,
+        "dissolutions": 6,
+        "relations": {
+          "attempts": 4253,
+          "admitted": 4253,
+          "favorable": 2633,
+          "neutral": 534,
+          "unfavorable": 1086,
+          "gained": 4342.104622785271,
+          "lost": 868.7999999999678,
+          "erosion": 29.694386430760186
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "day": 90,
+      "active": 3,
+      "survivors30d": 3,
+      "mature": 6,
+      "matureSingle": 6,
+      "maxMembership": 1,
+      "metrics": {
+        "eligible": 1317,
+        "proposed": 39,
+        "accepted": 9,
+        "adoptions": 34,
+        "practiceRequests": 415,
+        "practices": 206,
+        "departures": 6,
+        "dissolutions": 4,
+        "relations": {
+          "attempts": 4173,
+          "admitted": 4173,
+          "favorable": 2916,
+          "neutral": 558,
+          "unfavorable": 699,
+          "gained": 4539.9626110219515,
+          "lost": 559.1999999999854,
+          "erosion": 1.3390630223588653
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "day": 90,
+      "active": 2,
+      "survivors30d": 2,
+      "mature": 7,
+      "matureSingle": 7,
+      "maxMembership": 1,
+      "metrics": {
+        "eligible": 1109,
+        "proposed": 29,
+        "accepted": 7,
+        "adoptions": 61,
+        "practiceRequests": 288,
+        "practices": 214,
+        "departures": 2,
+        "dissolutions": 2,
+        "relations": {
+          "attempts": 4827,
+          "admitted": 4827,
+          "favorable": 3430,
+          "neutral": 622,
+          "unfavorable": 775,
+          "gained": 5368.553298746418,
+          "lost": 619.9999999999819,
+          "erosion": 5.0196062082677875
+        }
+      }
+    }
+  ]
+}

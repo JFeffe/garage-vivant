@@ -1,4 +1,6 @@
-import { V71_RULES, initializeV71, setupAction, chooseInstrument, shouldLeave, musicName, reserveMusicName, classifySongs, upgradeV71, validateV71, decadenceCount } from "./v71.mjs?v=0.7.1";
+import { GROUP_RULES as GROUP_RULES } from './group-rules.mjs?v=0.7.2';
+import { musicalChemistry, pairEligible, membershipReason, considerMembership, initializeGroupData, resolveInvitation, rehearsalReady, upgradeGroups, validateGroups, leaveGroup } from './groups.mjs?v=0.7.2';
+import { V71_RULES, initializeV71, setupAction, chooseInstrument, shouldLeave, musicName, reserveMusicName, classifySongs, upgradeV71, validateV71, decadenceCount } from "./v71.mjs?v=0.7.2";
 import {
   NEED_DRAIN,
   ACTIVITY_EFFECTS,
@@ -17,13 +19,13 @@ import {
   interactionProbabilities,
   coolRelationV7,
   validateV7,
-} from "./v7.mjs?v=0.7.1";
+} from "./v7.mjs?v=0.7.2";
 import {
   initializeV6Person,
   upgradeV6,
   markGrief,
   repairGrief,
-} from "./social.mjs?v=0.7.1";
+} from "./social.mjs?v=0.7.2";
 import {
   initializePerson,
   initializeGroup,
@@ -35,10 +37,12 @@ import {
   groupRehearsal,
   travelEngagement,
   lifeMinute,
+  groupContext,
+  departForShow,
   refreshOpportunity,
   validateLife,
-} from "./life.mjs?v=0.7.1";
-export const VERSION = "0.7.1";
+} from "./life.mjs?v=0.7.2";
+export const VERSION = "0.7.2";
 export const NEEDS = {
   energy: "Énergie",
   social: "Lien social",
@@ -330,7 +334,6 @@ export function relationship(s, a, b) {
   if (!s.rels[key])
     s.rels[key] = {
       affinity: 0,
-      trust: 10,
       tension: 0,
       collaboration: 0,
       couple: false,
@@ -343,20 +346,7 @@ export function relationship(s, a, b) {
     };
   return s.rels[key];
 }
-export function chemistry(a, b) {
-  let similarity =
-    1 -
-    (Math.abs(a.personality.creative - b.personality.creative) +
-      Math.abs(a.personality.discipline - b.personality.discipline)) /
-      200;
-  return clamp(
-    25 +
-      similarity * 30 +
-      (a.genre === b.genre ? 25 : 0) +
-      (a.instrument !== b.instrument ? 10 : -6) +
-      (a.personality.kind + b.personality.kind) / 20,
-  );
-}
+export function chemistry(a, b) { return musicalChemistry(a,b); }
 export function dominantEmotion(p) {
   const key =
       p.emotions.exaltation >= p.emotions.distress ? "exaltation" : "distress",
@@ -444,6 +434,10 @@ function closeActivity(s, p, status = "completed") {
   row.status = status;
   row.end = s.time;
   row.activeMinutes = Math.max(row.activeMinutes, a.elapsed);
+}
+export function interruptActivity(s,p,status='interrupted'){
+ if(p.action?.elapsed>0)p.actionCounts[p.action.key].interrupted++;
+ closeActivity(s,p,status);p.action=null;
 }
 export function journalEntries(
   s,
@@ -790,7 +784,7 @@ export function addPerson(s) {
     emotionSources: {},
     priorities: priorities(),
     draft: defaultDraft(),
-    lastFormation: -1440,
+    lastFormation: -1e9,
     actionCounts: Object.fromEntries(
       Object.keys(ACTIONS).map((k) => [
         k,
@@ -897,54 +891,16 @@ export function refreshReputation(s, p) {
   };
   return p.reputation;
 }
-export function formationEligible(s, a, b) {
-  if (a === b) return false;
-  const ab = relationship(s, a, b),
-    ba = relationship(s, b, a);
-  return (
-    ab.affinity >= 22 &&
-    ba.affinity >= 22 &&
-    Math.min(ab.trust, ba.trust) >= 18 &&
-    Math.max(ab.tension, ba.tension) < 40 &&
-    (Math.min(ab.collaboration, ba.collaboration) >= 10 ||
-      Math.min(ab.affinity, ba.affinity) >= 40)
-  );
+export function formationEligible(s,a,b){return pairEligible(s,a,b);}
+export function formationPlan(s,p){
+ for(const q of s.people.filter(x=>x!==p)){
+  const g=groupsOf(s,q).find(g=>!membershipReason(s,q,p,g));
+  if(g)return {partner:q.id,groupId:g.id};
+  if(!membershipReason(s,p,q))return {partner:q.id,groupId:null};
+ }
+ return null;
 }
-export function formationPlan(s, p) {
-  if (s.time - p.lastFormation < 720) return null;
-  const peers = s.people
-    .filter((q) => q !== p && formationEligible(s, p, q))
-    .sort(
-      (a, b) =>
-        b.reputation.score +
-        relationship(s, p, b).affinity -
-        (a.reputation.score + relationship(s, p, a).affinity),
-    );
-  for (const q of peers) {
-    const shared = s.groups.some(
-      (g) =>
-        g.archivedAt === null &&
-        g.members.includes(p.id) &&
-        g.members.includes(q.id),
-    );
-    if (shared) continue;
-    const group = groupsOf(s, q).find(
-      (g) =>
-        g.archivedAt === null &&
-        !g.members.includes(p.id) &&
-        g.members.filter((id) =>
-          formationEligible(
-            s,
-            p,
-            s.people.find((x) => x.id === id),
-          ),
-        ).length >= Math.ceil(g.members.length / 2),
-    );
-    return { partner: q.id, groupId: group?.id || null };
-  }
-  return null;
-}
-export function createGroup(s, ids, { name = null, manual = false } = {}) {
+export function createGroup(s, ids, { name = null, manual = false, origin = manual ? 'laboratoire' : 'autonome' } = {}) {
   const members = [...new Set(ids)].filter((id) =>
     s.people.some((p) => p.id === id),
   );
@@ -970,14 +926,15 @@ export function createGroup(s, ids, { name = null, manual = false } = {}) {
     founders,
     created: s.time,
     genre: p.genre,
-    origin: manual ? "laboratoire" : "autonome",
+    origin,
   };
   initializeGroup(group, s.time);
+  initializeGroupData(s,group,()=>rand(s));
   s.groups.push(group);
   const ev = log(
     s,
     "group",
-    `${manual ? "Intervention : " : ""}${members.map((id) => s.people.find((p) => p.id === id).name).join(", ")} forment « ${group.name} ».`,
+    `${origin === 'laboratoire' ? "Intervention : " : ""}${members.map((id) => s.people.find((p) => p.id === id).name).join(", ")} forment « ${group.name} ».`,
     members,
     { groupId: group.id },
   );
@@ -1058,6 +1015,7 @@ export function decide(s, p, forced = null, options = {}) {
     closeActivity(s, p, p.action.elapsed > 0 ? "interrupted" : "cancelled");
 
   }
+  if (!forced && s.time < p.sleep.nextBedtime && resolveInvitation(s,p,groupContext(s))) return p.action;
   const key = forced || reserveToken(p, () => rand(s));
   if(!key){p.action=null;log(s,"system",`${p.name} attend : inventaire d’actions vide.`,[p.id]);return null;}
   if (!ACTIONS[key]) throw Error("Action V7 inconnue");
@@ -1106,6 +1064,7 @@ export function decide(s, p, forced = null, options = {}) {
     p.action.sessionId = j.id;
     dest = PLACES.find((x) => x.id === j.place);
   }
+  if(options.rehearsalId){p.action.rehearsalId=options.rehearsalId;p.action.mode="group";p.action.why="Invitation de répétition hors sac";dest=PLACES.find(x=>x.id===options.place)||dest;}
   routeTo(s, p, p.action, dest);
   beginActivity(s, p, p.action);
   if(key==="write"){
@@ -1194,6 +1153,7 @@ export function interaction(s, a, b, type = "discuss", music = false, admitted =
         "Affinité et tension du destinataire, deux jauges émotionnelles, traits actifs. Aucune humeur.",
     },
   );
+  const metric=s.groupState.metrics.relations;metric.attempts++;if(accepted){metric.admitted++;metric[outcome]++;}
   const before = structuredClone({
     a: { emotions: a.emotions, needs: a.needs, relation: ra },
     b: { emotions: b.emotions, needs: b.needs, relation: rb },
@@ -1219,18 +1179,16 @@ export function interaction(s, a, b, type = "discuss", music = false, admitted =
     if (outcome === "favorable") {
       const chemBonus = music ? Math.max(0, chemistry(a, b) - 50) / 100 : 0;
       r.affinity = clamp(
-        r.affinity + (0.4 + chemBonus) * s.params.relations,
+        r.affinity + (GROUP_RULES.positiveAffinity + chemBonus) * s.params.relations,
         -100,
         100,
       );
-      r.trust = clamp(r.trust + 1);
       r.tension = clamp(r.tension - 3 * s.params.relations);
       repairGrief(r, 2);
       feel(s, p, { exaltation: 3 }, event);
     }
     if (outcome === "unfavorable") {
-      r.affinity = clamp(r.affinity - 0.5 * s.params.relations, -100, 100);
-      r.trust = clamp(r.trust - 1);
+      r.affinity = clamp(r.affinity - GROUP_RULES.negativeAffinity * s.params.relations, -100, 100);
       r.tension = clamp(r.tension + 8 * s.params.relations);
       markGrief(s, r, event);
       feel(s, p, { distress: 5 }, event);
@@ -1288,42 +1246,8 @@ export function interaction(s, a, b, type = "discuss", music = false, admitted =
       b: { emotions: b.emotions, needs: b.needs, relation: rb },
     }),
   };
-  if (
-    outcome === "favorable" &&
-    formationEligible(s, a, b) &&
-    !s.groups.some(
-      (g) =>
-        g.archivedAt === null &&
-        g.members.includes(a.id) &&
-        g.members.includes(b.id),
-    ) &&
-    s.time - Math.max(a.lastFormation, b.lastFormation) >= 720
-  ) {
-    const existing = groupsOf(s, b).find(
-      (g) =>
-        g.archivedAt === null &&
-        !g.members.includes(a.id) &&
-        g.members.filter((id) =>
-          formationEligible(
-            s,
-            a,
-            s.people.find((p) => p.id === id),
-          ),
-        ).length >= Math.ceil(g.members.length / 2),
-    );
-    if (existing) {
-      existing.members.push(a.id);
-      a.lastFormation = b.lastFormation = s.time;
-      const ev = log(
-        s,
-        "group",
-        `${a.name} rejoint « ${existing.name} » après un échange favorable.`,
-        [a.id, b.id],
-        { groupId: existing.id },
-      );
-      feel(s, a, { exaltation: 12 }, ev);
-    } else createGroup(s, [a.id, b.id]);
-  }
+  for(const [r,old]of [[ra,before.a.relation],[rb,before.b.relation]]){const delta=r.affinity-old.affinity;if(delta>=0)metric.gained+=delta;else metric.lost-=delta;}
+  if(outcome === "favorable") considerMembership(s,a,b,groupContext(s));
 
   return { accepted, event, outcome };
 }
@@ -1381,7 +1305,6 @@ export function musicalOutcome(s, a, b, j) {
     empathy = (a.personality.kind + b.personality.kind) / 2,
     discipline = (a.personality.discipline + b.personality.discipline) / 2,
     gap = Math.abs(skillA - skillB),
-    trust = Math.min(relationship(s, a, b).trust, relationship(s, b, a).trust),
     familiarity = Math.min(
       relationship(s, a, b).collaboration,
       relationship(s, b, a).collaboration,
@@ -1393,7 +1316,7 @@ export function musicalOutcome(s, a, b, j) {
       4 +
       (a.personality.creative + b.personality.creative) / 7 +
       Math.max(a.emotions.exaltation, b.emotions.exaltation) / 10,
-    debate: (a.genre !== b.genre ? 18 : 3) + trust / 8,
+    debate: (a.genre !== b.genre ? 18 : 3),
     clash: conflictRisk(s, a, b) * 120,
     consolidate: 10 + discipline * 0.3,
   };
@@ -1417,20 +1340,20 @@ export function musicalOutcome(s, a, b, j) {
     consolidate: `${a.name} et ${b.name} consolident leurs acquis dans une séance régulière.`,
   }[outcome];
   const explanations = {
-    sync: `Compatibilité ${round(chem)}, complicité vécue ${round(familiarity)}.`,
+    sync: `Compatibilité ${round(chem)}.`,
     learn: `Écart de maîtrise ${round(gap)}, empathie ${round(empathy)}.`,
     idea: `Créativité ${round((a.personality.creative + b.personality.creative) / 2)} et exaltation du moment.`,
-    debate: `${a.genre === b.genre ? "Styles proches" : "Styles différents"}, confiance mutuelle ${round(trust)}.`,
+    debate: `${a.genre === b.genre ? "Styles proches" : "Styles différents"}.`,
     clash: `Risque d’accrochage ${round(conflictRisk(s, a, b) * 100)} % : affinité, tension, exaltation, détresse et traits.`,
     consolidate: `Discipline moyenne ${round(discipline)} ; progrès réguliers.`,
   };
   const effects = {
-    sync: "Complicité et confiance renforcées.",
-    learn: `Maîtrise instrumentale de ${novice.name} améliorée ; confiance renforcée.`,
+    sync: "Complicité et affinité renforcées.",
+    learn: `Maîtrise instrumentale de ${novice.name} améliorée ; affinité renforcée.`,
     idea: "Une inspiration conservée pour le prochain projet de chacun.",
     debate:
-      "Expression créative et confiance ; légère tension sans hostilité automatique.",
-    clash: "Complicité et confiance diminuent ; frustration et tension.",
+      "Expression créative et affinité ; légère tension sans hostilité automatique.",
+    clash: "Complicité et affinité diminuent ; frustration et tension.",
     consolidate: "Petit progrès instrumental, complicité renforcée.",
   };
   const event = log(
@@ -1453,26 +1376,25 @@ export function musicalOutcome(s, a, b, j) {
     const r = relationship(s, p, q),
       scale = s.params.relations * factor;
     const delta = {
-      sync: [4, 3, -2, 5],
-      learn: [3.5, 2, -1, 3],
-      idea: [3.5, 2, -1, 3],
-      debate: [2, 1, 1, 2],
-      clash: [-3, -3, 6, -1],
-      consolidate: [2.5, 1.5, -0.5, 3.5],
+      sync: [4, -2, 5],
+      learn: [3.5, -1, 3],
+      idea: [3.5, -1, 3],
+      debate: [2, 1, 2],
+      clash: [-3, 6, -1],
+      consolidate: [2.5, -0.5, 3.5],
     }[outcome];
     r.affinity = clamp(
       r.affinity + delta[0] * scale * 0.1 * (0.7 + p.personality.kind / 150),
       -100,
       100,
     );
-    r.trust = clamp(r.trust + delta[1] * scale);
     r.tension = clamp(
       r.tension +
-        (delta[2] < 0 && r.grief?.strength > 0 ? delta[2] * 0.1 : delta[2]) *
+        (delta[1] < 0 && r.grief?.strength > 0 ? delta[1] * 0.1 : delta[1]) *
           scale,
     );
     if (outcome === "clash") markGrief(s, r, event);
-    r.collaboration = clamp(r.collaboration + delta[3] * scale);
+    r.collaboration = clamp(r.collaboration + delta[2] * scale);
     r.meetings++;
     r.last = s.time;
     if (outcome === "consolidate")
@@ -1583,6 +1505,8 @@ function releaseSong(s, p) {
     authors: [...project.authors],
     authorNames: {...project.authorNames},
     groupId: project.groupId,
+    ownerGroupId: null,
+    adoptedAt: null,
     sources: [...project.sources],
     hit: result.resonance >= 80,
   };
@@ -1921,27 +1845,27 @@ function joinComposition(s,p){
 function choosePractice(s,p,options={}){
  const a=p.action;a.instrument=chooseInstrument(p,()=>rand(s));
  const group=options.groupId?s.groups.find(g=>g.id===options.groupId&&g.members.includes(p.id)&&g.archivedAt===null):null;
- const songs=s.songs.filter(x=>x.authors.includes(p.id)||s.groups.some(g=>g.members.includes(p.id)&&g.repertoire.some(r=>r.songId===x.id)));
- const choices=group?songs.filter(x=>group.repertoire.some(r=>r.songId===x.id)):songs;
+ const songs=s.songs.filter(x=>x.authors.includes(p.id)||s.groups.some(g=>g.members.includes(p.id)&&g.repertoire.some(r=>r.songId===x.id&&r.active!==false)));
+ const choices=group?songs.filter(x=>group.repertoire.some(r=>r.songId===x.id&&r.active!==false)):songs;
  const song=options.songId?choices.find(x=>x.id===options.songId):choices.length&&(group||rand(s)<.65)?pick(s,choices):null;
  a.groupId=group?.id||null;a.songId=song?.id||null;a.content=song?'song':'technique';
 }
 function practiceMinute(s,p){
  const a=p.action;
  if(a.songId)p.songMastery[a.songId]=clamp((p.songMastery[a.songId]||0)+.08);
- if(a.elapsed===1&&!a.groupId){
+ if(a.elapsed===1&&!a.groupId&&!a.rehearsalId){
   const hosts=s.people.filter(q=>q!==p&&q.action?.key==='practice'&&!q.action.route.length&&q.action.songId&&s.groups.some(g=>g.archivedAt===null&&g.members.includes(p.id)&&g.members.includes(q.id)&&(!q.action.groupId||g.id===q.action.groupId)&&g.repertoire.some(r=>r.songId===q.action.songId)));
   const host=weightedChoice(hosts,q=>partnerWeight(s,p,q,relationship(s,p,q)),()=>rand(s));
-  if(host&&admission(s,p,host,'practice')){const group=s.groups.find(g=>g.archivedAt===null&&g.members.includes(p.id)&&g.members.includes(host.id)&&(!host.action.groupId||g.id===host.action.groupId)&&g.repertoire.some(r=>r.songId===host.action.songId));host.action.groupId=a.groupId=group.id;a.songId=host.action.songId;a.content='song';routeTo(s,p,a,PLACES.find(x=>x.id===host.action.dest));}
+  if(host&&admission(s,p,host,'practice')){const group=s.groups.find(g=>g.archivedAt===null&&g.members.includes(p.id)&&g.members.includes(host.id)&&(!host.action.groupId||g.id===host.action.groupId)&&g.repertoire.some(r=>r.songId===host.action.songId));host.action.groupId=a.groupId=group.id;a.songId=host.action.songId;a.content='song';if(host.action.rehearsalId){a.rehearsalId=host.action.rehearsalId;const req=s.groupState.requests.find(r=>r.id===a.rehearsalId);if(req&&!req.invited.includes(p.id))req.invited.push(p.id);}routeTo(s,p,a,PLACES.find(x=>x.id===host.action.dest));}
  }
  const members=s.people.filter(q=>q.action?.key==='practice'&&!q.action.route.length&&q.place===p.place&&a.groupId&&q.action.groupId===a.groupId&&q.action.songId===a.songId);
- if(members.length>=2&&members[0]===p)groupRehearsal(s,{groupId:a.groupId,songId:a.songId,elapsed:a.elapsed},members);
+ if(members.length>=2&&members[0]===p&&(!a.rehearsalId||s.groupState.requests.find(r=>r.id===a.rehearsalId)?.status==='playing')){groupRehearsal(s,{groupId:a.groupId,songId:a.songId,elapsed:a.elapsed},members);if(a.elapsed%15===0)interact(s,p,pick(s,members.slice(1)),true,true);}
  if(--a.cycleRemaining>0)return;
  a.cycles++;
  if(shouldLeave(p,()=>rand(s))){finish(s,p);return;}
  const group=s.groups.find(g=>g.id===a.groupId&&g.archivedAt===null);
- if(group&&members.length>1){if(members[0]===p){const options={groupId:group.id,songId:group.repertoire.length?pick(s,group.repertoire).songId:a.songId};for(const q of members){choosePractice(s,q,options);q.action.cycleRemaining=V71_RULES.cycleMinutes;}}else a.cycleRemaining=V71_RULES.cycleMinutes;}
- else{choosePractice(s,p);a.cycleRemaining=V71_RULES.cycleMinutes;}
+ if(group&&members.length>1){if(members[0]===p){const options={groupId:group.id,songId:group.repertoire.some(r=>r.active!==false)?pick(s,group.repertoire.filter(r=>r.active!==false)).songId:a.songId};for(const q of members){choosePractice(s,q,options);q.action.cycleRemaining=V71_RULES.cycleMinutes;}}else a.cycleRemaining=V71_RULES.cycleMinutes;}
+ else{choosePractice(s,p,a.rehearsalId?{groupId:a.groupId,songId:a.songId}:{});a.cycleRemaining=V71_RULES.cycleMinutes;}
 }
 function projectMaintenance(s){
  for(const project of s.projects)if(!['finished','abandoned'].includes(project.status)&&s.time-project.updated>=V71_RULES.abandonMinutes){project.status='abandoned';log(s,'project',`« ${project.title} » est abandonné après une longue période sans travail.`,project.authors);for(const p of s.people)if(p.draft.projectId===project.id){p.drafts[project.id]=structuredClone(p.draft);p.draft=defaultDraft();}}
@@ -1966,6 +1890,7 @@ export function step(s, minutes = 1) {
                   : 1),
         );
       emotionalMinute(p, s.params);
+      departForShow(s,p);
       if (travelEngagement(s, p)) continue;
       if (sleepMinute(s, p) && !p.action?.route.length) continue;
       if (!p.action) {
@@ -1990,6 +1915,7 @@ export function step(s, minutes = 1) {
         continue;
       }
       if (action.key === "jam" || action.key === "sleep") continue;
+      if(action.key === "practice" && !rehearsalReady(s,p,groupContext(s))) continue;
       if (!action.tokenStarted && action.key !== "social") {
 
         action.tokenStarted = true;
@@ -2058,7 +1984,7 @@ export function step(s, minutes = 1) {
     socialSessionsMinute(s);
     lifeMinute(s);
     if(s.time%60===0)projectMaintenance(s);
-    for (const r of Object.values(s.rels)) coolRelationV7(r);
+    for (const r of Object.values(s.rels)){const old=r.affinity;coolRelationV7(r);s.groupState.metrics.relations.erosion+=Math.max(0,old-r.affinity);}
     if (s.time % 30 === 0)
       for (const p of s.people) {
         p.history.push({ time: s.time, ...p.emotions });
@@ -2133,28 +2059,13 @@ export function removePerson(s, id) {
         activityId: row.id,
       });
   }
+  if(departing)for(const g of [...groupsOf(s,departing)])leaveGroup(s,g,departing,"Personnage retiré du quartier.",groupContext(s));
   s.people = s.people.filter((p) => p.id !== id);
   if (s.playerId === id) s.playerId = s.people[0].id;
   for (const k of Object.keys(s.rels))
     if (k.split(">").includes(id)) delete s.rels[k];
   for (const p of s.people)
     if (p.action) p.action.partners = p.action.partners.filter((x) => x !== id);
-  for (const g of s.groups) {
-    if (g.members.includes(id)) {
-      g.alumni ||= [];
-      g.alumni.push({
-        id,
-        name: departing?.name || "Ancien voisin",
-        left: s.time,
-      });
-    }
-    g.members = g.members.filter((x) => x !== id);
-    g.founders = g.founders.filter((x) => x !== id);
-    if (!g.members.length) {
-      g.archivedAt = s.time;
-      g.development = 0;
-    }
-  }
   for (const b of s.bookings) {
     if (
       ["applied", "booked", "assembling"].includes(b.status) &&
@@ -2508,6 +2419,7 @@ export function restore(input) {
       "0.5.1",
       "0.6.0",
       "0.7.0",
+      "0.7.1",
       VERSION,
     ].includes(input.version) ||
     !Array.isArray(input.people) ||
@@ -2519,7 +2431,7 @@ export function restore(input) {
   )
     throw Error("Sauvegarde incompatible ou incomplète.");
   const raw = JSON.parse(JSON.stringify(input));
-  if (input.version !== VERSION && input.version !== "0.7.0") {
+  if (input.version !== VERSION && !["0.7.0","0.7.1"].includes(input.version)) {
     migrate(raw);
     for (const p of raw.people)
       p.legacyActionCounts = {
@@ -2529,7 +2441,7 @@ export function restore(input) {
     upgradeV6(raw);
     upgradeV7(raw);
   }
-  if(input.version!==VERSION)upgradeV71(raw,()=>rand(raw));
+  if(input.version!==VERSION){if(input.version!=="0.7.1")upgradeV71(raw,()=>rand(raw));upgradeGroups(raw,()=>rand(raw),groupContext(raw));}
   const num = (v, min = 0, max = 100) =>
     Number.isFinite(v) && v >= min && v <= max;
   const source = (x) =>
@@ -2639,7 +2551,6 @@ export function restore(input) {
       throw Error("Relation invalide.");
     for (const k of [
       "affinity",
-      "trust",
       "tension",
       "collaboration",
       "love",
@@ -2648,7 +2559,7 @@ export function restore(input) {
       "lastAdvance",
     ])
       if (!Number.isFinite(r[k])) throw Error("Relation invalide.");
-    for (const k of ["trust", "tension", "collaboration", "love"])
+    for (const k of ["tension", "collaboration", "love"])
       if (!num(r[k])) throw Error("Relation hors limites.");
     if (!num(r.affinity, -100, 100)) throw Error("Affinité invalide.");
   }
@@ -2812,6 +2723,7 @@ export function restore(input) {
   if (raw.nextId <= Math.max(...raw.people.map((p) => Number(p.id.slice(1)))))
     throw Error("Identifiant de personnage invalide.");
   validateLife(raw);
+  validateGroups(raw,PLACES);
   validateV7(raw);
   validateV71(raw);
   return raw;
