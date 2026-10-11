@@ -1,12 +1,12 @@
-# Plan de test — V7 complète à V7.3
+# Plan de test — V7 complète à V7.4
 
-Référence : **version 0.7.3**, 11 octobre 2026. Ce plan couvre les systèmes conservés de la V7, les actions de la V7.1, les groupes de la V7.2 et leurs raccords à la scène, puis les quatre transitions corrigées en V7.3. Les [quinze DDD](./gdd/documentation.md) décrivent les règles actuelles ; les anciens plans conservent aussi des propositions non réalisées.
+Référence : **interface 0.7.4, format 0.7.3**, 11 octobre 2026. Ce plan couvre les systèmes conservés de la V7, les actions de la V7.1, les groupes de la V7.2 et leurs raccords à la scène, puis les quatre transitions corrigées en V7.3 et l’accès aux archives V7.4. Les [quinze DDD](./gdd/documentation.md) décrivent les règles actuelles ; les anciens plans conservent aussi des propositions non réalisées.
 
 Les tests ci-dessous constituent une liste à exécuter, pas une déclaration que chaque essai manuel a déjà réussi. La réception automatisée disponible est détaillée à la fin. Aucun essai ne doit ajouter une règle, offrir des relations, créer un groupe de secours ou modifier silencieusement une sauvegarde pour réussir.
 
-## Ce soir : commencer par la 7.3
+## Ce soir : commencer par les archives et la 7.3
 
-Recharger et vérifier **0.7.3**, exporter sa partie, puis faire R01–R10. Tester ensuite C73-01 à C73-05 ci-dessous avant la boucle complète « composer → adopter → répéter → spectacle ». Le [bilan des seize parties simulées](./AUDIT_V7_3.md) distingue défauts corrigés et points d’équilibre ; il ne remplace pas cette réception humaine.
+Recharger et vérifier **0.7.4**, exporter sa partie, puis faire G25–G27 pour les archives et R01–R10. Tester ensuite C73-01 à C73-05 ci-dessous avant la boucle complète « composer → adopter → répéter → spectacle ». Le [bilan des seize parties simulées](./AUDIT_V7_3.md) distingue défauts corrigés et points d’équilibre ; il ne remplace pas cette réception humaine.
 
 | ID / priorité | Essai | Résultat attendu |
 |---|---|---|
@@ -44,7 +44,7 @@ Un résultat probabiliste ne doit pas être garanti dans une séance isolée. S�
 
 ## 2. Préparer et conserver les preuves
 
-1. Vérifier le numéro 0.7.3 dans le jeu et les notes de version. Après publication, recharger pour récupérer les nouveaux modules.
+1. Vérifier le numéro 0.7.4 dans le jeu et les notes de version. Après publication, recharger pour récupérer les nouveaux modules.
 2. Exporter sa partie avant les essais. Conserver l’original sans l’écraser ; utiliser une origine locale ou un autre profil de navigateur pour les fixtures et manipulations.
 3. Noter version, commit, graine si connue, population, paramètres, navigateur, appareil, taille d’écran et heure simulée de départ.
 4. Utiliser Pause pendant les mesures. Un affichage en lecture continue peut évoluer entre deux captures.
@@ -206,6 +206,10 @@ Source : [Groupes](./gdd/groupes.md). Les valeurs ci-dessous sont celles de V7.2
 | G22 P0 | Coordination positive très faible, puis zéro ; moins de deux membres | Récupération possible tant que positif ; zéro/sous deux terminal, demandes/réservations fermées, aucune résurrection |
 | G23 P0 | Recharger groupe dissous puis demander reprise ou nouvelle adoption | État terminal conservé, reprise refusée ; œuvres/historique gardés, aucun transfert de secours |
 | G24 P1 | Adoption, plusieurs minutes, puis vrai show et replay | Réputation catalogue recalculée sans crédit répété ; part spectacle appliquée une fois ; moral existant conservé |
+| G25 P1 | Groupes actifs et dissous présents ; cliquer Archives, rechercher et consulter une fiche | Boutons avec compteurs, catégorie Archives distincte ; répertoire/maîtrise, fondateurs/anciens membres, date/motif, histoire et shows accessibles ; aucune commande d’activité active |
+| G26 P1 | Groupe consulté qui se dissout ; lien de propriétaire d’une chanson depuis une autre catégorie/recherche | Fiche conservée dans Archives ; lien ouvre le bon groupe et retire une recherche incompatible, pas une autre fiche par défaut |
+| G27 P0 | Export/rechargement d’une partie avec groupe dissous après une vraie prestation | Même groupe et historique, propriétaire et maîtrise conservés ; archive accessible après recharge ; aucune réactivation, suppression ou migration 0.7.4 de format |
+
 
 ## 9. Déchéance et engagements de scène
 
@@ -251,7 +255,7 @@ La clarté fait partie de la réception : une valeur juste mais cachée peut emp
 | U11 P1 | Son OFF/ON puis inspection, skip et show suivant | Bouton visible, démarrage sonore à l’initiative du joueur, tir/contact distincts ; aucun bruit continu gossant ou boucle doublée |
 | U12 P2 | Effets réduits puis capture comparative | Résultats et cibles inchangés, secousses/recul/éclats retirés, jauges et indications conservées |
 | U13 P1 | Recherche jeu et VitePress : adoption, défausse, seuils, Solitaire, plan de test | Résultats actuels, liens/ancres valides, navigation clavier ; plan accessible par architecture documentaire et VitePress |
-| U14 P1 | Version puis notes, fermer/revenir/recharger | v0.7.3 et note correcte ; notes lues conservées, pause/focus restaurés |
+| U14 P1 | Version puis notes, fermer/revenir/recharger | v0.7.4 et note correcte ; notes lues conservées, pause/focus restaurés |
 | U15 P1 | Nom avec accents, apostrophes et contenu de type HTML | Nom affiché comme texte, jamais exécuté ; unicité normalisée ; contrôles dans leurs cartes |
 
 Matrice minimale de scène : **1440×900, 1200×768, 900×850, 390×844, 390×667, 844×390**. Vérifier titre, nom du groupe, cartes, decks, foule, commandes et jauges sans défilement extérieur. Le quartier et les fiches peuvent défiler ; leur contenu ne doit pas déborder horizontalement.

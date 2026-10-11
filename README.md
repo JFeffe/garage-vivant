@@ -1,10 +1,12 @@
 [▶ Jouer à Garage vivant](https://jutrasimon.github.io/garage-vivant/)
 
-# Garage vivant · v0.7.3
+# Garage vivant · v0.7.4
 
 Une simulation autonome de musiciens dans une banlieue. Les personnages sont des cubes avec personnalité, émotions, compétences et relations. Ils composent, montent des bands et tentent leur chance devant un public physique. Le joueur peut observer, régler leurs sacs ou intervenir.
 
 [Documentation du jeu](https://jutrasimon.github.io/garage-vivant/docs/) · [Notes de version](https://jutrasimon.github.io/garage-vivant/docs/versions.html#v072) · [Contribuer](CONTRIBUTING.md)
+
+**V7.4 — accès aux archives :** Groupes → Actifs / Archives, compteurs visibles, fiche conservée à la dissolution et liens vers les propriétaires dissous. Anciennes données conservées ; format de sauvegarde toujours 0.7.3, aucune règle moteur changée.
 
 **V7.3 — correctif après simulations :** [bilan avant/après et limites](docs/AUDIT_V7_3.md). Quatre transitions corrigées, aucune mécanique ajoutée. `npm run audit:simulation` rejoue seize parties de quinze jours.
 
@@ -50,7 +52,7 @@ Sauvegarde locale, export/import et migration V1–V7. Chansons, projets, compé
 
 ## Plan de test de la V7 complète
 
-[Plan de test V7 à V7.3](docs/PLAN_TEST_V7.md) : parcours rapide de 20–30 minutes, cas prioritaires par système, migrations, expérience multi-graines, interface/son et publication. Il distingue les résultats automatisés et les essais humains encore à consigner.
+[Plan de test V7 à V7.4](docs/PLAN_TEST_V7.md) : parcours rapide de 20–30 minutes, cas prioritaires par système, migrations, expérience multi-graines, interface/son et publication. Il distingue les résultats automatisés et les essais humains encore à consigner.
 
 ## Développement et validation
 

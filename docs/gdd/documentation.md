@@ -1,6 +1,6 @@
 # DDD — Architecture documentaire et recherche
 
-Version 0.7.3. Le dossier historique `docs/gdd/` contient les DDD par domaine. Garder ces chemins conserve les liens existants; leur titre DDD indique une description des règles livrées.
+Version 0.7.4. Le dossier historique `docs/gdd/` contient les DDD par domaine. Garder ces chemins conserve les liens existants; leur titre DDD indique une description des règles livrées.
 
 ## Carte des domaines
 
@@ -30,7 +30,7 @@ Le [plan V7.2](../PLAN_V7_2.md) conserve les décisions et les hypothèses d’a
 
 ## Plan de test de la V7 complète
 
-Le [plan de test V7 à V7.3](../PLAN_TEST_V7.md) regroupe vérification rapide, règles isolées, boucles de jeu, migrations, expérience multi-graines, interface, audio et publication. Chaque cas donne identifiant, priorité, conditions et résultat attendu. Il distingue réception automatisée déjà effectuée, essais manuels à consigner et quatorze raccords volontairement débranchés. Les suites couvrent le moteur ; les appareils réels et le plaisir de jeu demandent leur propre réception. Le plan n’ajoute aucune mécanique.
+Le [plan de test V7 à V7.4](../PLAN_TEST_V7.md) regroupe vérification rapide, règles isolées, boucles de jeu, migrations, expérience multi-graines, interface, audio et publication. Chaque cas donne identifiant, priorité, conditions et résultat attendu. Il distingue réception automatisée déjà effectuée, essais manuels à consigner et quatorze raccords volontairement débranchés. Les suites couvrent le moteur ; les appareils réels et le plaisir de jeu demandent leur propre réception. Le plan n’ajoute aucune mécanique.
 
 La navigation VitePress donne une entrée directe. Sa recherche indexe le plan complet ; celle du jeu trouve cette rubrique « plan de test » et le lien vers le plan.
 
@@ -51,3 +51,7 @@ Le test documentaire vérifie les pages attendues, liens Markdown locaux, prése
 ## Audit et correctif V7.3
 
 Le [bilan V7.3](../AUDIT_V7_3.md) relie protocole, résultats avant/après, limites d’observation et essais prioritaires. Les données brutes V7.2 et V7.3 restent séparées ; les téléchargements JSON sont copiés lors de la construction. Les règles de morceau annoncé et expiration appartiennent à Groupes, les compteurs de cycle à Actions/Musique, la finalisation des coauteurs à Compositions, le passage de format sans tirage à Technique. Ces rubriques rendent « simulation V7.3 » et ses corrections cherchables dans le jeu ; VitePress indexe aussi le bilan complet et le plan de test.
+
+## Archives des groupes V7.4
+
+La [fiche et navigation d’archives](./groupes.md) sont décrites dans Groupes ; la séparation version d’interface/format de sauvegarde dans [Technique](./technique.md). Le [plan de test](../PLAN_TEST_V7.md) ajoute G25–G27 pour l’accès, les liens et la conservation au rechargement. VitePress et la recherche du jeu indexent les mêmes règles d’archives.

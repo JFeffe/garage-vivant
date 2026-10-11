@@ -1,5 +1,16 @@
 # Notes de version
 
+## V0.7.4 — Archives des groupes accessibles {#v074}
+
+11 octobre 2026. Correctif d’interface : les groupes dissous étaient conservés dans la sauvegarde, mais cachés par défaut derrière un filtre peu visible.
+
+- Deux boutons Actifs / Archives avec compteurs, et listes séparées.
+- La fiche d’un groupe reste accessible lorsqu’il se dissout ; liens de propriétaire/invitation vers sa bonne catégorie, même après une recherche incompatible.
+- Répertoire, maîtrise, anciens membres, fondateurs, shows, histoire et motif/date de dissolution consultables. Aucune réactivation ni commande d’activité de groupe dissous.
+- Contrôles sur ordinateur et téléphone : groupe après vraie prestation, navigation et export/rechargement. [DDD Groupes](./gdd/groupes.md) et cas G25–G27 du [plan complet](./PLAN_TEST_V7.md).
+
+Interface 0.7.4, format du monde inchangé 0.7.3 ; aucune mécanique ni migration ajoutée.
+
 ## V0.7.3 — Correctif après seize parties simulées {#v073}
 
 11 octobre 2026. [Bilan, protocole et résultats avant/après](./AUDIT_V7_3.md) et [plan de test V7 complet actualisé](./PLAN_TEST_V7.md).

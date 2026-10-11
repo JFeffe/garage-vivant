@@ -1,5 +1,5 @@
-import { placeActivityLabels } from './map-labels.mjs?v=0.7.3';
-import {DEFAULT_FILTERS,catalogueControls,catalogueHTML as musicCatalogueHTML,songDetailsHTML} from "./catalogue.mjs?v=0.7.3";
+import { placeActivityLabels } from './map-labels.mjs?v=0.7.4';
+import {DEFAULT_FILTERS,catalogueControls,catalogueHTML as musicCatalogueHTML,songDetailsHTML} from "./catalogue.mjs?v=0.7.4";
 let catalogueFilters={...DEFAULT_FILTERS};
 import {
   thresholdsHTML,
@@ -8,13 +8,13 @@ import {
   exchangeTrace,
   sessionHTML,
   rapinHTML,
-} from "./v7-view.mjs?v=0.7.3";
+} from "./v7-view.mjs?v=0.7.4";
 import {
   effectiveTraits,
   updateTraits,
   TRAIT_CATALOG,
   BAG_ACTIONS,
-} from "./v7.mjs?v=0.7.3";
+} from "./v7.mjs?v=0.7.4";
 import {
   createShowClock,
   advanceShowClock,
@@ -24,22 +24,22 @@ import {
   songKey,
   stageGeometry,
   showBeat,
-} from "./show-playback.mjs?v=0.7.3";
+} from "./show-playback.mjs?v=0.7.4";
 import {
   showOverlayHTML,
   showResourcesHTML,
   deckInspectionHTML,
   cardInspectionHTML,
-} from "./show-view.mjs?v=0.7.3";
-import { setupDocSearch } from "./doc-search.mjs?v=0.7.3";
-import { calendarHTML } from "./v6-view.mjs?v=0.7.3";
-import { pendingBooking, eventById } from "./calendar.mjs?v=0.7.3";
-import { editBag } from "./social.mjs?v=0.7.3";
+} from "./show-view.mjs?v=0.7.4";
+import { setupDocSearch } from "./doc-search.mjs?v=0.7.4";
+import { calendarHTML } from "./v6-view.mjs?v=0.7.4";
+import { pendingBooking, eventById } from "./calendar.mjs?v=0.7.4";
+import { editBag } from "./social.mjs?v=0.7.4";
 import {
   profileMarkup,
   changeModule,
   resetLayout,
-} from "./profile-layout.mjs?v=0.7.3";
+} from "./profile-layout.mjs?v=0.7.4";
 import {
   VERSION,
   NEEDS,
@@ -78,7 +78,7 @@ import {
   compositionProject,
   journalEntries,
   chemistryKnowledge,
-} from "./engine.mjs?v=0.7.3";
+} from "./engine.mjs?v=0.7.4";
 import {
   command,
   bandStage,
@@ -93,20 +93,20 @@ import {
   newSeason,
   nextSlot,
   skipShow,
-} from "./life.mjs?v=0.7.3";
+} from "./life.mjs?v=0.7.4";
 import {
   CARDS,
   CURSES,
   INTENTIONS,
   SHOW_TICKS,
   createPerformance,
-} from "./stage.mjs?v=0.7.3";
-import { resolveShowPlan } from "./show-planning.mjs?v=0.7.3";
+} from "./stage.mjs?v=0.7.4";
+import { resolveShowPlan } from "./show-planning.mjs?v=0.7.4";
 import {
   reconcile,
   createViewPositions,
   withReadingAnchor,
-} from "./ui-state.mjs?v=0.7.3";
+} from "./ui-state.mjs?v=0.7.4";
 import {
   quickHTML,
   skillHTML,
@@ -122,14 +122,14 @@ import {
   drawStage,
   enableAudio,
   playSound,
-} from "./v5-view.mjs?v=0.7.3";
+} from "./v5-view.mjs?v=0.7.4";
 import {
   createPlayback,
   snapSpeed,
   setPlaybackSpeed,
   advancePlayback,
   updatePositions,
-} from "./runtime.mjs?v=0.7.3";
+} from "./runtime.mjs?v=0.7.4";
 const playback = createPlayback();
 const $ = (q) => document.querySelector(q),
   $$ = (q) => [...document.querySelectorAll(q)],
@@ -1350,6 +1350,9 @@ function renderActions() {
 }
 
 function renderGroups() {
+  if(world.groups.find(g=>g.id===selectedGroup)?.archivedAt!=null)bandArchives=true;
+  const visible=world.groups.filter(g=>(bandArchives?g.archivedAt!==null:g.archivedAt===null)&&g.name.toLowerCase().includes(bandQuery.toLowerCase()));
+  selectedGroup=visible.find(g=>g.id===selectedGroup)?.id||visible[0]?.id||null;
   replacePreserving(
     "#group-list",
     bandsHTML(world, selectedGroup, bandQuery, bandArchives),
@@ -1904,7 +1907,7 @@ function launchPreview(replay = false) {
 }
 $("#version").onclick = (e) => {
   e.stopPropagation();
-  window.open("docs/versions.html#v073", "_blank", "noopener");
+  window.open("docs/versions.html#v074", "_blank", "noopener");
 };
 $("#brand-home").onclick = (e) => {
   e.preventDefault();
@@ -2029,10 +2032,6 @@ document.addEventListener("change", (e) => {
       el.value === "free" ? null : Number(el.value);
     renderShows();
   }
-  if (el.id === "band-archives") {
-    bandArchives = el.checked;
-    renderGroups();
-  }
   if (el.dataset.bagWeight) {
     const [id, key] = el.dataset.bagWeight.split(":");
     if (
@@ -2087,10 +2086,17 @@ document.addEventListener("change", (e) => {
 document.addEventListener("click", (e) => {
   const el = e.target.closest("button");
   if (!el) return;
+  if (el.dataset.bandView) {
+    bandArchives=el.dataset.bandView==='archives';
+    selectedGroup=null;
+    renderGroups();
+  }
   if (el.dataset.groupSelect) {
     if($("#dialog").open)$("#dialog").close();
     selectedGroup = el.dataset.groupSelect;
-    if(world.groups.find(g=>g.id===selectedGroup)?.archivedAt!==null)bandArchives=true;
+    const group=world.groups.find(g=>g.id===selectedGroup);
+    bandArchives=group?.archivedAt!=null;
+    if(group&&!group.name.toLowerCase().includes(bandQuery.toLowerCase()))bandQuery='';
     changeView("groups");
     renderGroups();
   }

@@ -2,7 +2,9 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
-import {isArchivedSong} from '../dist/life.mjs';
+import {isArchivedSong,groupContext} from '../dist/life.mjs';
+import {dissolveGroup} from '../dist/groups.mjs';
+import {bandsHTML} from '../dist/v6-view.mjs';
 import {catalogueControls,catalogueHTML as musicCatalogueHTML,DEFAULT_FILTERS} from '../dist/catalogue.mjs';
 import {exchangeTrace} from '../dist/v7-view.mjs';
 import * as engine from '../dist/engine.mjs';
@@ -24,4 +26,10 @@ const activity=engine.journalEntries(world).find(x=>x.session);context.activity=
 // The map drawing code renders an action and an optional emotion in independent bubbles.
 const bubble=source.slice(source.indexOf('ACTIONS[p.action.key].icon')-400,source.indexOf('const tw = ctx.measureText(p.name)'));
 assert(bubble.includes('ACTIONS[p.action.key].icon'));assert(bubble.includes('EMOTIONS[em.key].icon'));assert(!bubble.includes('showEmotion?'));assert(bubble.includes('p.action.route.length ? "↗"'));
-console.log('Interface rendering passed: hidden chemistry, laboratory switch, escaped names, persistent projects, session details, independent action/emotion bubbles. Visual layout not tested.');
+// Follow the actual selected group when it dissolves instead of silently showing another group.
+const archived=engine.createGroup(world,world.people.map(p=>p.id),{manual:true,name:'Les Archives de la Rue'});
+Object.assign(context,{bandsHTML,selectedGroup:archived.id,bandQuery:archived.name,bandArchives:false});
+load('function renderGroups()', '\n$("#decision-mode")');vm.runInContext('renderGroups()',context);
+assert(dissolveGroup(world,archived,'Archive de test',groupContext(world)));vm.runInContext('renderGroups()',context);
+assert.equal(context.bandArchives,true);assert.equal(context.selectedGroup,archived.id);assert(node('#group-list').innerHTML.includes('Dissolution définitive'));
+console.log('Interface rendering passed: hidden chemistry, laboratory switch, escaped names, persistent projects, session details, independent action/emotion bubbles and selected dissolved group retained. Visual layout not tested.');

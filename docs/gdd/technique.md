@@ -1,6 +1,6 @@
 # DDD — Architecture, sauvegardes et validation
 
-Version d’interface et format du monde : 0.7.3. L’application reste statique, sans dépendance de simulation à l’exécution ni compte serveur.
+Version d’interface : 0.7.4. Format du monde : 0.7.3. L’application reste statique, sans dépendance de simulation à l’exécution ni compte serveur.
 
 ## Modules et responsabilités
 
@@ -102,3 +102,7 @@ Les entités restent des données sérialisables, avec fonctions pures et transi
 Aucun champ de simulation ajouté. Sur une copie, changer seulement `version` de 0.7.2 à 0.7.3, puis valider strictement : RNG, seuils, sacs, dates, projets, répertoires, maîtrises, files et historiques sont conservés. Aucun tirage de migration, compensation ni réparation de donnée corrompue. Les anciennes copies `garage-vivant-before-v7-2` restent en place ; l’interface utilise une copie distincte `garage-vivant-before-v7-3`. La fixture `v072-world.json` a été générée et validée avec le moteur publié V7.2 (`c13b861088347ffcc2508eb54d285499b8278093`), avant les corrections.
 
 Les corrections s’appliquent à la prochaine transition : l’appel garde son morceau avant travail ; un auteur encore associé à un projet terminé ferme sa séance avant trajet ou nouveau travail. Les gains historiques restent inchangés. Le futur sous les nouvelles règles peut diverger de V7.2 ; deux continuations V7.3 du même monde sont identiques. `tests/v73.test.mjs` reproduit les quatre défauts et vérifie la vraie sauvegarde V7.2. `npm run audit:simulation` observe seize parties de quinze jours, vérifie chaque sauvegarde quotidienne, puis compare 240 minutes de continuation. Il échoue sur blocage, rechargement divergent ou invariant observé violé. [Protocole et résultats](../AUDIT_V7_3.md).
+
+## Correctif d’interface V7.4 — Archives des groupes
+
+Le navigateur de groupes sépare Actifs et Archives, conserve la sélection lors d’une dissolution et ouvre le bon état depuis les liens de propriétaire. Seuls filtres et sélection de vue changent ; aucune donnée, migration, politique de dissolution ni tirage du moteur modifié. Les groupes dissous étaient déjà stockés dans `world.groups`. `RELEASE_VERSION` et les paramètres de cache des ressources passent à 0.7.4 ; `VERSION` reste à 0.7.3, afin de ne pas migrer une sauvegarde inchangée. Le test Chromium suit une vraie prestation terminée, dissout son groupe dans une fixture contrôlée, puis vérifie archive, répertoire, anciens membres, bilan de show, navigation depuis une chanson et export/rechargement sur ordinateur et téléphone.
