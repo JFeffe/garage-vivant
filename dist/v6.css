@@ -8,3 +8,5 @@
   #inspector.expanded .profile-modules .module-left { grid-column:1; }
   #inspector.expanded .profile-modules .module-right { grid-column:2; }
 }
+
+.band-filters{display:flex;gap:6px}.band-filters button{flex:1;min-width:0;padding:10px 6px}.band-filters button[aria-pressed=true]{background:#dce8d4;border-color:#7e9d78;font-weight:700}
