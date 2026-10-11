@@ -1,6 +1,6 @@
 # DDD — Compositions, chansons et catalogue
 
-Version 0.7.2. Les séances de composition développent des projets persistants. Le catalogue conserve les œuvres et permet de masquer les productions peu utiles sans les supprimer.
+Version 0.7.3. Les séances de composition développent des projets persistants. Le catalogue conserve les œuvres et permet de masquer les productions peu utiles sans les supprimer.
 
 ## Plusieurs projets et coauteurs
 
@@ -8,7 +8,7 @@ Un personnage possède autant de projets en cours qu’il en crée. Une nouvelle
 
 Chaque projet contient auteur initial, coauteurs, noms conservés, groupe éventuel, dates, travail, cible, séances, minutes et contributions. Chaque brouillon conserve séparément échantillons émotionnels, sources et travail créatif ; alterner ne mélange pas les origines.
 
-Composer solo reste possible. En collectif, seuls les membres d’un groupe actif commun peuvent demander à rejoindre la composition. Une admission acceptée partage le même projet ; les minutes travaillées sont attribuées à chaque présent. La finalisation crée une seule chanson pour ce projet. Les auteurs restent attribués à l’œuvre, même si le groupe se défait. Le rattachement collectif n’est pas déduit de tous les groupes actuels d’un auteur.
+Composer solo reste possible. En collectif, seuls les membres d’un groupe actif commun peuvent demander à rejoindre la composition. Une admission acceptée partage le même projet ; les minutes travaillées sont attribuées à chaque présent. La finalisation crée une seule chanson pour ce projet. Elle termine aussi les séances des coauteurs encore associés à ce projet, même en trajet : leur brouillon est libéré et ils passent au choix normal suivant (priorités, file, puis sac). Un nouveau projet exige une nouvelle action, jamais le remplacement silencieux du projet terminé dans l’ancienne séance. Les contributions et crédits déjà acquis restent conservés. Les auteurs restent attribués à l’œuvre, même si le groupe se défait. Le rattachement collectif n’est pas déduit de tous les groupes actuels d’un auteur.
 
 ## Durée et travail
 

@@ -1,6 +1,6 @@
 # DDD — Architecture documentaire et recherche
 
-Version 0.7.2. Le dossier historique `docs/gdd/` contient les DDD par domaine. Garder ces chemins conserve les liens existants; leur titre DDD indique une description des règles livrées.
+Version 0.7.3. Le dossier historique `docs/gdd/` contient les DDD par domaine. Garder ces chemins conserve les liens existants; leur titre DDD indique une description des règles livrées.
 
 ## Carte des domaines
 
@@ -30,7 +30,7 @@ Le [plan V7.2](../PLAN_V7_2.md) conserve les décisions et les hypothèses d’a
 
 ## Plan de test de la V7 complète
 
-Le [plan de test V7 à V7.2](../PLAN_TEST_V7.md) regroupe vérification rapide, règles isolées, boucles de jeu, migrations, expérience multi-graines, interface, audio et publication. Chaque cas donne identifiant, priorité, conditions et résultat attendu. Il distingue réception automatisée déjà effectuée, essais manuels à consigner et quatorze raccords volontairement débranchés. Les suites couvrent le moteur ; les appareils réels et le plaisir de jeu demandent leur propre réception. Le plan n’ajoute aucune mécanique.
+Le [plan de test V7 à V7.3](../PLAN_TEST_V7.md) regroupe vérification rapide, règles isolées, boucles de jeu, migrations, expérience multi-graines, interface, audio et publication. Chaque cas donne identifiant, priorité, conditions et résultat attendu. Il distingue réception automatisée déjà effectuée, essais manuels à consigner et quatorze raccords volontairement débranchés. Les suites couvrent le moteur ; les appareils réels et le plaisir de jeu demandent leur propre réception. Le plan n’ajoute aucune mécanique.
 
 La navigation VitePress donne une entrée directe. Sa recherche indexe le plan complet ; celle du jeu trouve cette rubrique « plan de test » et le lien vers le plan.
 
@@ -47,3 +47,7 @@ Les sous-sections sont indexées avec titres et ancres compatibles avec VitePres
 Tout changement mécanique doit actualiser le DDD propriétaire et ses liens de raccord. Un changement de schéma ou de migration actualise aussi Technique; un raccord inactif actualise le registre moteur et Raccords V7. Les identifiants des notes lues sont importés depuis `release.mjs` pour éviter une liste historique oubliée. Une version actualise `release.mjs`, `package.json`, le footer documentaire et les notes.
 
 Le test documentaire vérifie les pages attendues, liens Markdown locaux, présence de tous les traits/limites, version, navigation et entrée de recherche pour les termes V7.2. Le test Chromium vérifie la recherche du jeu et celle de VitePress sur la page construite, l’ouverture des règles et les notes lues. Le build refuse les liens morts. La CI publie documentation et jeu ensemble après tests.
+
+## Audit et correctif V7.3
+
+Le [bilan V7.3](../AUDIT_V7_3.md) relie protocole, résultats avant/après, limites d’observation et essais prioritaires. Les données brutes V7.2 et V7.3 restent séparées ; les téléchargements JSON sont copiés lors de la construction. Les règles de morceau annoncé et expiration appartiennent à Groupes, les compteurs de cycle à Actions/Musique, la finalisation des coauteurs à Compositions, le passage de format sans tirage à Technique. Ces rubriques rendent « simulation V7.3 » et ses corrections cherchables dans le jeu ; VitePress indexe aussi le bilan complet et le plan de test.

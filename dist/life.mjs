@@ -1,8 +1,8 @@
-import { GROUP_RULES as R } from './group-rules.mjs?v=0.7.2';
-import { initializeGroupState, proposeMembership, requestRehearsal, adoptSong, refreshGroup, groupsMinute, leaveGroup, dissolveGroup, activeGroup } from './groups.mjs?v=0.7.2';
-import { plateauGain, decadenceCount, availableMusicName, musicName } from "./v71.mjs?v=0.7.2";
-import { editTokens } from "./v7.mjs?v=0.7.2";
-import { initializeV6Person } from "./social.mjs?v=0.7.2";
+import { GROUP_RULES as R } from './group-rules.mjs?v=0.7.3';
+import { initializeGroupState, proposeMembership, requestRehearsal, adoptSong, refreshGroup, groupsMinute, leaveGroup, dissolveGroup, activeGroup } from './groups.mjs?v=0.7.3';
+import { plateauGain, decadenceCount, availableMusicName, musicName } from "./v71.mjs?v=0.7.3";
+import { editTokens } from "./v7.mjs?v=0.7.3";
+import { initializeV6Person } from "./social.mjs?v=0.7.3";
 import {
   initializeCalendar,
   upgradeCalendar,
@@ -14,7 +14,7 @@ import {
   morale,
   moraleEffect,
   validateCalendar,
-} from "./calendar.mjs?v=0.7.2";
+} from "./calendar.mjs?v=0.7.3";
 import {
   clamp,
   round,
@@ -31,7 +31,7 @@ import {
   ACTIONS,
   step,
   refreshReputation,
-} from "./engine.mjs?v=0.7.2";
+} from "./engine.mjs?v=0.7.3";
 import {
   CARDS,
   CURSES,
@@ -41,7 +41,7 @@ import {
   createPerformance,
   advancePerformance,
   validatePerformance,
-} from "./stage.mjs?v=0.7.2";
+} from "./stage.mjs?v=0.7.3";
 
 export function initializePerson(p) {
   initializeV6Person(p);

@@ -13,7 +13,7 @@ function prepared(){const s=restore(legacy);for(const p of s.people){p.sleep.nex
 const controlled=s=>({...groupContext(s),random:()=>0});
 
 test('Real V7.1 migration archives trust and resolves shared repertoire without rewriting authors or mastery',()=>{
- const before=copy(legacy),s=restore(legacy),song=s.songs[0],g1=s.groups[0],g2=s.groups[1];assert.deepEqual(legacy,before);assert.equal(s.version,'0.7.2');assert.equal(song.ownerGroupId,g1.id);assert.equal(song.adoptedAt,null);assert.equal(g1.repertoire[0].mastery,60);assert.equal(g2.repertoire.length,0);assert.equal(s.legacyV71.sharedRepertoires[0].mastery,30);assert.equal(s.people[0].songMastery[song.id],44);assert.deepEqual(song.authors,legacy.songs[0].authors);
+ const before=copy(legacy),s=restore(legacy),song=s.songs[0],g1=s.groups[0],g2=s.groups[1];assert.deepEqual(legacy,before);assert.equal(s.version,'0.7.3');assert.equal(song.ownerGroupId,g1.id);assert.equal(song.adoptedAt,null);assert.equal(g1.repertoire[0].mastery,60);assert.equal(g2.repertoire.length,0);assert.equal(s.legacyV71.sharedRepertoires[0].mastery,30);assert.equal(s.people[0].songMastery[song.id],44);assert.deepEqual(song.authors,legacy.songs[0].authors);
  for(const [key,r]of Object.entries(legacy.rels)){assert(!('trust'in s.rels[key]));assert.equal(s.legacyV71.trust[key],r.trust);assert.equal(s.rels[key].affinity,r.affinity);}
  assert(s.bookings[0].legacySetlist);assert(s.legacyV71.confirmedBookings.includes(s.bookings[0].id));assert.deepEqual(restore(s),s);
  const twin=restore(s);step(s,250);step(twin,250);assert.deepEqual(s,twin);

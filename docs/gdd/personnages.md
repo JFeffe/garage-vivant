@@ -1,6 +1,6 @@
 # DDD — Personnages, besoins et émotions
 
-Version 0.7.2. Ces règles décrivent le moteur livré; les anciennes propositions se trouvent dans les plans historiques.
+Version 0.7.3. Ces règles décrivent le moteur livré; les anciennes propositions se trouvent dans les plans historiques.
 
 ## Identité et personnalité
 

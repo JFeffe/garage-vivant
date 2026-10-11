@@ -28,8 +28,15 @@ jobs:
       - name: Conserver les mesures des groupes
         uses: actions/upload-artifact@v4
         with:
-          name: equilibrage-v72
-          path: docs/BALANCE_V7_2.json
+          name: equilibrage-v73
+          path: docs/BALANCE_V7_3.json
+      - name: Simuler seize parties de quinze jours
+        run: npm run audit:simulation
+      - name: Conserver les observations des parties
+        uses: actions/upload-artifact@v4
+        with:
+          name: simulations-v73
+          path: docs/AUDIT_V7_3.json
       - name: Installer le navigateur de validation
         run: |
           npm ci --ignore-scripts
