@@ -4,8 +4,8 @@
   "version": "0.7.2",
   "type": "module",
   "scripts": {
-    "test": "node --test tests/engine.test.mjs tests/systems.test.mjs tests/v4.test.mjs tests/v5.test.mjs tests/runtime.test.mjs tests/interface.test.mjs tests/v6.test.mjs tests/show.test.mjs tests/v7.test.mjs tests/v71.test.mjs tests/docs.test.mjs tests/v72.test.mjs",
-    "test:browser": "node tests/browser.test.mjs && node tests/show-layout.test.mjs",
+    "test": "node --test tests/engine.test.mjs tests/systems.test.mjs tests/v4.test.mjs tests/v5.test.mjs tests/runtime.test.mjs tests/interface.test.mjs tests/v6.test.mjs tests/show.test.mjs tests/v7.test.mjs tests/v71.test.mjs tests/docs.test.mjs tests/v72.test.mjs tests/bandlive.test.mjs",
+    "test:browser": "node tests/browser.test.mjs && node tests/show-layout.test.mjs && node tests/bandlive-browser.test.mjs",
     "docs:build": "node scripts/build-docs.mjs",
     "audit:groups": "node scripts/audit-groups.mjs"
   },

@@ -20,6 +20,12 @@ Les dates se renouvellent continuellement. Un gros événement revient toutes le
 
 **Essayer maintenant** est une répétition générale sans récompense. Un replay reproduit le tirage et n’ajoute aucune conséquence; les douze dernières prestations gardent la trace de leur dernière chanson. **Interrompre** un vrai show ne donne pas de récompense et coûte de l’énergie.
 
+## BandLive · répétition expérimentale
+
+Activer **BandLive** dans **Réglages**, puis **Jouer avec BandLive** depuis un groupe, ouvrir son onglet ou **Essayer BandLive** depuis Shows. Choisir **deux à six membres** du groupe : leurs instruments construisent la pioche commune. Jouer les compositions actives de son répertoire, avec leurs titres, styles et auteurs. Une chanson unique peut être reprise au deuxième passage ; un groupe sans composition doit en adopter une avant de prendre la scène. Les groupes existants plus grands sont conservés, avec six musiciens maximum sélectionnés pour BandLive.
+
+Le joueur choisit de trois à douze spectateurs et glisse ses cartes sur eux. Trois points d’énergie par tour, cinq cartes pigées et deux passages de trois tours. Solo et Improvisation consomment le tempo commun. Le module est désactivé par défaut et sa répétition est enregistrée séparément, sans récompense ni modification du quartier. À la victoire ou à la fin des six tours, **Retour au quartier · continuer** reprend la partie à sa dernière vitesse de lecture. Les anciennes répétitions restent lisibles. Le calendrier conserve les spectacles classiques. [Règles, cartes et limites](docs/BANDLIVE.md).
+
 ## Quartier V7.2
 
 Six actions d’éveil : Détente, Socialiser, Pratiquer, Jam, Composer et Déchéance. Le jeton est défaussé dès la pige ; aucun remboursement après refus ou interruption. Les acquisitions arrivent dans le sac ; les retraits se font depuis la défausse, en attendant la pige des exemplaires encore dans le sac. Fourchettes personnelles et cycles remplacent les durées fixes. Le sommeil reste quotidien et hors sac.
