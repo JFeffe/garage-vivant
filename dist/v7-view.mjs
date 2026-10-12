@@ -6,7 +6,7 @@ import {
   ACTIVITY_EFFECTS,
   partnerWeight,
   traitEffect,
-} from "./v7.mjs?v=0.7.5";
+} from "./v7.mjs?v=0.7.5-bandlive5";
 import {
   ACTIONS,
   SKILLS,
@@ -15,7 +15,7 @@ import {
   scores,
   stamp,
   relationship,
-} from "./engine.mjs?v=0.7.5";
+} from "./engine.mjs?v=0.7.5-bandlive5";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,

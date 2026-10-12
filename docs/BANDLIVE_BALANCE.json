@@ -1,0 +1,870 @@
+{
+  "method": "100 deterministic seeds per combination; greedy card and target choices; six turns; fixed approved cards; venue-defined audience; no neighbourhood effects. This is a benchmark, not an optimal solver or a human win-rate estimate.",
+  "games": 4200,
+  "rows": [
+    {
+      "roster": "Duo guitare/basse",
+      "instruments": [
+        "guitar",
+        "bass"
+      ],
+      "scene": "Le garage",
+      "audience": 8,
+      "resistancePercent": 65,
+      "styles": "de la scène",
+      "games": 100,
+      "wins": 97,
+      "winPercent": 97,
+      "averageConquered": 7.97,
+      "averageScore": 99.8,
+      "positivePercent": 100,
+      "averageCards": 19.6,
+      "averageWinningTurn": 5.95
+    },
+    {
+      "roster": "Duo guitare/basse",
+      "instruments": [
+        "guitar",
+        "bass"
+      ],
+      "scene": "Le garage",
+      "audience": 8,
+      "resistancePercent": 65,
+      "styles": "hors des styles de la scène",
+      "games": 100,
+      "wins": 7,
+      "winPercent": 7,
+      "averageConquered": 7.02,
+      "averageScore": 93.1,
+      "positivePercent": 100,
+      "averageCards": 19.6,
+      "averageWinningTurn": 6
+    },
+    {
+      "roster": "Duo guitare/basse",
+      "instruments": [
+        "guitar",
+        "bass"
+      ],
+      "scene": "Le parc",
+      "audience": 10,
+      "resistancePercent": 80,
+      "styles": "de la scène",
+      "games": 100,
+      "wins": 0,
+      "winPercent": 0,
+      "averageConquered": 6.76,
+      "averageScore": 72.9,
+      "positivePercent": 100,
+      "averageCards": 20.7,
+      "averageWinningTurn": null
+    },
+    {
+      "roster": "Duo guitare/basse",
+      "instruments": [
+        "guitar",
+        "bass"
+      ],
+      "scene": "Le parc",
+      "audience": 10,
+      "resistancePercent": 80,
+      "styles": "hors des styles de la scène",
+      "games": 100,
+      "wins": 0,
+      "winPercent": 0,
+      "averageConquered": 5.68,
+      "averageScore": 63.3,
+      "positivePercent": 100,
+      "averageCards": 19.8,
+      "averageWinningTurn": null
+    },
+    {
+      "roster": "Duo guitare/basse",
+      "instruments": [
+        "guitar",
+        "bass"
+      ],
+      "scene": "Grande scène",
+      "audience": 12,
+      "resistancePercent": 100,
+      "styles": "de la scène",
+      "games": 100,
+      "wins": 0,
+      "winPercent": 0,
+      "averageConquered": 5.64,
+      "averageScore": 52.6,
+      "positivePercent": 1,
+      "averageCards": 21.2,
+      "averageWinningTurn": null
+    },
+    {
+      "roster": "Duo guitare/basse",
+      "instruments": [
+        "guitar",
+        "bass"
+      ],
+      "scene": "Grande scène",
+      "audience": 12,
+      "resistancePercent": 100,
+      "styles": "hors des styles de la scène",
+      "games": 100,
+      "wins": 0,
+      "winPercent": 0,
+      "averageConquered": 4.67,
+      "averageScore": 43.9,
+      "positivePercent": 0,
+      "averageCards": 19.5,
+      "averageWinningTurn": null
+    },
+    {
+      "roster": "Duo clavier/sax",
+      "instruments": [
+        "keys",
+        "sax"
+      ],
+      "scene": "Le garage",
+      "audience": 8,
+      "resistancePercent": 65,
+      "styles": "de la scène",
+      "games": 100,
+      "wins": 100,
+      "winPercent": 100,
+      "averageConquered": 8,
+      "averageScore": 100,
+      "positivePercent": 100,
+      "averageCards": 10.9,
+      "averageWinningTurn": 3.9
+    },
+    {
+      "roster": "Duo clavier/sax",
+      "instruments": [
+        "keys",
+        "sax"
+      ],
+      "scene": "Le garage",
+      "audience": 8,
+      "resistancePercent": 65,
+      "styles": "hors des styles de la scène",
+      "games": 100,
+      "wins": 100,
+      "winPercent": 100,
+      "averageConquered": 8,
+      "averageScore": 100,
+      "positivePercent": 100,
+      "averageCards": 13.2,
+      "averageWinningTurn": 4.76
+    },
+    {
+      "roster": "Duo clavier/sax",
+      "instruments": [
+        "keys",
+        "sax"
+      ],
+      "scene": "Le parc",
+      "audience": 10,
+      "resistancePercent": 80,
+      "styles": "de la scène",
+      "games": 100,
+      "wins": 100,
+      "winPercent": 100,
+      "averageConquered": 10,
+      "averageScore": 100,
+      "positivePercent": 100,
+      "averageCards": 14.2,
+      "averageWinningTurn": 5.08
+    },
+    {
+      "roster": "Duo clavier/sax",
+      "instruments": [
+        "keys",
+        "sax"
+      ],
+      "scene": "Le parc",
+      "audience": 10,
+      "resistancePercent": 80,
+      "styles": "hors des styles de la scène",
+      "games": 100,
+      "wins": 91,
+      "winPercent": 91,
+      "averageConquered": 9.9,
+      "averageScore": 99.6,
+      "positivePercent": 100,
+      "averageCards": 17.3,
+      "averageWinningTurn": 5.9
+    },
+    {
+      "roster": "Duo clavier/sax",
+      "instruments": [
+        "keys",
+        "sax"
+      ],
+      "scene": "Grande scène",
+      "audience": 12,
+      "resistancePercent": 100,
+      "styles": "de la scène",
+      "games": 100,
+      "wins": 8,
+      "winPercent": 8,
+      "averageConquered": 10,
+      "averageScore": 91.7,
+      "positivePercent": 100,
+      "averageCards": 18,
+      "averageWinningTurn": 6
+    },
+    {
+      "roster": "Duo clavier/sax",
+      "instruments": [
+        "keys",
+        "sax"
+      ],
+      "scene": "Grande scène",
+      "audience": 12,
+      "resistancePercent": 100,
+      "styles": "hors des styles de la scène",
+      "games": 100,
+      "wins": 0,
+      "winPercent": 0,
+      "averageConquered": 7.82,
+      "averageScore": 83,
+      "positivePercent": 100,
+      "averageCards": 18,
+      "averageWinningTurn": null
+    },
+    {
+      "roster": "Trio guitare/basse/batterie",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums"
+      ],
+      "scene": "Le garage",
+      "audience": 8,
+      "resistancePercent": 65,
+      "styles": "de la scène",
+      "games": 100,
+      "wins": 92,
+      "winPercent": 92,
+      "averageConquered": 7.92,
+      "averageScore": 99.4,
+      "positivePercent": 100,
+      "averageCards": 19.5,
+      "averageWinningTurn": 5.99
+    },
+    {
+      "roster": "Trio guitare/basse/batterie",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums"
+      ],
+      "scene": "Le garage",
+      "audience": 8,
+      "resistancePercent": 65,
+      "styles": "hors des styles de la scène",
+      "games": 100,
+      "wins": 0,
+      "winPercent": 0,
+      "averageConquered": 6.7,
+      "averageScore": 86.8,
+      "positivePercent": 100,
+      "averageCards": 18.7,
+      "averageWinningTurn": null
+    },
+    {
+      "roster": "Trio guitare/basse/batterie",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums"
+      ],
+      "scene": "Le parc",
+      "audience": 10,
+      "resistancePercent": 80,
+      "styles": "de la scène",
+      "games": 100,
+      "wins": 0,
+      "winPercent": 0,
+      "averageConquered": 6.37,
+      "averageScore": 69.5,
+      "positivePercent": 100,
+      "averageCards": 20,
+      "averageWinningTurn": null
+    },
+    {
+      "roster": "Trio guitare/basse/batterie",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums"
+      ],
+      "scene": "Le parc",
+      "audience": 10,
+      "resistancePercent": 80,
+      "styles": "hors des styles de la scène",
+      "games": 100,
+      "wins": 0,
+      "winPercent": 0,
+      "averageConquered": 5.82,
+      "averageScore": 62.2,
+      "positivePercent": 100,
+      "averageCards": 18.6,
+      "averageWinningTurn": null
+    },
+    {
+      "roster": "Trio guitare/basse/batterie",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums"
+      ],
+      "scene": "Grande scène",
+      "audience": 12,
+      "resistancePercent": 100,
+      "styles": "de la scène",
+      "games": 100,
+      "wins": 0,
+      "winPercent": 0,
+      "averageConquered": 5.31,
+      "averageScore": 51,
+      "positivePercent": 0,
+      "averageCards": 20.4,
+      "averageWinningTurn": null
+    },
+    {
+      "roster": "Trio guitare/basse/batterie",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums"
+      ],
+      "scene": "Grande scène",
+      "audience": 12,
+      "resistancePercent": 100,
+      "styles": "hors des styles de la scène",
+      "games": 100,
+      "wins": 0,
+      "winPercent": 0,
+      "averageConquered": 4.4,
+      "averageScore": 41.6,
+      "positivePercent": 0,
+      "averageCards": 18.6,
+      "averageWinningTurn": null
+    },
+    {
+      "roster": "Quatuor chant",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums",
+        "voice"
+      ],
+      "scene": "Le garage",
+      "audience": 8,
+      "resistancePercent": 65,
+      "styles": "de la scène",
+      "games": 100,
+      "wins": 100,
+      "winPercent": 100,
+      "averageConquered": 8,
+      "averageScore": 100,
+      "positivePercent": 100,
+      "averageCards": 12.4,
+      "averageWinningTurn": 4.52
+    },
+    {
+      "roster": "Quatuor chant",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums",
+        "voice"
+      ],
+      "scene": "Le garage",
+      "audience": 8,
+      "resistancePercent": 65,
+      "styles": "hors des styles de la scène",
+      "games": 100,
+      "wins": 99,
+      "winPercent": 99,
+      "averageConquered": 7.99,
+      "averageScore": 99.9,
+      "positivePercent": 100,
+      "averageCards": 13.1,
+      "averageWinningTurn": 4.79
+    },
+    {
+      "roster": "Quatuor chant",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums",
+        "voice"
+      ],
+      "scene": "Le parc",
+      "audience": 10,
+      "resistancePercent": 80,
+      "styles": "de la scène",
+      "games": 100,
+      "wins": 82,
+      "winPercent": 82,
+      "averageConquered": 9.66,
+      "averageScore": 97.7,
+      "positivePercent": 100,
+      "averageCards": 16.2,
+      "averageWinningTurn": 5.48
+    },
+    {
+      "roster": "Quatuor chant",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums",
+        "voice"
+      ],
+      "scene": "Le parc",
+      "audience": 10,
+      "resistancePercent": 80,
+      "styles": "hors des styles de la scène",
+      "games": 100,
+      "wins": 38,
+      "winPercent": 38,
+      "averageConquered": 8.6,
+      "averageScore": 91.2,
+      "positivePercent": 100,
+      "averageCards": 16.6,
+      "averageWinningTurn": 5.63
+    },
+    {
+      "roster": "Quatuor chant",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums",
+        "voice"
+      ],
+      "scene": "Grande scène",
+      "audience": 12,
+      "resistancePercent": 100,
+      "styles": "de la scène",
+      "games": 100,
+      "wins": 10,
+      "winPercent": 10,
+      "averageConquered": 8.19,
+      "averageScore": 79.3,
+      "positivePercent": 95,
+      "averageCards": 17.5,
+      "averageWinningTurn": 6
+    },
+    {
+      "roster": "Quatuor chant",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums",
+        "voice"
+      ],
+      "scene": "Grande scène",
+      "audience": 12,
+      "resistancePercent": 100,
+      "styles": "hors des styles de la scène",
+      "games": 100,
+      "wins": 5,
+      "winPercent": 5,
+      "averageConquered": 6.46,
+      "averageScore": 70.1,
+      "positivePercent": 78,
+      "averageCards": 16.8,
+      "averageWinningTurn": 6
+    },
+    {
+      "roster": "Quatuor sax",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums",
+        "sax"
+      ],
+      "scene": "Le garage",
+      "audience": 8,
+      "resistancePercent": 65,
+      "styles": "de la scène",
+      "games": 100,
+      "wins": 96,
+      "winPercent": 96,
+      "averageConquered": 7.95,
+      "averageScore": 99.6,
+      "positivePercent": 100,
+      "averageCards": 16.4,
+      "averageWinningTurn": 5.11
+    },
+    {
+      "roster": "Quatuor sax",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums",
+        "sax"
+      ],
+      "scene": "Le garage",
+      "audience": 8,
+      "resistancePercent": 65,
+      "styles": "hors des styles de la scène",
+      "games": 100,
+      "wins": 68,
+      "winPercent": 68,
+      "averageConquered": 7.47,
+      "averageScore": 95.3,
+      "positivePercent": 100,
+      "averageCards": 17.7,
+      "averageWinningTurn": 5.56
+    },
+    {
+      "roster": "Quatuor sax",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums",
+        "sax"
+      ],
+      "scene": "Le parc",
+      "audience": 10,
+      "resistancePercent": 80,
+      "styles": "de la scène",
+      "games": 100,
+      "wins": 33,
+      "winPercent": 33,
+      "averageConquered": 7.95,
+      "averageScore": 85.2,
+      "positivePercent": 100,
+      "averageCards": 19.3,
+      "averageWinningTurn": 5.73
+    },
+    {
+      "roster": "Quatuor sax",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums",
+        "sax"
+      ],
+      "scene": "Le parc",
+      "audience": 10,
+      "resistancePercent": 80,
+      "styles": "hors des styles de la scène",
+      "games": 100,
+      "wins": 11,
+      "winPercent": 11,
+      "averageConquered": 6.66,
+      "averageScore": 75,
+      "positivePercent": 100,
+      "averageCards": 18.8,
+      "averageWinningTurn": 5.64
+    },
+    {
+      "roster": "Quatuor sax",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums",
+        "sax"
+      ],
+      "scene": "Grande scène",
+      "audience": 12,
+      "resistancePercent": 100,
+      "styles": "de la scène",
+      "games": 100,
+      "wins": 2,
+      "winPercent": 2,
+      "averageConquered": 6.51,
+      "averageScore": 65.8,
+      "positivePercent": 69,
+      "averageCards": 19.7,
+      "averageWinningTurn": 6
+    },
+    {
+      "roster": "Quatuor sax",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums",
+        "sax"
+      ],
+      "scene": "Grande scène",
+      "audience": 12,
+      "resistancePercent": 100,
+      "styles": "hors des styles de la scène",
+      "games": 100,
+      "wins": 1,
+      "winPercent": 1,
+      "averageConquered": 4.76,
+      "averageScore": 54.9,
+      "positivePercent": 29,
+      "averageCards": 18.8,
+      "averageWinningTurn": 6
+    },
+    {
+      "roster": "Quatuor collectif",
+      "instruments": [
+        "keys",
+        "voice",
+        "sax",
+        "trumpet"
+      ],
+      "scene": "Le garage",
+      "audience": 8,
+      "resistancePercent": 65,
+      "styles": "de la scène",
+      "games": 100,
+      "wins": 100,
+      "winPercent": 100,
+      "averageConquered": 8,
+      "averageScore": 100,
+      "positivePercent": 100,
+      "averageCards": 10.6,
+      "averageWinningTurn": 3.67
+    },
+    {
+      "roster": "Quatuor collectif",
+      "instruments": [
+        "keys",
+        "voice",
+        "sax",
+        "trumpet"
+      ],
+      "scene": "Le garage",
+      "audience": 8,
+      "resistancePercent": 65,
+      "styles": "hors des styles de la scène",
+      "games": 100,
+      "wins": 100,
+      "winPercent": 100,
+      "averageConquered": 8,
+      "averageScore": 100,
+      "positivePercent": 100,
+      "averageCards": 11.8,
+      "averageWinningTurn": 4.12
+    },
+    {
+      "roster": "Quatuor collectif",
+      "instruments": [
+        "keys",
+        "voice",
+        "sax",
+        "trumpet"
+      ],
+      "scene": "Le parc",
+      "audience": 10,
+      "resistancePercent": 80,
+      "styles": "de la scène",
+      "games": 100,
+      "wins": 100,
+      "winPercent": 100,
+      "averageConquered": 10,
+      "averageScore": 100,
+      "positivePercent": 100,
+      "averageCards": 13.3,
+      "averageWinningTurn": 4.63
+    },
+    {
+      "roster": "Quatuor collectif",
+      "instruments": [
+        "keys",
+        "voice",
+        "sax",
+        "trumpet"
+      ],
+      "scene": "Le parc",
+      "audience": 10,
+      "resistancePercent": 80,
+      "styles": "hors des styles de la scène",
+      "games": 100,
+      "wins": 98,
+      "winPercent": 98,
+      "averageConquered": 9.97,
+      "averageScore": 99.9,
+      "positivePercent": 100,
+      "averageCards": 15.3,
+      "averageWinningTurn": 5.17
+    },
+    {
+      "roster": "Quatuor collectif",
+      "instruments": [
+        "keys",
+        "voice",
+        "sax",
+        "trumpet"
+      ],
+      "scene": "Grande scène",
+      "audience": 12,
+      "resistancePercent": 100,
+      "styles": "de la scène",
+      "games": 100,
+      "wins": 72,
+      "winPercent": 72,
+      "averageConquered": 11.23,
+      "averageScore": 96.6,
+      "positivePercent": 100,
+      "averageCards": 17.7,
+      "averageWinningTurn": 5.89
+    },
+    {
+      "roster": "Quatuor collectif",
+      "instruments": [
+        "keys",
+        "voice",
+        "sax",
+        "trumpet"
+      ],
+      "scene": "Grande scène",
+      "audience": 12,
+      "resistancePercent": 100,
+      "styles": "hors des styles de la scène",
+      "games": 100,
+      "wins": 59,
+      "winPercent": 59,
+      "averageConquered": 10.55,
+      "averageScore": 93.7,
+      "positivePercent": 100,
+      "averageCards": 18,
+      "averageWinningTurn": 5.9
+    },
+    {
+      "roster": "Six instruments",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums",
+        "voice",
+        "keys",
+        "sax"
+      ],
+      "scene": "Le garage",
+      "audience": 8,
+      "resistancePercent": 65,
+      "styles": "de la scène",
+      "games": 100,
+      "wins": 100,
+      "winPercent": 100,
+      "averageConquered": 8,
+      "averageScore": 100,
+      "positivePercent": 100,
+      "averageCards": 10.5,
+      "averageWinningTurn": 3.78
+    },
+    {
+      "roster": "Six instruments",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums",
+        "voice",
+        "keys",
+        "sax"
+      ],
+      "scene": "Le garage",
+      "audience": 8,
+      "resistancePercent": 65,
+      "styles": "hors des styles de la scène",
+      "games": 100,
+      "wins": 99,
+      "winPercent": 99,
+      "averageConquered": 7.99,
+      "averageScore": 100,
+      "positivePercent": 100,
+      "averageCards": 11.8,
+      "averageWinningTurn": 4.26
+    },
+    {
+      "roster": "Six instruments",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums",
+        "voice",
+        "keys",
+        "sax"
+      ],
+      "scene": "Le parc",
+      "audience": 10,
+      "resistancePercent": 80,
+      "styles": "de la scène",
+      "games": 100,
+      "wins": 96,
+      "winPercent": 96,
+      "averageConquered": 9.91,
+      "averageScore": 99.5,
+      "positivePercent": 100,
+      "averageCards": 13.3,
+      "averageWinningTurn": 4.77
+    },
+    {
+      "roster": "Six instruments",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums",
+        "voice",
+        "keys",
+        "sax"
+      ],
+      "scene": "Le parc",
+      "audience": 10,
+      "resistancePercent": 80,
+      "styles": "hors des styles de la scène",
+      "games": 100,
+      "wins": 83,
+      "winPercent": 83,
+      "averageConquered": 9.58,
+      "averageScore": 97.6,
+      "positivePercent": 100,
+      "averageCards": 14.8,
+      "averageWinningTurn": 5.14
+    },
+    {
+      "roster": "Six instruments",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums",
+        "voice",
+        "keys",
+        "sax"
+      ],
+      "scene": "Grande scène",
+      "audience": 12,
+      "resistancePercent": 100,
+      "styles": "de la scène",
+      "games": 100,
+      "wins": 51,
+      "winPercent": 51,
+      "averageConquered": 10.24,
+      "averageScore": 91.8,
+      "positivePercent": 100,
+      "averageCards": 16.8,
+      "averageWinningTurn": 5.59
+    },
+    {
+      "roster": "Six instruments",
+      "instruments": [
+        "guitar",
+        "bass",
+        "drums",
+        "voice",
+        "keys",
+        "sax"
+      ],
+      "scene": "Grande scène",
+      "audience": 12,
+      "resistancePercent": 100,
+      "styles": "hors des styles de la scène",
+      "games": 100,
+      "wins": 38,
+      "winPercent": 38,
+      "averageConquered": 9.01,
+      "averageScore": 86.1,
+      "positivePercent": 94,
+      "averageCards": 16.8,
+      "averageWinningTurn": 5.66
+    }
+  ]
+}

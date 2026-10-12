@@ -1,8 +1,9 @@
-import { GROUP_RULES as R } from './group-rules.mjs?v=0.7.5';
-import { initializeGroupState, proposeMembership, requestRehearsal, adoptSong, refreshGroup, groupsMinute, leaveGroup, dissolveGroup, activeGroup } from './groups.mjs?v=0.7.5';
-import { plateauGain, decadenceCount, availableMusicName, musicName } from "./v71.mjs?v=0.7.5";
-import { editTokens } from "./v7.mjs?v=0.7.5";
-import { initializeV6Person } from "./social.mjs?v=0.7.5";
+import { followingConcertPerformance } from './bandlive-concert.mjs?v=0.7.5-bandlive5';
+import { GROUP_RULES as R } from './group-rules.mjs?v=0.7.5-bandlive5';
+import { initializeGroupState, proposeMembership, requestRehearsal, adoptSong, refreshGroup, groupsMinute, leaveGroup, dissolveGroup, activeGroup } from './groups.mjs?v=0.7.5-bandlive5';
+import { plateauGain, decadenceCount, availableMusicName, musicName } from "./v71.mjs?v=0.7.5-bandlive5";
+import { editTokens } from "./v7.mjs?v=0.7.5-bandlive5";
+import { initializeV6Person } from "./social.mjs?v=0.7.5-bandlive5";
 import {
   initializeCalendar,
   upgradeCalendar,
@@ -14,7 +15,7 @@ import {
   morale,
   moraleEffect,
   validateCalendar,
-} from "./calendar.mjs?v=0.7.5";
+} from "./calendar.mjs?v=0.7.5-bandlive5";
 import {
   clamp,
   round,
@@ -31,7 +32,7 @@ import {
   ACTIONS,
   step,
   refreshReputation,
-} from "./engine.mjs?v=0.7.5";
+} from "./engine.mjs?v=0.7.5-bandlive5";
 import {
   CARDS,
   CURSES,
@@ -41,7 +42,7 @@ import {
   createPerformance,
   advancePerformance,
   validatePerformance,
-} from "./stage.mjs?v=0.7.5";
+} from "./stage.mjs?v=0.7.5-bandlive5";
 
 export function initializePerson(p) {
   initializeV6Person(p);
@@ -282,6 +283,7 @@ function book(s, cmd) {
 export function command(s, cmd) {
   if (!cmd || typeof cmd.type !== "string")
     return result(false, "Commande invalide.");
+  if(s.performance?.bandLive&&s.showEventId&&['preview','replay','skip'].includes(cmd.type))return result(false,'Termine ou interromps le show BandLive avant de lancer une autre prestation.');
   if (
     s.performance?.status === "playing" &&
     !["avatar", "cancelBooking", "cancelPerformance", "skip"].includes(cmd.type)
@@ -814,7 +816,7 @@ export function completePerformance(s) {
   return true;
 }
 export function playTicks(s, ticks) {
-  if (s.performance?.status !== "playing") return;
+  if (s.performance?.status !== "playing" || s.performance.bandLive) return;
   advancePerformance(s.performance, ticks);
   if (s.performance.status !== "finished") return;
   const old = s.performance,
@@ -876,7 +878,8 @@ export function playTicks(s, ticks) {
   completePerformance(s);
 }
 export function nextSlot(s, previous = s.performance) {
-  const old = previous;
+  // Every exit route carries the full venue audience, including Shows and interruptions.
+  const old = followingConcertPerformance(previous);
   if (!old || old.preview) {
     s.showEventId = null;
     return false;
@@ -1126,5 +1129,6 @@ export function validateLife(s) {
   )
     throw Error("Identifiant de réservation invalide.");
   if (s.performance) validatePerformance(s.performance);
+  if(s.performance?.bandLive){const show=s.performance,live=show.bandLive,b=s.bookings.find(b=>b.id===live.bookingId);if(!b||b.performanceId!==show.id||b.groupId!==show.groupId||b.opportunityId!==show.opportunityId||b.status!==(show.status==='finished'?'played':'playing')||live.game.actors.some(a=>!b.members.includes(a.id)))throw Error('Engagement BandLive incohérent.');}
   validateCalendar(s);
 }

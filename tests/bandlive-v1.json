@@ -1,0 +1,593 @@
+{
+  "version": 1,
+  "seed": 12,
+  "rng": 3255420425,
+  "groupName": "Ancienne formation libre",
+  "actors": [
+    {
+      "id": "p1",
+      "name": "Alex",
+      "instrument": "trumpet",
+      "genre": "Indie",
+      "color": "#d67753",
+      "identity": {
+        "accessory": "glasses",
+        "accent": null,
+        "movement": "flamboyant"
+      },
+      "personality": {
+        "creative": 41,
+        "outgoing": 77,
+        "kind": 32,
+        "discipline": 37,
+        "stable": 21,
+        "ambition": 79
+      },
+      "skill": 60,
+      "needs": {
+        "energy": 82,
+        "social": 83,
+        "fun": 84,
+        "expression": 77
+      },
+      "exaltation": 0,
+      "distress": 0
+    },
+    {
+      "id": "p2",
+      "name": "Sam",
+      "instrument": "trumpet",
+      "genre": "Métal",
+      "color": "#7192b3",
+      "identity": {
+        "accessory": "cap",
+        "accent": null,
+        "movement": "nervous"
+      },
+      "personality": {
+        "creative": 72,
+        "outgoing": 45,
+        "kind": 24,
+        "discipline": 40,
+        "stable": 21,
+        "ambition": 34
+      },
+      "skill": 28,
+      "needs": {
+        "energy": 86,
+        "social": 87,
+        "fun": 64,
+        "expression": 78
+      },
+      "exaltation": 0,
+      "distress": 0
+    },
+    {
+      "id": "p3",
+      "name": "Jo",
+      "instrument": "trumpet",
+      "genre": "Ska",
+      "color": "#9a79ad",
+      "identity": {
+        "accessory": "brows",
+        "accent": "scarf",
+        "movement": "flamboyant"
+      },
+      "personality": {
+        "creative": 68,
+        "outgoing": 80,
+        "kind": 60,
+        "discipline": 38,
+        "stable": 23,
+        "ambition": 60
+      },
+      "skill": 19,
+      "needs": {
+        "energy": 77,
+        "social": 63,
+        "fun": 73,
+        "expression": 68
+      },
+      "exaltation": 0,
+      "distress": 0
+    },
+    {
+      "id": "p4",
+      "name": "Charlie",
+      "instrument": "guitar",
+      "genre": "Électro",
+      "color": "#c0a646",
+      "identity": {
+        "accessory": "moustache",
+        "accent": null,
+        "movement": "calm"
+      },
+      "personality": {
+        "creative": 50,
+        "outgoing": 65,
+        "kind": 57,
+        "discipline": 28,
+        "stable": 55,
+        "ambition": 54
+      },
+      "skill": 54,
+      "needs": {
+        "energy": 66,
+        "social": 71,
+        "fun": 58,
+        "expression": 64
+      },
+      "exaltation": 0,
+      "distress": 0
+    },
+    {
+      "id": "p5",
+      "name": "Lou",
+      "instrument": "bass",
+      "genre": "Folk",
+      "color": "#629c84",
+      "identity": {
+        "accessory": "earring",
+        "accent": null,
+        "movement": "nervous"
+      },
+      "personality": {
+        "creative": 70,
+        "outgoing": 20,
+        "kind": 77,
+        "discipline": 68,
+        "stable": 21,
+        "ambition": 51
+      },
+      "skill": 22,
+      "needs": {
+        "energy": 89,
+        "social": 81,
+        "fun": 82,
+        "expression": 60
+      },
+      "exaltation": 0,
+      "distress": 0
+    },
+    {
+      "id": "p6",
+      "name": "Max",
+      "instrument": "drums",
+      "genre": "Folk",
+      "color": "#c78196",
+      "identity": {
+        "accessory": "hair",
+        "accent": "scarf",
+        "movement": "calm"
+      },
+      "personality": {
+        "creative": 44,
+        "outgoing": 23,
+        "kind": 31,
+        "discipline": 63,
+        "stable": 83,
+        "ambition": 66
+      },
+      "skill": 47,
+      "needs": {
+        "energy": 83,
+        "social": 81,
+        "fun": 89,
+        "expression": 50
+      },
+      "exaltation": 0,
+      "distress": 0
+    },
+    {
+      "id": "p7",
+      "name": "Camille",
+      "instrument": "drums",
+      "genre": "Punk",
+      "color": "#75894d",
+      "identity": {
+        "accessory": "glasses",
+        "accent": null,
+        "movement": "flamboyant"
+      },
+      "personality": {
+        "creative": 25,
+        "outgoing": 66,
+        "kind": 33,
+        "discipline": 61,
+        "stable": 30,
+        "ambition": 71
+      },
+      "skill": 30,
+      "needs": {
+        "energy": 59,
+        "social": 57,
+        "fun": 77,
+        "expression": 84
+      },
+      "exaltation": 0,
+      "distress": 0
+    },
+    {
+      "id": "p8",
+      "name": "Noa",
+      "instrument": "bass",
+      "genre": "Indie",
+      "color": "#5b939d",
+      "identity": {
+        "accessory": "cap",
+        "accent": null,
+        "movement": "calm"
+      },
+      "personality": {
+        "creative": 47,
+        "outgoing": 33,
+        "kind": 48,
+        "discipline": 58,
+        "stable": 43,
+        "ambition": 74
+      },
+      "skill": 26,
+      "needs": {
+        "energy": 57,
+        "social": 73,
+        "fun": 77,
+        "expression": 85
+      },
+      "exaltation": 0,
+      "distress": 0
+    }
+  ],
+  "cards": [
+    {
+      "id": "p1:0",
+      "actorId": "p1",
+      "instrument": "trumpet",
+      "kind": "note"
+    },
+    {
+      "id": "p1:1",
+      "actorId": "p1",
+      "instrument": "trumpet",
+      "kind": "note"
+    },
+    {
+      "id": "p1:2",
+      "actorId": "p1",
+      "instrument": "trumpet",
+      "kind": "note"
+    },
+    {
+      "id": "p1:3",
+      "actorId": "p1",
+      "instrument": "trumpet",
+      "kind": "special"
+    },
+    {
+      "id": "p1:4",
+      "actorId": "p1",
+      "instrument": "trumpet",
+      "kind": "special"
+    },
+    {
+      "id": "p2:0",
+      "actorId": "p2",
+      "instrument": "trumpet",
+      "kind": "note"
+    },
+    {
+      "id": "p2:1",
+      "actorId": "p2",
+      "instrument": "trumpet",
+      "kind": "note"
+    },
+    {
+      "id": "p2:2",
+      "actorId": "p2",
+      "instrument": "trumpet",
+      "kind": "note"
+    },
+    {
+      "id": "p2:3",
+      "actorId": "p2",
+      "instrument": "trumpet",
+      "kind": "special"
+    },
+    {
+      "id": "p2:4",
+      "actorId": "p2",
+      "instrument": "trumpet",
+      "kind": "special"
+    },
+    {
+      "id": "p3:0",
+      "actorId": "p3",
+      "instrument": "trumpet",
+      "kind": "note"
+    },
+    {
+      "id": "p3:1",
+      "actorId": "p3",
+      "instrument": "trumpet",
+      "kind": "note"
+    },
+    {
+      "id": "p3:2",
+      "actorId": "p3",
+      "instrument": "trumpet",
+      "kind": "note"
+    },
+    {
+      "id": "p3:3",
+      "actorId": "p3",
+      "instrument": "trumpet",
+      "kind": "special"
+    },
+    {
+      "id": "p3:4",
+      "actorId": "p3",
+      "instrument": "trumpet",
+      "kind": "special"
+    },
+    {
+      "id": "p4:0",
+      "actorId": "p4",
+      "instrument": "guitar",
+      "kind": "note"
+    },
+    {
+      "id": "p4:1",
+      "actorId": "p4",
+      "instrument": "guitar",
+      "kind": "note"
+    },
+    {
+      "id": "p4:2",
+      "actorId": "p4",
+      "instrument": "guitar",
+      "kind": "note"
+    },
+    {
+      "id": "p4:3",
+      "actorId": "p4",
+      "instrument": "guitar",
+      "kind": "special"
+    },
+    {
+      "id": "p4:4",
+      "actorId": "p4",
+      "instrument": "guitar",
+      "kind": "special"
+    },
+    {
+      "id": "p5:0",
+      "actorId": "p5",
+      "instrument": "bass",
+      "kind": "note"
+    },
+    {
+      "id": "p5:1",
+      "actorId": "p5",
+      "instrument": "bass",
+      "kind": "note"
+    },
+    {
+      "id": "p5:2",
+      "actorId": "p5",
+      "instrument": "bass",
+      "kind": "note"
+    },
+    {
+      "id": "p5:3",
+      "actorId": "p5",
+      "instrument": "bass",
+      "kind": "special"
+    },
+    {
+      "id": "p5:4",
+      "actorId": "p5",
+      "instrument": "bass",
+      "kind": "special"
+    },
+    {
+      "id": "p6:0",
+      "actorId": "p6",
+      "instrument": "drums",
+      "kind": "note"
+    },
+    {
+      "id": "p6:1",
+      "actorId": "p6",
+      "instrument": "drums",
+      "kind": "note"
+    },
+    {
+      "id": "p6:2",
+      "actorId": "p6",
+      "instrument": "drums",
+      "kind": "note"
+    },
+    {
+      "id": "p6:3",
+      "actorId": "p6",
+      "instrument": "drums",
+      "kind": "special"
+    },
+    {
+      "id": "p6:4",
+      "actorId": "p6",
+      "instrument": "drums",
+      "kind": "special"
+    },
+    {
+      "id": "p7:0",
+      "actorId": "p7",
+      "instrument": "drums",
+      "kind": "note"
+    },
+    {
+      "id": "p7:1",
+      "actorId": "p7",
+      "instrument": "drums",
+      "kind": "note"
+    },
+    {
+      "id": "p7:2",
+      "actorId": "p7",
+      "instrument": "drums",
+      "kind": "note"
+    },
+    {
+      "id": "p7:3",
+      "actorId": "p7",
+      "instrument": "drums",
+      "kind": "special"
+    },
+    {
+      "id": "p7:4",
+      "actorId": "p7",
+      "instrument": "drums",
+      "kind": "special"
+    },
+    {
+      "id": "p8:0",
+      "actorId": "p8",
+      "instrument": "bass",
+      "kind": "note"
+    },
+    {
+      "id": "p8:1",
+      "actorId": "p8",
+      "instrument": "bass",
+      "kind": "note"
+    },
+    {
+      "id": "p8:2",
+      "actorId": "p8",
+      "instrument": "bass",
+      "kind": "note"
+    },
+    {
+      "id": "p8:3",
+      "actorId": "p8",
+      "instrument": "bass",
+      "kind": "special"
+    },
+    {
+      "id": "p8:4",
+      "actorId": "p8",
+      "instrument": "bass",
+      "kind": "special"
+    }
+  ],
+  "songs": [
+    {
+      "id": "punk",
+      "title": "Rébellion nocturne",
+      "style": "Punk"
+    },
+    {
+      "id": "pop",
+      "title": "Sous les néons",
+      "style": "Pop"
+    }
+  ],
+  "usedSongs": [
+    "punk"
+  ],
+  "songId": "punk",
+  "phase": "play",
+  "turn": 1,
+  "section": 1,
+  "energy": 3,
+  "tempo": 0,
+  "boost": 0,
+  "hand": [
+    "p2:4",
+    "p3:4",
+    "p1:1",
+    "p1:4",
+    "p3:3"
+  ],
+  "deck": [
+    "p5:2",
+    "p6:0",
+    "p1:0",
+    "p3:2",
+    "p6:3",
+    "p4:0",
+    "p8:1",
+    "p8:3",
+    "p7:3",
+    "p1:3",
+    "p4:3",
+    "p5:3",
+    "p3:0",
+    "p5:4",
+    "p6:1",
+    "p7:2",
+    "p8:2",
+    "p6:4",
+    "p2:0",
+    "p4:1",
+    "p2:1",
+    "p5:1",
+    "p3:1",
+    "p8:0",
+    "p1:2",
+    "p7:1",
+    "p7:0",
+    "p8:4",
+    "p6:2",
+    "p2:2",
+    "p2:3",
+    "p4:4",
+    "p7:4",
+    "p4:2",
+    "p5:0"
+  ],
+  "discard": [],
+  "played": 0,
+  "logs": [
+    "Le band prend la scène. Choisis la première chanson.",
+    "Tour 1 · Rébellion nocturne · Couplet."
+  ],
+  "events": [],
+  "fans": [
+    {
+      "id": "f0",
+      "name": "Lou",
+      "max": 24,
+      "hp": 24,
+      "favorite": "Punk",
+      "color": "#c798ac",
+      "identity": {
+        "accessory": "hair"
+      },
+      "intent": "bored"
+    },
+    {
+      "id": "f1",
+      "name": "Pat",
+      "max": 20,
+      "hp": 20,
+      "favorite": "Pop",
+      "color": "#d6b15a",
+      "identity": {
+        "accessory": "glasses"
+      },
+      "intent": "solo"
+    },
+    {
+      "id": "f2",
+      "name": "Kim",
+      "max": 25,
+      "hp": 25,
+      "favorite": "Pop",
+      "color": "#78a89b",
+      "identity": {
+        "accessory": "cap"
+      },
+      "intent": "bored"
+    }
+  ]
+}

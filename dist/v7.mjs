@@ -1,5 +1,5 @@
-import { attachment } from './groups.mjs?v=0.7.5';
-import { GROUP_RULES } from './group-rules.mjs?v=0.7.5';
+import { attachment } from './groups.mjs?v=0.7.5-bandlive5';
+import { GROUP_RULES } from './group-rules.mjs?v=0.7.5-bandlive5';
 // V7 rules shared by simulation, inspectors and documentation tests.
 export const BAG_ACTIONS = ["relax", "social", "practice", "jam", "write", "decadence"];
 export const BAG_SAMPLES = [
