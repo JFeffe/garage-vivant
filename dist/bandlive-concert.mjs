@@ -1,5 +1,5 @@
-import {RULES,STYLES,createBandLive,restoreBandLive,currentSong} from './bandlive.mjs?v=0.7.13';
-import {performanceResult} from './stage.mjs?v=0.7.13';
+import {RULES,STYLES,createBandLive,restoreBandLive,currentSong} from './bandlive.mjs?v=0.7.14';
+import {performanceResult} from './stage.mjs?v=0.7.14';
 
 // Interactive audiences are compact. Calendar capacity and the full audience
 // passed to the next band remain unchanged.

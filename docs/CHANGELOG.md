@@ -1,3 +1,7 @@
+# V0.7.14 — 12 octobre 2026
+
+Des mini-personnages bien droits. [Notes complètes](./versions.md#v0714).
+
 # V0.7.13 — 12 octobre 2026
 
 BandLive : scène pleine largeur, mains individuelles et preview des dégâts lisible au-dessus du glissement.
