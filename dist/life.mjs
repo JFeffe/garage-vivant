@@ -1,9 +1,9 @@
-import { followingConcertPerformance } from './bandlive-concert.mjs?v=0.7.6';
-import { GROUP_RULES as R } from './group-rules.mjs?v=0.7.6';
-import { initializeGroupState, proposeMembership, requestRehearsal, adoptSong, refreshGroup, groupsMinute, leaveGroup, dissolveGroup, activeGroup } from './groups.mjs?v=0.7.6';
-import { plateauGain, decadenceCount, availableMusicName, musicName } from "./v71.mjs?v=0.7.6";
-import { editTokens } from "./v7.mjs?v=0.7.6";
-import { initializeV6Person } from "./social.mjs?v=0.7.6";
+import { followingConcertPerformance } from './bandlive-concert.mjs?v=0.7.7';
+import { GROUP_RULES as R } from './group-rules.mjs?v=0.7.7';
+import { initializeGroupState, proposeMembership, requestRehearsal, adoptSong, refreshGroup, groupsMinute, leaveGroup, dissolveGroup, activeGroup } from './groups.mjs?v=0.7.7';
+import { plateauGain, decadenceCount, availableMusicName, musicName } from "./v71.mjs?v=0.7.7";
+import { editTokens } from "./v7.mjs?v=0.7.7";
+import { initializeV6Person } from "./social.mjs?v=0.7.7";
 import {
   initializeCalendar,
   upgradeCalendar,
@@ -15,7 +15,7 @@ import {
   morale,
   moraleEffect,
   validateCalendar,
-} from "./calendar.mjs?v=0.7.6";
+} from "./calendar.mjs?v=0.7.7";
 import {
   clamp,
   round,
@@ -32,7 +32,7 @@ import {
   ACTIONS,
   step,
   refreshReputation,
-} from "./engine.mjs?v=0.7.6";
+} from "./engine.mjs?v=0.7.7";
 import {
   CARDS,
   CURSES,
@@ -42,7 +42,7 @@ import {
   createPerformance,
   advancePerformance,
   validatePerformance,
-} from "./stage.mjs?v=0.7.6";
+} from "./stage.mjs?v=0.7.7";
 
 export function initializePerson(p) {
   initializeV6Person(p);

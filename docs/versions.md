@@ -1,5 +1,11 @@
 # Notes de version
 
+## V0.7.7 — Publication BandLive débloquée {#v077}
+
+11 octobre 2026. Le contrôle tactile compare maintenant le défilement après la carte à sa position au relâchement du doigt. Il tient ainsi compte du défilement automatique voulu pendant le glissement, tout en vérifiant que le rendu conserve la position. Les contrôles navigateur restent obligatoires avant publication.
+
+BandLive et ses notes V0.7.6 ci-dessous sont inclus. Activation : **Réglages → Activer BandLive**. Interface **0.7.7**, sauvegardes **0.7.3** inchangées.
+
 ## V0.7.6 — BandLive : à toi de jouer les spectacles {#v076}
 
 11 octobre 2026. Notes ajoutées rétroactivement pour la [PR #11](https://github.com/jutrasimon/garage-vivant/pull/11), initialement fusionnée sans nouveau numéro de version.
