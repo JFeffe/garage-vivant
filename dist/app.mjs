@@ -1,5 +1,8 @@
-import { placeActivityLabels } from './map-labels.mjs?v=0.7.5';
-import {DEFAULT_FILTERS,catalogueControls,catalogueHTML as musicCatalogueHTML,songDetailsHTML} from "./catalogue.mjs?v=0.7.5";
+import {characterPortrait,characterName,drawCharacter,ACCESSORIES,MOVEMENTS} from './character-view.mjs?v=0.7.6';
+import {readMapOptions,saveMapOptions,mapOptionsHTML,MAP_DEFAULTS} from './map-options.mjs?v=0.7.6';
+const mapOptions=readMapOptions(localStorage);
+import { placeActivityLabels } from './map-labels.mjs?v=0.7.6';
+import {compositionCreditHTML,DEFAULT_FILTERS,catalogueControls,catalogueHTML as musicCatalogueHTML,songDetailsHTML} from "./catalogue.mjs?v=0.7.6";
 let catalogueFilters={...DEFAULT_FILTERS};
 import {
   thresholdsHTML,
@@ -8,13 +11,13 @@ import {
   exchangeTrace,
   sessionHTML,
   rapinHTML,
-} from "./v7-view.mjs?v=0.7.5";
+} from "./v7-view.mjs?v=0.7.6";
 import {
   effectiveTraits,
   updateTraits,
   TRAIT_CATALOG,
   BAG_ACTIONS,
-} from "./v7.mjs?v=0.7.5";
+} from "./v7.mjs?v=0.7.6";
 import {
   createShowClock,
   advanceShowClock,
@@ -24,22 +27,22 @@ import {
   songKey,
   stageGeometry,
   showBeat,
-} from "./show-playback.mjs?v=0.7.5";
+} from "./show-playback.mjs?v=0.7.6";
 import {
   showOverlayHTML,
   showResourcesHTML,
   deckInspectionHTML,
   cardInspectionHTML,
-} from "./show-view.mjs?v=0.7.5";
-import { setupDocSearch } from "./doc-search.mjs?v=0.7.5";
-import { calendarHTML } from "./v6-view.mjs?v=0.7.5";
-import { pendingBooking, eventById } from "./calendar.mjs?v=0.7.5";
-import { editBag } from "./social.mjs?v=0.7.5";
+} from "./show-view.mjs?v=0.7.6";
+import { setupDocSearch } from "./doc-search.mjs?v=0.7.6";
+import { calendarHTML } from "./v6-view.mjs?v=0.7.6";
+import { pendingBooking, eventById } from "./calendar.mjs?v=0.7.6";
+import { editBag } from "./social.mjs?v=0.7.6";
 import {
   profileMarkup,
   changeModule,
   resetLayout,
-} from "./profile-layout.mjs?v=0.7.5";
+} from "./profile-layout.mjs?v=0.7.6";
 import {
   VERSION,
   NEEDS,
@@ -78,7 +81,7 @@ import {
   compositionProject,
   journalEntries,
   chemistryKnowledge,
-} from "./engine.mjs?v=0.7.5";
+} from "./engine.mjs?v=0.7.6";
 import {
   command,
   bandStage,
@@ -93,20 +96,20 @@ import {
   newSeason,
   nextSlot,
   skipShow,
-} from "./life.mjs?v=0.7.5";
+} from "./life.mjs?v=0.7.6";
 import {
   CARDS,
   CURSES,
   INTENTIONS,
   SHOW_TICKS,
   createPerformance,
-} from "./stage.mjs?v=0.7.5";
-import { resolveShowPlan } from "./show-planning.mjs?v=0.7.5";
+} from "./stage.mjs?v=0.7.6";
+import { resolveShowPlan } from "./show-planning.mjs?v=0.7.6";
 import {
   reconcile,
   createViewPositions,
   withReadingAnchor,
-} from "./ui-state.mjs?v=0.7.5";
+} from "./ui-state.mjs?v=0.7.6";
 import {
   quickHTML,
   skillHTML,
@@ -118,18 +121,17 @@ import {
   showSetupHTML,
   showStatusHTML,
   seasonHTML,
-  decorateCube,
   drawStage,
   enableAudio,
   playSound,
-} from "./v5-view.mjs?v=0.7.5";
+} from "./v5-view.mjs?v=0.7.6";
 import {
   createPlayback,
   snapSpeed,
   setPlaybackSpeed,
   advancePlayback,
   updatePositions,
-} from "./runtime.mjs?v=0.7.5";
+} from "./runtime.mjs?v=0.7.6";
 const playback = createPlayback();
 const $ = (q) => document.querySelector(q),
   $$ = (q) => [...document.querySelectorAll(q)],
@@ -159,9 +161,9 @@ try {
       } catch {}
     }
     world = restore(input);
-  } else world = createWorld();
+  } else world = createWorld(2040,8,{setup:"varied"});
 } catch {
-  world = createWorld();
+  world = createWorld(2040,8,{setup:"varied"});
   saveProblem = true;
   loadFailed = true;
 }
@@ -360,7 +362,7 @@ function renderPeople() {
     world.people
       .map(
         (p) =>
-          `<button class="person ${p.id === selected ? "active" : ""}" data-person="${p.id}"><span class="mini-cube" style="background:${esc(p.color)}"></span><span><span class="person-name">${esc(p.name)} ${isMember(world, p) ? '<span class="role-dot" title="Membre d’un groupe">♫</span>' : ""}</span><span class="person-action">${esc(actionLabel(p))}</span></span></button>`,
+          `<button class="person ${p.id === selected ? "active" : ""}" data-person="${p.id}">${characterPortrait(p)}<span><span class="person-name">${esc(characterName(p))} ${isMember(world, p) ? '<span class="role-dot" title="Membre d’un groupe">♫</span>' : ""}</span><span class="person-action">${esc(actionLabel(p))}</span></span></button>`,
       )
       .join(""),
   );
@@ -416,7 +418,7 @@ function renderProfile(force = false) {
   replacePreserving(
     "#profile",
     profileMarkup(
-      `<div class="profile-head"><div class="portrait" style="background:${esc(p.color)}">♫</div><div><h2>${esc(p.name)}</h2><p>${p.age} ans · ${SKILLS[p.instrument]} · ${p.genre}</p></div></div><div class="pills">${groupsOf(
+      `<div class="profile-head">${characterPortrait(p,64)}<div><h2>${esc(characterName(p))}</h2><p>${p.age} ans · ${SKILLS[p.instrument]} · ${p.genre}</p></div></div><div class="profile-commands"><button data-edit-character>Nom et apparence</button><button data-delete-character class="danger" ${world.people.length<=1||world.performance?.status==='playing'||world.showEventId?'disabled':''}>Supprimer</button></div><div class="pills">${groupsOf(
         world,
         p,
       )
@@ -435,7 +437,7 @@ function renderProfile(force = false) {
         )}</div><div id="profile-history">${spark(p)}</div></section><section><div class="section-head">POURQUOI CETTE ACTIVITÉ <span id="decision-time" data-retain style="letter-spacing:0;font-weight:400"></span></div><div id="ranks">${decisionHTML(p)}</div><p id="decision-note" class="muted" style="font-size:10px;margin:7px 0 0">${decisionNote(p)}</p></section><section id="rapin-pool" data-retain></section><section><div class="section-head">DERNIERS SOUVENIRS</div><div id="memories">${memoryHTML(p)}</div></section><section id="profile-links"><div class="section-head">SES 3 PLUS FORTS LIENS <button class="text-button" id="profile-relations">Matrice ↗</button></div>${friends
         .map((b) => {
           const r = relationship(world, p, b);
-          return `<button class="person" data-person="${b.id}" style="padding:7px 0"><span class="mini-cube" style="background:${esc(b.color)};width:19px;height:19px"></span><span style="flex:1;font-size:10px">${esc(b.name)}</span><span style="font-size:11px;color:${r.affinity < 0 ? "#c28069" : "#819b6f"}">${r.affinity > 0 ? "+" : ""}${round(r.affinity)}</span></button>`;
+          return `<button class="person" data-person="${b.id}" style="padding:7px 0">${characterPortrait(b,24)}<span style="flex:1;font-size:10px">${esc(b.name)}</span><span style="font-size:11px;color:${r.affinity < 0 ? "#c28069" : "#819b6f"}">${r.affinity > 0 ? "+" : ""}${round(r.affinity)}</span></button>`;
         })
         .join(
           "",
@@ -446,7 +448,7 @@ function renderProfile(force = false) {
         .map(([k, v]) => rangeEditor("emotions", k, v.label, p.emotions[k]))
         .join(
           "",
-        )}</details><details id="identity-edit"><summary>IDENTITÉ & TRAITS · MODIFIER</summary><div class="editor"><label class="edit-row">Nom<input data-identity="name" maxlength="24" value="${esc(p.name)}"></label><label class="edit-row">Âge<input data-identity="age" type="number" min="18" max="90" value="${p.age}"></label><label class="edit-row">Couleur<input data-identity="color" type="color" value="${esc(p.color)}"></label><label class="edit-row">Instrument<select data-identity="instrument">${Object.entries(
+        )}</details><details id="identity-edit"><summary>IDENTITÉ & TRAITS · MODIFIER</summary><div class="editor"><label class="edit-row">Nom<input data-identity="name" maxlength="24" value="${esc(p.name)}"></label><label class="edit-row">Surnom<input data-identity="nickname" maxlength="24" value="${esc(p.nickname||'')}"></label>${Object.entries({accessory:ACCESSORIES,movement:MOVEMENTS,accent:{'':'Sans foulard',scarf:'Foulard'}}).map(([key,values])=>`<label class="edit-row">${{accessory:'Accessoire',movement:'Allure',accent:'Accent'}[key]}<select data-appearance="${key}">${Object.entries(values).map(([value,label])=>`<option value="${value}" ${value===(p.identity[key]||'')?'selected':''}>${label}</option>`).join('')}</select></label>`).join('')}<label class="edit-row">Âge<input data-identity="age" type="number" min="18" max="90" value="${p.age}"></label><label class="edit-row">Couleur<input data-identity="color" type="color" value="${esc(p.color)}"></label><label class="edit-row">Instrument<select data-identity="instrument">${Object.entries(
         SKILLS,
       )
         .filter(([k]) => k !== "writing")
@@ -643,7 +645,7 @@ function projectHTML(p, c = compositionProject(world, p)) {
   if (!c) return "";
   const progress = clamp((c.work / c.target) * 100),
     active = p && c.id === p.draft.projectId;
-  return `<div class="draft-note"><strong>✎ ${esc(c.title)}</strong><br>${c.status === "idea" ? "Idée" : c.status === "ready" ? "Prête à terminer" : "Ébauche"} · ${round(progress)} % · ${c.sessions} séance${c.sessions > 1 ? "s" : ""}<div class="bar"><i style="width:${progress}%"></i></div><small>${esc(c.genre)} · ${esc(c.tone)} · potentiel provisoire ${c.potential}/100<br>${active ? "Ce projet peut être repris à une prochaine séance." : "Projet conservé dans le carnet ; le scénario a lancé un autre projet."}</small>${c.sources.length ? `<details class="causes" data-key="project-${c.id}"><summary>Ce qui inspire ce projet</summary>${c.sources.map((x) => `<p>${esc(x.text)}</p>`).join("")}</details>` : ""}</div>`;
+  return `<div class="draft-note"><strong>✎ ${esc(c.title)}</strong>${compositionCreditHTML(world,c)}<br>${c.status === "idea" ? "Idée" : c.status === "ready" ? "Prête à terminer" : "Ébauche"} · ${round(progress)} % · ${c.sessions} séance${c.sessions > 1 ? "s" : ""}<div class="bar"><i style="width:${progress}%"></i></div><small>${esc(c.genre)} · ${esc(c.tone)} · potentiel provisoire ${c.potential}/100<br>${active ? "Ce projet peut être repris à une prochaine séance." : "Projet conservé dans le carnet ; le scénario a lancé un autre projet."}</small>${c.sources.length ? `<details class="causes" data-key="project-${c.id}"><summary>Ce qui inspire ce projet</summary>${c.sources.map((x) => `<p>${esc(x.text)}</p>`).join("")}</details>` : ""}</div>`;
 }
 function renderProfileSongs(p) {
   const songs = world.songs.filter(
@@ -665,7 +667,7 @@ function renderProfileSongs(p) {
             .slice(0, profileSongLimit)
             .map(
               (song) =>
-                `<details class="profile-song" data-key="profile-song-${song.id}"><summary><span>${esc(song.title)}</span><b>${song.quality}/100</b></summary><p>${esc(song.genre)} · ${esc(song.tone)} · ${stamp(song.time)}</p>${song.sources.map((c) => `<p class="muted">${esc(c.text)}</p>`).join("")}</details>`,
+                `<details class="profile-song" data-key="profile-song-${song.id}"><summary><span>${esc(song.title)}</span><b>${song.quality}/100</b></summary>${compositionCreditHTML(world,song)}<p>${esc(song.genre)} · ${esc(song.tone)} · ${stamp(song.time)}</p>${song.sources.map((c) => `<p class="muted">${esc(c.text)}</p>`).join("")}</details>`,
             )
             .join(
               "",
@@ -913,8 +915,6 @@ const titles = {
 };
 function changeView(v) {
   if (!titles[v]) return;
-  if (v === "shows" && !liveEvent && world.performance?.status !== "playing")
-    setPlaybackSpeed(playback, 0);
   if (liveEvent) showPaused = v !== "shows";
   $(".topline").hidden = false;
   viewPositions.save(view, $("#main"));
@@ -980,6 +980,7 @@ function render() {
   renderPeople();
   renderProfile();
   renderMetrics();
+  $('#activity-labels').hidden=!mapOptions.actions;
   replacePreserving('#activity-labels',world.people.map(p=>`<button data-person="${p.id}" data-key="activity-label-${p.id}"><i style="background:${p.color}"></i><span><b>${esc(p.name)}</b><small>${esc(actionLabel(p))}${p.action?.rehearsalId&&world.groupState.requests.find(r=>r.id===p.action.rehearsalId)?.status==='open'&&!p.action.route.length?' · attente':''}</small></span></button>`).join(''));
   if (view === "groups") renderGroups();
   if (view === "actions") renderActions();
@@ -1133,8 +1134,11 @@ document.addEventListener("click", (e) => {
   if (e.target.id === "profile-relations") {
     changeView("relations");
   }
-  if (e.target.id === "remove" && world.people.length > 1) {
-    removePerson(world, selected);
+  if (e.target.id === "confirm-remove" && world.people.length > 1) {
+    $("#dialog").close();
+    const result=removePerson(world, selected);
+    if(result?.ok===false){notify(result.message);return;}
+    displayPos.delete(selected);
     selected = world.people[0].id;
     pair = null;
     render();
@@ -1163,9 +1167,10 @@ document.addEventListener("input", (e) => {
   }
   if (el.dataset.identity) {
     const k = el.dataset.identity;
-    p[k] = k === "age" ? clamp(Number(el.value), 18, 90) : el.value;
+    if(k!=="name"||el.value.trim())p[k] = k === "age" ? clamp(Number(el.value), 18, 90) : el.value;
     renderPeople();
   }
+  if(el.dataset.appearance){p.identity[el.dataset.appearance]=el.value||null;renderPeople();}
   if (el.dataset.param) {
     const k = el.dataset.param;
     if (snappingRange === el) el.value = snapSpeed(el.value);
@@ -1210,6 +1215,7 @@ document.addEventListener("change", (e) => {
   if (
     el.dataset.edit ||
     el.dataset.identity ||
+    el.dataset.appearance ||
     el.dataset.param ||
     el.dataset.rel ||
     el.dataset.trait
@@ -1222,7 +1228,7 @@ document.addEventListener("change", (e) => {
         ? [selected]
         : [],
     );
-    if (el.dataset.identity) renderProfile(true);
+    if (el.dataset.identity || el.dataset.appearance) renderProfile(true);
     if (
       el.dataset.edit?.startsWith("skills:") ||
       el.dataset.identity === "instrument"
@@ -1282,7 +1288,7 @@ $("#import-file").onchange = async (e) => {
 };
 $("#reset").onclick = () =>
   modal(
-    '<h2>Un nouveau quartier</h2><p>Remplace le monde actuel. Exporte le JSON si tu veux le conserver. La même graine reproduit le même départ.</p><label>Graine<input id="seed" type="number" value="2040" min="0" max="4294967295"></label><label>Voisins<input id="count" type="number" value="8" min="2" max="24"></label><button id="confirm-reset" class="primary">Créer le quartier</button>',
+    '<h2>Un nouveau quartier</h2><p>Remplace le monde actuel. Exporte le JSON si tu veux le conserver. La même graine reproduit le même départ.</p><label>Graine<input id="seed" type="number" value="2040" min="0" max="4294967295"></label><label>Voisins<input id="count" type="number" value="8" min="2" max="24"></label><label>Groupes au départ<select id="band-setup"><option value="varied">Variable · 1 à 4 groupes selon la population</option><option value="large">Un grand groupe</option><option value="medium">Deux groupes moyens</option><option value="small">Deux petits groupes</option><option value="none">Aucun · rencontres naturelles</option></select></label><button id="confirm-reset" class="primary">Créer le quartier</button>',
   );
 document.addEventListener("click", (e) => {
   if (e.target.id === "confirm-reset") {
@@ -1306,6 +1312,7 @@ document.addEventListener("click", (e) => {
     world = createWorld(
       clamp(Number($("#seed").value), 0, 4294967295),
       clamp(round(Number($("#count").value)), 2, 24),
+      {setup:$("#band-setup").value},
     );
     displayPos.clear();
     selected = world.people[0].id;
@@ -1536,7 +1543,7 @@ function draw() {
   label("QUARTIER DES MUSICIENS", 550, 625, "#8f9c80", 9);
   const activityLabels=[];
   // Shared activity highlights represent actual concurrent activity, not mere proximity.
-  for (const session of liveSessions(world)) {
+  for (const session of mapOptions.collective?liveSessions(world):[]) {
     const positions = session.participants
       .map((id) => displayPos.get(id))
       .filter(Boolean);
@@ -1563,7 +1570,7 @@ function draw() {
     ctx.font="11px ui-sans-serif, system-ui";
     activityLabels.push({id:'session-'+session.id,text,w:ctx.measureText(text).width+18,h:20,anchor:{x:(minX+maxX)/2,y:minY},color});
   }
-  if ($("#links").checked) {
+  if (mapOptions.links) {
     for (let i = 0; i < world.people.length; i++)
       for (let j = i + 1; j < world.people.length; j++) {
         const a = world.people[i],
@@ -1590,7 +1597,7 @@ function draw() {
         ctx.setLineDash([]);
       }
   }
-  if ($("#paths").checked) {
+  if (mapOptions.paths) {
     const p = current(),
       pos = displayPos.get(p.id);
     ctx.strokeStyle = "#788c6988";
@@ -1629,21 +1636,17 @@ function draw() {
       ctx.ellipse(x, y + 3, 22, 9, 0, 0, Math.PI * 2);
       ctx.stroke();
     }
-    rect(x - size / 2, y - size, size, size, p.color, 3);
-    rect(x - size / 2, y - size, size, 5, "#ffffff38", 3);
-    rect(x + size / 2 - 5, y - size + 4, 5, size - 4, "#00000015", 2);
-    decorateCube(ctx, x, y, size, p);
+    drawCharacter(ctx,x,y,size,p);
     if (isMember(world, p)) {
       rect(x - size / 2, y - 2, size, 3, "#fff8d2");
     }
-    rect(x - 5, y - 11, 2, 2, "#ffffff");
-    rect(x + 3, y - 11, 2, 2, "#ffffff");
+
     if (p.action) {
+      if(mapOptions.icons){
       ctx.fillStyle = "#f9fbf0ed";
       ctx.beginPath();
       ctx.arc(x + 17, y - 30, 10, 0, Math.PI * 2);
       ctx.fill();
-      const em = dominantEmotion(p);
       label(
         p.action.route.length ? "↗" : ACTIONS[p.action.key].icon,
         x + 17,
@@ -1651,7 +1654,9 @@ function draw() {
         "#66805a",
         12,
       );
-      if ($("#emotional-map").checked && em.active) {
+      }
+      const em = dominantEmotion(p);
+      if (mapOptions.emotions && em.active) {
         rect(x - 30, y - 42, 20, 18, "#f9fbf0ed", 6);
         label(
           EMOTIONS[em.key].icon,
@@ -1672,7 +1677,8 @@ function draw() {
         p.encounterVisual.outcome === "conflict" ? "#b45f47" : "#aa6b93";
       ctx.fillText(p.encounterVisual.partner, x, y - 43);
     }
-    const tw = ctx.measureText(p.name).width;
+    if(mapOptions.names){
+    const tw = ctx.measureText(characterName(p)).width;
     rect(
       x - tw / 2 - 6,
       y + 10,
@@ -1681,7 +1687,8 @@ function draw() {
       isSelected ? "#fffcf4ed" : "#f1f5e5cc",
       3,
     );
-    label(p.name, x, y + 21, isSelected ? "#365740" : "#6f7b62", 10);
+    label(characterName(p), x, y + 21, isSelected ? "#365740" : "#6f7b62", 10);
+    }
     screenPositions.push({
       id: p.id,
       x: ox + x * scale,
@@ -1691,7 +1698,7 @@ function draw() {
   }
   const hour = (world.time % 1440) / 60;
   if (hour >= 21 || hour < 6) {
-    rect(0, 0, 1100, 670, "#25395426");
+    if(mapOptions.night)rect(0, 0, 1100, 670, "#25395426");
     $("#weather").textContent = "☾ Une autre nuit de musique";
   } else
     $("#weather").textContent =
@@ -1700,7 +1707,7 @@ function draw() {
         : hour < 18
           ? "☀ Le quartier prend son rythme"
           : "◐ La fin de journée s’étire";
-  for(const p of world.people){const pos=displayPos.get(p.id),a=p.action;
+  for(const p of mapOptions.actions?world.people:[]){const pos=displayPos.get(p.id),a=p.action;
    const req=world.groupState.requests.find(r=>r.id===a?.rehearsalId);
    const text=p.engagement?'Spectacle · '+(p.engagement.arrived?'Sur place':'Trajet'):a?(a.route.length?'Trajet · ':'')+(req?.status==='open'&&!a.route.length?'Attente · pratique':ACTIONS[a.key].label):'Disponible';
    ctx.font='10px ui-sans-serif, system-ui';activityLabels.push({id:p.id,text,w:ctx.measureText(text).width+16,h:18,anchor:pos,color:'#365740'});
@@ -2752,3 +2759,11 @@ document.addEventListener('click',e=>{const details=e.target.closest('[data-song
 document.addEventListener('click',e=>{const open=e.target.closest('[data-open-catalogue]');if(!open)return;catalogueFilters={...DEFAULT_FILTERS,author:open.dataset.openCatalogue};catalogueLimit=50;$('#catalogue-controls').dataset.signature='';changeView('journal');renderJournal();});
 
 document.addEventListener('click',e=>{const el=e.target.closest('[data-resume-project]');if(!el)return;const [projectId,actorId]=el.dataset.resumeProject.split(':');const r=submit({type:'action',key:'write',projectId,actorId});if(r.ok)$('#dialog').close();});
+
+document.addEventListener('click',e=>{
+ if(e.target.closest('[data-edit-character]')){const section=$('#identity-edit');for(let el=section;el;el=el.parentElement)if(el.tagName==='DETAILS')el.open=true;section.scrollIntoView({block:'nearest'});section.querySelector('input').focus();}
+ if(e.target.closest('[data-delete-character]')||e.target.id==='remove')modal(`<h2>Supprimer ${esc(characterName(current()))} ?</h2><p>Le personnage quitte définitivement le quartier. Ses chansons, ses crédits et les archives des groupes restent conservés. Ses réservations à venir sont annulées. Un groupe réduit à moins de deux membres est dissous.</p><button id="confirm-remove" class="danger">Confirmer la suppression</button>`);
+ if(e.target.closest('[data-reset-map]')){Object.assign(mapOptions,MAP_DEFAULTS);saveMapOptions(localStorage,mapOptions);$('#map-controls').innerHTML=mapOptionsHTML(mapOptions);}
+});
+document.addEventListener('change',e=>{const key=e.target.dataset.mapOption;if(key&&Object.hasOwn(MAP_DEFAULTS,key)){mapOptions[key]=e.target.checked;saveMapOptions(localStorage,mapOptions);render();}});
+$('#map-controls').innerHTML=mapOptionsHTML(mapOptions);

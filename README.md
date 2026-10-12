@@ -1,12 +1,12 @@
 [▶ Jouer à Garage vivant](https://jutrasimon.github.io/garage-vivant/)
 
-# Garage vivant · v0.7.5
+# Garage vivant · v0.7.6
 
 Une simulation autonome de musiciens dans une banlieue. Les personnages sont des cubes avec personnalité, émotions, compétences et relations. Ils composent, montent des bands et tentent leur chance devant un public physique. Le joueur peut observer, régler leurs sacs ou intervenir.
 
-[Documentation du jeu](https://jutrasimon.github.io/garage-vivant/docs/) · [Notes de version](https://jutrasimon.github.io/garage-vivant/docs/versions.html#v075) · [Contribuer](CONTRIBUTING.md)
+[Documentation du jeu](https://jutrasimon.github.io/garage-vivant/docs/) · [Notes de version](https://jutrasimon.github.io/garage-vivant/docs/versions.html#v076) · [Contribuer](CONTRIBUTING.md)
 
-**V7.5 — formation et recrutement :** créer un band est un peu plus probable ; compléter son band ne subit plus la pénalité de créer un autre groupe. Le candidat attend 24 h, le recruteur n’est plus bloqué par une adhésion. Liens réciproques, acceptation variable et freins au multigroupe conservés. [Comparaison et limites](docs/BALANCE_V7_5.md). Format de sauvegarde toujours 0.7.3.
+**V7.6 — personnages et groupes :** nom, surnom et apparence cohérente dans les portraits; suppression confirmée; options de carte; Shows consultable sans pause. Configurations initiales variables, propositions de formation +12,5 % et pratiques plus insistantes pour les groupes fragiles. [Design et bilan](docs/BILAN_V7_6.md). Format du monde toujours 0.7.3.
 
 **V7.4 — accès aux archives :** Groupes → Actifs / Archives, compteurs visibles, fiche conservée à la dissolution et liens vers les propriétaires dissous. Anciennes données conservées ; format de sauvegarde toujours 0.7.3, aucune règle moteur changée.
 
@@ -54,7 +54,7 @@ Sauvegarde locale, export/import et migration V1–V7. Chansons, projets, compé
 
 ## Plan de test de la V7 complète
 
-[Plan de test V7 à V7.5](docs/PLAN_TEST_V7.md) : parcours rapide de 20–30 minutes, cas prioritaires par système, migrations, expérience multi-graines, interface/son et publication. Il distingue les résultats automatisés et les essais humains encore à consigner.
+[Plan de test V7 à V7.6](docs/PLAN_TEST_V7.md) : parcours rapide de 20–30 minutes, cas prioritaires par système, migrations, expérience multi-graines, interface/son et publication. Il distingue les résultats automatisés et les essais humains encore à consigner.
 
 ## Développement et validation
 
@@ -70,7 +70,7 @@ npx playwright install --with-deps chromium
 npm run test:browser
 ```
 
-Pour jouer localement : `python3 -m http.server 8000 --directory dist`, puis `http://localhost:8000/`. `npm run audit:groups` rejoue les 20 graines sur 30 jours, dont trois prolongées à 90 jours, et produit `docs/BALANCE_V7_5.json`, tailles et stabilité comprises. Le build crée la documentation et son index de recherche. Les quatorze fichiers de tests moteur/interface/doc couvrent les règles V7.2, imports réels V1–V7, déterminisme, compositions, engagements, setlists, skip/replay, récompenses uniques, 100 jours de calendrier et cohérence documentaire. Chromium couvre ordinateur et tactile, rendu, recherche VitePress et parcours de jeu. Le viewport tactile ne remplace pas un test sur appareil réel.
+Pour jouer localement : `python3 -m http.server 8000 --directory dist`, puis `http://localhost:8000/`. `npm run audit:groups` rejoue les 20 graines sur 30 jours, dont trois prolongées à 90 jours, et produit `docs/BALANCE_V7_6.json`, tailles et stabilité comprises. Le build crée la documentation et son index de recherche. Les quinze fichiers de tests moteur/interface/doc couvrent les règles V7.2, imports réels V1–V7, déterminisme, compositions, engagements, setlists, skip/replay, récompenses uniques, 100 jours de calendrier et cohérence documentaire. Chromium couvre ordinateur et tactile, rendu, recherche VitePress et parcours de jeu. Le viewport tactile ne remplace pas un test sur appareil réel.
 
 La CI vérifie les PR sans publier; `main` publie jeu et doc après validation. Captures dans `interface-v7`. Voir [PLAN_V7_1](docs/PLAN_V7_1.md), [PLAN_V7](docs/PLAN_V7.md), [DDD](docs/gdd/documentation.md), [historique](docs/CHANGELOG.md) et [contribution](CONTRIBUTING.md). L’équilibrage des profils et probabilités reste provisoire et demande un essai avec joueurs.
 

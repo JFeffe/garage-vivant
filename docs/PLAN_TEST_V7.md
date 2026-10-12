@@ -1,12 +1,12 @@
-# Plan de test — V7 complète à V7.5
+# Plan de test — V7 complète à V7.6
 
-Référence : **interface 0.7.5, format 0.7.3**, 11 octobre 2026. Ce plan couvre les systèmes conservés de la V7, les actions de la V7.1, les groupes de la V7.2 et leurs raccords à la scène, puis les quatre transitions corrigées en V7.3, l’accès aux archives V7.4 et le réglage de formation/recrutement V7.5. Les [quinze DDD](./gdd/documentation.md) décrivent les règles actuelles ; les anciens plans conservent aussi des propositions non réalisées.
+Référence : **interface 0.7.6, format 0.7.3**, 11 octobre 2026. Ce plan couvre les systèmes conservés de la V7, les actions de la V7.1, les groupes de la V7.2 et leurs raccords à la scène, puis les quatre transitions corrigées en V7.3, l’accès aux archives V7.4 et le réglage de formation/recrutement V7.6. Les [quinze DDD](./gdd/documentation.md) décrivent les règles actuelles ; les anciens plans conservent aussi des propositions non réalisées.
 
 Les tests ci-dessous constituent une liste à exécuter, pas une déclaration que chaque essai manuel a déjà réussi. La réception automatisée disponible est détaillée à la fin. Aucun essai ne doit ajouter une règle, offrir des relations, créer un groupe de secours ou modifier silencieusement une sauvegarde pour réussir.
 
 ## Commencer par le recrutement, les archives et la 7.3
 
-Recharger et vérifier **0.7.5**, exporter sa partie, puis faire G28–G30 pour le recrutement, G25–G27 pour les archives et R01–R10. Tester ensuite C73-01 à C73-05 ci-dessous avant la boucle complète « composer → adopter → répéter → spectacle ». Le [bilan des seize parties simulées](./AUDIT_V7_3.md) distingue défauts corrigés et points d’équilibre ; il ne remplace pas cette réception humaine.
+Recharger et vérifier **0.7.6**, exporter sa partie, puis faire G28–G30 pour le recrutement, G25–G27 pour les archives et R01–R10. Tester ensuite C73-01 à C73-05 ci-dessous avant la boucle complète « composer → adopter → répéter → spectacle ». Le [bilan des seize parties simulées](./AUDIT_V7_3.md) distingue défauts corrigés et points d’équilibre ; il ne remplace pas cette réception humaine.
 
 | ID / priorité | Essai | Résultat attendu |
 |---|---|---|
@@ -44,7 +44,7 @@ Un résultat probabiliste ne doit pas être garanti dans une séance isolée. S�
 
 ## 2. Préparer et conserver les preuves
 
-1. Vérifier le numéro 0.7.5 dans le jeu et les notes de version. Après publication, recharger pour récupérer les nouveaux modules.
+1. Vérifier le numéro 0.7.6 dans le jeu et les notes de version. Après publication, recharger pour récupérer les nouveaux modules.
 2. Exporter sa partie avant les essais. Conserver l’original sans l’écraser ; utiliser une origine locale ou un autre profil de navigateur pour les fixtures et manipulations.
 3. Noter version, commit, graine si connue, population, paramètres, navigateur, appareil, taille d’écran et heure simulée de départ.
 4. Utiliser Pause pendant les mesures. Un affichage en lecture continue peut évoluer entre deux captures.
@@ -200,7 +200,7 @@ Source : [Groupes](./gdd/groupes.md). Les valeurs ci-dessous sont celles de V7.2
 | G16 P0 | Appel expiré à 12 h, morceau désactivé ou dissolution en attente | Demande fermée et participations correspondantes terminées ; sac intact |
 | G17 P1 | Participant ayant pigé Pratiquer rejoint un appel compatible | Admission et déplacement, inscription à la demande ; crédit collectif uniquement après démarrage réel |
 | G18 P0 | Après départ des autres, un seul participant continue | Travail personnel possible, aucun crédit collectif ; demandes/références nettoyées sans corruption |
-| G19 P1 | Attachement <20 ou autre groupe rejoint +25, après grâce | Examen variable après 48 h puis chaque 12 h ; motifs réels, pas de groupe potentiel inventé |
+| G19 P1 | Attachement <20 ou autre groupe rejoint +25, après grâce | Examen variable après 72 h puis chaque 12 h ; motifs réels, pas de groupe potentiel inventé |
 | G20 P1 | Show confirmé du groupe dans moins de six heures | Examen de départ différé ; pas d’annulation autonome juste avant l’engagement |
 | G21 P0 | Départ manuel/autonome, invitations et réservations pendantes | Historique conservé, participation fermée, engagement revalidé/annulé selon membres restants |
 | G22 P0 | Coordination positive très faible, puis zéro ; moins de deux membres | Récupération possible tant que positif ; zéro/sous deux terminal, demandes/réservations fermées, aucune résurrection |
@@ -258,7 +258,7 @@ La clarté fait partie de la réception : une valeur juste mais cachée peut emp
 | U11 P1 | Son OFF/ON puis inspection, skip et show suivant | Bouton visible, démarrage sonore à l’initiative du joueur, tir/contact distincts ; aucun bruit continu gossant ou boucle doublée |
 | U12 P2 | Effets réduits puis capture comparative | Résultats et cibles inchangés, secousses/recul/éclats retirés, jauges et indications conservées |
 | U13 P1 | Recherche jeu et VitePress : adoption, défausse, seuils, Solitaire, plan de test | Résultats actuels, liens/ancres valides, navigation clavier ; plan accessible par architecture documentaire et VitePress |
-| U14 P1 | Version puis notes, fermer/revenir/recharger | v0.7.5 et note correcte ; notes lues conservées, pause/focus restaurés |
+| U14 P1 | Version puis notes, fermer/revenir/recharger | v0.7.6 et note correcte ; notes lues conservées, pause/focus restaurés |
 | U15 P1 | Nom avec accents, apostrophes et contenu de type HTML | Nom affiché comme texte, jamais exécuté ; unicité normalisée ; contrôles dans leurs cartes |
 
 Matrice minimale de scène : **1440×900, 1200×768, 900×850, 390×844, 390×667, 844×390**. Vérifier titre, nom du groupe, cartes, decks, foule, commandes et jauges sans défilement extérieur. Le quartier et les fiches peuvent défiler ; leur contenu ne doit pas déborder horizontalement.
@@ -297,7 +297,7 @@ Commande reproductible : `npm run audit:groups`. Elle simule vingt graines avec 
 | Stabilité prolongée sur trois graines | À J90 : 8 groupes actifs âgés d’au moins 30 j, 19/19 attachés en groupe unique | Échantillon limité à ces trois parties |
 | Sauvegarde et futur | Rechargements et continuation conformes | Pas seulement une validation de schéma |
 
-Le [rapport](./BALANCE_V7_2.md) et ses [données](./BALANCE_V7_2.json) constituent la référence. La commande courante écrit `BALANCE_V7_5.json` ; les références V7.2/V7.3 et le contrôle V7.4 restent conservés. Le [bilan V7.5](./BALANCE_V7_5.md) ajoute tailles et arrivée à trois membres. Comparer les mêmes réglages et lire aussi le [bilan V7.3](./AUDIT_V7_3.md). Une graine isolée sans groupe à J10 ne justifie pas une mécanique de secours.
+Le [rapport](./BALANCE_V7_2.md) et ses [données](./BALANCE_V7_2.json) constituent la référence. La commande courante écrit `BALANCE_V7_6.json` ; les références V7.2/V7.3 et le contrôle V7.4 restent conservés. Le [bilan V7.5](./BALANCE_V7_5.md) ajoute tailles et arrivée à trois membres. Comparer les mêmes réglages et lire aussi le [bilan V7.3](./AUDIT_V7_3.md). Une graine isolée sans groupe à J10 ne justifie pas une mécanique de secours.
 
 Compléments manuels à mesurer sans les annoncer déjà réussis : populations 2/4/12/24, sacs édités, paramètres extrêmes mais valides, évolution d’une vraie partie V7.1 importée, rotations de membres et lisibilité d’un grand catalogue. Les critères chiffrés à huit personnages ne se transfèrent pas automatiquement aux autres configurations. Relever une file interminable, une famine de pige, une succession permanente de duos ou une disparition d’œuvres ; conserver la partie pour diagnostic.
 
@@ -372,6 +372,22 @@ Livraison acceptable : automatisations vertes sur le commit final, aucun P0 ouve
 
 Après fusion et succès de Pages : vérifier version, recherche « plan de test », ouverture de cette page et téléchargement du rapport JSON sur le site public. Conserver la date de publication et le commit. Les essais humains et appareils réels restent consignés séparément des résultats automatisés.
 
-## Réception du recrutement V7.5
+## Réception du recrutement V7.6
 
 Les tests ciblés de `tests/v75.test.mjs` vérifient la croissance d’un duo, le délai du candidat, les liens vers la moitié de l’effectif, le refus et le délai de paire partagé, le choix d’un groupe existant et la réticence à rejoindre plusieurs bands. Le [bilan comparatif](./BALANCE_V7_5.md) conserve les mêmes graines avant/après ; ses résultats d’ensemble ne garantissent pas un recrutement particulier. Les bandes plus grandes restent sensibles à disponibilité, besoins et affinités. Une sauvegarde existante ne reçoit aucun membre automatiquement : les prochains échanges utilisent les nouvelles règles.
+
+## V7.6 — Personnages, carte et départs
+
+| Cas | Manipulation | Attendu |
+|---|---|---|
+| H01 | Nom et apparence; changer nom, surnom, couleur, chaque accessoire et foulard | Fiche et liste identiques à la carte; aucune perte de liens ou œuvres |
+| H02 | Exporter, recharger et importer ce monde | Apparence et surnom conservés; continuité moteur |
+| H03 | Supprimer un auteur membre d’un duo après confirmation | Voisin absent, groupe archivé consultable, crédits et chansons conservés |
+| H04 | Essayer pendant un show et avec un seul voisin | Suppression indisponible; monde intact |
+| H05 | Cocher/décocher les huit options carte puis recharger | Actions individuelles et collectives indépendantes; réglages conservés; simulation inchangée |
+| H06 | Consulter Shows à ×1 puis à zéro | Vitesse conservée; seule une représentation suspend le quartier |
+| H07 | Créer chaque configuration avec 2, 8 puis 24 voisins | Effectifs possibles, aucun membre initial dupliqué; même graine/même choix reproductible |
+| H08 | Importer un ancien monde sans groupes | Aucun groupe ajouté par la mise à jour |
+| H09 | Suivre les groupes fragiles avec/sans répertoire | Appels plus fréquents seulement avec chanson; refus possibles; aucun gain artificiel |
+| H10 | Consulter les archives après plusieurs départs | Groupes dissous conservés, aucune résurrection |
+| H11 | Chanson solo puis coécrite, adoptée par un groupe; supprimer un auteur | Crédit Composition lisible, tous les coauteurs affichés, fiches cliquables; propriétaire distinct; nom supprimé conservé sans lien |

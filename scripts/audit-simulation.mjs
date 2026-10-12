@@ -5,9 +5,9 @@ import {skipShow,nextSlot} from '../dist/life.mjs';
 import {RELEASE_VERSION} from '../dist/release.mjs';
 import {attachment,activeGroups} from '../dist/groups.mjs';
 
-// Observation only: do not prepare relationships, force actions or create bands.
+// Observe either the empty laboratory setup or the explicit real starting configuration.
 const configs=[...Array.from({length:12},(_,i)=>({seed:i===0?2040:i,count:8})),{seed:713,count:4},{seed:714,count:4},{seed:713,count:12},{seed:714,count:12}];
-const output=process.argv[2]||'docs/AUDIT_V7_5.json';
+const output=process.argv[2]||'docs/AUDIT_V7_6.json';
 const mean=xs=>xs.reduce((n,x)=>n+x,0)/(xs.length||1),round=x=>Math.round(x*100)/100;
 function resolveShows(s){
  let safety=0;
@@ -20,7 +20,7 @@ function resolveShows(s){
 function advance(s){resolveShows(s);step(s);}
 const runs=[];
 for(const {seed,count} of configs){
- const s=createWorld(seed,count),start=s.time,initialSkills=s.people.map(p=>({...p.skills}));
+ const s=createWorld(seed,count,{setup:process.argv[3]||"varied"}),start=s.time,initialSkills=s.people.map(p=>({...p.skills}));
  const minutes={},daily=[],anomalies={},examples={},shows=new Set(),seenActivities=new Set(),activityResults={},invitations={},seenResponses=new Set();
  let firstGroup=null,firstSong=null,validationError=null,continuation=true;
  const note=(kind,example)=>{anomalies[kind]=(anomalies[kind]||0)+1;examples[kind]??=example;};
@@ -59,7 +59,7 @@ for(const {seed,count} of configs){
  console.log(JSON.stringify({seed,count,days:daily.length,groups:run.groupSizes,songs:run.songs,shows:run.shows,anomalies,validationError,continuation,needs:run.observed.averageNeeds,critical:run.observed.criticalPercent}));
  if(validationError){writeFileSync('/tmp/v73-anomaly-'+seed+'-'+count+'.json',JSON.stringify(final));}
 }
-const result={version:VERSION,release:RELEASE_VERSION,days:15,protocol:'12 graines à 8 personnages + 4 parties à 4/12 personnages, paramètres par défaut, 15 jours écoulés. Résolution des spectacles avec skipShow/nextSlot, sans préparer les relations ni imposer les actions. Validation quotidienne exacte et continuation rechargée de 240 minutes. Compteurs de temps en minutes-personnes.',configs,runs};
+const result={setup:process.argv[3]||"varied",version:VERSION,release:RELEASE_VERSION,days:15,protocol:`Configuration initiale ${process.argv[3]||'varied'}. 12 graines à 8 personnages + 4 parties à 4/12 personnages, paramètres par défaut, 15 jours écoulés. Résolution des spectacles avec skipShow/nextSlot, sans préparer les relations ni imposer les actions. Validation quotidienne exacte et continuation rechargée de 240 minutes. Compteurs de temps en minutes-personnes.`,configs,runs};
 writeFileSync(output,JSON.stringify(result,null,2)+'\n');
 console.log('REPORT '+output);
 if(runs.some(r=>r.validationError||!r.continuation||Object.values(r.anomalies).some(n=>n>0)))process.exitCode=1;
