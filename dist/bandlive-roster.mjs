@@ -1,5 +1,5 @@
-import {activeGroup} from './groups.mjs?v=0.7.2';
-import {eligibleSongs} from './life.mjs?v=0.7.2';
+import {activeGroup} from './groups.mjs?v=0.7.4';
+import {eligibleSongs} from './life.mjs?v=0.7.4';
 import {RULES,createBandLive} from './bandlive.mjs?v=4';
 
 // Resolve only the module's draft. Group membership, canonical songs, mastery

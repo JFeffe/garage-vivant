@@ -1,9 +1,9 @@
 import {RULES,INSTRUMENTS,SPECIALS,restoreBandLive,cardById,cardDefinition,currentSong,availableSongs,chooseSong,canPlay,playCard,endTurn} from './bandlive.mjs?v=4';
 import {resolveBandLivePlan,createBandLiveFromWorld} from './bandlive-roster.mjs?v=4';
 import {createConcertReplay,resolveBandLiveConcert} from './bandlive-concert.mjs?v=4';
-import {NEEDS,PERSONALITY} from './engine.mjs?v=0.7.2';
-import {instrumentArt,drawStageBackdrop} from './show-view.mjs?v=0.7.2';
-import {decorateCube,enableAudio,playSound} from './v5-view.mjs?v=0.7.2';
+import {NEEDS,PERSONALITY} from './engine.mjs?v=0.7.4';
+import {instrumentArt,drawStageBackdrop} from './show-view.mjs?v=0.7.4';
+import {decorateCube,enableAudio,playSound} from './v5-view.mjs?v=0.7.4';
 
 const STORAGE='garage-vivant-bandlive-v1';
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
