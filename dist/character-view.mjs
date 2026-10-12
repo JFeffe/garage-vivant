@@ -5,14 +5,15 @@ const escape=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>'
 export const characterName=p=>p.nickname?`${p.name} « ${p.nickname} »`:p.name;
 // y is the bottom of the head; the tiny body extends 0.32 head widths below it.
 export function drawMicroBody(ctx,x,y,size,p){
- ctx.save();ctx.fillStyle=p.color||'#82a98b';ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=size*.12;ctx.lineCap='round';
- ctx.beginPath();ctx.roundRect(x-size*.19,y-size*.05,size*.38,size*.25,size*.08);ctx.fill();
- ctx.beginPath();
- ctx.moveTo(x-size*.19,y+size*.04);ctx.lineTo(x-size*.3,y+size*.14);
- ctx.moveTo(x+size*.19,y+size*.04);ctx.lineTo(x+size*.3,y+size*.14);
- ctx.moveTo(x-size*.1,y+size*.18);ctx.lineTo(x-size*.12,y+size*.26);
- ctx.moveTo(x+size*.1,y+size*.18);ctx.lineTo(x+size*.12,y+size*.26);ctx.stroke();
- ctx.fillStyle='#00000018';ctx.beginPath();ctx.roundRect(x-size*.12,y+size*.04,size*.24,size*.12,size*.04);ctx.fill();ctx.restore();
+ ctx.save();ctx.fillStyle=p.color||'#82a98b';
+ // Straight torso, parallel arms and two separated legs. Keep the footprint
+ // shared by portraits, the map and both stages, so names remain unobstructed.
+ ctx.fillRect(x-size*.16,y-size*.02,size*.32,size*.23);
+ ctx.fillRect(x-size*.29,y,size*.09,size*.17);
+ ctx.fillRect(x+size*.20,y,size*.09,size*.17);
+ ctx.fillRect(x-size*.14,y+size*.20,size*.10,size*.12);
+ ctx.fillRect(x+size*.04,y+size*.20,size*.10,size*.12);
+ ctx.fillStyle='#00000018';ctx.fillRect(x-size*.16,y+size*.15,size*.32,size*.06);ctx.restore();
 }
 export function decorateCube(ctx,x,y,size,p,t=0) {
   const a=p.identity?.accessory,top=y-size;

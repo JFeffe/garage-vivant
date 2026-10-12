@@ -1,12 +1,12 @@
-import {drawMicroBody} from './character-view.mjs?v=0.7.13';
-import {songTurns} from './song-rules.mjs?v=0.7.13';
-import {groupLinkHTML} from './group-link.mjs?v=0.7.13';
-import {RULES,INSTRUMENTS,SPECIALS,restoreBandLive,cardById,cardDefinition,currentSong,availableSongs,chooseSong,canPlay,playCard,endTurn,powerAgainst,totalTurns,sectionName} from './bandlive.mjs?v=0.7.13';
-import {resolveBandLivePlan,createBandLiveFromWorld} from './bandlive-roster.mjs?v=0.7.13';
-import {createConcertReplay,resolveBandLiveConcert} from './bandlive-concert.mjs?v=0.7.13';
-import {NEEDS,PERSONALITY} from './engine.mjs?v=0.7.13';
-import {instrumentArt} from './show-view.mjs?v=0.7.13';
-import {decorateCube,enableAudio,playSound} from './v5-view.mjs?v=0.7.13';
+import {drawMicroBody} from './character-view.mjs?v=0.7.14';
+import {songTurns} from './song-rules.mjs?v=0.7.14';
+import {groupLinkHTML} from './group-link.mjs?v=0.7.14';
+import {RULES,INSTRUMENTS,SPECIALS,restoreBandLive,cardById,cardDefinition,currentSong,availableSongs,chooseSong,canPlay,playCard,endTurn,powerAgainst,totalTurns,sectionName} from './bandlive.mjs?v=0.7.14';
+import {resolveBandLivePlan,createBandLiveFromWorld} from './bandlive-roster.mjs?v=0.7.14';
+import {createConcertReplay,resolveBandLiveConcert} from './bandlive-concert.mjs?v=0.7.14';
+import {NEEDS,PERSONALITY} from './engine.mjs?v=0.7.14';
+import {instrumentArt} from './show-view.mjs?v=0.7.14';
+import {decorateCube,enableAudio,playSound} from './v5-view.mjs?v=0.7.14';
 
 const STORAGE='garage-vivant-bandlive-v1';
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

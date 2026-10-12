@@ -1,5 +1,11 @@
 # Notes de version
 
+## V0.7.14 — Des mini-personnages bien droits {#v0714}
+
+12 octobre 2026.
+
+- Les personnages gardent leur grosse tête et adoptent une silhouette droite : torse rectangulaire, bras verticaux le long du corps et jambes parallèles séparées. Le même dessin est utilisé dans les portraits, sur la carte et dans les deux modes de spectacle. Aucun changement de mécanique ni de sauvegarde.
+
 ## V0.7.13 — Qualité des chansons, formules et mini-personnages {#v0713}
 
 12 octobre 2026.
