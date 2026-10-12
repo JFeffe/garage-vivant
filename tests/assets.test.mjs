@@ -1,14 +1,15 @@
 import test from 'node:test';
+import {RELEASE_VERSION} from '../dist/release.mjs';
 import assert from 'node:assert/strict';
 import {existsSync,readFileSync,readdirSync} from 'node:fs';
 import {resolve} from 'node:path';
 
-test('the browser entry and complete module graph use one BandLive-specific cache version',()=>{
+test('the browser entry and complete module graph use the displayed release cache version',()=>{
   const html=readFileSync('dist/index.html','utf8');
   const entry=html.match(/<script[^>]*type="module"[^>]*src="([^"]+)"/);
   assert(entry,'The browser has an explicit versioned module entry');
   const token=new URL(entry[1],'https://example.invalid/').searchParams.get('v');
-  assert(token?.includes('bandlive'),'Do not reuse an upstream release URL for modified modules');
+  assert.equal(token,RELEASE_VERSION,'Cache URLs must match the displayed release');
   const files=readdirSync('dist').filter(name=>name.endsWith('.mjs'));
   let imports=0;
   for(const file of files){
