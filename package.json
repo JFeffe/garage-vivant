@@ -1,7 +1,7 @@
 {
   "name": "garage-vivant",
   "private": true,
-  "version": "0.7.6",
+  "version": "0.7.7",
   "type": "module",
   "scripts": {
     "test": "node --test tests/engine.test.mjs tests/systems.test.mjs tests/v4.test.mjs tests/v5.test.mjs tests/runtime.test.mjs tests/interface.test.mjs tests/v6.test.mjs tests/show.test.mjs tests/v7.test.mjs tests/v71.test.mjs tests/docs.test.mjs tests/v72.test.mjs tests/v73.test.mjs tests/v75.test.mjs tests/bandlive.test.mjs tests/bandlive-concert.test.mjs tests/assets.test.mjs",

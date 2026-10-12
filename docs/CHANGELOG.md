@@ -1,3 +1,7 @@
+# V0.7.7 — 11 octobre 2026
+
+Correction de la référence de défilement du test tactile BandLive qui bloquait la publication. Le test contrôle la position au relâchement du doigt, après le défilement automatique intentionnel. [Notes](./versions.md#v077).
+
 # V0.7.6 — 11 octobre 2026
 
 Publication rétroactive de BandLive (PR #11) : spectacles interactifs optionnels, répétitions, sauvegarde et résultats uniques. Activation dans Réglages → Activer BandLive. Corrections du cache et du public du groupe suivant. Version et patch notes obligatoires pour chaque fusion vers main. [Notes complètes](./versions.md#v076). Format 0.7.3 inchangé.

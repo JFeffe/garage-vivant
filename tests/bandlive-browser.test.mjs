@@ -114,10 +114,12 @@ try{
     const main=await page.locator('#main').boundingBox();
     assert(source.y>=main.y&&source.y+source.height<=main.y+main.height,'The whole card stays in the visible stage');
     assert(target.y+target.height/2>main.y&&target.y+target.height/2<main.y+main.height,'The last-row drop target is visible with the card');
-    if(touch)await touchDrag(page,game.cards[0].id,targetId);
+    // Dragging can intentionally auto-scroll; rendering must preserve the release position.
+    let releaseOffset=offset;
+    if(touch)releaseOffset=await touchDrag(page,game.cards[0].id,targetId);
     else{await page.locator(`[data-bl-card="${game.cards[0].id}"]`).dragTo(page.locator(`[data-bl-fan="${targetId}"]`),{sourcePosition:{x:40,y:42}});await idle(page);}
     const played=await data(page);assert.equal(played.played,1);assert(played.fans.find(f=>f.id===targetId).hp<game.fans.find(f=>f.id===targetId).hp,'The last-row spectator receives the card');
-    assert(Math.abs(await audienceOffset(page)-offset)<=1,'Card play and the animation-completion render preserve public scroll');
+    assert(Math.abs(await audienceOffset(page)-releaseOffset)<=1,'Card play and the animation-completion render preserve public scroll');
     const after=await stageGeometry(page);assert.deepEqual(after.musicians,fixed.musicians);assert.equal(after.main,fixed.main);assert.equal(after.horizontal,fixed.horizontal,'Card play preserves horizontal stage scroll too');
     assert.equal(await page.locator('.bl-ghost').count(),0);
     await page.screenshot({path:`test-results/bandlive-scroll-${width}x${height}.png`});await page.close();
