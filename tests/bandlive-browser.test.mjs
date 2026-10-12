@@ -29,7 +29,7 @@ async function load(page,state=null,sourceWorld=world){
 }
 async function data(page){return page.evaluate(()=>JSON.parse(localStorage.getItem('garage-vivant-bandlive-v1')).game);}
 async function idle(page){await page.waitForFunction(()=>!document.querySelector('#bl-end')||!document.querySelector('#bl-end').disabled);}
-async function drag(page,id,target,targetPosition){await page.locator(`[data-bl-card="${id}"]`).dragTo(page.locator(target),{sourcePosition:{x:8,y:42},targetPosition});await idle(page);}
+async function drag(page,id,target,targetPosition){await page.locator(`[data-bl-card="${id}"]`).dragTo(page.locator(target),{sourcePosition:{x:30,y:45},targetPosition});await idle(page);}
 async function stageGeometry(page){
   return page.evaluate(()=>{
     const rect=selector=>{const {x,y,width,height}=document.querySelector(selector).getBoundingClientRect();return {x,y,width,height};};
@@ -44,7 +44,7 @@ async function centerFan(page,id){
   });
 }
 async function touchDrag(page,id,targetId,{edge=false}={}){
-  const source=await page.locator(`[data-bl-card="${id}"]`).boundingBox(),start={x:source.x+10,y:source.y+42};
+  const source=await page.locator(`[data-bl-card="${id}"]`).boundingBox(),start={x:source.x+30,y:source.y+42};
   const cdp=await page.context().newCDPSession(page);
   const move=async point=>cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[point]});
   await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[start]});
@@ -54,16 +54,23 @@ async function touchDrag(page,id,targetId,{edge=false}={}){
     for(let step=1;step<=8;step++)await move({x:start.x+(finish.x-start.x)*step/8,y:start.y+(finish.y-start.y)*step/8});
     await page.waitForFunction(()=>{const el=document.querySelector('.bl-audience-viewport');return el.scrollTop>=el.scrollHeight-el.clientHeight-1;});
   }
+  const horizontalTarget=await page.locator(`[data-bl-fan="${targetId}"]`).boundingBox();
+  if(horizontalTarget.x+horizontalTarget.width/2>page.viewportSize().width-15){
+    const area=await page.locator('.bl-viewport').boundingBox();
+    await move({x:Math.min(page.viewportSize().width,area.x+area.width)-5,y:horizontalTarget.y+horizontalTarget.height/2});
+    await page.waitForFunction(id=>{const r=document.querySelector('[data-bl-fan="'+id+'"]').getBoundingClientRect();const v=document.querySelector('.bl-viewport').getBoundingClientRect();return r.x+r.width/2<Math.min(innerWidth,v.right)-35;},targetId);
+  }
   const target=await page.locator(`[data-bl-fan="${targetId}"]`).boundingBox(),finish={x:target.x+target.width/2,y:target.y+target.height/2};
   assert(start.x>0&&finish.x<page.viewportSize().width&&start.y>0&&finish.y<page.viewportSize().height,JSON.stringify({start,finish,viewport:page.viewportSize(),targetId}));
   for(let step=1;step<=8;step++)await move(edge?finish:{x:start.x+(finish.x-start.x)*step/8,y:start.y+(finish.y-start.y)*step/8});
-  await page.evaluate(()=>document.querySelector('#bandlive-view').addEventListener('pointerup',()=>{window.testReleaseScroll=document.querySelector('.bl-audience-viewport').scrollTop;},{capture:true,once:true}));
+  await page.evaluate(()=>document.querySelector('#bandlive-view').addEventListener('pointerup',()=>{window.testReleaseScroll=document.querySelector('.bl-audience-viewport').scrollTop;window.testReleaseHorizontal=document.querySelector('.bl-viewport').scrollLeft;},{capture:true,once:true}));
+  await page.waitForTimeout(45);const settled=await page.locator(`[data-bl-fan="${targetId}"]`).boundingBox();await move({x:settled.x+settled.width/2,y:settled.y+settled.height/2});
   await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});const offset=await page.evaluate(()=>window.testReleaseScroll);await idle(page);await cdp.detach();
   return offset;
 }
 let page;
 try{
-  page=await browser.newPage({viewport:{width:1440,height:1000}});await load(page);assert(await page.locator('#bandlive-nav').isHidden());
+  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});await load(page);assert(await page.locator('#bandlive-nav').isHidden());
   await page.locator('[data-view="settings"]').click();await page.locator('#bandlive-enabled').check();assert(await page.locator('#bandlive-nav').isVisible());
   await page.locator('[data-view="groups"]').click();await page.locator(`#group-list [data-group-select="${group.id}"]`).click();await page.locator('#group-list [data-bandlive-open]').click();assert.equal(await page.locator('#bl-group').inputValue(),group.id);assert.equal(await page.locator('.bl-repertoire li').count(),3);
   assert((await page.locator('.bl-repertoire').textContent()).includes(template.authorNames.p1));assert.equal(await page.locator('[data-bl-member]').count(),4);await page.locator('#bl-start').click();assert.equal(await page.locator('.bl-song-choice button').count(),3);
@@ -75,7 +82,7 @@ try{
   await page.locator('#bl-setup').click();await page.locator('#bl-group').selectOption(emptyGroup.id);assert(await page.locator('#bl-start').isDisabled());assert((await page.locator('.bl-setup-reason').textContent()).includes('composition'));assert.deepEqual(await data(page),savedRehearsal);await page.locator('#bl-resume').click();assert.deepEqual(await data(page),savedRehearsal);
   await page.locator('[data-view="settings"]').click();await page.locator('#bandlive-enabled').uncheck();assert(await page.locator('#bandlive-nav').isHidden());await page.locator('[data-view="shows"]').click();assert.equal(await page.locator('[data-bandlive-open]').count(),0);await page.locator('#preview-show').click();assert(await page.locator('#start-show').isVisible());await page.locator('#skip-show').click();assert(await page.locator('.show-result').isVisible());await page.close();
 
-  page=await browser.newPage({viewport:{width:1440,height:1000}});await load(page,{enabled:true,game:fixture()});await page.locator('#bandlive-nav').click();
+  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});await load(page,{enabled:true,game:fixture()});await page.locator('#bandlive-nav').click();
   const before=await data(page),note=before.cards[0].id,bass=before.cards[13].id,sax=before.cards[18].id;
   await drag(page,note,'.bl-audience',{x:10,y:10});assert.deepEqual(await data(page),before,'A single-target card dropped on empty crowd space is not spent');
   await drag(page,bass,'.bl-audience',{x:10,y:10});let after=await data(page);assert.equal(after.energy,3);assert.equal(after.tempo,5);assert.equal(after.boost,3);assert.equal(after.hand.length,4);
@@ -91,7 +98,7 @@ try{
   await page.close();
 
   // The photographed regression: choosing a song with two musicians and ten fans.
-  page=await browser.newPage({viewport:{width:1908,height:909}});
+  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1908,height:909}});
   const waitingGame=createBandLive({people:actors.slice(0,2),groupName:'Les Effets Sauvages',songs:[{id:'first',title:'Depuis que le temps nous emporte sans un mot',style:'Punk'}],seed:12,audienceSize:10});
   await load(page,{enabled:true,game:waitingGame});await page.locator('#bandlive-nav').click();
   assert.equal(await page.locator('.bl-card-table').count(),0,'No empty reserved hand before choosing a song');
@@ -113,7 +120,7 @@ try{
     {width:320,height:568,members:6,fans:12,touch:true},
   ]){
     const {width,height,members,fans,touch=false}=sample,game=fixture(fans,members),targetId=`f${Math.floor((fans-1)/3)*3}`;
-    page=await browser.newPage({viewport:{width,height},isMobile:touch,hasTouch:touch});await load(page,{enabled:true,game});await page.locator('#bandlive-nav').click();
+    page=await browser.newPage({reducedMotion:'reduce',viewport:{width,height},isMobile:touch,hasTouch:touch});await load(page,{enabled:true,game});await page.locator('#bandlive-nav').click();
     await page.locator('.bl-viewport').evaluate(el=>{el.scrollIntoView({block:'start',inline:'nearest'});el.scrollLeft=16;});
     await page.mouse.move(0,0);
     const fixed=await stageGeometry(page),publicViewport=page.locator('.bl-audience-viewport');
@@ -130,19 +137,19 @@ try{
     // Dragging can intentionally auto-scroll; rendering must preserve the release position.
     let releaseOffset=offset;
     if(touch)releaseOffset=await touchDrag(page,game.cards[0].id,targetId);
-    else{await page.evaluate(()=>document.querySelector('#bandlive-view').addEventListener('drop',()=>{window.testReleaseScroll=document.querySelector('.bl-audience-viewport').scrollTop;},{capture:true,once:true}));await page.mouse.move(source.x+10,source.y+42);await page.mouse.down();await page.mouse.move(source.x+10,source.y+58,{steps:4});await page.mouse.move(target.x+target.width/2,target.y+target.height/2,{steps:10});await page.mouse.up();releaseOffset=await page.evaluate(()=>window.testReleaseScroll);await idle(page);}
+    else{await page.evaluate(()=>document.querySelector('#bandlive-view').addEventListener('drop',()=>{window.testReleaseScroll=document.querySelector('.bl-audience-viewport').scrollTop;window.testReleaseHorizontal=document.querySelector('.bl-viewport').scrollLeft;},{capture:true,once:true}));await page.mouse.move(source.x+30,source.y+42);await page.mouse.down();await page.mouse.move(source.x+30,source.y+58,{steps:4});await page.mouse.move(target.x+target.width/2,target.y+target.height/2,{steps:10});await page.mouse.up();releaseOffset=await page.evaluate(()=>window.testReleaseScroll);await idle(page);}
     const played=await data(page);assert.equal(played.played,1);assert(played.fans.find(f=>f.id===targetId).hp<game.fans.find(f=>f.id===targetId).hp,'The last-row spectator receives the card');
     assert(Math.abs(await audienceOffset(page)-releaseOffset)<=1,JSON.stringify({width,height,releaseOffset,after:await audienceOffset(page),scroll:await publicViewport.evaluate(el=>({height:el.clientHeight,content:el.scrollHeight}))}));
-    const after=await stageGeometry(page);assert.deepEqual(after.musicians,fixed.musicians);assert.equal(after.main,fixed.main);assert.equal(after.horizontal,fixed.horizontal,'Card play preserves horizontal stage scroll too');
+    const after=await stageGeometry(page);assert.deepEqual({...after.musicians,x:fixed.musicians.x},fixed.musicians);assert.equal(after.main,fixed.main);assert.equal(after.horizontal,await page.evaluate(()=>window.testReleaseHorizontal),'Card play preserves horizontal release position');
     assert.equal(await page.locator('.bl-ghost').count(),0);
     await page.screenshot({path:`test-results/bandlive-scroll-${width}x${height}.png`});await page.close();
   }
 
   // The same edge-scroll path is used by a native mouse drag.
-  page=await browser.newPage({viewport:{width:900,height:720}});const mouseGame=fixture(12,6);
+  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:900,height:720}});const mouseGame=fixture(12,6);
   await load(page,{enabled:true,game:mouseGame});await page.locator('#bandlive-nav').click();await page.locator('.bl-viewport').evaluate(el=>el.scrollIntoView({block:'start'}));
   const mouseFixed=await page.locator('.bl-musicians').boundingBox(),mouseCard=await page.locator('[data-bl-card]').first().boundingBox(),mousePublic=await page.locator('.bl-audience-viewport').boundingBox();
-  await page.mouse.move(mouseCard.x+10,mouseCard.y+42);await page.mouse.down();await page.mouse.move(mouseCard.x+10,mouseCard.y+58,{steps:4});
+  await page.mouse.move(mouseCard.x+30,mouseCard.y+42);await page.mouse.down();await page.mouse.move(mouseCard.x+30,mouseCard.y+58,{steps:4});
   await page.mouse.move(mousePublic.x+mousePublic.width/6,mousePublic.y+mousePublic.height-5,{steps:8});
   await page.waitForFunction(()=>{const el=document.querySelector('.bl-audience-viewport');return el.scrollTop>=el.scrollHeight-el.clientHeight-1;});
   const mouseFan=await page.locator('[data-bl-fan="f9"]').boundingBox();await page.mouse.move(mouseFan.x+mouseFan.width/2,mouseFan.y+mouseFan.height/2,{steps:4});
@@ -150,14 +157,14 @@ try{
   assert.equal((await data(page)).played,1,'A native mouse drag auto-scrolls to the final public row');assert(mouseOffset>0);assert.equal(await audienceOffset(page),mouseOffset);assert.deepEqual(await page.locator('.bl-musicians').boundingBox(),mouseFixed);await page.close();
 
   // A held finger at the public edge must keep scrolling even without more moves.
-  page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});const touchGame=fixture(12);
+  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:390,height:844},isMobile:true,hasTouch:true});const touchGame=fixture(12);
   await load(page,{enabled:true,game:touchGame});await page.locator('#bandlive-nav').click();await page.locator('.bl-viewport').evaluate(el=>el.scrollIntoView({block:'start'}));
   const touchFixed=await page.locator('.bl-musicians').boundingBox();
   const touchOffset=await touchDrag(page,touchGame.cards[0].id,'f9',{edge:true});
   assert.equal((await data(page)).played,1,'An actual touch drag auto-scrolls to the final public row');assert(touchOffset>0);assert.equal(await audienceOffset(page),touchOffset);assert.deepEqual(await page.locator('.bl-musicians').boundingBox(),touchFixed);
   await page.screenshot({path:'test-results/bandlive-touch.png'});await page.close();
 
-  page=await browser.newPage({viewport:{width:1440,height:1000}});await load(page,{enabled:true});await page.locator('#bandlive-nav').click();await page.locator('#bl-group').selectOption(largeGroup.id);
+  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});await load(page,{enabled:true});await page.locator('#bandlive-nav').click();await page.locator('#bl-group').selectOption(largeGroup.id);
   assert.equal(await page.locator('#bl-audience-size').inputValue(),'3');await page.locator('#bl-audience-size').fill('13');await page.locator('#bl-audience-size').press('Tab');assert.equal(await page.locator('#bl-audience-size').inputValue(),'3');
   await page.locator('#bl-audience-size').fill('12');await page.locator('#bl-audience-size').press('Tab');
   await page.reload();await page.locator('#bandlive-nav').click();assert.equal(await page.locator('#bl-audience-size').inputValue(),'12','The chosen crowd size survives a reload before starting');
@@ -176,13 +183,13 @@ try{
   await page.locator('#bandlive-nav').click();assert.deepEqual(await data(page),finishedShow);await page.locator('#bl-replay').click();assert.equal((await data(page)).phase,'choose');assert.equal((await data(page)).fans.length,12);assert.equal((await data(page)).groupId,largeGroup.id);await page.close();
 
   const nearVictory=fixture(9);for(const fan of nearVictory.fans)fan.hp=1;
-  page=await browser.newPage({viewport:{width:1440,height:1000}});await load(page,{enabled:true,game:nearVictory});await page.locator('#speed').fill('0.7');await page.locator('#bandlive-nav').click();
+  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});await load(page,{enabled:true,game:nearVictory});await page.locator('#speed').fill('0.7');await page.locator('#bandlive-nav').click();
   const victoryWorld=await page.evaluate(()=>JSON.parse(localStorage.getItem('garage-vivant-v1'))),victoryClock=await page.locator('#clock').textContent();assert.equal(await page.locator('#bl-return').count(),0);
-  await page.locator(`[data-bl-card="${nearVictory.cards[18].id}"]`).click({position:{x:8,y:42}});await page.locator('.bl-audience').click({position:{x:10,y:10}});assert.equal((await data(page)).phase,'won');assert.equal(await page.locator('.bl-conquered').count(),9);assert((await page.locator('.bl-resources').textContent()).includes('9/9'));
+  await page.locator(`[data-bl-card="${nearVictory.cards[18].id}"]`).click({position:{x:30,y:45}});await page.locator('.bl-audience').click({position:{x:10,y:10}});assert.equal((await data(page)).phase,'won');assert.equal(await page.locator('.bl-conquered').count(),9);assert((await page.locator('.bl-resources').textContent()).includes('9/9'));
   await page.locator('#bl-return').click();assert(await page.locator('#map-view').isVisible());assert.equal(await page.locator('#speed').inputValue(),'0.7','Returning after victory resumes the previous nonzero speed');assert.equal((await data(page)).phase,'won');assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('garage-vivant-v1'))),victoryWorld);
   await page.waitForFunction(previous=>document.querySelector('#clock').textContent!==previous,victoryClock,{timeout:5000});assert.equal(await page.locator('#dialog').evaluate(el=>el.open),false);await page.screenshot({path:'test-results/bandlive-return-to-neighbourhood.png'});await page.close();
 
-  page=await browser.newPage({viewport:{width:1440,height:1000}});await load(page,{enabled:true},createWorld(205,8));await page.locator('#bandlive-nav').click();assert(await page.locator('#bl-start').isDisabled());assert.equal(await page.locator('[data-bl-member]').count(),0);await page.locator('#bandlive-view [data-open-groups]').click();assert(await page.locator('#groups-view').isVisible());await page.close();
-  const legacy=JSON.parse(await readFile('tests/bandlive-v1.json','utf8'));page=await browser.newPage({viewport:{width:1440,height:1000}});await load(page,{enabled:true,game:legacy});await page.locator('#bandlive-nav').click();assert.equal(await page.locator('[data-bl-actor]').count(),8);assert.deepEqual(await data(page),legacy);await page.locator('#bl-end').click();assert.equal((await data(page)).turn,2);await page.close();
+  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});await load(page,{enabled:true},createWorld(205,8));await page.locator('#bandlive-nav').click();assert(await page.locator('#bl-start').isDisabled());assert.equal(await page.locator('[data-bl-member]').count(),0);await page.locator('#bandlive-view [data-open-groups]').click();assert(await page.locator('#groups-view').isVisible());await page.close();
+  const legacy=JSON.parse(await readFile('tests/bandlive-v1.json','utf8'));page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});await load(page,{enabled:true,game:legacy});await page.locator('#bandlive-nav').click();assert.equal(await page.locator('[data-bl-actor]').count(),8);assert.deepEqual(await data(page),legacy);await page.locator('#bl-end').click();assert.equal((await data(page)).turn,2);await page.close();
   assert.deepEqual(errors,[]);console.log('BandLive navigateur : groupes et compositions réels, six musiciens maximum, public de 3 à 12, sauvegarde et replay du public, retour au quartier après victoire et dernier tour, reprise de la simulation, anciens shows, public seul défilant, musiciens et cartes fixes, conservation des deux scrolls, dernières rangées en drag/drop souris et tactile, petits et grands écrans, infobulles et désactivation vérifiés.');
 }finally{await page?.close().catch(()=>{});await browser.close();await new Promise(resolve=>server.close(resolve));}

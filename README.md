@@ -1,6 +1,6 @@
 [▶ Jouer à Garage vivant](https://jutrasimon.github.io/garage-vivant/)
 
-# Garage vivant · v0.7.18
+# Garage vivant · v0.7.19
 
 Une simulation autonome de musiciens dans une banlieue. Les personnages sont des cubes avec personnalité, émotions, compétences et relations. Ils composent, montent des bands et tentent leur chance devant un public physique. Le joueur peut observer, régler leurs sacs ou intervenir.
 
@@ -117,4 +117,4 @@ Les pratiques collectives apparaissent sur la carte. Le sac affiche les invitati
 
 Une nouvelle chanson reçoit 3, 4 ou 5 tours à sa composition. Une meilleure qualité augmente la probabilité de cinq tours; la pratique n’ajoute ni niveau de morceau ni progression au groupe. La fiche d’une chanson propose **Recomposer** : un projet distinct, sur plusieurs séances, remplace la qualité et la durée seulement à son achèvement. La progression du groupe vient des shows.
 
-Dans BandLive, musiciens et foule sont compacts; la main commune indique le propriétaire de chaque carte. Le survol pendant un drag, ou la sélection puis le focus d’une cible, affiche les dégâts et la résistance restante. Pioche et défausse sont consultables sans révéler l’ordre du prochain tirage. Explosion, transe et émotion restent purement visuelles.
+Dans BandLive, la scène Minuit présente une foule organique et les cartes réelles en éventail devant chaque musicien. Le mode Disposition déplace musiciens et mains séparément ; chaque spectateur reste dans sa place logique pour conserver les rangées et voisins. Les mains ne poussent rien. Le survol pendant un drag, ou la sélection puis le focus d’une cible, affiche les dégâts et la résistance restante. Pioche et défausse sont consultables sans révéler l’ordre du prochain tirage. Explosion, transe et émotion restent purement visuelles.

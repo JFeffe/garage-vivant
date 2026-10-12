@@ -32,11 +32,11 @@ async function idle(page){await page.waitForFunction(()=>!document.querySelector
 let page;
 try{
   const source=preparedConcert().world,rehearsal=createBandLive({people:source.people.slice(0,3),songs:[{id:'demo',title:'Répétition conservée',style:'Punk'}],seed:32});
-  page=await browser.newPage({viewport:{width:1440,height:1000}});await load(page,source,{rehearsal});await start(page);
+  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});await load(page,source,{rehearsal});await start(page);
   assert(await page.locator('#bandlive-view').isVisible());assert.equal(await page.locator('[data-bl-fan]').count(),8);assert.deepEqual(await rehearsalData(page),rehearsal);
   assert.equal(await page.locator('#bl-setup').count(),0,'An active booking cannot change formation');assert.equal(await page.locator('#bl-replay').count(),0);
   const before=await liveData(page),note=before.hand.find(id=>before.cards.find(c=>c.id===id).kind==='note');assert(note);
-  await page.locator(`[data-bl-card="${note}"]`).dragTo(page.locator('[data-bl-fan="f0"]'),{sourcePosition:{x:8,y:42}});await idle(page);const played=await liveData(page);assert.equal(played.played,1);assert(played.fans[0].hp<before.fans[0].hp);assert.equal((await worldData(page)).showHistory.length,0);
+  await page.locator(`[data-bl-card="${note}"]`).dragTo(page.locator('[data-bl-fan="f0"]'),{sourcePosition:{x:30,y:45}});await idle(page);const played=await liveData(page);assert.equal(played.played,1);assert(played.fans[0].hp<before.fans[0].hp);assert.equal((await worldData(page)).showHistory.length,0);
   await page.locator('[data-bl-fan="f0"]').hover();assert((await page.locator('#bandlive-tooltip').textContent()).includes('Conquête'));await page.locator('[data-bl-fan="f0"]').click();assert.equal(await page.locator('#dialog').evaluate(el=>el.open),false);
   const clock=await page.locator('#clock').textContent();await page.waitForTimeout(1000);assert.equal(await page.locator('#clock').textContent(),clock);
   await page.reload();assert(await page.locator('#bandlive-view').isVisible());assert.deepEqual(await liveData(page),played);assert.deepEqual(await rehearsalData(page),rehearsal);
@@ -47,14 +47,14 @@ try{
   await page.locator('#speed').fill('0');await page.locator('[data-view="groups"]').click();const record=(await worldData(page)).showHistory[0];await page.locator(`#group-list [data-group-select="${record.groupId}"]`).click();await page.locator(`details[data-key="shows-${record.groupId}"] > summary`).click();await page.locator(`details[data-key="history-${record.id}"] > summary`).click();
   const beforeReplay=await worldData(page);await page.locator(`[data-history-replay="${record.id}"]`).click();assert(await page.locator('#bandlive-view').isVisible());assert((await page.locator('.bl-hud .eyebrow').textContent()).includes('REPLAY'));assert.equal((await rehearsalData(page)).phase,'choose');await page.locator('[data-bl-song]').first().click();await page.locator('#bl-end').click();assert.deepEqual(await worldData(page),beforeReplay,'A historical replay gives no second result or consequences');await page.close();
 
-  page=await browser.newPage({viewport:{width:1440,height:1000}});await load(page,preparedConcert().world);await start(page);await page.locator('#bl-end').click();const mid=await liveData(page);
+  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});await load(page,preparedConcert().world);await start(page);await page.locator('#bl-end').click();const mid=await liveData(page);
   await page.locator('[data-view="settings"]').click();await page.locator('#bandlive-enabled').uncheck();assert(await page.locator('#bandlive-nav').isVisible());await page.locator('#bandlive-nav').click();assert.deepEqual(await liveData(page),mid);await page.reload();assert(await page.locator('#bandlive-view').isVisible());assert.deepEqual(await liveData(page),mid);
   await finish(page);await page.locator('#bl-return').click();assert(await page.locator('#map-view').isVisible());assert(await page.locator('#bandlive-nav').isHidden());assert.equal((await worldData(page)).showHistory.length,1);await page.close();
 
-  page=await browser.newPage({viewport:{width:1440,height:1000}});await load(page,preparedConcert({following:true}).world);await start(page);await finish(page);assert((await page.locator('#bl-return').textContent()).includes('soirée'));await page.locator('#bl-return').click();assert(await page.locator('#shows-view').isVisible());const next=await worldData(page);assert.equal(next.performance.fans.length,12);assert(!next.performance.bandLive);assert.equal(next.showHistory.length,1);await page.locator('#skip-show').click();await page.locator('#next-slot').click();assert(await page.locator('#map-view').isVisible());assert.equal((await worldData(page)).showHistory.length,2);await page.close();
+  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});await load(page,preparedConcert({following:true}).world);await start(page);await finish(page);assert((await page.locator('#bl-return').textContent()).includes('soirée'));await page.locator('#bl-return').click();assert(await page.locator('#shows-view').isVisible());const next=await worldData(page);assert.equal(next.performance.fans.length,12);assert(!next.performance.bandLive);assert.equal(next.showHistory.length,1);await page.locator('#skip-show').click();await page.locator('#next-slot').click();assert(await page.locator('#map-view').isVisible());assert.equal((await worldData(page)).showHistory.length,2);await page.close();
 
   for(const exit of ['#next-slot','[data-return-preparation]']){
-    page=await browser.newPage({viewport:{width:1440,height:1000}});
+    page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});
     await load(page,preparedConcert({following:true}).world);await start(page);await finish(page);await page.reload();
     const completed=await worldData(page),previous=completed.performance,live=previous.bandLive;
     assert.equal(previous.fans.length,8);assert.equal(live.originalFans.length,12);
@@ -77,9 +77,9 @@ try{
     await page.locator('#next-slot').click();assert(await page.locator('#map-view').isVisible());await page.close();
   }
 
-  page=await browser.newPage({viewport:{width:1440,height:1000}});await load(page,preparedConcert({following:true}).world);await start(page);
+  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});await load(page,preparedConcert({following:true}).world);await start(page);
   const interruptedGame=await liveData(page),interruptionNote=interruptedGame.hand.find(id=>interruptedGame.cards.find(c=>c.id===id).kind==='note');
-  await page.locator(`[data-bl-card="${interruptionNote}"]`).click();await page.locator('[data-bl-fan="f0"]').click();await idle(page);
+  await page.locator(`[data-bl-card="${interruptionNote}"]`).click({position:{x:30,y:45}});await page.locator('[data-bl-fan="f0"]').click();await idle(page);
   const interrupted=await worldData(page),interruptedId=interrupted.performance.bandLive.bookingId,damagedFan=interrupted.performance.bandLive.game.fans[0];
   assert(damagedFan.hp<damagedFan.max);await page.locator('#bl-cancel').click();
   const continued=await worldData(page);assert(await page.locator('#shows-view').isVisible());
@@ -89,7 +89,7 @@ try{
 
   for(const exit of ['#bl-return','#next-slot','[data-return-preparation]']){
     const touch=exit==='[data-return-preparation]';
-    page=await browser.newPage({viewport:touch?{width:390,height:844}:{width:1440,height:1000},isMobile:touch,hasTouch:touch});
+    page=await browser.newPage({reducedMotion:'reduce',viewport:touch?{width:390,height:844}:{width:1440,height:1000},isMobile:touch,hasTouch:touch});
     await load(page,preparedConcert({following:true,followingComposed:true}).world);await start(page);
     assert((await page.locator('.bl-hud .eyebrow').textContent()).includes('Première partie'));
     assert((await page.locator('#bandlive-view .bl-evening').textContent()).includes('Les Voisins'));
@@ -108,18 +108,18 @@ try{
     await page.locator('#bl-return').click();assert(await page.locator('#map-view').isVisible());await page.close();
   }
 
-  page=await browser.newPage({viewport:{width:1440,height:1000}});await load(page,preparedConcert({following:true,followingComposed:true}).world);await start(page);
+  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});await load(page,preparedConcert({following:true,followingComposed:true}).world);await start(page);
   await page.locator('[data-view="settings"]').click();await page.locator('#bandlive-enabled').uncheck();await page.locator('#bandlive-nav').click();await finish(page);await page.locator('#bl-return').click();
   assert(await page.locator('#shows-view').isVisible());assert(!(await worldData(page)).performance.bandLive);await page.close();
 
   const wonSource=preparedConcert({intention:'wild'}).world,{game}=beginBandLiveConcert(wonSource);chooseSong(game,'song-1');for(const fan of game.fans)fan.hp=1;const sax=game.cards.find(c=>c.instrument==='sax'&&c.kind==='special');for(const pile of ['hand','deck','discard'])game[pile]=game[pile].filter(id=>id!==sax.id);while(game.hand.length>=5)game.deck.push(game.hand.pop());game.hand.push(sax.id);game.tempo=4;restore(wonSource);
-  page=await browser.newPage({viewport:{width:430,height:932},isMobile:true,hasTouch:true});await load(page,wonSource);await page.locator(`[data-bl-card="${sax.id}"]`).tap();await page.locator('.bl-audience').tap({position:{x:10,y:10}});await idle(page);assert.equal((await liveData(page)).phase,'won');assert.equal((await worldData(page)).showHistory[0].score,100);assert(await page.locator('.bl-concert-result').isVisible());assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await page.screenshot({path:'test-results/bandlive-calendar-touch-result.png'});await page.locator('#bl-return').click();assert(await page.locator('#map-view').isVisible());await page.close();
+  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:430,height:932},isMobile:true,hasTouch:true});await load(page,wonSource);await page.locator(`[data-bl-card="${sax.id}"]`).tap({position:{x:30,y:45}});await page.locator('.bl-audience').tap({position:{x:10,y:10}});await idle(page);assert.equal((await liveData(page)).phase,'won');assert.equal((await worldData(page)).showHistory[0].score,100);assert(await page.locator('.bl-concert-result').isVisible());assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await page.screenshot({path:'test-results/bandlive-calendar-touch-result.png'});await page.locator('#bl-return').click();assert(await page.locator('#map-view').isVisible());await page.close();
 
-  page=await browser.newPage({viewport:{width:1440,height:1000}});await load(page,preparedConcert().world);await start(page);await page.locator('#bl-cancel').click();assert(await page.locator('#map-view').isVisible());assert.equal((await worldData(page)).showHistory.length,0);assert.equal((await worldData(page)).performance,null);await page.close();
+  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});await load(page,preparedConcert().world);await start(page);await page.locator('#bl-cancel').click();assert(await page.locator('#map-view').isVisible());assert.equal((await worldData(page)).showHistory.length,0);assert.equal((await worldData(page)).performance,null);await page.close();
 
   const imported=preparedConcert().world;const importedGame=beginBandLiveConcert(imported).game;chooseSong(importedGame,'song-1');endTurn(importedGame);
-  page=await browser.newPage({viewport:{width:1440,height:1000}});await load(page,createWorld(12,8),{enabled:false,rehearsal});await page.locator('[data-view="settings"]').click();await page.locator('#import-file').setInputFiles({name:'concert-en-cours.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(imported))});await page.waitForFunction(()=>document.querySelector('#toast').textContent.includes('Monde importé'));await page.locator('#bandlive-nav').click();assert.deepEqual(await liveData(page),importedGame);assert.deepEqual(await rehearsalData(page),rehearsal);await finish(page);await page.locator('#bl-return').click();assert(await page.locator('#bandlive-nav').isHidden());assert.equal((await worldData(page)).showHistory.length,1);await page.close();
+  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});await load(page,createWorld(12,8),{enabled:false,rehearsal});await page.locator('[data-view="settings"]').click();await page.locator('#import-file').setInputFiles({name:'concert-en-cours.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(imported))});await page.waitForFunction(()=>document.querySelector('#toast').textContent.includes('Monde importé'));await page.locator('#bandlive-nav').click();assert.deepEqual(await liveData(page),importedGame);assert.deepEqual(await rehearsalData(page),rehearsal);await finish(page);await page.locator('#bl-return').click();assert(await page.locator('#bandlive-nav').isHidden());assert.equal((await worldData(page)).showHistory.length,1);await page.close();
 
-  page=await browser.newPage({viewport:{width:1440,height:1000}});await load(page,preparedConcert().world,{enabled:false});await page.locator('[data-view="shows"]').click();assert.equal(await page.locator('[data-bandlive-concert]').count(),0);await page.locator('#skip-show').click();assert.equal((await worldData(page)).showHistory.length,1);assert(!(await worldData(page)).showHistory[0].mode);await page.close();
+  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});await load(page,preparedConcert().world,{enabled:false});await page.locator('[data-view="shows"]').click();assert.equal(await page.locator('[data-bandlive-concert]').count(),0);await page.locator('#skip-show').click();assert.equal((await worldData(page)).showHistory.length,1);assert(!(await worldData(page)).showHistory[0].mode);await page.close();
   assert.deepEqual(errors,[]);console.log('Calendar BandLive browser passed: booked band and setlist, drag/drop, hover, exact reload, separate rehearsal, real result once, return and clock, history replay, disable while playing, following classic band through all result exits, interrupted audience welcome, touch victory and result layout, interruption and default-off classic show.');
 }finally{await browser.close();server.close();}
