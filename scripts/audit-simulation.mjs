@@ -2,11 +2,12 @@ import assert from 'node:assert/strict';
 import {writeFileSync} from 'node:fs';
 import {createWorld,step,restore,VERSION} from '../dist/engine.mjs';
 import {skipShow,nextSlot} from '../dist/life.mjs';
+import {RELEASE_VERSION} from '../dist/release.mjs';
 import {attachment,activeGroups} from '../dist/groups.mjs';
 
 // Observation only: do not prepare relationships, force actions or create bands.
 const configs=[...Array.from({length:12},(_,i)=>({seed:i===0?2040:i,count:8})),{seed:713,count:4},{seed:714,count:4},{seed:713,count:12},{seed:714,count:12}];
-const output=process.argv[2]||'docs/AUDIT_V7_3.json';
+const output=process.argv[2]||'docs/AUDIT_V7_5.json';
 const mean=xs=>xs.reduce((n,x)=>n+x,0)/(xs.length||1),round=x=>Math.round(x*100)/100;
 function resolveShows(s){
  let safety=0;
@@ -58,7 +59,7 @@ for(const {seed,count} of configs){
  console.log(JSON.stringify({seed,count,days:daily.length,groups:run.groupSizes,songs:run.songs,shows:run.shows,anomalies,validationError,continuation,needs:run.observed.averageNeeds,critical:run.observed.criticalPercent}));
  if(validationError){writeFileSync('/tmp/v73-anomaly-'+seed+'-'+count+'.json',JSON.stringify(final));}
 }
-const result={version:VERSION,days:15,protocol:'12 graines à 8 personnages + 4 parties à 4/12 personnages, paramètres par défaut, 15 jours écoulés. Résolution des spectacles avec skipShow/nextSlot, sans préparer les relations ni imposer les actions. Validation quotidienne exacte et continuation rechargée de 240 minutes. Compteurs de temps en minutes-personnes.',configs,runs};
+const result={version:VERSION,release:RELEASE_VERSION,days:15,protocol:'12 graines à 8 personnages + 4 parties à 4/12 personnages, paramètres par défaut, 15 jours écoulés. Résolution des spectacles avec skipShow/nextSlot, sans préparer les relations ni imposer les actions. Validation quotidienne exacte et continuation rechargée de 240 minutes. Compteurs de temps en minutes-personnes.',configs,runs};
 writeFileSync(output,JSON.stringify(result,null,2)+'\n');
 console.log('REPORT '+output);
 if(runs.some(r=>r.validationError||!r.continuation||Object.values(r.anomalies).some(n=>n>0)))process.exitCode=1;

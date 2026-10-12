@@ -1,4 +1,4 @@
-import {GROUP_RULES as R} from './group-rules.mjs?v=0.7.4';
+import {GROUP_RULES as R} from './group-rules.mjs?v=0.7.5';
 const clamp=(v,a=0,b=100)=>Math.max(a,Math.min(b,v));
 const mean=xs=>xs.length?xs.reduce((n,x)=>n+x,0)/xs.length:0;
 const person=(s,id)=>s.people.find(p=>p.id===id);
@@ -40,7 +40,8 @@ export function pairEligible(s,a,b){
 export function membershipReason(s,host,target,g=null){
  if(!host||!target||host===target)return 'Partenaires invalides.';
  if(host.engagement||target.engagement||[host,target].some(p=>p.action?.key==='sleep'))return 'Partenaire indisponible.';
- if(s.time-Math.max(host.lastFormation,target.lastFormation)<R.membershipDelay)return '48 h doivent s’écouler depuis la dernière formation ou adhésion.';
+ const elapsed=s.time-(g?target.lastFormation:Math.max(host.lastFormation,target.lastFormation));
+ if(elapsed<(g?R.recruitmentDelay:R.membershipDelay))return g?'24 h doivent s’écouler depuis la dernière formation ou adhésion du candidat.':'48 h doivent s’écouler depuis la dernière formation ou adhésion.';
  if(!pairEligible(s,host,target))return 'Affinité ou amour réciproque insuffisant, ou tension excessive.';
  if(g){if(!activeGroup(g)||!g.members.includes(host.id))return 'Groupe indisponible.';if(g.members.includes(target.id))return 'Déjà membre.';if(g.members.filter(id=>pairEligible(s,target,person(s,id))).length<Math.ceil(g.members.length/2))return 'Liens insuffisants avec la moitié des membres.';}
  else if(s.groups.some(x=>activeGroup(x)&&x.members.includes(host.id)&&x.members.includes(target.id)))return 'Ces musiciens partagent déjà un groupe.';
@@ -57,19 +58,23 @@ export function proposeMembership(s,host,target,g,ctx,{manual=false,name=null}={
  if(!g&&ctx.canCreate&&!ctx.canCreate(name))return {ok:false,message:'Création refusée : nom indisponible ou banque épuisée.'};
  const key=[host.id,target.id].sort().join(':'),last=s.groupState.proposals[key]??-1e9;
  if(s.time-last<R.pairDelay)return {ok:false,message:'Cette paire a déjà reçu une proposition dans les dernières 24 h.'};
- if(!manual){const current=activeGroups(s,host.id),max=Math.max(0,...current.map(x=>attachment(s,host,x).value)),chance=R.proposal/(1+current.length**2)*Math.max(.05,1-max/100);s.groupState.metrics.eligible++;if(ctx.random()>=chance)return {ok:false,message:'Aucune proposition.'};}
+ if(!manual){
+  const current=activeGroups(s,host.id).filter(x=>x!==g),max=Math.max(0,...current.map(x=>attachment(s,host,x).value));
+  const chance=(g?R.recruitmentProposal:R.proposal)/(1+current.length**2)*Math.max(.05,1-max/100);
+  s.groupState.metrics.eligible++;if(ctx.random()>=chance)return {ok:false,message:'Aucune proposition.'};
+ }
  s.groupState.proposals[key]=s.time;s.groupState.metrics.proposed++;
  const chance=membershipChance(s,host,target,g),roll=ctx.random(),accepted=roll<chance;
  ctx.emit('group',`${host.name} propose ${g?'de rejoindre « '+g.name+' »':'de former un groupe'} à ${target.name} : ${accepted?'accepté':'refusé'}.`,[host.id,target.id],{membership:true,groupId:g?.id||null,chance,roll,accepted});
  if(!accepted){ctx.refused?.(host);return {ok:false,message:'Proposition déclinée.',chance};}
- if(g){g.members.push(target.id);g.memberships[target.id]={joined:s.time,nextCheck:s.time+R.departureGrace};host.lastFormation=target.lastFormation=s.time;ctx.joined?.(target);}
+ if(g){g.members.push(target.id);g.memberships[target.id]={joined:s.time,nextCheck:s.time+R.departureGrace};target.lastFormation=s.time;ctx.joined?.(target);}
  else {g=ctx.create([host.id,target.id],{manual:true,name,origin:manual?'player':'autonome'});if(!g)return {ok:false,message:'Création refusée : nom indisponible.'};}
  s.groupState.metrics.accepted++;return {ok:true,message:`${target.name} rejoint « ${g.name} ».`,groupId:g.id,chance};
 }
 export function considerMembership(s,a,b,ctx){
  if(!pairEligible(s,a,b))return;
  const options=[{host:a,target:b,g:null},...activeGroups(s,a.id).filter(g=>!membershipReason(s,a,b,g)).map(g=>({host:a,target:b,g})),...activeGroups(s,b.id).filter(g=>!membershipReason(s,b,a,g)).map(g=>({host:b,target:a,g}))].filter(o=>!membershipReason(s,o.host,o.target,o.g));
- if(!options.length)return;const weights=options.map(o=>1+(o.g?attachment(s,o.target,o.g).value:18)/25),total=weights.reduce((a,b)=>a+b,0);let roll=ctx.random()*total,index=0;while(index<weights.length-1&&(roll-=weights[index])>=0)index++;const o=options[index];return proposeMembership(s,o.host,o.target,o.g,ctx);
+ if(!options.length)return;const weights=options.map(o=>(o.g?R.recruitmentWeight:1)*(1+(o.g?attachment(s,o.target,o.g).value:18)/25)),total=weights.reduce((a,b)=>a+b,0);let roll=ctx.random()*total,index=0;while(index<weights.length-1&&(roll-=weights[index])>=0)index++;const o=options[index];return proposeMembership(s,o.host,o.target,o.g,ctx);
 }
 export function initializeGroupState(s){s.groupState={nextRequestId:1,requests:[],proposals:{},metrics:{eligible:0,proposed:0,accepted:0,adoptions:0,practiceRequests:0,practices:0,departures:0,dissolutions:0,relations:{attempts:0,admitted:0,favorable:0,neutral:0,unfavorable:0,gained:0,lost:0,erosion:0}}};}
 export function initializeGroupData(s,g,random){

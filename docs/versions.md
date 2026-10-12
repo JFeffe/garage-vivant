@@ -1,5 +1,17 @@
 # Notes de version
 
+## V0.7.5 — Des bands plus faciles à former et compléter {#v075}
+
+11 octobre 2026. Ajustement des règles existantes après comparaison sur les mêmes graines. [Mesures et limites](./BALANCE_V7_5.md).
+
+- Proposition de nouvelle formation : base 28 % au lieu de 22 %, freins au multigroupe conservés.
+- Recrutement : le band à compléter ne pénalise plus son propre recruteur ; base 12 %, choix d’un groupe existant légèrement favorisé.
+- Seul le candidat attend 24 h ; une adhésion ne relance plus 48 h d’attente chez le recruteur. Nouvelle formation : délai de 48 h conservé.
+- Affinités/amour réciproques, liens avec la moitié du groupe, tension, refus et temporisation de paire inchangés. Aucun recrutement forcé ni plafond d’effectif ajouté.
+- Tests ciblés, vingt graines à 30 jours dont trois à 90, seize parties complètes à 15 jours, DDD et plan actualisés.
+
+Version 0.7.5, format du monde toujours 0.7.3 ; aucune migration ni mécanique supplémentaire.
+
 ## V0.7.4 — Archives des groupes accessibles {#v074}
 
 11 octobre 2026. Correctif d’interface : les groupes dissous étaient conservés dans la sauvegarde, mais cachés par défaut derrière un filtre peu visible.
