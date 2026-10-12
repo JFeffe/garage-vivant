@@ -1,6 +1,6 @@
 # DDD — Groupes autonomes, attachement et adoption
 
-Version 0.7.9. Le groupe est une entité persistante. Il prend des initiatives virtuelles ; ses membres réalisent les pratiques et spectacles avec leurs besoins et positions. Aucune personnalité, action de sac ou ressource fictive de groupe.
+Version 0.7.10. Le groupe est une entité persistante. Il prend des initiatives virtuelles ; ses membres réalisent les pratiques et spectacles avec leurs besoins et positions. Aucune personnalité, action de sac ou ressource fictive de groupe.
 
 ## Identité et données
 
@@ -110,7 +110,7 @@ Les coefficients sont réunis dans `group-rules.mjs`, les politiques et transiti
 
 L’admissibilité de l’appel est partagée entre admission, travail et entretien des demandes. À son échéance, aucune minute supplémentaire de maîtrise collective n’est attribuée ; les participants terminent cette action, sans remboursement de jeton. Une ancienne action V7.2 qui a changé de morceau reprend la cible de sa demande avant le prochain travail ; les gains historiques ne sont pas réécrits. Le [bilan des simulations V7.3](../AUDIT_V7_3.md) couvre seize parties de quinze jours et le contrôle de stabilité sur vingt graines.
 
-## Configuration initiale et persistance · V7.9
+## Configuration initiale et persistance · V7.10
 
 Une nouvelle partie dans l’interface choisit **Variable** par défaut : de 1 à `min(4, floor(population/2))` groupes, chaque taille entre 2 et 6 selon les voisins encore disponibles. Options explicites : **un grand groupe** (jusqu’à 6 membres), **deux moyens** (jusqu’à 4 chacun), **deux petits** (2 chacun), **aucun**. Une population trop petite réduit le nombre/taille; aucun personnage n’appartient à deux groupes initiaux. La graine détermine répartition, noms, coordination 35–50 et affinités dirigées 35–55 entre membres; tension plafonnée à 10 entre ces membres seulement. Les autres relations restent celles du générateur. Ces liens représentent un passé commun initial, sans fausses chansons, répétitions ou spectacles. Les groupes utilisent ensuite toutes les règles normales et peuvent se dissoudre. Une ancienne partie n’est pas modifiée à l’import.
 

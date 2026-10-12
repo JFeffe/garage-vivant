@@ -1,4 +1,4 @@
-import {GROUP_RULES as R} from './group-rules.mjs?v=0.7.9';
+import {GROUP_RULES as R} from './group-rules.mjs?v=0.7.10';
 const clamp=(v,a=0,b=100)=>Math.max(a,Math.min(b,v));
 const mean=xs=>xs.length?xs.reduce((n,x)=>n+x,0)/xs.length:0;
 const person=(s,id)=>s.people.find(p=>p.id===id);

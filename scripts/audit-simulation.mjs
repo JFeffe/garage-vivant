@@ -7,7 +7,7 @@ import {attachment,activeGroups} from '../dist/groups.mjs';
 
 // Observe either the empty laboratory setup or the explicit real starting configuration.
 const configs=[...Array.from({length:12},(_,i)=>({seed:i===0?2040:i,count:8})),{seed:713,count:4},{seed:714,count:4},{seed:713,count:12},{seed:714,count:12}];
-const output=process.argv[2]||'docs/AUDIT_V7_9.json';
+const output=process.argv[2]||'docs/AUDIT_V7_10.json';
 const mean=xs=>xs.reduce((n,x)=>n+x,0)/(xs.length||1),round=x=>Math.round(x*100)/100;
 function resolveShows(s){
  let safety=0;

@@ -4,7 +4,7 @@ import {skipShow,nextSlot} from '../dist/life.mjs';
 import {activeGroups,attachment} from '../dist/groups.mjs';
 import {GROUP_RULES} from '../dist/group-rules.mjs';
 import {RELEASE_VERSION} from '../dist/release.mjs';
-const output=process.argv[2]||'docs/BALANCE_V7_9.json';
+const output=process.argv[2]||'docs/BALANCE_V7_10.json';
 const seeds=[2040,...Array.from({length:18},(_,i)=>i+1),713],mean=xs=>xs.reduce((a,b)=>a+b,0)/(xs.length||1),runs=[],extended=[];
 for(const seed of seeds){
  const s=createWorld(seed,8),start=s.time;let first=null,firstTrio=null,maxGroupSize=0,checkpoints=[];

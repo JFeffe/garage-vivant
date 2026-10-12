@@ -1,16 +1,20 @@
 {
   "name": "garage-vivant",
   "private": true,
-  "version": "0.7.9",
+  "version": "0.7.10",
   "type": "module",
   "scripts": {
-    "test": "node --test tests/engine.test.mjs tests/systems.test.mjs tests/v4.test.mjs tests/v5.test.mjs tests/runtime.test.mjs tests/interface.test.mjs tests/v6.test.mjs tests/show.test.mjs tests/v7.test.mjs tests/v71.test.mjs tests/docs.test.mjs tests/v72.test.mjs tests/v73.test.mjs tests/v75.test.mjs tests/bandlive.test.mjs tests/bandlive-concert.test.mjs tests/assets.test.mjs tests/v79.test.mjs",
-    "test:browser": "node tests/v79-browser.test.mjs && node tests/browser.test.mjs && node tests/show-layout.test.mjs && node tests/bandlive-browser.test.mjs && node tests/bandlive-concert-browser.test.mjs && node tests/cache-upgrade-browser.test.mjs",
+    "test": "node --test tests/engine.test.mjs tests/systems.test.mjs tests/v4.test.mjs tests/v5.test.mjs tests/runtime.test.mjs tests/interface.test.mjs tests/v6.test.mjs tests/show.test.mjs tests/v7.test.mjs tests/v71.test.mjs tests/docs.test.mjs tests/v72.test.mjs tests/v73.test.mjs tests/v75.test.mjs tests/bandlive.test.mjs tests/bandlive-concert.test.mjs tests/assets.test.mjs tests/release-tool.test.mjs tests/v710.test.mjs",
+    "test:browser": "node tests/v710-browser.test.mjs && node tests/browser.test.mjs && node tests/show-layout.test.mjs && node tests/bandlive-browser.test.mjs && node tests/bandlive-concert-browser.test.mjs && node tests/cache-upgrade-browser.test.mjs",
     "docs:build": "node scripts/build-docs.mjs",
     "audit:groups": "node scripts/audit-groups.mjs",
     "audit:simulation": "node scripts/audit-simulation.mjs",
     "audit:bandlive": "node scripts/audit-bandlive.mjs",
-    "bandlive:test-file": "node scripts/build-bandlive-test.mjs"
+    "bandlive:test-file": "node scripts/build-bandlive-test.mjs",
+    "release:prepare": "node scripts/release.mjs prepare",
+    "release:check": "node scripts/release.mjs check",
+    "test:quick": "node scripts/check-syntax.mjs && npm run release:check && npm test",
+    "test:smoke": "node tests/smoke-browser.test.mjs && node tests/cache-upgrade-browser.test.mjs"
   },
   "devDependencies": {
     "playwright": "1.56.1",

@@ -1,6 +1,6 @@
 # DDD — Personnages, besoins et émotions
 
-Version 0.7.9. Ces règles décrivent le moteur livré; les anciennes propositions se trouvent dans les plans historiques.
+Version 0.7.10. Ces règles décrivent le moteur livré; les anciennes propositions se trouvent dans les plans historiques.
 
 ## Identité et personnalité
 
@@ -59,7 +59,7 @@ Vue détaillée et Organiser conservent ordre, largeur, colonne et modules masqu
 
 Liens : [actions](./actions.md), [sommeil](./sommeil.md), [traits](./traits.md), [interactions](./interactions.md), [raccords](./raccords-v7.md).
 
-## Personnaliser et supprimer · V7.9
+## Personnaliser et supprimer · V7.10
 
 Le bouton **Nom et apparence** ouvre l’éditeur. Le nom reste l’identité principale; le surnom facultatif (24 caractères) apparaît entre guillemets sur la carte, la fiche et la liste. Les références et les auteurs utilisent toujours l’identifiant, pas le nom. Couleur, six accessoires existants, foulard et quatre allures sont éditables. `character-view.mjs` centralise le dessin du cube et des accessoires; les portraits de fiche, liste et liens sont générés à partir de cette même apparence. Les shows conservent un instantané de l’identité au début de la représentation. L’allure anime la carte; les portraits restent fixes.
 

@@ -21,13 +21,13 @@ try{
  await page.locator('[data-identity="nickname"]').fill('La Louve');await page.locator('[data-identity="nickname"]').press('Tab');
  await page.locator('[data-appearance="accessory"]').selectOption('glasses');await page.locator('[data-appearance="accent"]').selectOption('scarf');
  const a=page.locator('#profile .profile-head img'),b=page.locator('#people [data-person]').first().locator('img');assert.equal(await a.getAttribute('src'),await b.getAttribute('src'));assert.equal(await a.getAttribute('data-accessory'),'glasses');assert((await page.locator('#profile h2').textContent()).includes('La Louve'));
- await page.locator('#inspector').evaluate(el=>el.scrollTop=0);await page.screenshot({path:'test-results/v079-character.png'});
- await page.locator('[data-view="groups"]').click();const credit=page.locator('.repertoire-row .composition-credit').first();assert((await credit.textContent()).includes('Composition :'));assert((await credit.textContent()).includes('La Louve'));assert.equal(await credit.locator('[data-person]').count(),2);await credit.scrollIntoViewIfNeeded();await page.screenshot({path:'test-results/v079-composer.png'});
+ await page.locator('#inspector').evaluate(el=>el.scrollTop=0);await page.screenshot({path:'test-results/v0710-character.png'});
+ await page.locator('[data-view="groups"]').click();const credit=page.locator('.repertoire-row .composition-credit').first();assert((await credit.textContent()).includes('Composition :'));assert((await credit.textContent()).includes('La Louve'));assert.equal(await credit.locator('[data-person]').count(),2);await credit.scrollIntoViewIfNeeded();await page.screenshot({path:'test-results/v0710-composer.png'});
  await credit.locator('[data-person]').first().click();await page.locator('[data-view="map"]').click();
  await page.locator('.map-options summary').click();await page.locator('[data-map-option="actions"]').uncheck();assert.equal(await page.locator('[data-map-option="collective"]').isChecked(),true);assert.equal(await page.locator('#activity-labels').isVisible(),false);
  await page.reload();await page.locator('#profile .profile-head').waitFor({state:'attached'});assert.equal(await page.locator('[data-map-option="actions"]').isChecked(),false);assert.equal(await page.locator('#people img').first().getAttribute('data-accessory'),'glasses');
  await page.locator('#people [data-person]').first().click();await page.locator('[data-delete-character]').click();assert.equal(await page.locator('#population').textContent(),'8');await page.locator('#confirm-remove').click();assert.equal(await page.locator('#population').textContent(),'7');
  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('garage-vivant-v1')));assert(!saved.people.some(p=>p.name==='Zoé'));assert.equal(saved.groups[0].state,'dissolved');assert.equal(saved.songs[0].authorNames[s.people[0].id],'Zoé');
- await page.setViewportSize({width:390,height:844});await page.screenshot({path:'test-results/v079-mobile.png'});
- assert.deepEqual(errors,[]);console.log('V7.9 browser: shared portraits, nickname, persistence, removal, options and Shows navigation passed.');
+ await page.setViewportSize({width:390,height:844});await page.screenshot({path:'test-results/v0710-mobile.png'});
+ assert.deepEqual(errors,[]);console.log('V7.10 browser: shared portraits, nickname, persistence, removal, options and Shows navigation passed.');
 }finally{await browser.close();server.close();}

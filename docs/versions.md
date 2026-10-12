@@ -1,8 +1,8 @@
 # Notes de version
 
-## V0.7.9 — Personnages personnalisés et groupes présents dès le départ {#v079}
+## V0.7.10 — Personnages personnalisés et groupes présents dès le départ {#v0710}
 
-12 octobre 2026. [Design, validation et limites](./BILAN_V7_9.md).
+12 octobre 2026. [Design, validation et limites](./BILAN_V7_10.md).
 
 - Nom, surnom et apparence accessibles depuis la fiche; portraits partagés avec les accessoires de la carte et des shows.
 - Crédit « Composition : » explicite et cliquable, coauteurs visibles, propriétaire séparé.
@@ -15,6 +15,18 @@
 - Albums non implémentés; les raccords laissés débranchés restent identifiés.
 
 
+
+
+## V0.7.9 — Publication plus rapide et versions cohérentes {#v079}
+
+11 octobre 2026.
+
+- Publication accélérée : contrôles du moteur, des sauvegardes, du démarrage et du cache avant chaque mise en ligne.
+- Les simulations longues et vérifications visuelles complètes passent dans un audit nocturne ou manuel, indépendant de la publication.
+- Le site publie exactement les fichiers testés ; une vérification confirme ensuite la version et le commit servis.
+- Une commande prépare les versions et les notes de façon cohérente. Les contributions continuent par de petites PR vers main.
+
+BandLive reste accessible dans **Réglages → Activer BandLive**. Aucun changement de gameplay ni de format de sauvegarde.
 
 ## V0.7.8 — Vérification des notes de la version courante {#v078}
 

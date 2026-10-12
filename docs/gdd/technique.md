@@ -1,6 +1,6 @@
 # DDD — Architecture, sauvegardes et validation
 
-Version d’interface : 0.7.9. Format du monde : 0.7.3. L’application reste statique, sans dépendance de simulation à l’exécution ni compte serveur.
+Version d’interface : 0.7.10. Format du monde : 0.7.3. L’application reste statique, sans dépendance de simulation à l’exécution ni compte serveur.
 
 ## Modules et responsabilités
 
@@ -113,10 +113,10 @@ La version historique 0.7.5 ; le format du monde reste 0.7.3. Les délais et pro
 
 L’audit accepte un chemin de sortie, conserve une [référence V7.4](../BALANCE_V7_5_BASELINE.json) séparée et publie tailles, première arrivée à trois membres, stabilité et multigroupe dans le [bilan V7.5](../BALANCE_V7_5.md). La simulation complète de cette version historique produit `AUDIT_V7_5.json` ; les rapports V7.2/V7.3 ne sont plus écrasés par la CI courante. Les tests ciblés couvrent recrutement successif, candidat indisponible, liens réciproques, refus et temporisation, sélection d’un groupe existant et freins au multigroupe.
 
-## Modules d’affichage V7.9
+## Modules d’affichage V7.10
 
 `character-view.mjs` partage le dessin des accessoires entre carte, scène et portraits HTML générés sur canvas. Le cache de portraits est borné à 128 apparences; le nom est échappé dans les attributs HTML. `map-options.mjs` définit huit options booléennes et leurs valeurs par défaut. Préférences conservées dans `garage-vivant-map-options`, séparées du monde exporté; valeurs mal formées ignorées. Aucun tirage moteur ni effet sur les actions.
 
-L’interface est 0.7.9, format du monde 0.7.3 avec surnom facultatif. `createWorld(seed,count,{setup})` est explicite : l’API moteur garde `none` pour les tests et laboratoires; l’interface crée par défaut `varied`. `seedStartingGroups` utilise le RNG du monde et `createGroup`; jamais appliqué à l’import. Les identifiants, sauvegardes et archives existantes ne sont pas réécrits.
+L’interface est 0.7.10, format du monde 0.7.3 avec surnom facultatif. `createWorld(seed,count,{setup})` est explicite : l’API moteur garde `none` pour les tests et laboratoires; l’interface crée par défaut `varied`. `seedStartingGroups` utilise le RNG du monde et `createGroup`; jamais appliqué à l’import. Les identifiants, sauvegardes et archives existantes ne sont pas réécrits.
 
 Le journal copie désormais les identifiants des participants à la création d’un événement. Il ne conserve plus la référence mutable à la liste des membres d’un groupe; un recrutement ne modifie donc pas les anciens événements ni la continuité après rechargement.

@@ -1,6 +1,6 @@
 # DDD — Sommeil quotidien hors sac
 
-Version 0.7.9. Le sommeil est obligatoire selon l’horaire personnel. Il n’ajoute ni ne consomme de jeton.
+Version 0.7.10. Le sommeil est obligatoire selon l’horaire personnel. Il n’ajoute ni ne consomme de jeton.
 
 ## Horaire et besoin
 

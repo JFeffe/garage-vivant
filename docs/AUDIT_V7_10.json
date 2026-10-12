@@ -1,7 +1,7 @@
 {
   "setup": "varied",
   "version": "0.7.3",
-  "release": "0.7.9",
+  "release": "0.7.10",
   "days": 15,
   "protocol": "Configuration initiale varied. 12 graines à 8 personnages + 4 parties à 4/12 personnages, paramètres par défaut, 15 jours écoulés. Résolution des spectacles avec skipShow/nextSlot, sans préparer les relations ni imposer les actions. Validation quotidienne exacte et continuation rechargée de 240 minutes. Compteurs de temps en minutes-personnes.",
   "configs": [

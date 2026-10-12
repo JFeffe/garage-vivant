@@ -10,48 +10,53 @@ on:
 permissions:
   contents: read
 
+# Cancel obsolete PR validations, but never interrupt a live Pages deployment.
+concurrency:
+  group: publication-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   verify:
     name: Tests de non-régression
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Vérifier JavaScript et la simulation
-        run: |
-          for file in dist/*.mjs; do node --check "$file"; done
-          npm test
-      - name: Vérifier la formation et la stabilité sur vingt graines
-        run: npm run audit:groups
-      - name: Conserver les mesures des groupes
-        uses: actions/upload-artifact@v4
-        with:
-          name: equilibrage-v79
-          path: docs/BALANCE_V7_9.json
-      - name: Simuler seize parties de quinze jours
-        run: npm run audit:simulation
-      - name: Conserver les observations des parties
-        uses: actions/upload-artifact@v4
-        with:
-          name: simulations-v79
-          path: docs/AUDIT_V7_9.json
-      - name: Installer le navigateur de validation
-        run: |
-          npm ci --ignore-scripts
-          npx playwright install --with-deps chromium
-      - name: Construire la documentation
+          cache: npm
+      - name: Vérifier version et notes de la PR
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: node scripts/release.mjs check --base "$BASE_SHA"
+      - name: Vérifier la progression de main
+        if: github.event_name == 'push'
+        env:
+          BASE_SHA: ${{ github.event.before }}
+        run: node scripts/release.mjs check --base "$BASE_SHA"
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Vérifier syntaxe, sauvegardes et règles
+        run: npm run test:quick
+      - name: Installer Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Construire une seule fois les fichiers à publier
         run: npm run docs:build
-      - name: Vérifier les interactions ordinateur et tactile
-        run: npm run test:browser
-      - name: Conserver les captures de validation
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Vérifier le démarrage et la reprise des sauvegardes
+        run: npm run test:smoke
+      - uses: actions/upload-artifact@v4
+        if: failure()
         with:
-          name: interface-v7
+          name: smoke-failure
           path: test-results/
           retention-days: 7
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        with:
+          path: dist
 
   deploy:
     name: Publier GitHub Pages
@@ -68,17 +73,16 @@ jobs:
       group: pages
       cancel-in-progress: false
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
+      - name: Déployer les fichiers déjà testés
+        id: deployment
+        uses: actions/deploy-pages@v5
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: npm ci --ignore-scripts
-      - run: npm run docs:build
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-      - name: Déployer le jeu
-        id: deployment
-        uses: actions/deploy-pages@v5
+      - name: Confirmer la version réellement servie
+        env:
+          SITE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: node scripts/verify-published.mjs

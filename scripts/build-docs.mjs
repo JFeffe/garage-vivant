@@ -6,8 +6,11 @@ execFileSync(process.execPath,['node_modules/vitepress/bin/vitepress.js','build'
 await mkdir('dist/docs',{recursive:true});
 await cp('docs/.vitepress/dist','dist/docs',{recursive:true});
 // VitePress keeps this explicit download link; publish the report beside the page.
-for(const report of ['BALANCE_V7_2.json','BALANCE_V7_3.json','AUDIT_V7_3_BASELINE.json','AUDIT_V7_3.json','BALANCE_V7_5_BASELINE.json','BALANCE_V7_5.json','AUDIT_V7_5.json','AUDIT_V7_9.json','BALANCE_V7_9.json'])await cp('docs/'+report,'dist/docs/'+report);
+for(const report of ['BALANCE_V7_2.json','BALANCE_V7_3.json','AUDIT_V7_3_BASELINE.json','AUDIT_V7_3.json','BALANCE_V7_5_BASELINE.json','BALANCE_V7_5.json','AUDIT_V7_5.json','AUDIT_V7_10.json','BALANCE_V7_10.json'])await cp('docs/'+report,'dist/docs/'+report);
 const files=['docs/index.md',...(await readdir('docs/gdd')).filter(x=>x.endsWith('.md')).map(x=>'docs/gdd/'+x)];
 const entries=[];
 for(const file of files)entries.push(...indexDocument(file,await readFile(file,'utf8')));
 await writeFile('dist/doc-index.json',JSON.stringify({version:RELEASE_VERSION,entries}));
+// Identify the exact tested artifact; publishing does not rebuild it.
+const commit=process.env.GITHUB_SHA||execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+await writeFile('dist/build.json',JSON.stringify({version:RELEASE_VERSION,commit,builtAt:new Date().toISOString()})+'\n');

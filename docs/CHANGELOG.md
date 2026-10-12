@@ -1,11 +1,12 @@
+# V0.7.10 — 12 octobre 2026
+
+Personnages personnalisables, crédits de composition visibles, options de carte et groupes de départ. Intégration de BandLive et du circuit de publication rapide V0.7.9. Format des sauvegardes inchangé. [Notes complètes](./versions.md#v0710) et [bilan, validations et limites](./BILAN_V7_10.md). Aucun éditeur d’équilibrage ajouté.
+
+# V0.7.9 — 11 octobre 2026
+
+Publication plus rapide et versions cohérentes. [Notes complètes](./versions.md#v079).
+
 # V0.7.8 — 11 octobre 2026
-
-## 0.7.9 — Personnages et groupes de départ
-
-12 octobre 2026. PR #16, renommée après les publications 0.7.6–0.7.8 de BandLive.
-
-Nom/surnom et apparence partagée, suppression confirmée, compositeurs visibles, huit options de carte, consultation Shows sans pause, configurations de groupes initiaux et réglages de persistance. Journal protégé contre la mutation des anciens participants. BandLive et ses correctifs sont conservés; activer Réglages → Activer BandLive pour l’utiliser. Format des sauvegardes toujours 0.7.3. [Bilan et limites](./BILAN_V7_9.md). Aucun éditeur d’équilibrage ajouté dans cette PR.
-
 
 Le test de lecture des patch notes utilise la version courante plutôt que V0.7.5. [Notes](./versions.md#v078).
 
