@@ -1,3 +1,7 @@
+# V0.7.12 — 12 octobre 2026
+
+BandLive lisible et pratique des musiciens. [Notes complètes](./versions.md#v0712).
+
 # V0.7.11 — 12 octobre 2026
 
 Atelier d’équilibrage par partie. [Notes complètes](./versions.md#v0711).

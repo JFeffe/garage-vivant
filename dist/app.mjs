@@ -1,11 +1,12 @@
-import {mountDesignDashboard} from './design-dashboard.mjs?v=0.7.11';
-import {characterPortrait,characterName,drawCharacter,ACCESSORIES,MOVEMENTS} from './character-view.mjs?v=0.7.11';
-import {readMapOptions,saveMapOptions,mapOptionsHTML,MAP_DEFAULTS} from './map-options.mjs?v=0.7.11';
+import {groupLinkHTML} from './group-link.mjs?v=0.7.12';
+import {mountDesignDashboard} from './design-dashboard.mjs?v=0.7.12';
+import {characterPortrait,characterName,drawCharacter,ACCESSORIES,MOVEMENTS} from './character-view.mjs?v=0.7.12';
+import {readMapOptions,saveMapOptions,mapOptionsHTML,MAP_DEFAULTS} from './map-options.mjs?v=0.7.12';
 const mapOptions=readMapOptions(localStorage);
-import { placeActivityLabels } from './map-labels.mjs?v=0.7.11';
-import { createBandLiveModule } from './bandlive-view.mjs?v=0.7.11';
-import {beginBandLiveConcert,commitBandLiveConcert,followingConcertPerformance} from './bandlive-concert.mjs?v=0.7.11';
-import {compositionCreditHTML,DEFAULT_FILTERS,catalogueControls,catalogueHTML as musicCatalogueHTML,songDetailsHTML} from "./catalogue.mjs?v=0.7.11";
+import { placeActivityLabels } from './map-labels.mjs?v=0.7.12';
+import { createBandLiveModule } from './bandlive-view.mjs?v=0.7.12';
+import {beginBandLiveConcert,commitBandLiveConcert,followingConcertPerformance} from './bandlive-concert.mjs?v=0.7.12';
+import {compositionCreditHTML,DEFAULT_FILTERS,catalogueControls,catalogueHTML as musicCatalogueHTML,songDetailsHTML} from "./catalogue.mjs?v=0.7.12";
 let catalogueFilters={...DEFAULT_FILTERS};
 import {
   thresholdsHTML,
@@ -14,13 +15,13 @@ import {
   exchangeTrace,
   sessionHTML,
   rapinHTML,
-} from "./v7-view.mjs?v=0.7.11";
+} from "./v7-view.mjs?v=0.7.12";
 import {
   effectiveTraits,
   updateTraits,
   TRAIT_CATALOG,
   BAG_ACTIONS,
-} from "./v7.mjs?v=0.7.11";
+} from "./v7.mjs?v=0.7.12";
 import {
   createShowClock,
   advanceShowClock,
@@ -30,22 +31,22 @@ import {
   songKey,
   stageGeometry,
   showBeat,
-} from "./show-playback.mjs?v=0.7.11";
+} from "./show-playback.mjs?v=0.7.12";
 import {
   showOverlayHTML,
   showResourcesHTML,
   deckInspectionHTML,
   cardInspectionHTML,
-} from "./show-view.mjs?v=0.7.11";
-import { setupDocSearch } from "./doc-search.mjs?v=0.7.11";
-import { calendarHTML } from "./v6-view.mjs?v=0.7.11";
-import { pendingBooking, eventById } from "./calendar.mjs?v=0.7.11";
-import { editBag } from "./social.mjs?v=0.7.11";
+} from "./show-view.mjs?v=0.7.12";
+import { setupDocSearch } from "./doc-search.mjs?v=0.7.12";
+import { calendarHTML } from "./v6-view.mjs?v=0.7.12";
+import { pendingBooking, eventById } from "./calendar.mjs?v=0.7.12";
+import { editBag } from "./social.mjs?v=0.7.12";
 import {
   profileMarkup,
   changeModule,
   resetLayout,
-} from "./profile-layout.mjs?v=0.7.11";
+} from "./profile-layout.mjs?v=0.7.12";
 import {
   VERSION,
   NEEDS,
@@ -84,7 +85,7 @@ import {
   compositionProject,
   journalEntries,
   chemistryKnowledge,
-} from "./engine.mjs?v=0.7.11";
+} from "./engine.mjs?v=0.7.12";
 import {
   command,
   bandStage,
@@ -100,20 +101,20 @@ import {
   nextSlot,
   skipShow,
   completePerformance,
-} from "./life.mjs?v=0.7.11";
+} from "./life.mjs?v=0.7.12";
 import {
   CARDS,
   CURSES,
   INTENTIONS,
   SHOW_TICKS,
   createPerformance,
-} from "./stage.mjs?v=0.7.11";
-import { resolveShowPlan } from "./show-planning.mjs?v=0.7.11";
+} from "./stage.mjs?v=0.7.12";
+import { resolveShowPlan } from "./show-planning.mjs?v=0.7.12";
 import {
   reconcile,
   createViewPositions,
   withReadingAnchor,
-} from "./ui-state.mjs?v=0.7.11";
+} from "./ui-state.mjs?v=0.7.12";
 import {
   quickHTML,
   skillHTML,
@@ -128,14 +129,14 @@ import {
   drawStage,
   enableAudio,
   playSound,
-} from "./v5-view.mjs?v=0.7.11";
+} from "./v5-view.mjs?v=0.7.12";
 import {
   createPlayback,
   snapSpeed,
   setPlaybackSpeed,
   advancePlayback,
   updatePositions,
-} from "./runtime.mjs?v=0.7.11";
+} from "./runtime.mjs?v=0.7.12";
 const playback = createPlayback();
 const $ = (q) => document.querySelector(q),
   $$ = (q) => [...document.querySelectorAll(q)],
@@ -165,9 +166,9 @@ try {
       } catch {}
     }
     world = restore(input);
-  } else world = createWorld(2040,8,{setup:"varied"});
+  } else world = createWorld(2040,3,{setup:"varied"});
 } catch {
-  world = createWorld(2040,8,{setup:"varied"});
+  world = createWorld(2040,3,{setup:"varied"});
   saveProblem = true;
   loadFailed = true;
 }
@@ -379,7 +380,7 @@ function renderPeople() {
     world.people
       .map(
         (p) =>
-          `<button class="person ${p.id === selected ? "active" : ""}" data-person="${p.id}">${characterPortrait(p)}<span><span class="person-name">${esc(characterName(p))} ${isMember(world, p) ? '<span class="role-dot" title="Membre d’un groupe">♫</span>' : ""}</span><span class="person-action">${esc(actionLabel(p))}</span></span></button>`,
+          `<button class="person ${p.id === selected ? "active" : ""}" data-person="${p.id}">${characterPortrait(p)}<span><span class="person-name">${esc(characterName(p))} ${isMember(world, p) ? '<span class="role-dot" title="Membre d’un groupe">♫</span>' : ""}</span><span class="person-instrument">${esc(SKILLS[p.instrument])}</span><span class="person-action">${esc(actionLabel(p))}</span></span></button>`,
       )
       .join(""),
   );
@@ -441,7 +442,7 @@ function renderProfile(force = false) {
       )
         .map(
           (g) =>
-            `<button class="pill member" data-open-groups>${esc(g.name)}</button>`,
+            groupLinkHTML(g),
         )
         .join(
           "",
@@ -932,7 +933,7 @@ const titles = {
     "Change les règles du quotidien.",
     "Observe les conséquences. Ajuste. Recommence.",
   ],
-  bandlive: ['BandLive · le show est entre tes mains.', 'Une pioche commune. De trois à douze spectateurs. Six tours pour les conquérir.'],
+  bandlive: ['BandLive · le show est entre tes mains.', 'Une pioche commune. De trois à douze spectateurs. Deux chansons pour les conquérir.'],
 };
 function changeView(v) {
   if (!titles[v]) return;
@@ -1316,7 +1317,7 @@ $("#import-file").onchange = async (e) => {
 };
 $("#reset").onclick = () =>
   modal(
-    '<h2>Un nouveau quartier</h2><p>Remplace le monde actuel. Exporte le JSON si tu veux le conserver. La même graine reproduit le même départ.</p><label>Graine<input id="seed" type="number" value="2040" min="0" max="4294967295"></label><label>Voisins<input id="count" type="number" value="8" min="2" max="24"></label><label>Groupes au départ<select id="band-setup"><option value="varied">Variable · 1 à 4 groupes selon la population</option><option value="large">Un grand groupe</option><option value="medium">Deux groupes moyens</option><option value="small">Deux petits groupes</option><option value="none">Aucun · rencontres naturelles</option></select></label><button id="confirm-reset" class="primary">Créer le quartier</button>',
+    '<h2>Un nouveau quartier</h2><p>Remplace le monde actuel. Exporte le JSON si tu veux le conserver. La même graine reproduit le même départ.</p><label>Graine<input id="seed" type="number" value="2040" min="0" max="4294967295"></label><label>Voisins<input id="count" type="number" value="3" min="2" max="24"></label><label>Groupes au départ<select id="band-setup"><option value="varied">Variable · 1 à 4 groupes selon la population</option><option value="large">Un grand groupe</option><option value="medium">Deux groupes moyens</option><option value="small">Deux petits groupes</option><option value="none">Aucun · rencontres naturelles</option></select></label><button id="confirm-reset" class="primary">Créer le quartier</button>',
   );
 document.addEventListener("click", (e) => {
   if (e.target.id === "confirm-reset") {
@@ -2129,6 +2130,7 @@ document.addEventListener("click", (e) => {
     renderGroups();
   }
   if (el.dataset.groupSelect) {
+    $("#dialog").close();
     if($("#dialog").open)$("#dialog").close();
     selectedGroup = el.dataset.groupSelect;
     const group=world.groups.find(g=>g.id===selectedGroup);
@@ -2260,6 +2262,7 @@ document.addEventListener("click", (e) => {
   }
   if (el.dataset.excess) submit({ type: "excess", actorId: el.dataset.excess });
   if(el.dataset.leaveGroup)submit({type:"leaveGroup",groupId:el.dataset.leaveGroup});
+  if(el.dataset.recompose){const r=submit({type:'recompose',songId:Number(el.dataset.recompose),actorId:el.dataset.actor});if(r.ok)$('#dialog').close();}
   if (el.dataset.rehearse) {
     const [groupId, songId] = el.dataset.rehearse.split(":"),
       g = world.groups.find((g) => g.id === groupId);
@@ -2698,7 +2701,7 @@ function renderLivePresentation(show) {
     replacePreserving(
       "#show-overlay",
       show.status === "playing"
-        ? showOverlayHTML(show, { ready: showReady(show), geometry })
+        ? showOverlayHTML(show, { ready: showReady(show), group: world.groups.find(g=>g.id===show.groupId), geometry })
         : "",
     );
     replacePreserving("#show-resources", showResourcesHTML(show));

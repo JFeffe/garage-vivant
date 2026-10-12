@@ -1,6 +1,6 @@
-import {activeGroup} from './groups.mjs?v=0.7.11';
-import {eligibleSongs} from './life.mjs?v=0.7.11';
-import {RULES,createBandLive} from './bandlive.mjs?v=0.7.11';
+import {activeGroup} from './groups.mjs?v=0.7.12';
+import {eligibleSongs} from './life.mjs?v=0.7.12';
+import {RULES,createBandLive} from './bandlive.mjs?v=0.7.12';
 
 // Resolve only the module's draft. Group membership, canonical songs, mastery
 // and the world's RNG are read without being changed.
@@ -19,7 +19,7 @@ export function resolveBandLivePlan(world,draft,{canStart=true}={}) {
   const songs=group?eligibleSongs(world,group).map(song=>({
     id:`song-${song.id}`,sourceSongId:song.id,title:song.title,style:song.genre,
     authors:[...song.authors],authorNames:song.authors.map(id=>song.authorNames?.[id]||world.people.find(p=>p.id===id)?.name||id),
-    quality:song.quality,mastery:group.repertoire.find(r=>r.songId===song.id).mastery,
+    quality:song.quality,...(song.turns!==undefined?{turns:song.turns}:{}),mastery:group.repertoire.find(r=>r.songId===song.id).mastery,
   })):[];
   const reason=!group?'Crée un groupe dans le quartier pour jouer avec BandLive.':members.length<RULES.minMembers?'Choisis au moins deux musiciens du groupe.':members.length>RULES.maxMembers?'Choisis six musiciens maximum pour BandLive.':!songs.length?'Adopte une composition dans le répertoire du groupe pour prendre la scène.':!canStart?'Termine le spectacle en cours avant de prendre la scène avec BandLive.':'';
   return {groups,group,people,members,songs,ready:!reason,reason};

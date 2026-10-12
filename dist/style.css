@@ -34,3 +34,5 @@ nav{gap:18px}button:disabled{opacity:.45;cursor:not-allowed}.eyebrow{display:blo
 .design-footer{margin:14px 0 20px;padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--soft)}.design-footer [role=status]{margin-bottom:0}.design-value input:invalid{outline:2px solid #f19778}.design-toolbar input,.design-toolbar select,.design-value input{min-height:40px}
 
 .design-toolbar input[type=search],.design-value input{border:1px solid #b4bfb4;border-radius:7px;padding:8px;background:var(--white);color:var(--ink)}.design-heading a{color:var(--green)}.design-footer [role=status]{color:var(--ink)}.design-toolbar .design-check{font-size:12px}
+
+.pending-actions{padding:12px;background:#f0ecd9;border:1px solid #ccc9b0;border-radius:8px;margin:10px 0}.pending-actions small{display:block}.pending-actions li{margin:9px 0}.group-link{text-align:left}.person-instrument{display:block;font-size:10px;color:#64745b}

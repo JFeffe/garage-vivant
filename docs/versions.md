@@ -1,5 +1,18 @@
 # Notes de version
 
+## V0.7.12 — BandLive lisible et pratique des musiciens {#v0712}
+
+12 octobre 2026.
+
+- Nouveau quartier à trois personnages, relations initiales partielles entre voisins et tailles de groupes plus variées.
+- Les pratiques de band apparaissent dans les activités collectives. Elles entraînent les musiciens, sans donner de niveau au morceau ni de progression au groupe; les shows font progresser le groupe.
+- Les nouvelles compositions reçoivent une durée fixe de 3, 4 ou 5 tours. Les affinités des coauteurs modulent leur qualité. La commande Recomposer ouvre un projet distinct; le morceau actuel reste jouable jusqu’à sa finalisation.
+- BandLive présente une scène plus compacte, une main commune identifiée, un aperçu exact des dégâts et de la résistance restante, ainsi que le contenu de la pioche et de la défausse sans révéler l’ordre du tirage.
+- Explosion, transe et émotion du public sont uniquement visuelles : aucun effet sur les voisins, les bonus ou les dégâts.
+- Les conditions d’accès à BandLive sont explicites : 2 à 6 musiciens et 1 ou 2 compositions sans jam, avant le départ de la première chanson. Le rang du band dans la soirée ne bloque pas ce mode.
+- Le sac montre les invitations en attente avant la prochaine pige. Les instruments apparaissent à gauche et les références de groupe regroupent nom, style et accès à la fiche.
+- Les anciennes sauvegardes et les concerts déjà commencés conservent leurs données et leurs durées. Le quartier reste suspendu pendant un show; les shows parallèles ne sont pas activés.
+
 ## V0.7.11 — Atelier d’équilibrage par partie {#v0711}
 
 12 octobre 2026.

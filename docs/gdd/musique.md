@@ -14,11 +14,11 @@ Bases instrumentales : Pratiquer et Composer 0,009 × Apprentissage/min ; Oreill
 
 Une séance alterne instruments, technique et morceaux par cycles de 15 minutes. Avec des morceaux admissibles, leur choix est favorisé à 65 % ; sinon travail technique. Le choix est réévalué à la fin d’un cycle si le personnage continue. La pratique n’ajoute aucune expression par défaut.
 
-Un personnage peut travailler ses œuvres et les morceaux de ses groupes. Le travail solo du morceau augmente sa maîtrise personnelle de 0,08/min. Cette valeur est distincte de la compétence instrumentale et de la maîtrise collective.
+Un personnage peut travailler ses œuvres et les morceaux de ses groupes. Depuis 0.7.12, travailler un morceau entraîne les compétences individuelles, sans créer de maîtrise personnelle du morceau.
 
 La pratique collective exige un groupe actif commun et un morceau. Une personne ayant pigé Pratiquer peut demander à rejoindre une pratique de morceau ; après acceptation, elle se déplace vers son partenaire. La séance attribue explicitement groupe et morceau ; des appartenances multiples ne créditent pas tous les groupes. Une pratique collective spontanée peut changer de morceau ensemble à la fin des cycles. Un appel Répéter garde le morceau annoncé jusqu’à sa fin ; les instruments peuvent encore varier. Chaque participant conserve son propre compteur de cycle et son choix de départ : le meneur ne remet pas le temps des autres à zéro.
 
-Avec au moins deux membres effectivement présents, la répétition augmente Coordination de `0,07 × min(1 ; présents/4)`/min. La maîtrise collective du morceau augmente de `0,12 × (0,65 + coordination/200) × min(1 ; présents/membres du groupe)`/min. Une paire ne reçoit ce crédit qu’une fois par minute. Le compteur de répétition et les moments du groupe avancent à chaque cycle travaillé. Une personne seule peut continuer son travail personnel.
+Avec au moins deux membres effectivement présents, la répétition est affichée comme une activité collective. Elle ne donne plus de coordination au groupe ni de maîtrise au morceau. Le compteur de répétition et les moments du groupe avancent à chaque cycle travaillé. Une personne seule peut continuer son travail personnel.
 
 Les commandes Répéter placent des invitations hors sac, consultées à la fin de l’action courante. Le premier arrivé attend sans gains ; la pratique commence avec deux membres. Voir [Groupes](./groupes.md). Elles n’utilisent plus Jam pour préparer un morceau. Une demande sans morceau doit être refusée ou passée explicitement à Jam ; elle ne doit pas produire une répétition de technique présentée comme morceau travaillé.
 
@@ -51,7 +51,7 @@ La chimie potentielle est symétrique, calculée depuis similitude de créativit
 
 Le [DDD Groupes](./groupes.md) possède formation/recrutement, attachement, couleur musicale, réputation, adoption exclusive, invitations et dissolution. `development` reste le champ de Coordination. La pratique ne crédite qu’un groupe et un morceau actifs annoncés, pas tous les groupes des participants. Une improvisation ou une proximité sans séance ne constitue pas une répétition.
 
-Les pratiques physiques peuvent produire un échange musical admis toutes les 15 minutes travaillées, entre le premier participant présent et un autre présent choisi. Les mêmes relations et moments techniques sont réutilisés. Jam reste ouvert hors groupe ; il ne crédite pas la Coordination. Une chanson adoptée reste au groupe après départ d’un auteur ; celui-ci conserve son crédit et sa maîtrise personnelle.
+Les pratiques physiques peuvent produire un échange musical admis toutes les 15 minutes travaillées, entre le premier participant présent et un autre présent choisi. Les mêmes relations et moments techniques sont réutilisés. Jam reste ouvert hors groupe ; il ne crédite pas la Coordination. Une chanson adoptée reste au groupe après départ d’un auteur ; celui-ci conserve son crédit d’auteur et ses compétences.
 
 ## Déchéance et carrière
 

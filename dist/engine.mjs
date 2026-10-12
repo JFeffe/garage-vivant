@@ -1,6 +1,7 @@
-import {rule,validateDesign} from './design-rules.mjs?v=0.7.11';
-import { musicalChemistry, pairEligible, membershipReason, considerMembership, initializeGroupData, resolveInvitation, rehearsalReady, upgradeGroups, validateGroups, leaveGroup } from './groups.mjs?v=0.7.11';
-import { V71_RULES, initializeV71, setupAction, chooseInstrument, shouldLeave, musicName, reserveMusicName, classifySongs, upgradeV71, validateV71, decadenceCount } from "./v71.mjs?v=0.7.11";
+import {rule,validateDesign} from './design-rules.mjs?v=0.7.12';
+import { musicalChemistry, pairEligible, membershipReason, considerMembership, initializeGroupData, resolveInvitation, rehearsalReady, upgradeGroups, validateGroups, leaveGroup } from './groups.mjs?v=0.7.12';
+import {compositionTurns,songTurns} from './song-rules.mjs?v=0.7.12';
+import { V71_RULES, initializeV71, setupAction, chooseInstrument, shouldLeave, musicName, reserveMusicName, classifySongs, upgradeV71, validateV71, decadenceCount } from "./v71.mjs?v=0.7.12";
 import {
   NEED_DRAIN,
   ACTIVITY_EFFECTS,
@@ -19,13 +20,13 @@ import {
   interactionProbabilities,
   coolRelationV7,
   validateV7,
-} from "./v7.mjs?v=0.7.11";
+} from "./v7.mjs?v=0.7.12";
 import {
   initializeV6Person,
   upgradeV6,
   markGrief,
   repairGrief,
-} from "./social.mjs?v=0.7.11";
+} from "./social.mjs?v=0.7.12";
 import {
   initializePerson,
   initializeGroup,
@@ -41,7 +42,7 @@ import {
   departForShow,
   refreshOpportunity,
   validateLife,
-} from "./life.mjs?v=0.7.11";
+} from "./life.mjs?v=0.7.12";
 export const VERSION = "0.7.3";
 export const NEEDS = {
   energy: "Énergie",
@@ -542,12 +543,12 @@ export function selectProject(s,p,projectId=null){
  p.songProgress=project?clamp(project.work/project.target*100):0;
  return project;
 }
-function ensureProject(s, p) {
+function ensureProject(s, p, sourceSong = null) {
   let project = s.projects.find(
     (x) => x.id === p.draft.projectId && x.status !== "finished",
   );
   if (project && !["finished","abandoned"].includes(project.status)) return project;
-  const title=projectTitle(s);
+  const title=sourceSong?.title||projectTitle(s);
   if(!title){log(s,'system',`${p.name} ne crée pas de projet : banque de titres épuisée.`,[p.id]);if(p.action?.key==='write'){closeActivity(s,p,'cancelled');p.action=null;}return null;}
   const emotion = dominantEmotion(p).key;
   project = {
@@ -815,7 +816,7 @@ export function addPerson(s) {
   log(s, "system", `${p.name} s’installe dans le quartier.`, [p.id]);
   return p;
 }
-export function createWorld(seed = 2040, count = 8, {setup="none"} = {}) {
+export function createWorld(seed = 2040, count = 3, {setup="none"} = {}) {
   if(!["none","varied","large","medium","small"].includes(setup))throw Error("Configuration de groupes inconnue.");
   const s = {
     version: VERSION,
@@ -846,6 +847,7 @@ export function createWorld(seed = 2040, count = 8, {setup="none"} = {}) {
   };
   for (let i = 0; i < count; i++) addPerson(s);
   initializeLife(s);
+  seedStartingRelations(s);
   seedStartingGroups(s,setup);
   for (const p of s.people) {
     refreshReputation(s, p);
@@ -853,16 +855,38 @@ export function createWorld(seed = 2040, count = 8, {setup="none"} = {}) {
   }
   return s;
 }
+// Initial acquaintances are deterministic and directional. Existing worlds
+// never pass through this initializer when restored.
+export function seedStartingRelations(s) {
+  for(let i=0;i<s.people.length;i++)for(let j=i+1;j<s.people.length;j++){
+    const a=s.people[i],b=s.people[j],potential=rand(s);
+    const base=potential<.2?-18+potential*90:5+(potential-.2)*50;
+    relationship(s,a,b).affinity=Math.round(clamp(base+range(s,-8,8),-100,100))||0;
+    relationship(s,b,a).affinity=Math.round(clamp(base+range(s,-8,8),-100,100))||0;
+  }
+}
+export function startRecomposition(s,p,songId){
+  const song=s.songs.find(x=>x.id===songId),group=s.groups.find(g=>g.id===song?.ownerGroupId&&g.archivedAt===null);
+  if(!song||!(song.authors.includes(p.id)||group?.members.includes(p.id)))return {ok:false,message:'Seul un auteur ou un membre du groupe propriétaire peut recomposer.'};
+  if(p.engagement||p.action?.key==='sleep')return {ok:false,message:'Ce musicien est indisponible pour recomposer.'};
+  const existing=s.projects.find(x=>x.recompositionOf===song.id&&!['finished','abandoned'].includes(x.status));
+  if(existing)return {ok:false,message:'Une recomposition de ce morceau est déjà en cours.'};
+  const action=decide(s,p,'write',{newProject:true,groupId:group?.id,recompositionOf:song.id});
+  if(!action)return {ok:false,message:'Impossible de commencer ce projet.'};
+  const project=compositionProject(s,p);
+  Object.assign(project,{recompositionOf:song.id,title:song.title,genre:song.genre,authors:[...new Set([...song.authors,p.id])],authorNames:{...song.authorNames,[p.id]:p.name}});
+  return {ok:true,message:`Recomposition de « ${song.title} » commencée. Le morceau actuel reste jouable jusqu’à la fin du projet.`};
+}
 // Starting setups use real groups and existing relations, never synthetic songs.
 export function seedStartingGroups(s,setup){
  if(setup==='none'||s.people.length<2)return;
  const people=[...s.people];for(let i=people.length-1;i>0;i--){const j=Math.floor(rand(s)*(i+1));[people[i],people[j]]=[people[j],people[i]];}
  const max=Math.min(4,Math.floor(people.length/2));
- const count=setup==='large'?1:setup==='varied'?1+Math.floor(rand(s)*max):Math.min(2,max);
+ const count=setup==='large'?1:setup==='varied'?1+Math.floor(rand(s)*Math.min(max,Math.max(1,Math.floor(people.length/3)))):Math.min(2,max);
  let cursor=0;
  for(let i=0;i<count;i++){
   const available=people.length-cursor-2*(count-i-1);
-  const size=setup==='small'?2:setup==='large'?Math.min(6,available):setup==='medium'?Math.min(4,available):2+Math.floor(rand(s)*(Math.min(6,available)-1));
+  const size=setup==='small'?2:setup==='large'?Math.min(6,available):setup==='medium'?Math.min(available,3+Math.floor(rand(s)*2)):Math.min(available,3+Math.floor(rand(s)*4));
   const members=people.slice(cursor,cursor+size);cursor+=size;
   for(const a of members)for(const b of members)if(a!==b){const r=relationship(s,a,b);r.affinity=35+Math.floor(rand(s)*21);r.tension=Math.min(r.tension,10);}
   const g=createGroup(s,members.map(p=>p.id),{manual:true,origin:'départ'});
@@ -1092,7 +1116,7 @@ export function decide(s, p, forced = null, options = {}) {
     else if(options.projectId)selectProject(s,p,options.projectId);
     else if(candidates.length&&rand(s)<.8)selectProject(s,p,pick(s,candidates).id);
     else selectProject(s,p);
-    const project=ensureProject(s,p);if(!project)return null;p.action.projectId=project.id;p.action.groupId=project.groupId;
+    const project=ensureProject(s,p,s.songs.find(song=>song.id===options.recompositionOf));if(!project)return null;p.action.projectId=project.id;p.action.groupId=project.groupId;
   }
   log(
     s,
@@ -1487,9 +1511,9 @@ export function songOutcome(s, p) {
   const ensemble = d.jamSamples ? clamp(d.jamQuality / d.jamSamples, 0, 12) : 0;
   const perfection = traitEffect(p, "quality");
   const variance = range(s, 3, 13);
-  const quality = clamp(
-    craft + expression + ensemble + perfection + variance - overwhelm,
-  );
+  const pairs=contributors.flatMap((a,i)=>contributors.slice(i+1).map(b=>(relationship(s,a.p,b.p).affinity+relationship(s,b.p,a.p).affinity)/2));
+  const affinity=pairs.length?pairs.reduce((n,x)=>n+x,0)/pairs.length*.1:0;
+  const quality = clamp(craft + expression + ensemble + affinity + perfection + variance - overwhelm);
   const fit = 0;
   const resonance = clamp(
     quality * 0.65 + intensity * 0.2 + fit + range(s, 0, 18),
@@ -1504,6 +1528,7 @@ export function songOutcome(s, p) {
       craft: round(craft),
       expression: round(expression),
       ensemble: round(ensemble),
+      affinity: round(affinity),
       perfection,
       overwhelm: round(overwhelm),
       variance: round(variance),
@@ -1513,22 +1538,28 @@ export function songOutcome(s, p) {
 function releaseSong(s, p) {
   const project = ensureProject(s, p),
     result = songOutcome(s, p);
-  const song = {
-    id: s.nextSongId++,
+  const original=project.recompositionOf?s.songs.find(x=>x.id===project.recompositionOf):null;
+  const revision={
+    id: original?.id ?? s.nextSongId++,
     projectId: project.id,
     title: project.title,
     time: s.time,
     ...result,
+    turns: compositionTurns(result.quality,()=>rand(s)),
     genre: project.genre,
     authors: [...project.authors],
     authorNames: {...project.authorNames},
     groupId: project.groupId,
-    ownerGroupId: null,
-    adoptedAt: null,
+    ownerGroupId: original?.ownerGroupId ?? null,
+    adoptedAt: original?.adoptedAt ?? null,
     sources: [...project.sources],
     hit: result.resonance >= 80,
   };
-  s.songs.unshift(song);
+  const song=original||revision;
+  if(original){
+    const revisions=[...(original.revisions||[]),{time:s.time,quality:original.quality,turns:songTurns(original)}];
+    Object.assign(original,revision,{revisions});
+  }else s.songs.unshift(song);
   classifySongs(s);
 
   project.status = "finished";
@@ -1650,6 +1681,19 @@ function assignJam(s, p, sessionId, options = {}) {
 
 export function liveSessions(s) {
   const result = [];
+  const practices=new Map();
+  for(const p of s.people){
+    const a=p.action;
+    if(a?.key!=='practice'||a.route.length||p.engagement||!a.groupId)continue;
+    if(a.rehearsalId&&s.groupState.requests.find(r=>r.id===a.rehearsalId)?.status!=='playing')continue;
+    const key=`practice:${a.groupId}:${a.songId}:${p.place}`;
+    if(!practices.has(key))practices.set(key,{id:key,type:'practice',groupId:a.groupId,place:p.place,participants:[]});
+    practices.get(key).participants.push(p.id);
+  }
+  for(const session of practices.values()){
+    const group=s.groups.find(g=>g.id===session.groupId&&g.archivedAt===null);
+    if(group&&session.participants.length>=2)result.push({...session,label:`Pratique de ${group.name}`});
+  }
   for (const j of s.jams.filter((j) => j.status === "active")) {
     const ids = j.participants.filter((id) => {
       const p = s.people.find((x) => x.id === id);
@@ -1874,7 +1918,7 @@ function choosePractice(s,p,options={}){
 }
 function practiceMinute(s,p){
  const a=p.action;
- if(a.songId)p.songMastery[a.songId]=clamp((p.songMastery[a.songId]||0)+.08);
+ // Practice improves the musician's instrument through plateauGain below.
  if(a.elapsed===1&&!a.groupId&&!a.rehearsalId){
   const hosts=s.people.filter(q=>q!==p&&q.action?.key==='practice'&&!q.action.route.length&&q.action.songId&&s.groups.some(g=>g.archivedAt===null&&g.members.includes(p.id)&&g.members.includes(q.id)&&(!q.action.groupId||g.id===q.action.groupId)&&g.repertoire.some(r=>r.songId===q.action.songId)));
   const host=weightedChoice(hosts,q=>partnerWeight(s,p,q,relationship(s,p,q)),()=>rand(s));

@@ -1,3 +1,4 @@
+import {groupLinkHTML} from './group-link.mjs?v=0.7.12';
 import {
   TRAIT_CATALOG,
   effectiveTraits,
@@ -6,7 +7,7 @@ import {
   ACTIVITY_EFFECTS,
   partnerWeight,
   traitEffect,
-} from "./v7.mjs?v=0.7.11";
+} from "./v7.mjs?v=0.7.12";
 import {
   ACTIONS,
   SKILLS,
@@ -15,7 +16,7 @@ import {
   scores,
   stamp,
   relationship,
-} from "./engine.mjs?v=0.7.11";
+} from "./engine.mjs?v=0.7.12";
 const esc = (x) =>
   String(x ?? "").replace(
     /[&<>"']/g,
@@ -25,10 +26,14 @@ const esc = (x) =>
       ],
   );
 const n = (x) => Math.round(x * 1000) / 1000;
+export function pendingActionsHTML(s,p){
+ const queue=p.invitationQueue.filter(x=>x.status==='pending').sort((a,b)=>a.created-b.created||a.id.localeCompare(b.id));
+ return '<div class="pending-actions"><strong>Avant le prochain jeton</strong>'+(p.engagement?'<p>Engagement de spectacle en cours.</p>':'')+(queue.length?'<ol>'+queue.map(inv=>{const req=s.groupState.requests.find(r=>r.id===inv.requestId),g=s.groups.find(g=>g.id===req?.groupId),song=s.songs.find(x=>x.id===req?.songId);return '<li>Pratique · '+groupLinkHTML(g)+(song?' · « '+esc(song.title)+' »':'')+'<small>Invitation à décider · expire '+stamp(inv.expires)+'</small></li>';}).join('')+'</ol>':'<p>Aucune invitation en attente.</p>')+'<p class="muted">Les invitations seront examinées avant la prochaine pige. Elles peuvent être refusées; le prochain jeton reste aléatoire. Le sommeil garde sa priorité.</p></div>';
+}
 export function rapinHTML(s,p){
  const b=p.bag,exhausted=!Object.values(b.remaining).some(x=>x>0),total=Object.values(b.consumed).reduce((a,b)=>a+b,0);
  const rows=scores(s,p).map(r=>({...r,chance:exhausted&&total?b.consumed[r.key]/total*100:r.chance}));
- return `<section class="rapin-pool"><div class="section-head">SAC RAPIN · CYCLE ${b.cycle}</div><p>Chaque pige passe en défausse. ${exhausted?'Chances après remplissage depuis la défausse.':'Chances de la prochaine pige.'}</p><div class="bag-rows">${rows.map(r=>`<div class="bag-row" data-key="bag-${p.id}-${r.key}"><span>${ACTIONS[r.key].label}<small>Sac ${r.remaining} · défausse ${r.consumed} · retraits en attente ${b.pendingRemoval[r.key]}</small></span><label>${r.key==='decadence'?'Quantité liée à la déchéance':'Quantité souhaitée'}<input data-bag-weight="${p.id}:${r.key}" aria-label="Jetons ${ACTIONS[r.key].label}" type="number" min="0" max="100" value="${b.composition[r.key]}" ${r.key==='decadence'?'disabled':''}></label><b>${r.chance.toFixed(1)} %</b></div>`).join('')}</div><p>Les ajouts entrent immédiatement dans le sac. Les retraits attendent la défausse. Sommeil et interventions sont hors sac.</p></section>`;
+ return `<section class="rapin-pool"><div class="section-head">SAC RAPIN · CYCLE ${b.cycle}</div><p>Chaque pige passe en défausse. ${exhausted?'Chances après remplissage depuis la défausse.':'Chances de la prochaine pige.'}</p>${pendingActionsHTML(s,p)}<div class="bag-rows">${rows.map(r=>`<div class="bag-row" data-key="bag-${p.id}-${r.key}"><span>${ACTIONS[r.key].label}<small>Sac ${r.remaining} · défausse ${r.consumed} · retraits en attente ${b.pendingRemoval[r.key]}</small></span><label>${r.key==='decadence'?'Quantité liée à la déchéance':'Quantité souhaitée'}<input data-bag-weight="${p.id}:${r.key}" aria-label="Jetons ${ACTIONS[r.key].label}" type="number" min="0" max="100" value="${b.composition[r.key]}" ${r.key==='decadence'?'disabled':''}></label><b>${r.chance.toFixed(1)} %</b></div>`).join('')}</div><p>Les ajouts entrent immédiatement dans le sac. Les retraits attendent la défausse. Sommeil et interventions sont hors sac.</p></section>`;
 }
 export function thresholdsHTML(p, s) {
   return `<section data-stable="thresholds"><div class="section-head">SEUILS ET PRESSIONS</div><div class="v7-table-scroll"><table class="v7-table"><thead><tr><th>Besoin</th><th>Critique</th><th>Bas</th><th>Comblé</th><th>Actuel</th></tr></thead><tbody>${Object.entries(
@@ -92,5 +97,5 @@ export function exchangeTrace(e) {
 export function sessionHTML(s,p){
  const a=p.action,jam=a?.key==='jam'?s.jams.find(j=>j.id===a.sessionId):null,social=s.socialSessions.find(x=>!x.ended&&x.id===a?.socialSessionId);
  const group=s.groups.find(g=>g.id===a?.groupId),song=s.songs.find(x=>x.id===a?.songId),range=p.actionRanges?.[a?.key];
- return `<section data-stable="session-v7"><div class="section-head">SÉANCE ET PARTICIPATION</div><p>${a?ACTIONS[a.key].label:'Aucune activité'}${range?` · ${a.elapsed} min · fourchette ${range.min}–${range.max} min`:''}</p>${jam?`<p>Jam · ${jam.participants.length} inscrit(s) · solo possible · demandes de participation ouvertes.</p>`:''}${social?`<p>Admission acquise · ${social.members.length} membres · intensité ${Math.round(social.intensity||0)} · prochain échange ${stamp(social.nextExchange)}.</p>`:''}${group?`<p>Groupe : ${esc(group.name)}${song?` · Chanson « ${esc(song.title)} »`:''}</p>`:''}${a?.instrument?`<p>Instrument travaillé : ${esc(SKILLS[a.instrument]||a.instrument)} · ${a.content==='song'?'morceau':'technique'}.</p>`:''}<details data-key="queue-${p.id}"><summary>File de pratique hors sac · ${p.invitationQueue.filter(x=>x.status==='pending').length}</summary>${p.invitationQueue.map(inv=>{const req=s.groupState.requests.find(r=>r.id===inv.requestId),g=s.groups.find(g=>g.id===req?.groupId);return `<p>${g?`<button data-group-select="${g.id}" class="text-button">Groupe · ${esc(g.name)}</button>`:'Groupe historique'} · ${esc(inv.status)} · échéance ${stamp(inv.expires)}${inv.reason?' · '+esc(inv.reason):''}</p>`;}).join('')||'<p>Aucune invitation.</p>'}</details><p>Les demandes utilisent les liens et l’acceptation du destinataire. Les échanges dans la séance ne redemandent pas l’admission.</p></section>`;
+ return `<section data-stable="session-v7"><div class="section-head">SÉANCE ET PARTICIPATION</div><p>${a?ACTIONS[a.key].label:'Aucune activité'}${range?` · ${a.elapsed} min · fourchette ${range.min}–${range.max} min`:''}</p>${jam?`<p>Jam · ${jam.participants.length} inscrit(s) · solo possible · demandes de participation ouvertes.</p>`:''}${social?`<p>Admission acquise · ${social.members.length} membres · intensité ${Math.round(social.intensity||0)} · prochain échange ${stamp(social.nextExchange)}.</p>`:''}${group?`<p>Groupe : ${groupLinkHTML(group)}${song?` · Chanson « ${esc(song.title)} »`:''}</p>`:''}${a?.instrument?`<p>Instrument travaillé : ${esc(SKILLS[a.instrument]||a.instrument)} · ${a.content==='song'?'morceau':'technique'}.</p>`:''}<details data-key="queue-${p.id}"><summary>File de pratique hors sac · ${p.invitationQueue.filter(x=>x.status==='pending').length}</summary>${p.invitationQueue.map(inv=>{const req=s.groupState.requests.find(r=>r.id===inv.requestId),g=s.groups.find(g=>g.id===req?.groupId);return `<p>${g?groupLinkHTML(g):'Groupe historique'} · ${esc(inv.status)} · échéance ${stamp(inv.expires)}${inv.reason?' · '+esc(inv.reason):''}</p>`;}).join('')||'<p>Aucune invitation.</p>'}</details><p>Les demandes utilisent les liens et l’acceptation du destinataire. Les échanges dans la séance ne redemandent pas l’admission.</p></section>`;
 }

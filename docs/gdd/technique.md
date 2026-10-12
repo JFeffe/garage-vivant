@@ -124,3 +124,9 @@ Le journal copie désormais les identifiants des participants à la création d�
 ## Paramètres personnalisables · V0.7.11
 
 Les paramètres exposés de ce domaine se règlent dans [l’Atelier d’équilibrage](./equilibrage.md). Les chiffres de référence de ce DDD décrivent les valeurs par défaut ; le profil de la partie peut les remplacer. Les formules et conditions non exposées sont conservées.
+
+## Frontière BandLive et préparation du multi
+
+BandLive conserve son état, son RNG et sa résolution de cartes séparés. Les réactions de foule ajoutées en 0.7.12 sont calculées par la vue sans écrire dans le monde ou les dégâts. Les raccords au calendrier continuent d’appliquer une seule fois les conséquences à la fin.
+
+Pour un futur quartier continu ou multijoueur, remplacer la prestation unique par une collection de concerts identifiés, séparer horloge du quartier et tours de chaque concert, réserver seulement leurs participants et rendre les commandes/id de résultat idempotents. Le serveur devra être autoritaire sur RNG, commandes et engagements. Ce travail n’est pas activé ici : le quartier reste suspendu pendant un show. Ne pas ajouter de dépendance du moteur BandLive à la boucle de simulation pour un effet visuel.

@@ -1,5 +1,5 @@
-import {RULES,STYLES,createBandLive,restoreBandLive,currentSong} from './bandlive.mjs?v=0.7.11';
-import {performanceResult} from './stage.mjs?v=0.7.11';
+import {RULES,STYLES,createBandLive,restoreBandLive,currentSong} from './bandlive.mjs?v=0.7.12';
+import {performanceResult} from './stage.mjs?v=0.7.12';
 
 // Interactive audiences are compact. Calendar capacity and the full audience
 // passed to the next band remain unchanged.
@@ -25,7 +25,7 @@ export function resolveBandLiveConcert(world) {
   if(!setlist.length||setlist.length>2||setlist.includes(null))return denied('Prévois une ou deux compositions pour BandLive. Les jams et les setlists plus longues se jouent en spectacle classique.');
   const sourceSongs=[...new Set(setlist)].map(id=>world.songs.find(s=>s.id===id&&s.ownerGroupId===group.id&&group.repertoire.some(r=>r.songId===id&&r.active!==false)));
   if(sourceSongs.some(s=>!s)||show.actors.some(a=>!world.people.some(p=>p.id===a.id)))return denied('Le répertoire ou les musiciens de cette réservation ne sont plus disponibles.');
-  const songs=sourceSongs.map(s=>({id:`song-${s.id}`,sourceSongId:s.id,title:s.title,style:s.genre,quality:s.quality,intensity:s.intensity||0,emotion:s.emotion,tone:s.tone,mastery:group.repertoire.find(r=>r.songId===s.id).mastery,authors:[...s.authors],authorNames:s.authors.map(id=>s.authorNames?.[id]||world.people.find(p=>p.id===id)?.name||id)}));
+  const songs=sourceSongs.map(s=>({id:`song-${s.id}`,sourceSongId:s.id,title:s.title,style:s.genre,quality:s.quality,...(s.turns!==undefined?{turns:s.turns}:{}),intensity:s.intensity||0,emotion:s.emotion,tone:s.tone,mastery:group.repertoire.find(r=>r.songId===s.id).mastery,authors:[...s.authors],authorNames:s.authors.map(id=>s.authorNames?.[id]||world.people.find(p=>p.id===id)?.name||id)}));
   const people=show.actors.map(a=>({...structuredClone(world.people.find(p=>p.id===a.id)),...structuredClone(a),genre:world.people.find(p=>p.id===a.id).genre,skills:{[a.instrument]:a.skill},needs:{...world.people.find(p=>p.id===a.id).needs,energy:a.energy}}));
   return {ready:true,reason:'',show,booking,group,songs,people,profile:concertAudienceProfile(show.sourceOpportunity),songOrder:(setlist.length===1?[setlist[0],setlist[0]]:setlist).map(id=>`song-${id}`)};
 }

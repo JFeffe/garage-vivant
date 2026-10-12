@@ -30,7 +30,7 @@ if(command==='prepare'){
   }
   write('README.md',read('README.md').replace(/(# Garage vivant · v)[\d.]+/,`$1${version}`));
   write('docs/.vitepress/config.mjs',read('docs/.vitepress/config.mjs').replace(/Documentation de la version [\d.]+/,'Documentation de la version '+version));
-  write('docs/versions.md',notes.replace('# Notes de version\n','# Notes de version\n\n'+`## V${version} — ${title} {#${id(version)}}\n\n${date}.\n\n${body}\n`));
+  write('docs/versions.md',notes.replace(/# Notes de version\r?\n/,'# Notes de version\n\n'+`## V${version} — ${title} {#${id(version)}}\n\n${date}.\n\n${body}\n`));
   write('docs/CHANGELOG.md',`# V${version} — ${date}\n\n${title}. [Notes complètes](./versions.md#${id(version)}).\n\n`+read('docs/CHANGELOG.md'));
   console.log(`Version ${old} → ${version} préparée. Relire le diff puis npm run test:quick.`);
 }else if(command==='check'){

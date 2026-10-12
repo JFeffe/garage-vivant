@@ -1,3 +1,4 @@
+import {sep} from 'node:path';
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
 import {readFile,readdir,mkdir} from 'node:fs/promises';
@@ -22,7 +23,7 @@ const server=createServer(async(req,res)=>{
       primedRequests++;res.setHeader('Content-Type','text/javascript');res.setHeader('Cache-Control','public, max-age=600');res.end('export const oldCachedRelease=true;');return;
     }
     const path=resolve(root,'.'+(url.pathname==='/'?'/index.html':url.pathname));
-    if(!path.startsWith(root+'/'))throw Error('Outside fixture root');
+    if(!path.startsWith(root+sep))throw Error('Outside fixture root');
     res.setHeader('Content-Type',({'.html':'text/html','.mjs':'text/javascript','.js':'text/javascript','.css':'text/css','.json':'application/json'})[extname(path)]||'application/octet-stream');
     res.setHeader('Cache-Control',extname(path)==='.html'?'no-store':'public, max-age=600');res.end(await readFile(path));
   }catch{res.writeHead(404);res.end();}
