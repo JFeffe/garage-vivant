@@ -11,3 +11,6 @@ const files=['docs/index.md',...(await readdir('docs/gdd')).filter(x=>x.endsWith
 const entries=[];
 for(const file of files)entries.push(...indexDocument(file,await readFile(file,'utf8')));
 await writeFile('dist/doc-index.json',JSON.stringify({version:RELEASE_VERSION,entries}));
+// Identify the exact tested artifact; publishing does not rebuild it.
+const commit=process.env.GITHUB_SHA||execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+await writeFile('dist/build.json',JSON.stringify({version:RELEASE_VERSION,commit,builtAt:new Date().toISOString()})+'\n');

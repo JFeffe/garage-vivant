@@ -1,6 +1,6 @@
 [▶ Jouer à Garage vivant](https://jutrasimon.github.io/garage-vivant/)
 
-# Garage vivant · v0.7.8
+# Garage vivant · v0.7.9
 
 Une simulation autonome de musiciens dans une banlieue. Les personnages sont des cubes avec personnalité, émotions, compétences et relations. Ils composent, montent des bands et tentent leur chance devant un public physique. Le joueur peut observer, régler leurs sacs ou intervenir.
 
@@ -84,7 +84,7 @@ Pour jouer localement : `python3 -m http.server 8000 --directory dist`, puis `ht
 
 `npm run audit:groups` rejoue les 20 graines sur 30 jours, dont trois prolongées à 90 jours, et produit `docs/BALANCE_V7_5.json`, tailles et stabilité comprises. Le build crée la documentation et son index de recherche. Les fichiers de tests moteur/interface/doc couvrent les règles V7.5 et BandLive, imports réels V1–V7, déterminisme, compositions, engagements, setlists, skip/replay, récompenses uniques, 100 jours de calendrier et cohérence documentaire. Chromium couvre ordinateur et tactile, rendu, recherche VitePress et parcours de jeu. Le viewport tactile ne remplace pas un test sur appareil réel.
 
-La CI vérifie les PR sans publier; `main` publie jeu et doc après validation. Captures dans `interface-v7`. Voir [PLAN_V7_1](docs/PLAN_V7_1.md), [PLAN_V7](docs/PLAN_V7.md), [DDD](docs/gdd/documentation.md), [historique](docs/CHANGELOG.md) et [contribution](CONTRIBUTING.md). L’équilibrage des profils et probabilités reste provisoire et demande un essai avec joueurs.
+La CI vérifie les PR sans publier; `main` publie jeu et doc après validation. Captures complètes dans les artefacts `audit-browser-*` ; capture de diagnostic `smoke-failure` en cas d’échec du contrôle rapide. Voir [PLAN_V7_1](docs/PLAN_V7_1.md), [PLAN_V7](docs/PLAN_V7.md), [DDD](docs/gdd/documentation.md), [historique](docs/CHANGELOG.md) et [contribution](CONTRIBUTING.md). L’équilibrage des profils et probabilités reste provisoire et demande un essai avec joueurs.
 
 ## Mise en scène V0.6.4
 
@@ -93,3 +93,9 @@ La scène conserve ses proportions et occupe une seule arène. Le show attend «
 Chaque chanson se regarde en 30 secondes à ×1. `show-playback.mjs` transforme le temps de présentation en pas musicaux sans modifier les règles ou les résultats. Les anciennes prestations de 2160 pas et les nouvelles de 3600 pas gardent leurs tirages et conséquences. Les accélérations, le skip et le replay restent déterministes. `show-view.mjs` et `show.css` rendent les zones, charges, impacts, gains locaux, réactions et mini-cubes.
 
 `tests/show.test.mjs` vérifie la durée, les événements/résultats à plusieurs vitesses, la reprise, le repérage uniforme du canvas et l’ordre carte → disparition → visée → tir → impact. Les tests navigateur couvrent le départ explicite, les decks, les inspections imbriquées, la chronologie réelle en lecture, le son visible, les proportions et six tailles d’écran. Les cartes ne recouvrent ni le public ni les decks.
+
+## Publier pendant le développement
+
+`main` est la version jouable. Les PR utilisent une validation rapide du moteur, des sauvegardes, du démarrage navigateur et du cache. Pages publie les fichiers déjà construits et testés, puis vérifie version et commit sur le site (`build.json`). Les audits longs et les six formats visuels roulent séparément chaque nuit ou à la demande ; lancer aussi les tests ciblés de la fonctionnalité modifiée avant fusion.
+
+Version et notes : `npm run release:prepare -- VERSION --title "Titre" --notes-file /tmp/notes.md`. Voir [le processus complet et le retour arrière](CONTRIBUTING.md#développement-rapide--main-est-la-version-jouable).

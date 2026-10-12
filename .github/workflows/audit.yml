@@ -1,0 +1,50 @@
+name: Audit complet (hors publication)
+
+on:
+  schedule:
+    - cron: '17 8 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: audit-complet
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    name: ${{ matrix.suite }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [simulation, browser]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Audits des groupes, parties et BandLive
+        if: matrix.suite == 'simulation'
+        run: |
+          npm run audit:groups
+          npm run audit:simulation
+          npm run audit:bandlive
+      - name: Tous les parcours et formats d’écran
+        if: matrix.suite == 'browser'
+        run: |
+          npx playwright install --with-deps chromium
+          npm run docs:build
+          npm run test:browser
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: audit-${{ matrix.suite }}-${{ github.run_number }}
+          path: |
+            test-results/
+            docs/*V7_5.json
+          retention-days: 14

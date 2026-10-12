@@ -14,9 +14,9 @@ Créer des commits cohérents, avec un titre concret : `fix: stabilise le scroll
 
 ## Documentation et validation
 
-Respecter le README, les conventions existantes et les instructions applicables. Mettre à jour la documentation si le comportement, l’utilisation ou les sauvegardes changent. Vérifier les tests pertinents listés dans le README ; la vérification automatique couvre l’ensemble des tests avant la publication. Tester le rendu et les interactions du jeu web lorsqu’ils changent.
+Respecter le README, les conventions existantes et les instructions applicables. Mettre à jour la documentation si le comportement, l’utilisation ou les sauvegardes changent. Vérifier les tests pertinents listés dans le README ; la publication exige les tests rapides du moteur et des sauvegardes, la construction et les contrôles navigateur essentiels. Tester le rendu et les interactions du jeu web lorsqu’ils changent.
 
-Pousser sa branche et ouvrir une pull request vers `main`, avec résumé, vérifications et limites connues. Si l’accès en écriture manque, utiliser un fork. Simon examine et décide de l’intégration. Une pull request ne publie pas le jeu principal ; après intégration, les tests de `main` doivent réussir avant le déploiement Pages.
+Pousser sa branche et ouvrir une pull request vers `main`, avec résumé, vérifications et limites connues. Si l’accès en écriture manque, utiliser un fork. Simon examine et décide de l’intégration. Une pull request ne publie pas le jeu principal ; après intégration, les contrôles rapides de `main` doivent réussir avant le déploiement Pages.
 
 ## Hébergement GitHub Pages
 
@@ -38,3 +38,30 @@ Chaque PR destinée à `main`, sans exception (fonctionnalité, correctif, docum
 - Après fusion, distinguer « fusionnée » et « publiée » : vérifier le succès du workflow Pages et le numéro réellement servi avant d’annoncer la disponibilité en ligne.
 
 Un oubli se corrige par une nouvelle PR et une nouvelle version, avec une note rétroactive qui identifie la PR concernée ; ne pas réécrire l’historique de `main`.
+
+## Développement rapide : main est la version jouable
+
+Une branche courte par changement, puis PR vers `main`. Pas de branche d’intégration permanente supplémentaire. Garder les PR petites ; mettre à jour depuis main avant fusion, surtout si une autre PR a consommé le numéro prévu.
+
+- **Bloquant sur chaque PR et publication :** `npm run test:quick`, `npm run docs:build`, `npm run test:smoke`. Les tests moteur et sauvegardes existants restent actifs ; le smoke vérifie démarrage, version, reprise d’un monde et d’un concert BandLive, notes construites et ancien cache.
+- **Selon le changement, avant fusion :** lancer les tests ciblés de la fonctionnalité modifiée. Une modification du tactile exige le parcours tactile ; une modification des règles exige les tests concernés.
+- **Hors publication :** le workflow **Audit complet (hors publication)** lance les longues simulations et tous les parcours visuels chaque nuit à 08:17 UTC, ou manuellement depuis Actions. Ses échecs restent visibles et doivent être examinés, mais ne retardent pas une publication ordinaire. Le lancer et traiter les échecs avant une démo ou une livraison importante.
+- Le workflow Pages construit une seule fois, teste ces fichiers puis publie le même artefact. Il confirme ensuite `build.json` sur le site : version et commit doivent correspondre. Une erreur de cette dernière étape signifie « déployé mais non confirmé », pas un retour automatique à l’ancienne version.
+- Pour imposer aussi ces contrôles au bouton de fusion GitHub, conserver **Tests de non-régression** comme contrôle requis dans les règles de branche. La publication reste bloquée en cas d’échec même sans règle de fusion.
+
+### Préparer automatiquement une version
+
+Écrire les notes destinées aux joueurs dans un fichier Markdown, puis :
+
+```sh
+npm run release:prepare -- 0.7.10 --title "Titre de la livraison" --notes-file /tmp/notes.md
+npm run test:quick
+npm run docs:build
+npm run test:smoke
+```
+
+Choisir une version supérieure à la dernière de main. La commande synchronise métadonnées, version visible, imports/cache, README, pied de page documentaire et notes. Elle ne change jamais le format des sauvegardes. Relire le diff ; les notes restent rédigées par le contributeur. Le contrôle de PR refuse une version qui n’augmente pas par rapport à sa base. Une PR concurrente doit actualiser sa version avant fusion.
+
+### Revenir rapidement à un jeu fonctionnel
+
+En cas de régression publiée, créer une PR qui annule le changement fautif (`git revert` du commit concerné ; `git revert -m 1` pour un commit de fusion), préserver les changements ultérieurs utiles, puis préparer une **nouvelle** version et ses notes. Les contrôles rapides et la publication suivent le chemin habituel. Ne pas réinitialiser ou forcer main, ni effacer les sauvegardes. L’annulation du code ne peut pas réparer automatiquement des données déjà migrées : examiner ce cas avant publication.

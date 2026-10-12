@@ -1,3 +1,7 @@
+# V0.7.9 — 11 octobre 2026
+
+Publication plus rapide et versions cohérentes. [Notes complètes](./versions.md#v079).
+
 # V0.7.8 — 11 octobre 2026
 
 Le test de lecture des patch notes utilise la version courante plutôt que V0.7.5. [Notes](./versions.md#v078).
