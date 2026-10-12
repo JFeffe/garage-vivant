@@ -1,8 +1,10 @@
-import {characterPortrait,characterName,drawCharacter,ACCESSORIES,MOVEMENTS} from './character-view.mjs?v=0.7.6';
-import {readMapOptions,saveMapOptions,mapOptionsHTML,MAP_DEFAULTS} from './map-options.mjs?v=0.7.6';
+import {characterPortrait,characterName,drawCharacter,ACCESSORIES,MOVEMENTS} from './character-view.mjs?v=0.7.9';
+import {readMapOptions,saveMapOptions,mapOptionsHTML,MAP_DEFAULTS} from './map-options.mjs?v=0.7.9';
 const mapOptions=readMapOptions(localStorage);
-import { placeActivityLabels } from './map-labels.mjs?v=0.7.6';
-import {compositionCreditHTML,DEFAULT_FILTERS,catalogueControls,catalogueHTML as musicCatalogueHTML,songDetailsHTML} from "./catalogue.mjs?v=0.7.6";
+import { placeActivityLabels } from './map-labels.mjs?v=0.7.9';
+import { createBandLiveModule } from './bandlive-view.mjs?v=0.7.9';
+import {beginBandLiveConcert,commitBandLiveConcert,followingConcertPerformance} from './bandlive-concert.mjs?v=0.7.9';
+import {compositionCreditHTML,DEFAULT_FILTERS,catalogueControls,catalogueHTML as musicCatalogueHTML,songDetailsHTML} from "./catalogue.mjs?v=0.7.9";
 let catalogueFilters={...DEFAULT_FILTERS};
 import {
   thresholdsHTML,
@@ -11,13 +13,13 @@ import {
   exchangeTrace,
   sessionHTML,
   rapinHTML,
-} from "./v7-view.mjs?v=0.7.6";
+} from "./v7-view.mjs?v=0.7.9";
 import {
   effectiveTraits,
   updateTraits,
   TRAIT_CATALOG,
   BAG_ACTIONS,
-} from "./v7.mjs?v=0.7.6";
+} from "./v7.mjs?v=0.7.9";
 import {
   createShowClock,
   advanceShowClock,
@@ -27,22 +29,22 @@ import {
   songKey,
   stageGeometry,
   showBeat,
-} from "./show-playback.mjs?v=0.7.6";
+} from "./show-playback.mjs?v=0.7.9";
 import {
   showOverlayHTML,
   showResourcesHTML,
   deckInspectionHTML,
   cardInspectionHTML,
-} from "./show-view.mjs?v=0.7.6";
-import { setupDocSearch } from "./doc-search.mjs?v=0.7.6";
-import { calendarHTML } from "./v6-view.mjs?v=0.7.6";
-import { pendingBooking, eventById } from "./calendar.mjs?v=0.7.6";
-import { editBag } from "./social.mjs?v=0.7.6";
+} from "./show-view.mjs?v=0.7.9";
+import { setupDocSearch } from "./doc-search.mjs?v=0.7.9";
+import { calendarHTML } from "./v6-view.mjs?v=0.7.9";
+import { pendingBooking, eventById } from "./calendar.mjs?v=0.7.9";
+import { editBag } from "./social.mjs?v=0.7.9";
 import {
   profileMarkup,
   changeModule,
   resetLayout,
-} from "./profile-layout.mjs?v=0.7.6";
+} from "./profile-layout.mjs?v=0.7.9";
 import {
   VERSION,
   NEEDS,
@@ -81,7 +83,7 @@ import {
   compositionProject,
   journalEntries,
   chemistryKnowledge,
-} from "./engine.mjs?v=0.7.6";
+} from "./engine.mjs?v=0.7.9";
 import {
   command,
   bandStage,
@@ -96,20 +98,21 @@ import {
   newSeason,
   nextSlot,
   skipShow,
-} from "./life.mjs?v=0.7.6";
+  completePerformance,
+} from "./life.mjs?v=0.7.9";
 import {
   CARDS,
   CURSES,
   INTENTIONS,
   SHOW_TICKS,
   createPerformance,
-} from "./stage.mjs?v=0.7.6";
-import { resolveShowPlan } from "./show-planning.mjs?v=0.7.6";
+} from "./stage.mjs?v=0.7.9";
+import { resolveShowPlan } from "./show-planning.mjs?v=0.7.9";
 import {
   reconcile,
   createViewPositions,
   withReadingAnchor,
-} from "./ui-state.mjs?v=0.7.6";
+} from "./ui-state.mjs?v=0.7.9";
 import {
   quickHTML,
   skillHTML,
@@ -124,14 +127,14 @@ import {
   drawStage,
   enableAudio,
   playSound,
-} from "./v5-view.mjs?v=0.7.6";
+} from "./v5-view.mjs?v=0.7.9";
 import {
   createPlayback,
   snapSpeed,
   setPlaybackSpeed,
   advancePlayback,
   updatePositions,
-} from "./runtime.mjs?v=0.7.6";
+} from "./runtime.mjs?v=0.7.9";
 const playback = createPlayback();
 const $ = (q) => document.querySelector(q),
   $$ = (q) => [...document.querySelectorAll(q)],
@@ -230,6 +233,19 @@ try {
       journalTypes = new Set(settings.journalTypes);
   }
 } catch {}
+const bandLive = createBandLiveModule({
+  getWorld: () => world,
+  getPlan: () => showPlan,
+  onOpen: () => changeView('bandlive'),
+  onReturn: ({concert}={}) => { if(concert)return continueBandLiveConcert();changeView('map');setSpeed(playback.resumeSpeed); },
+  onConcertStart: () => {const result=beginBandLiveConcert(world);if(result.ok)save();return result;},
+  onConcertUpdate: () => {const applied=commitBandLiveConcert(world,completePerformance);save();return applied;},
+  onConcertCancel: () => continueBandLiveConcert(true),
+  onDisable: () => { if(bandLive.active()){notify('BandLive est désactivé pour les prochains shows. Termine ou interromps le spectacle en cours.');return;}if (view === 'bandlive') changeView('shows'); renderShows(); renderGroups(); },
+  canStart: () => world.performance?.status !== 'playing' && !world.showEventId,
+  notify,
+  getReducedEffects: () => reducedEffects,
+});
 function saveUI() {
   try {
     localStorage.setItem(
@@ -912,9 +928,13 @@ const titles = {
     "Change les règles du quotidien.",
     "Observe les conséquences. Ajuste. Recommence.",
   ],
+  bandlive: ['BandLive · le show est entre tes mains.', 'Une pioche commune. De trois à douze spectateurs. Six tours pour les conquérir.'],
 };
 function changeView(v) {
   if (!titles[v]) return;
+  if (v === 'bandlive' && !bandLive.enabled() && !bandLive.active()) return;
+  bandLive.leave();
+  if (v === 'bandlive') setPlaybackSpeed(playback, 0);
   if (liveEvent) showPaused = v !== "shows";
   $(".topline").hidden = false;
   viewPositions.save(view, $("#main"));
@@ -927,6 +947,8 @@ function changeView(v) {
     "show-mode",
     v === "shows" && showingPerformance && !!world.performance,
   );
+  document.body.classList.toggle('bandlive-mode', v === 'bandlive');
+  $('.workspace').classList.toggle('bandlive-layout', v === 'bandlive');
   for (const el of $$(".view")) el.hidden = el.id !== v + "-view";
   for (const el of $$("nav button"))
     el.classList.toggle("active", el.dataset.view === v);
@@ -943,6 +965,7 @@ function changeView(v) {
   if (v === "settings") renderSettings();
   if (v === "groups") renderGroups();
   if (v === "actions") renderActions();
+  if (v === 'bandlive') { bandLive.refresh(); renderTransport(); }
   if (v === "shows") {
     if (liveEvent) showingPerformance = true;
     renderShows();
@@ -976,6 +999,7 @@ function renderTransport() {
         : "Simulation en pause";
 }
 function render() {
+  bandLive.sync();
   renderTransport();
   renderPeople();
   renderProfile();
@@ -1362,7 +1386,7 @@ function renderGroups() {
   selectedGroup=visible.find(g=>g.id===selectedGroup)?.id||visible[0]?.id||null;
   replacePreserving(
     "#group-list",
-    bandsHTML(world, selectedGroup, bandQuery, bandArchives),
+    bandsHTML(world, selectedGroup, bandQuery, bandArchives, bandLive.enabled()),
   );
 }
 
@@ -1764,7 +1788,7 @@ function renderShows() {
   renderTransport();
   replacePreserving(
     "#show-setup",
-    showSetupHTML(world, showPlan, showFeedback),
+    showSetupHTML(world, showPlan, showFeedback) + bandLive.entryHTML(),
   );
   replacePreserving("#season-report", seasonHTML(world));
   const show = world.performance;
@@ -1799,13 +1823,14 @@ function renderShows() {
   $("#stop-show").textContent = show.preview
     ? "Arrêter l’essai"
     : "Interrompre le show";
-  replacePreserving("#show-status", showStatusHTML(world));
+  replacePreserving("#show-status", showStatusHTML(world) + bandLive.concertEntryHTML(show));
   $("#show-pause").textContent = showReady(show)
     ? "▶ Lancer le show"
     : showPaused
       ? "▶ Reprendre"
       : "Ⅱ Pause";
-  $("#show-pause").disabled = show.status !== "playing";
+  $("#show-pause").disabled = show.status !== "playing" || !!show.bandLive;
+  if(show.bandLive){$("#skip-show").hidden=true;$("#skip-evening").hidden=true;$("#stop-show").hidden=true;}
   replacePreserving(
     "#show-feed",
     show.events
@@ -1880,6 +1905,7 @@ function plannedCommand(type) {
   });
 }
 function launchPreview(replay = false) {
+  if(replay&&world.performance?.bandLive){bandLive.replayConcert(world.performance.bandLive.game);return;}
   if (replay && liveEvent && !world.performance?.preview)
     previewReturn = world.livePreviewReturn = structuredClone(
       world.performance,
@@ -2188,6 +2214,7 @@ document.addEventListener("click", (e) => {
       return;
     }
     const r = world.showHistory.find((r) => r.id === el.dataset.historyReplay);
+    if(r?.trace?.bandLive){bandLive.replayConcert(r.trace.bandLive.game);return;}
     if (r?.trace) {
       world.performance = JSON.parse(JSON.stringify(r.trace));
       world.performance.preview = true;
@@ -2355,6 +2382,7 @@ document.addEventListener("click", (e) => {
     showingPerformance = false;
     changeView("shows");
     $("#main").scrollTop = 0;
+    save();
   }
   if (el.hasAttribute("data-close-preparation")) {
     changeView("map");
@@ -2488,7 +2516,7 @@ function frame(now) {
   const dt = advancePlayback(
     playback,
     now,
-    !tabInactive && !liveEvent && world.performance?.status !== "playing",
+    !tabInactive && view !== 'bandlive' && !liveEvent && world.performance?.status !== "playing",
     (minutes) => {
       step(world, minutes);
       if (world.people.every((p) => p.action?.key === "sleep"))
@@ -2505,11 +2533,12 @@ function frame(now) {
       showClock = null;
       showSpeed = 1;
       $("#show-speed").value = "1";
-      changeView("shows");
+      changeView(world.performance.bandLive?'bandlive':'shows');
       $("#main").scrollTop = 0;
     }
     if (
       !tabInactive &&
+      !world.performance.bandLive &&
       !showPaused &&
       !showReady(world.performance) &&
       !$("#dialog").open &&
@@ -2612,6 +2641,7 @@ if (showingPerformance && world.performance) {
     world.performance.presentationPaused ||
     showReady(world.performance);
 }
+if(world.performance?.bandLive&&world.showEventId)changeView('bandlive');
 requestAnimationFrame(frame);
 if (saveProblem)
   notify(
@@ -2638,6 +2668,15 @@ function finishLive() {
   setPlaybackSpeed(playback, savedWorldSpeed);
   changeView("map");
   save();
+}
+function continueBandLiveConcert(cancel=false) {
+  const previous=world.performance;
+  if(!previous?.bandLive)return;
+  if(cancel){const result=command(world,{type:'cancelPerformance',actorId:previous.actors[0].id});if(!result.ok){notify(result.message);return;}notify(result.message);}
+  if(nextSlot(world,followingConcertPerformance(previous))){
+    liveEvent=true;showingPerformance=true;showPaused=true;showClock=null;showBudget=0;lastShowId=null;showSpeed=1;$("#show-speed").value='1';changeView('shows');
+  }else{finishLive();setSpeed(playback.resumeSpeed);}
+  render();save();
 }
 function showReady(show) {
   return (

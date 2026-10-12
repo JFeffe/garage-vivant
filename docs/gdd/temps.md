@@ -25,6 +25,6 @@ Le raccourci de sommeil ne prolonge pas le bouton +1 h et ne tourne pas en pause
 
 Liens : [shows](./shows.md), [actions](./actions.md), [architecture](./technique.md).
 
-## Onglet Shows · V7.6
+## Onglet Shows · V7.9
 
 Changer vers l’onglet Shows conserve la vitesse du quartier, y compris zéro si le joueur était déjà en pause. Les gardes existantes de spectacle réel et d’essai continuent de suspendre le moteur pendant la représentation. Consulter le calendrier ne lance pas un spectacle.

@@ -1,3 +1,22 @@
+# V0.7.8 — 11 octobre 2026
+
+## 0.7.9 — Personnages et groupes de départ
+
+12 octobre 2026. PR #16, renommée après les publications 0.7.6–0.7.8 de BandLive.
+
+Nom/surnom et apparence partagée, suppression confirmée, compositeurs visibles, huit options de carte, consultation Shows sans pause, configurations de groupes initiaux et réglages de persistance. Journal protégé contre la mutation des anciens participants. BandLive et ses correctifs sont conservés; activer Réglages → Activer BandLive pour l’utiliser. Format des sauvegardes toujours 0.7.3. [Bilan et limites](./BILAN_V7_9.md). Aucun éditeur d’équilibrage ajouté dans cette PR.
+
+
+Le test de lecture des patch notes utilise la version courante plutôt que V0.7.5. [Notes](./versions.md#v078).
+
+# V0.7.7 — 11 octobre 2026
+
+Correction de la référence de défilement du test tactile BandLive qui bloquait la publication. Le test contrôle la position au relâchement du doigt, après le défilement automatique intentionnel. [Notes](./versions.md#v077).
+
+# V0.7.6 — 11 octobre 2026
+
+Publication rétroactive de BandLive (PR #11) : spectacles interactifs optionnels, répétitions, sauvegarde et résultats uniques. Activation dans Réglages → Activer BandLive. Corrections du cache et du public du groupe suivant. Version et patch notes obligatoires pour chaque fusion vers main. [Notes complètes](./versions.md#v076). Format 0.7.3 inchangé.
+
 # V0.7.5 — 11 octobre 2026
 
 Formation légèrement favorisée et recrutement de son propre band libéré de la pénalité multigroupe du recruteur. Délai du candidat 24 h ; pas de remise à zéro de celui du recruteur. Affinités, refus, tension et freins du candidat conservés. Aucun quota ni recrutement forcé. [Règles](./gdd/groupes.md), [comparaison](./BALANCE_V7_5.md), tests G28–G30 du [plan complet](./PLAN_TEST_V7.md). Format 0.7.3 inchangé.

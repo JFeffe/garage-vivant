@@ -28,7 +28,7 @@ const bubble=source.slice(source.indexOf('ACTIONS[p.action.key].icon')-400,sourc
 assert(bubble.includes('ACTIONS[p.action.key].icon'));assert(bubble.includes('EMOTIONS[em.key].icon'));assert(!bubble.includes('showEmotion?'));assert(bubble.includes('p.action.route.length ? "↗"'));
 // Follow the actual selected group when it dissolves instead of silently showing another group.
 const archived=engine.createGroup(world,world.people.map(p=>p.id),{manual:true,name:'Les Archives de la Rue'});
-Object.assign(context,{bandsHTML,selectedGroup:archived.id,bandQuery:archived.name,bandArchives:false});
+Object.assign(context,{bandsHTML,bandLive:{enabled:()=>false},selectedGroup:archived.id,bandQuery:archived.name,bandArchives:false});
 load('function renderGroups()', '\n$("#decision-mode")');vm.runInContext('renderGroups()',context);
 assert(dissolveGroup(world,archived,'Archive de test',groupContext(world)));vm.runInContext('renderGroups()',context);
 assert.equal(context.bandArchives,true);assert.equal(context.selectedGroup,archived.id);assert(node('#group-list').innerHTML.includes('Dissolution définitive'));

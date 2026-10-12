@@ -1,5 +1,5 @@
-import {CARDS} from './stage.mjs?v=0.7.6';
-import {eventAge,songSeconds,actorPosition,stageGeometry,cardContext,showBeat,actorSize} from './show-playback.mjs?v=0.7.6';
+import {CARDS} from './stage.mjs?v=0.7.9';
+import {eventAge,songSeconds,actorPosition,stageGeometry,cardContext,showBeat,actorSize} from './show-playback.mjs?v=0.7.9';
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const names={guitar:'Guitare',bass:'Basse',drums:'Batterie',voice:'Chant',keys:'Clavier',sax:'Saxophone',trumpet:'Trompette',percussion:'Percussions'};
 const colors={rhythm:'#a9c995',impact:'#e4bd75',emotion:'#d3a8c3',support:'#9fc8d2',curse:'#d39280'};
@@ -79,14 +79,17 @@ let labelScale=1;
 const text=(ctx,t,x,y,size=12,c='#e9eedf')=>{ctx.font=`600 ${Math.max(size,10/labelScale)}px system-ui`;ctx.textAlign='center';ctx.fillStyle=c;ctx.fillText(t,x,y);};
 function circle(ctx,x,y,r,stroke,fill=null,width=2){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.lineWidth=width;ctx.strokeStyle=stroke;if(fill){ctx.fillStyle=fill;ctx.fill();}ctx.stroke();}
 function pop(ctx,t,x,y,color='#f2dfaa',size=16){ctx.font=`700 ${Math.max(size,11/labelScale)}px system-ui`;ctx.textAlign='center';ctx.lineWidth=4;ctx.strokeStyle='#16352b';ctx.strokeText(t,x,y);ctx.fillStyle=color;ctx.fillText(t,x,y);}
+export function drawStageBackdrop(ctx,{stageBottom=204}={}) {
+  box(ctx,45,48,810,stageBottom-44,'#2a4338',12);box(ctx,45,stageBottom,810,12,'#8a785e');
+  ['#b4d998','#cba0d9','#e8c278'].forEach((c,i)=>{ctx.fillStyle=c+'12';ctx.beginPath();ctx.moveTo(210+i*235,15);ctx.lineTo(50+i*280,600);ctx.lineTo(280+i*260,600);ctx.fill();box(ctx,196+i*235,20,28,9,c,4);});
+}
 export function drawShowStage(canvas,show,{reduced=false,selectedFan=null}={},decorateCube=()=>{}) {
   if(!canvas||!show)return;
   const ctx=canvas.getContext('2d'),g=stageGeometry(canvas),dpr=Math.min(globalThis.devicePixelRatio||1,2);
   labelScale=g.scale;
   if(canvas.width!==Math.round(g.width*dpr)||canvas.height!==Math.round(g.height*dpr)){canvas.width=Math.round(g.width*dpr);canvas.height=Math.round(g.height*dpr);}
   ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,g.width,g.height);box(ctx,0,0,g.width,g.height,'#172e2b');ctx.translate(g.ox,g.oy);ctx.scale(g.scale,g.scale);
-  box(ctx,45,48,810,160,'#2a4338',12);box(ctx,45,204,810,12,'#8a785e');
-  ['#b4d998','#cba0d9','#e8c278'].forEach((c,i)=>{ctx.fillStyle=c+'12';ctx.beginPath();ctx.moveTo(210+i*235,15);ctx.lineTo(50+i*280,600);ctx.lineTo(280+i*260,600);ctx.fill();box(ctx,196+i*235,20,28,9,c,4);});
+  drawStageBackdrop(ctx);
   text(ctx,'GARAGE VIVANT · LIVE',450,36,10,'#8fba99');
   const beat=showBeat(show,g),latest=beat.event;
   const hit=show.events.filter(e=>e.type==='impact').at(-1),hitAge=hit?eventAge(show,hit):100;

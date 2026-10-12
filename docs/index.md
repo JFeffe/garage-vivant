@@ -1,10 +1,10 @@
-# Garage vivant — Guide V7.6
+# Garage vivant — Guide V7.9
 
 [Jouer à Garage vivant](https://jutrasimon.github.io/garage-vivant/)
 
-**Version 0.7.6.** Les voisins pigent six actions d’éveil dans leur sac : Détente, Socialiser, Pratiquer, Jam, Composer et Déchéance. Dormir reste hors sac. Durées personnelles, projets persistants et demandes de participation rythment leur vie ; les règles V7 des besoins, émotions, traits et relations restent en place.
+**Version 0.7.9.** Les voisins pigent six actions d’éveil dans leur sac : Détente, Socialiser, Pratiquer, Jam, Composer et Déchéance. Dormir reste hors sac. Durées personnelles, projets persistants et demandes de participation rythment leur vie ; les règles V7 des besoins, émotions, traits et relations restent en place.
 
-**V7.6 :** personnalisation des personnages, suppression confirmée, options de carte, navigation Shows sans pause et configurations initiales de groupes. [Design et bilan](./BILAN_V7_6.md).
+**V7.9 :** personnalisation des personnages, suppression confirmée, options de carte, navigation Shows sans pause et configurations initiales de groupes. [Design et bilan](./BILAN_V7_9.md).
 
 La [V7.3](./AUDIT_V7_3.md) corrige quatre transitions observées en simulation : morceau annoncé, départ individuel en répétition, expiration d’une séance en cours et fin des coauteurs. Aucun nouveau système ajouté.
 
@@ -14,7 +14,7 @@ La fiche montre sac, défausse, retraits en attente, fourchettes et séance. Une
 
 Pratiquer prépare la technique et les morceaux sans combler l’expression. Ensemble, il faut un morceau et un groupe commun. Jam commence solo, accueille d’autres musiciens et peut continuer seul ; il n’avance pas directement le répertoire ni la coordination. Composer développe plusieurs projets sur plusieurs séances. Déchéance lie excès rapprochés, jetons nuisibles et cartes ajoutées aux shows.
 
-Les [quinze DDD](./gdd/documentation.md) décrivent les règles effectivement codées. Commence par [Actions](./gdd/actions.md), [Interactions](./gdd/interactions.md), [Musique](./gdd/musique.md) ou [Déchéance](./gdd/decheance.md). Les [raccords débranchés](./gdd/raccords-v7.md) sont aussi visibles dans Réglages. Le [plan de test complet V7 à V7.6](./PLAN_TEST_V7.md) propose un parcours rapide puis la réception de tous les systèmes, avec preuves et limites.
+Les [quinze DDD](./gdd/documentation.md) décrivent les règles effectivement codées. Commence par [Actions](./gdd/actions.md), [Interactions](./gdd/interactions.md), [Musique](./gdd/musique.md) ou [Déchéance](./gdd/decheance.md). Les [raccords débranchés](./gdd/raccords-v7.md) sont aussi visibles dans Réglages. Le [plan de test complet V7 à V7.9](./PLAN_TEST_V7.md) propose un parcours rapide puis la réception de tous les systèmes, avec preuves et limites.
 
 ## Groupes autonomes
 
@@ -45,8 +45,8 @@ La [scène](./gdd/shows.md), le [sommeil](./gdd/sommeil.md), les [besoins](./gdd
 
 **Ctrl+Espace** ou Rechercher dans le jeu ouvre les mêmes contenus que VitePress. Essaie plateaux, défausse, coauteurs, qualité relative, chaîne de déchéance ou noms. Les [notes de version](./versions.md) décrivent les changements ; le [plan V7.2](./PLAN_V7_2.md) conserve les décisions, arbitrages et limites de réalisation.
 
-## Personnaliser le quartier · V7.6
+## Personnaliser le quartier · V7.9
 
 Dans la fiche, **Nom et apparence** permet de renommer un voisin, lui donner un surnom et choisir son accessoire, foulard, couleur et allure. **Supprimer** conserve ses crédits et les archives. Sur la carte, **Affichage de la carte** sépare actions individuelles et collectives et propose icônes, noms, émotions, liens, trajets et ambiance nocturne. Les cases changent seulement l’affichage. Consulter Shows laisse le temps avancer.
 
-Dans Réglages, créer un nouveau quartier propose un départ variable ou des formations prédéfinies. Les sauvegardes actuelles ne reçoivent pas ces groupes. [Détails et bilan V7.6](./BILAN_V7_6.md).
+Dans Réglages, créer un nouveau quartier propose un départ variable ou des formations prédéfinies. Les sauvegardes actuelles ne reçoivent pas ces groupes. [Détails et bilan V7.9](./BILAN_V7_9.md).

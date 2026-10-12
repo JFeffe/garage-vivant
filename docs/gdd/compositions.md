@@ -1,6 +1,6 @@
 # DDD — Compositions, chansons et catalogue
 
-Version 0.7.6. Les séances de composition développent des projets persistants. Le catalogue conserve les œuvres et permet de masquer les productions peu utiles sans les supprimer.
+Version 0.7.9. Les séances de composition développent des projets persistants. Le catalogue conserve les œuvres et permet de masquer les productions peu utiles sans les supprimer.
 
 ## Plusieurs projets et coauteurs
 
@@ -58,6 +58,6 @@ Les individus restent les auteurs permanents. Le contexte `groupId` de création
 
 Filtres de groupe et de rattachement utilisent le propriétaire pour les chansons terminées ; les projets gardent leur contexte de création. La maîtrise personnelle dépend du musicien sélectionné, la maîtrise collective du propriétaire. Mettre un morceau de côté conserve propriété et maîtrise. Aucune copie ni deuxième adoption. Le [DDD Groupes](./groupes.md) décrit admissibilité, choix autonome, commandes et migration des anciens répertoires partagés.
 
-## Crédit de composition visible · V7.6
+## Crédit de composition visible · V7.9
 
 Le crédit **Composition :** est explicite dans le catalogue, le détail du morceau, la fiche du personnage, le répertoire du groupe et les chansons disponibles à adopter. Tous les coauteurs sont affichés; leur nom ouvre leur fiche tant qu’ils vivent dans le quartier. Le surnom apparaît aussi si présent. Le propriétaire est une information séparée; adopter une chanson ne remplace jamais ses auteurs. Après suppression d’un auteur, son dernier nom reste lisible sans lien vers une fiche inexistante.

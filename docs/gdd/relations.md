@@ -1,6 +1,6 @@
 # DDD — Relations, lien amoureux et souvenirs
 
-Version 0.7.6. Les relations A → B sont un point de vue. La case inverse porte le point de vue de B et peut différer.
+Version 0.7.9. Les relations A → B sont un point de vue. La case inverse porte le point de vue de B et peut différer.
 
 ## Dimensions conservées
 

@@ -1,8 +1,8 @@
 # Notes de version
 
-## V0.7.6 — Personnages personnalisés et groupes présents dès le départ {#v076}
+## V0.7.9 — Personnages personnalisés et groupes présents dès le départ {#v079}
 
-12 octobre 2026. [Design, validation et limites](./BILAN_V7_6.md).
+12 octobre 2026. [Design, validation et limites](./BILAN_V7_9.md).
 
 - Nom, surnom et apparence accessibles depuis la fiche; portraits partagés avec les accessoires de la carte et des shows.
 - Crédit « Composition : » explicite et cliquable, coauteurs visibles, propriétaire séparé.
@@ -14,6 +14,32 @@
 - Groupes de coordination sous 40 : appel de pratique à 75 % au lieu de 50 % lors du contrôle de six heures, répertoire actif requis. Première évaluation de départ après trois jours au lieu de deux.
 - Albums non implémentés; les raccords laissés débranchés restent identifiés.
 
+
+
+## V0.7.8 — Vérification des notes de la version courante {#v078}
+
+11 octobre 2026. Le test navigateur des notes suit désormais la dernière entrée de `PATCH_NOTES`, au lieu d’attendre la lecture de V0.7.5. Le bouton ouvre les nouveautés courantes et leur lecture est bien enregistrée. Cette correction complète les contrôles de publication de BandLive.
+
+Interface **0.7.8**, sauvegardes **0.7.3** inchangées. BandLive : **Réglages → Activer BandLive**.
+
+## V0.7.7 — Publication BandLive débloquée {#v077}
+
+11 octobre 2026. Le contrôle tactile compare maintenant le défilement après la carte à sa position au relâchement du doigt. Il tient ainsi compte du défilement automatique voulu pendant le glissement, tout en vérifiant que le rendu conserve la position. Les contrôles navigateur restent obligatoires avant publication.
+
+BandLive et ses notes V0.7.6 ci-dessous sont inclus. Activation : **Réglages → Activer BandLive**. Interface **0.7.7**, sauvegardes **0.7.3** inchangées.
+
+## V0.7.6 — BandLive : à toi de jouer les spectacles {#v076}
+
+11 octobre 2026. Notes ajoutées rétroactivement pour la [PR #11](https://github.com/jutrasimon/garage-vivant/pull/11), initialement fusionnée sans nouveau numéro de version.
+
+- **Activation : Réglages → Activer BandLive.** L’onglet BandLive apparaît ensuite ; le module est désactivé par défaut.
+- Jouez les spectacles réservés du calendrier avec les musiciens confirmés et les compositions prévues : deux à six musiciens, une ou deux chansons, deux passages de trois tours. Les spectacles non admissibles restent classiques.
+- Répétez avec les groupes et chansons du quartier, sans récompense, devant trois à douze spectateurs.
+- Les vrais spectacles appliquent une seule fois les conséquences habituelles et conservent leur bilan dans l’historique. Rechargement, export/import et replay sont pris en charge.
+- Correction du démarrage avec les anciens modules en cache ; public complet conservé pour le groupe suivant, peu importe le bouton de sortie utilisé.
+- Numéro visible et notes de version désormais obligatoires dans chaque PR fusionnée vers main, y compris les corrections et la documentation.
+
+Interface **0.7.6** ; format de sauvegarde **0.7.3** inchangé. Après publication réussie, rechargez le jeu : le bouton de version doit afficher **v0.7.6**. Cliquez dessus pour lire ces notes.
 
 ## V0.7.5 — Des bands plus faciles à former et compléter {#v075}
 

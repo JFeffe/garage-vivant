@@ -1,6 +1,6 @@
 # DDD — Six actions, sac et défausse
 
-Version 0.7.6. Six intentions d’éveil : Détente, Socialiser, Pratiquer, Jam, Composer et Déchéance. Dormir est hors sac. Former un groupe passe par proposition et acceptation après un échange favorable admissible, sans jeton dédié.
+Version 0.7.9. Six intentions d’éveil : Détente, Socialiser, Pratiquer, Jam, Composer et Déchéance. Dormir est hors sac. Former un groupe passe par proposition et acceptation après un échange favorable admissible, sans jeton dédié.
 
 ## Pige et inventaire
 
