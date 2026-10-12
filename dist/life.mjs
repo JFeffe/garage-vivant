@@ -1,9 +1,9 @@
-import { followingConcertPerformance } from './bandlive-concert.mjs?v=0.7.10';
-import { GROUP_RULES as R } from './group-rules.mjs?v=0.7.10';
-import { initializeGroupState, proposeMembership, requestRehearsal, adoptSong, refreshGroup, groupsMinute, leaveGroup, dissolveGroup, activeGroup } from './groups.mjs?v=0.7.10';
-import { plateauGain, decadenceCount, availableMusicName, musicName } from "./v71.mjs?v=0.7.10";
-import { editTokens } from "./v7.mjs?v=0.7.10";
-import { initializeV6Person } from "./social.mjs?v=0.7.10";
+import {rule} from './design-rules.mjs?v=0.7.11';
+import { followingConcertPerformance } from './bandlive-concert.mjs?v=0.7.11';
+import { initializeGroupState, proposeMembership, requestRehearsal, adoptSong, refreshGroup, groupsMinute, leaveGroup, dissolveGroup, activeGroup } from './groups.mjs?v=0.7.11';
+import { plateauGain, decadenceCount, availableMusicName, musicName } from "./v71.mjs?v=0.7.11";
+import { editTokens } from "./v7.mjs?v=0.7.11";
+import { initializeV6Person } from "./social.mjs?v=0.7.11";
 import {
   initializeCalendar,
   upgradeCalendar,
@@ -15,7 +15,7 @@ import {
   morale,
   moraleEffect,
   validateCalendar,
-} from "./calendar.mjs?v=0.7.10";
+} from "./calendar.mjs?v=0.7.11";
 import {
   clamp,
   round,
@@ -32,7 +32,7 @@ import {
   ACTIONS,
   step,
   refreshReputation,
-} from "./engine.mjs?v=0.7.10";
+} from "./engine.mjs?v=0.7.11";
 import {
   CARDS,
   CURSES,
@@ -42,7 +42,7 @@ import {
   createPerformance,
   advancePerformance,
   validatePerformance,
-} from "./stage.mjs?v=0.7.10";
+} from "./stage.mjs?v=0.7.11";
 
 export function initializePerson(p) {
   initializeV6Person(p);
@@ -174,9 +174,9 @@ export function groupContext(s){
    if(!['booked','assembling','playing'].includes(b.status)||!b.members.includes(p.id)||b.time<s.time)return false;
    const place=PLACES.find(x=>x.id===req.place),journey=showJourney(s,{...p,x:place.door.x,y:place.door.y},b);
    const approach=Math.ceil((Math.abs(p.y-340)+Math.abs(p.x-place.door.x)+Math.abs(place.door.y-340))/12)+3;
-   return journey&&s.time+approach+R.waitMinutes+p.actionRanges.practice.max>=journey.departure;
+   return journey&&s.time+approach+rule(s,'groups.waitMinutes')+p.actionRanges.practice.max>=journey.departure;
   }),
-  closeShow:(p,g)=>s.bookings.some(b=>b.groupId===g.id&&['booked','assembling','playing'].includes(b.status)&&b.members.includes(p.id)&&b.time-s.time<=R.nearShow),
+  closeShow:(p,g)=>s.bookings.some(b=>b.groupId===g.id&&['booked','assembling','playing'].includes(b.status)&&b.members.includes(p.id)&&b.time-s.time<=rule(s,'groups.nearShow')),
   refused:p=>feel(s,p,{distress:3}),joined:p=>feel(s,p,{exaltation:12}),
   cancelMember:(g,p)=>{for(const b of s.bookings.filter(b=>b.groupId===g.id&&['applied','booked','assembling'].includes(b.status))){const remaining=b.members.filter(id=>id!==p.id);if(p.engagement?.bookingId===b.id)p.engagement=null;if(remaining.length<2)cancelBooking(s,b);else b.members=remaining;}},
   cancelGroup:g=>{for(const b of s.bookings.filter(b=>b.groupId===g.id&&['applied','booked','assembling'].includes(b.status)))cancelBooking(s,b);}
@@ -557,13 +557,13 @@ export function showJourney(s,p,b){
  const o=eventById(s,b.opportunityId),place=PLACES.find(x=>x.id===o?.venue);if(!place)return null;
  const route=[{x:p.x,y:340},{x:place.door.x,y:340},{x:place.door.x+((b.members.indexOf(p.id)%6)-2.5)*25,y:place.door.y}];
  let previous=p,minutes=0;for(const point of route){minutes+=Math.max(1,Math.ceil(Math.hypot(point.x-previous.x,point.y-previous.y)/12));previous=point;}
- return {dest:place.id,route,minutes,departure:b.time-R.arrivalMargin-minutes};
+ return {dest:place.id,route,minutes,departure:b.time-rule(s,'groups.arrivalMargin')-minutes};
 }
 export function departForShow(s,p){
  if(p.engagement||s.performance?.status==='playing')return false;
  const b=s.bookings.filter(b=>['booked','assembling'].includes(b.status)&&b.members.includes(p.id)&&!b.absences?.[p.id]).sort((a,b)=>a.time-b.time)[0];
  if(!b)return false;const journey=showJourney(s,p,b);if(!journey||s.time<journey.departure)return false;
- b.absences||={};const chance=p.decadence>=R.absenceThreshold?Math.min(.2,(p.decadence-R.absenceThreshold)*R.absenceSlope):0;
+ b.absences||={};const chance=p.decadence>=rule(s,'groups.absenceThreshold')?Math.min(.2,(p.decadence-rule(s,'groups.absenceThreshold'))*rule(s,'groups.absenceSlope')):0;
  if(chance&&rand(s)<chance){b.absences[p.id]={time:s.time,reason:'Déchéance extrême',chance};log(s,'conflict',`${p.name} manque son spectacle : déchéance extrême.`,b.members,{bookingId:b.id,groupId:b.groupId});return false;}
  const sleeping=p.action?.key==='sleep';interruptActivity(s,p);
  if(sleeping){p.sleep.wakeAt=null;p.sleep.started=null;p.sleep.nextBedtime=s.time;}

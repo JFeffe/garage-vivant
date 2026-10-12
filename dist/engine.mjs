@@ -1,6 +1,6 @@
-import { GROUP_RULES as GROUP_RULES } from './group-rules.mjs?v=0.7.10';
-import { musicalChemistry, pairEligible, membershipReason, considerMembership, initializeGroupData, resolveInvitation, rehearsalReady, upgradeGroups, validateGroups, leaveGroup } from './groups.mjs?v=0.7.10';
-import { V71_RULES, initializeV71, setupAction, chooseInstrument, shouldLeave, musicName, reserveMusicName, classifySongs, upgradeV71, validateV71, decadenceCount } from "./v71.mjs?v=0.7.10";
+import {rule,validateDesign} from './design-rules.mjs?v=0.7.11';
+import { musicalChemistry, pairEligible, membershipReason, considerMembership, initializeGroupData, resolveInvitation, rehearsalReady, upgradeGroups, validateGroups, leaveGroup } from './groups.mjs?v=0.7.11';
+import { V71_RULES, initializeV71, setupAction, chooseInstrument, shouldLeave, musicName, reserveMusicName, classifySongs, upgradeV71, validateV71, decadenceCount } from "./v71.mjs?v=0.7.11";
 import {
   NEED_DRAIN,
   ACTIVITY_EFFECTS,
@@ -19,13 +19,13 @@ import {
   interactionProbabilities,
   coolRelationV7,
   validateV7,
-} from "./v7.mjs?v=0.7.10";
+} from "./v7.mjs?v=0.7.11";
 import {
   initializeV6Person,
   upgradeV6,
   markGrief,
   repairGrief,
-} from "./social.mjs?v=0.7.10";
+} from "./social.mjs?v=0.7.11";
 import {
   initializePerson,
   initializeGroup,
@@ -41,7 +41,7 @@ import {
   departForShow,
   refreshOpportunity,
   validateLife,
-} from "./life.mjs?v=0.7.10";
+} from "./life.mjs?v=0.7.11";
 export const VERSION = "0.7.3";
 export const NEEDS = {
   energy: "Énergie",
@@ -1126,7 +1126,7 @@ export function interaction(s, a, b, type = "discuss", music = false, admitted =
     type === "advance" &&
     (a.age < 18 ||
       b.age < 18 ||
-      ra.love < V7_RULES.advanceThreshold ||
+      ra.love < rule(s,'relations.advanceThreshold') ||
       s.time - ra.lastAdvance < 720)
   )
     return null;
@@ -1197,7 +1197,7 @@ export function interaction(s, a, b, type = "discuss", music = false, admitted =
     if (outcome === "favorable") {
       const chemBonus = music ? Math.max(0, chemistry(a, b) - 50) / 100 : 0;
       r.affinity = clamp(
-        r.affinity + (GROUP_RULES.positiveAffinity + chemBonus) * s.params.relations,
+        r.affinity + (rule(s,'groups.positiveAffinity') + chemBonus) * s.params.relations,
         -100,
         100,
       );
@@ -1206,7 +1206,7 @@ export function interaction(s, a, b, type = "discuss", music = false, admitted =
       feel(s, p, { exaltation: 3 }, event);
     }
     if (outcome === "unfavorable") {
-      r.affinity = clamp(r.affinity - GROUP_RULES.negativeAffinity * s.params.relations, -100, 100);
+      r.affinity = clamp(r.affinity - rule(s,'groups.negativeAffinity') * s.params.relations, -100, 100);
       r.tension = clamp(r.tension + 8 * s.params.relations);
       markGrief(s, r, event);
       feel(s, p, { distress: 5 }, event);
@@ -1229,7 +1229,7 @@ export function interaction(s, a, b, type = "discuss", music = false, admitted =
     feel(s, b, { distress: 2 }, event);
   if (type === "advance" && outcome === "favorable") {
     ra.love = clamp(ra.love + 6);
-    if (rb.love >= V7_RULES.advanceThreshold) rb.love = clamp(rb.love + 4);
+    if (rb.love >= rule(s,'relations.advanceThreshold')) rb.love = clamp(rb.love + 4);
   }
   if (type === "advance" && outcome === "unfavorable")
     ra.love = clamp(ra.love - 2);
@@ -1244,11 +1244,11 @@ export function interaction(s, a, b, type = "discuss", music = false, admitted =
         b.age >= 18 &&
         r.love === 0 &&
         rand(s) <
-          V7_RULES.romanticStart *
+          rule(s,'relations.romanticStart') *
             s.params.romance *
             Math.max(0, 1 + traitEffect(p, "romanticStart"))
       )
-        r.love = V7_RULES.advanceThreshold;
+        r.love = rule(s,'relations.advanceThreshold');
   }
   for (const p of [a, b])
     memory(
@@ -1286,7 +1286,7 @@ export function interact(s, a, b, music = false, admitted = false) {
         ? Math.max(0, a.personality.kind / 20 + traitEffect(a, "support"))
         : 0,
     advance:
-      relationship(s, a, b).love >= V7_RULES.advanceThreshold &&
+      relationship(s, a, b).love >= rule(s,'relations.advanceThreshold') &&
       s.time - relationship(s, a, b).lastAdvance >= 720 &&
       a.age >= 18 &&
       b.age >= 18
@@ -1725,7 +1725,7 @@ function updateJams(s) {
       a.elapsed++;
       a.remaining = Math.max(0, a.duration - a.elapsed);
       a.partners = present.filter((q) => q !== p).map((q) => q.id);
-      for (const [need, change] of Object.entries(ACTIVITY_EFFECTS.jam))
+      for (const [need, change] of Object.entries(ACTIVITY_EFFECTS.jam).map(([k,v])=>[k,rule(s,'effects.jam.'+k)]))
         if(need!=="social"||present.length>1)p.needs[need] = clamp(p.needs[need] + change);
       p.skills[p.instrument] = clamp(
         p.skills[p.instrument] +
@@ -1898,7 +1898,7 @@ export function step(s, minutes = 1) {
     s.time++;
     for (const p of s.people) {
       p.memories = p.memories.filter((m) => m.until > s.time);
-      for (const [k, d] of Object.entries(NEED_DRAIN))
+      for (const [k, d] of Object.entries(NEED_DRAIN).map(([k,v])=>[k,rule(s,'needs.'+k)]))
         p.needs[k] = clamp(
           p.needs[k] -
             d *
@@ -1950,7 +1950,7 @@ export function step(s, minutes = 1) {
       }
       action.elapsed++;
       action.remaining=Math.max(0,action.remaining-1);
-      const effects = ACTIVITY_EFFECTS[action.key];
+      const effects = ACTIVITY_EFFECTS[action.key] && Object.fromEntries(Object.keys(ACTIVITY_EFFECTS[action.key]).map(k=>[k,rule(s,'effects.'+action.key+'.'+k)]));
       for (const [k, d] of Object.entries(effects))
         p.needs[k] = clamp(
           p.needs[k] +
@@ -2007,7 +2007,7 @@ export function step(s, minutes = 1) {
     socialSessionsMinute(s);
     lifeMinute(s);
     if(s.time%60===0)projectMaintenance(s);
-    for (const r of Object.values(s.rels)){const old=r.affinity;coolRelationV7(r);s.groupState.metrics.relations.erosion+=Math.max(0,old-r.affinity);}
+    for (const r of Object.values(s.rels)){const old=r.affinity;coolRelationV7(r,s);s.groupState.metrics.relations.erosion+=Math.max(0,old-r.affinity);}
     if (s.time % 30 === 0)
       for (const p of s.people) {
         p.history.push({ time: s.time, ...p.emotions });
@@ -2027,16 +2027,16 @@ export function step(s, minutes = 1) {
         if (
           !r.couple &&
           !back.couple &&
-          r.love >= V7_RULES.coupleThreshold &&
-          back.love >= V7_RULES.coupleThreshold &&
-          rand(s) < V7_RULES.coupleChance
+          r.love >= rule(s,'relations.coupleThreshold') &&
+          back.love >= rule(s,'relations.coupleThreshold') &&
+          rand(s) < rule(s,'relations.coupleChance')
         ) {
           r.couple = back.couple = true;
           log(s, "romance", "Un couple se forme.", [aid, bid]);
         } else if (
           (r.couple || back.couple) &&
-          Math.min(r.love, back.love) < V7_RULES.breakupThreshold &&
-          rand(s) < V7_RULES.breakupChance
+          Math.min(r.love, back.love) < rule(s,'relations.breakupThreshold') &&
+          rand(s) < rule(s,'relations.breakupChance')
         ) {
           r.couple = back.couple = false;
           log(s, "romance", "Un couple se sépare.", [aid, bid]);
@@ -2459,6 +2459,7 @@ export function restore(input) {
   )
     throw Error("Sauvegarde incompatible ou incomplète.");
   const raw = JSON.parse(JSON.stringify(input));
+  validateDesign(raw.design);
   if (input.version !== VERSION && !["0.7.0","0.7.1","0.7.2"].includes(input.version)) {
     migrate(raw);
     for (const p of raw.people)

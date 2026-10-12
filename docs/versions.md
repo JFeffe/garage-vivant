@@ -1,5 +1,17 @@
 # Notes de version
 
+## V0.7.11 — Atelier d’équilibrage par partie {#v0711}
+
+12 octobre 2026.
+
+- Un atelier d’équilibrage organisé par système dans Réglages : recherche, valeurs personnalisées, unités, références et limites.
+- Préparation des modifications puis application atomique ; annulation et remise à zéro explicites.
+- Paramètres liés à la partie, conservés avec sa sauvegarde. Export/import de profils d’équilibrage.
+- Les groupes, relations, besoins et effets d’actions utilisent les valeurs du monde. Les invitations affichent les délais réellement configurés.
+- Les règles par défaut restent identiques. Aucune nouvelle mécanique de jeu. Les multiplicateurs généraux restent séparés et ne font pas partie des profils.
+
+[Guide de l’atelier et limites](./gdd/equilibrage.md). BandLive reste optionnel dans Réglages ; son moteur de cartes n’est pas paramétré par cet atelier.
+
 ## V0.7.10 — Personnages personnalisés et groupes présents dès le départ {#v0710}
 
 12 octobre 2026. [Design, validation et limites](./BILAN_V7_10.md).

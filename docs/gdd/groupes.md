@@ -117,3 +117,7 @@ Une nouvelle partie dans l’interface choisit **Variable** par défaut : de 1 �
 La proposition de **nouvelle formation** passe de 28 % à **31,5 %**, soit +12,5 % relatif avant les freins existants. Le recrutement reste à 12 %. Ce réglage ne garantit pas un pourcentage identique de groupes supplémentaires dans une trajectoire aléatoire.
 
 Le groupe existant insiste par ses **appels de répétition** : au contrôle toutes les six heures, chance de 75 % si coordination sous 40, sinon 50 %. Il faut une chanson active adoptée; une seule demande ouverte/en cours par groupe, sans empilement ni contournement des refus, sommeil ou spectacles. Aucun gain de coordination sans pratique réelle. Le premier contrôle de départ après une nouvelle adhésion est reporté à **72 h** au lieu de 48 h; les anciens contrôles déjà programmés ne sont pas déplacés. Ensuite les conditions et probabilités restent inchangées, ainsi que la dissolution définitive à zéro. Les albums restent hors périmètre.
+
+## Paramètres personnalisables · V0.7.11
+
+Les paramètres exposés de ce domaine se règlent dans [l’Atelier d’équilibrage](./equilibrage.md). Les chiffres de référence de ce DDD décrivent les valeurs par défaut ; le profil de la partie peut les remplacer. Les formules et conditions non exposées sont conservées.

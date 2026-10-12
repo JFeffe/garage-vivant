@@ -50,3 +50,7 @@ La [scène](./gdd/shows.md), le [sommeil](./gdd/sommeil.md), les [besoins](./gdd
 Dans la fiche, **Nom et apparence** permet de renommer un voisin, lui donner un surnom et choisir son accessoire, foulard, couleur et allure. **Supprimer** conserve ses crédits et les archives. Sur la carte, **Affichage de la carte** sépare actions individuelles et collectives et propose icônes, noms, émotions, liens, trajets et ambiance nocturne. Les cases changent seulement l’affichage. Consulter Shows laisse le temps avancer.
 
 Dans Réglages, créer un nouveau quartier propose un départ variable ou des formations prédéfinies. Les sauvegardes actuelles ne reçoivent pas ces groupes. [Détails et bilan V7.10](./BILAN_V7_10.md).
+
+## Atelier d’équilibrage · V0.7.11
+
+Dans Réglages, recherche et modifie les paramètres réels par système ; prépare les changements, applique-les ensemble et partage des profils. [Guide et catalogue](./gdd/equilibrage.md).

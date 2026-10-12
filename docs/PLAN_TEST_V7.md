@@ -391,3 +391,15 @@ Les tests ciblés de `tests/v75.test.mjs` vérifient la croissance d’un duo, l
 | H09 | Suivre les groupes fragiles avec/sans répertoire | Appels plus fréquents seulement avec chanson; refus possibles; aucun gain artificiel |
 | H10 | Consulter les archives après plusieurs départs | Groupes dissous conservés, aucune résurrection |
 | H11 | Chanson solo puis coécrite, adoptée par un groupe; supprimer un auteur | Crédit Composition lisible, tous les coauteurs affichés, fiches cliquables; propriétaire distinct; nom supprimé conservé sans lien |
+
+## V0.7.11 — Atelier d’équilibrage
+
+1. Dans Réglages, rechercher « chance de proposer un groupe ». Préparer 0,6 : le jeu affiche toujours 0,315 comme valeur en jeu. Appliquer puis recharger : 0,6 est conservé.
+2. Essayer 2 : application refusée, valeur du monde inchangée. Annuler puis filtrer les valeurs personnalisées.
+3. Exporter le profil ; créer un nouveau quartier : les références reviennent. Importer le profil : aucune modification avant Appliquer.
+4. Exporter et réimporter une sauvegarde complète personnalisée ; vérifier valeurs et reprise.
+5. Préparer les valeurs par défaut, annuler, puis refaire et appliquer. Vérifier les modifications dans le journal.
+6. Vérifier sur mobile : champs lisibles, filtres accessibles, aucun défilement horizontal du dashboard.
+7. Pendant un spectacle : préparer une modification, vérifier que l’application est refusée. Les règles de scène et l’état en cours doivent rester inchangés.
+
+Le profil exporté ne comprend pas les multiplicateurs généraux à application immédiate placés sous l’atelier. Ils restent dans la sauvegarde complète.

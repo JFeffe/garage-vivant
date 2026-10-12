@@ -1,5 +1,5 @@
-import { attachment } from './groups.mjs?v=0.7.10';
-import { GROUP_RULES } from './group-rules.mjs?v=0.7.10';
+import { attachment } from './groups.mjs?v=0.7.11';
+import {rule} from './design-rules.mjs?v=0.7.11';
 // V7 rules shared by simulation, inspectors and documentation tests.
 export const BAG_ACTIONS = ["relax", "social", "practice", "jam", "write", "decadence"];
 export const BAG_SAMPLES = [
@@ -12,32 +12,9 @@ export const BAG_SAMPLES = [
   [10, 4, 24, 8, 34],
   [20, 20, 20, 20, 20],
 ];
-export const NEED_DRAIN = {
-  energy: 0.065,
-  social: 0.035,
-  fun: 0.04,
-  expression: 0.05,
-};
-export const ACTIVITY_EFFECTS = {
-  relax: { fun: 0.12, energy: 0.16 },
-  social: { fun: 0.35 },
-  decadence: {fun:0.5,energy:-0.18},
-  practice: { fun: 0.26, energy: -0.055 },
-  write: { expression: 0.65, fun: 0.2, energy: -0.03 },
-  jam: { expression: 0.7, fun: 0.5, social: 0.6, energy: -0.05 },
-};
+export {NEED_DRAIN,ACTIVITY_EFFECTS} from './design-defaults.mjs?v=0.7.11';
 const clamp = (n, a = 0, b = 100) => Math.max(a, Math.min(b, n));
-export const V7_RULES = Object.freeze({
-  exchangeMinutes: 15,
-  searchMinutes: 30,
-  jamSearchMinutes: 90,
-  romanticStart: 0.035,
-  advanceThreshold: 5,
-  coupleThreshold: 40,
-  breakupThreshold: 25,
-  coupleChance: 0.08,
-  breakupChance: 0.15,
-});
+export {V7_RULES} from './design-defaults.mjs?v=0.7.11';
 export const TRAIT_CATALOG = {
   night: {
     label: "Oiseau de nuit",
@@ -426,14 +403,14 @@ export function interactionProbabilities(
     },
   };
 }
-export function coolRelationV7(r) {
+export function coolRelationV7(r,s) {
   const friendship = Math.max(0, r.affinity) / 100;
   r.grief ||= { strength: 0, time: 0, cause: null };
   r.grief.strength = Math.max(0, r.grief.strength - 0.015);
   const floor = Math.min(15, r.grief.strength * 0.45);
   r.tension = clamp(Math.max(floor, r.tension - (0.02 + 0.18 * friendship)));
   if (r.tension >= 30)
-    r.affinity = clamp(r.affinity - GROUP_RULES.tensionErosion * (r.tension - 20), -100, 100);
+    r.affinity = clamp(r.affinity - rule(s,'groups.tensionErosion') * (r.tension - 20), -100, 100);
 }
 export const DISCONNECTED = [
  {id:"absence-drama",label:"Drame d’absence",reason:"Absence extrême journalisée ; aucune pénalité relationnelle particulière ajoutée."},

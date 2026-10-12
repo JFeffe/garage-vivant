@@ -1,6 +1,6 @@
 [▶ Jouer à Garage vivant](https://jutrasimon.github.io/garage-vivant/)
 
-# Garage vivant · v0.7.10
+# Garage vivant · v0.7.11
 
 Une simulation autonome de musiciens dans une banlieue. Les personnages sont des cubes avec personnalité, émotions, compétences et relations. Ils composent, montent des bands et tentent leur chance devant un public physique. Le joueur peut observer, régler leurs sacs ou intervenir.
 
@@ -101,3 +101,7 @@ Chaque chanson se regarde en 30 secondes à ×1. `show-playback.mjs` transforme 
 `main` est la version jouable. Les PR utilisent une validation rapide du moteur, des sauvegardes, du démarrage navigateur et du cache. Pages publie les fichiers déjà construits et testés, puis vérifie version et commit sur le site (`build.json`). Les audits longs et les six formats visuels roulent séparément chaque nuit ou à la demande ; lancer aussi les tests ciblés de la fonctionnalité modifiée avant fusion.
 
 Version et notes : `npm run release:prepare -- VERSION --title "Titre" --notes-file /tmp/notes.md`. Voir [le processus complet et le retour arrière](CONTRIBUTING.md#développement-rapide--main-est-la-version-jouable).
+
+## Atelier d’équilibrage
+
+Réglages expose les paramètres de groupes, relations, besoins, effets d’actions et présence aux shows. Les modifications préparées sont validées puis appliquées au monde ; la sauvegarde les conserve. Export/import de profils, recherche, filtre des valeurs personnalisées et remise à zéro. [Guide, portée et limites](docs/gdd/equilibrage.md). Tests ciblés : `node --test tests/design.test.mjs` et `node tests/design-browser.test.mjs`.

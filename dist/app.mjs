@@ -1,10 +1,11 @@
-import {characterPortrait,characterName,drawCharacter,ACCESSORIES,MOVEMENTS} from './character-view.mjs?v=0.7.10';
-import {readMapOptions,saveMapOptions,mapOptionsHTML,MAP_DEFAULTS} from './map-options.mjs?v=0.7.10';
+import {mountDesignDashboard} from './design-dashboard.mjs?v=0.7.11';
+import {characterPortrait,characterName,drawCharacter,ACCESSORIES,MOVEMENTS} from './character-view.mjs?v=0.7.11';
+import {readMapOptions,saveMapOptions,mapOptionsHTML,MAP_DEFAULTS} from './map-options.mjs?v=0.7.11';
 const mapOptions=readMapOptions(localStorage);
-import { placeActivityLabels } from './map-labels.mjs?v=0.7.10';
-import { createBandLiveModule } from './bandlive-view.mjs?v=0.7.10';
-import {beginBandLiveConcert,commitBandLiveConcert,followingConcertPerformance} from './bandlive-concert.mjs?v=0.7.10';
-import {compositionCreditHTML,DEFAULT_FILTERS,catalogueControls,catalogueHTML as musicCatalogueHTML,songDetailsHTML} from "./catalogue.mjs?v=0.7.10";
+import { placeActivityLabels } from './map-labels.mjs?v=0.7.11';
+import { createBandLiveModule } from './bandlive-view.mjs?v=0.7.11';
+import {beginBandLiveConcert,commitBandLiveConcert,followingConcertPerformance} from './bandlive-concert.mjs?v=0.7.11';
+import {compositionCreditHTML,DEFAULT_FILTERS,catalogueControls,catalogueHTML as musicCatalogueHTML,songDetailsHTML} from "./catalogue.mjs?v=0.7.11";
 let catalogueFilters={...DEFAULT_FILTERS};
 import {
   thresholdsHTML,
@@ -13,13 +14,13 @@ import {
   exchangeTrace,
   sessionHTML,
   rapinHTML,
-} from "./v7-view.mjs?v=0.7.10";
+} from "./v7-view.mjs?v=0.7.11";
 import {
   effectiveTraits,
   updateTraits,
   TRAIT_CATALOG,
   BAG_ACTIONS,
-} from "./v7.mjs?v=0.7.10";
+} from "./v7.mjs?v=0.7.11";
 import {
   createShowClock,
   advanceShowClock,
@@ -29,22 +30,22 @@ import {
   songKey,
   stageGeometry,
   showBeat,
-} from "./show-playback.mjs?v=0.7.10";
+} from "./show-playback.mjs?v=0.7.11";
 import {
   showOverlayHTML,
   showResourcesHTML,
   deckInspectionHTML,
   cardInspectionHTML,
-} from "./show-view.mjs?v=0.7.10";
-import { setupDocSearch } from "./doc-search.mjs?v=0.7.10";
-import { calendarHTML } from "./v6-view.mjs?v=0.7.10";
-import { pendingBooking, eventById } from "./calendar.mjs?v=0.7.10";
-import { editBag } from "./social.mjs?v=0.7.10";
+} from "./show-view.mjs?v=0.7.11";
+import { setupDocSearch } from "./doc-search.mjs?v=0.7.11";
+import { calendarHTML } from "./v6-view.mjs?v=0.7.11";
+import { pendingBooking, eventById } from "./calendar.mjs?v=0.7.11";
+import { editBag } from "./social.mjs?v=0.7.11";
 import {
   profileMarkup,
   changeModule,
   resetLayout,
-} from "./profile-layout.mjs?v=0.7.10";
+} from "./profile-layout.mjs?v=0.7.11";
 import {
   VERSION,
   NEEDS,
@@ -83,7 +84,7 @@ import {
   compositionProject,
   journalEntries,
   chemistryKnowledge,
-} from "./engine.mjs?v=0.7.10";
+} from "./engine.mjs?v=0.7.11";
 import {
   command,
   bandStage,
@@ -99,20 +100,20 @@ import {
   nextSlot,
   skipShow,
   completePerformance,
-} from "./life.mjs?v=0.7.10";
+} from "./life.mjs?v=0.7.11";
 import {
   CARDS,
   CURSES,
   INTENTIONS,
   SHOW_TICKS,
   createPerformance,
-} from "./stage.mjs?v=0.7.10";
-import { resolveShowPlan } from "./show-planning.mjs?v=0.7.10";
+} from "./stage.mjs?v=0.7.11";
+import { resolveShowPlan } from "./show-planning.mjs?v=0.7.11";
 import {
   reconcile,
   createViewPositions,
   withReadingAnchor,
-} from "./ui-state.mjs?v=0.7.10";
+} from "./ui-state.mjs?v=0.7.11";
 import {
   quickHTML,
   skillHTML,
@@ -127,14 +128,14 @@ import {
   drawStage,
   enableAudio,
   playSound,
-} from "./v5-view.mjs?v=0.7.10";
+} from "./v5-view.mjs?v=0.7.11";
 import {
   createPlayback,
   snapSpeed,
   setPlaybackSpeed,
   advancePlayback,
   updatePositions,
-} from "./runtime.mjs?v=0.7.10";
+} from "./runtime.mjs?v=0.7.11";
 const playback = createPlayback();
 const $ = (q) => document.querySelector(q),
   $$ = (q) => [...document.querySelectorAll(q)],
@@ -883,7 +884,10 @@ function renderJournal() {
   $("#song-count").textContent=`${catalogue.count} résultats · ${world.projects.filter(x=>x.status!=="finished").length} projets · ${world.songs.length} chansons`;
 
 }
+var designDashboard;
 function renderSettings() {
+  designDashboard ||= mountDesignDashboard($("#design-dashboard"),{world:()=>world,onApply:changes=>{log(world,"system",`Équilibrage : ${changes.length} paramètres modifiés.`,[],{designChanges:changes});save();}});
+  designDashboard.sync();
   $("#decision-mode").value = world.decisionMode;
   $("#parameters").innerHTML = Object.entries(params)
     .filter(([k]) => !["randomness", "music", "social"].includes(k))

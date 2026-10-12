@@ -67,3 +67,7 @@ Liens : [Interactions](./interactions.md), [Musique](./musique.md), [Composition
 ## Invitations hors sac
 
 Les appels de groupe ne sont pas des jetons, ne modifient pas le sac et n’interrompent pas l’activité courante. Une participation acceptée démarre Pratiquer hors sac ; son trajet, attente, cycles et expiration suivent le [DDD Groupes](./groupes.md). Les refus ou expirations laissent la pige normale disponible. Le spectacle confirmé prend priorité même sur le sommeil.
+
+## Paramètres personnalisables · V0.7.11
+
+Les paramètres exposés de ce domaine se règlent dans [l’Atelier d’équilibrage](./equilibrage.md). Les chiffres de référence de ce DDD décrivent les valeurs par défaut ; le profil de la partie peut les remplacer. Les formules et conditions non exposées sont conservées.

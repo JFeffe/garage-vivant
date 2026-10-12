@@ -1,4 +1,4 @@
-import {stamp,SKILLS} from './engine.mjs?v=0.7.10';
+import {stamp,SKILLS} from './engine.mjs?v=0.7.11';
 export const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const authorName=(s,x,id)=>s.people.find(p=>p.id===id)?.name||x.authorNames?.[id]||'Ancien voisin';
 export function compositionCreditHTML(s,x){

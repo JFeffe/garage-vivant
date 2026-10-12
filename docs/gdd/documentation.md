@@ -6,6 +6,7 @@ Version 0.7.10. Le dossier historique `docs/gdd/` contient les DDD par domaine. 
 
 | DDD | Responsabilité et points d’entrée |
 |---|---|
+| [Atelier d’équilibrage](./equilibrage.md) | Paramètres par monde, brouillon, validation, profils et raccords moteur |
 | [Personnages](./personnages.md) | Identité, personnalité, quatre besoins, deux axes, pressions et courbes |
 | [Actions](./actions.md) | Six actions, sac/défausse, acquisitions, retraits, durées et interruptions |
 | [Sommeil](./sommeil.md) | Horaires personnels, récupération, engagements nocturnes et accélération |

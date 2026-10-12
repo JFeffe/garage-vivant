@@ -1,4 +1,5 @@
-import {GROUP_RULES as R} from './group-rules.mjs?v=0.7.10';
+import {rule} from './design-rules.mjs?v=0.7.11';
+const duration=n=>n%60===0?`${n/60} h`:`${n} min`;
 const clamp=(v,a=0,b=100)=>Math.max(a,Math.min(b,v));
 const mean=xs=>xs.length?xs.reduce((n,x)=>n+x,0)/xs.length:0;
 const person=(s,id)=>s.people.find(p=>p.id===id);
@@ -30,18 +31,18 @@ export function attachment(s,p,g){
  const styles=songs.length?songs:g.founders.map(id=>person(s,id)).filter(Boolean);
  const f=mean(peers.map(q=>clamp(relation(s,p.id,q.id).affinity))),t=mean(peers.map(q=>relation(s,p.id,q.id).tension));
  const h=mean(peers.map(q=>musicalChemistry(p,q))),style=styles.length?100*styles.filter(x=>x.genre===p.genre).length/styles.length:50;
- const terms={coordination:g.development,affinity:R.attachment.affinity*(f-50),style:R.attachment.style*(style-50),chemistry:R.attachment.chemistry*(h-50),reputation:R.attachment.reputation*g.reputation,tension:-R.attachment.tension*t};
+ const terms={coordination:g.development,affinity:rule(s,'groups.attachment.affinity')*(f-50),style:rule(s,'groups.attachment.style')*(style-50),chemistry:rule(s,'groups.attachment.chemistry')*(h-50),reputation:rule(s,'groups.attachment.reputation')*g.reputation,tension:-rule(s,'groups.attachment.tension')*t};
  return {value:clamp(Object.values(terms).reduce((n,x)=>n+x,0)),terms};
 }
 export function pairEligible(s,a,b){
  if(!a||!b||a===b)return false;const ab=relation(s,a.id,b.id),ba=relation(s,b.id,a.id);
- return ((Math.min(ab.affinity,ba.affinity)>=R.affinity)||(Math.min(ab.love,ba.love)>=R.love))&&Math.max(ab.tension,ba.tension)<R.tension;
+ return ((Math.min(ab.affinity,ba.affinity)>=rule(s,'groups.affinity'))||(Math.min(ab.love,ba.love)>=rule(s,'groups.love')))&&Math.max(ab.tension,ba.tension)<rule(s,'groups.tension');
 }
 export function membershipReason(s,host,target,g=null){
  if(!host||!target||host===target)return 'Partenaires invalides.';
  if(host.engagement||target.engagement||[host,target].some(p=>p.action?.key==='sleep'))return 'Partenaire indisponible.';
  const elapsed=s.time-(g?target.lastFormation:Math.max(host.lastFormation,target.lastFormation));
- if(elapsed<(g?R.recruitmentDelay:R.membershipDelay))return g?'24 h doivent s’écouler depuis la dernière formation ou adhésion du candidat.':'48 h doivent s’écouler depuis la dernière formation ou adhésion.';
+ if(elapsed<(g?rule(s,'groups.recruitmentDelay'):rule(s,'groups.membershipDelay')))return `${duration(g?rule(s,'groups.recruitmentDelay'):rule(s,'groups.membershipDelay'))} doivent s’écouler depuis la dernière formation ou adhésion.`;
  if(!pairEligible(s,host,target))return 'Affinité ou amour réciproque insuffisant, ou tension excessive.';
  if(g){if(!activeGroup(g)||!g.members.includes(host.id))return 'Groupe indisponible.';if(g.members.includes(target.id))return 'Déjà membre.';if(g.members.filter(id=>pairEligible(s,target,person(s,id))).length<Math.ceil(g.members.length/2))return 'Liens insuffisants avec la moitié des membres.';}
  else if(s.groups.some(x=>activeGroup(x)&&x.members.includes(host.id)&&x.members.includes(target.id)))return 'Ces musiciens partagent déjà un groupe.';
@@ -57,31 +58,31 @@ export function proposeMembership(s,host,target,g,ctx,{manual=false,name=null}={
  const reason=membershipReason(s,host,target,g);if(reason)return {ok:false,message:reason};
  if(!g&&ctx.canCreate&&!ctx.canCreate(name))return {ok:false,message:'Création refusée : nom indisponible ou banque épuisée.'};
  const key=[host.id,target.id].sort().join(':'),last=s.groupState.proposals[key]??-1e9;
- if(s.time-last<R.pairDelay)return {ok:false,message:'Cette paire a déjà reçu une proposition dans les dernières 24 h.'};
+ if(s.time-last<rule(s,'groups.pairDelay'))return {ok:false,message:`Cette paire a déjà reçu une proposition dans les dernières ${duration(rule(s,'groups.pairDelay'))}.`};
  if(!manual){
   const current=activeGroups(s,host.id).filter(x=>x!==g),max=Math.max(0,...current.map(x=>attachment(s,host,x).value));
-  const chance=(g?R.recruitmentProposal:R.proposal)/(1+current.length**2)*Math.max(.05,1-max/100);
+  const chance=(g?rule(s,'groups.recruitmentProposal'):rule(s,'groups.proposal'))/(1+current.length**2)*Math.max(.05,1-max/100);
   s.groupState.metrics.eligible++;if(ctx.random()>=chance)return {ok:false,message:'Aucune proposition.'};
  }
  s.groupState.proposals[key]=s.time;s.groupState.metrics.proposed++;
  const chance=membershipChance(s,host,target,g),roll=ctx.random(),accepted=roll<chance;
  ctx.emit('group',`${host.name} propose ${g?'de rejoindre « '+g.name+' »':'de former un groupe'} à ${target.name} : ${accepted?'accepté':'refusé'}.`,[host.id,target.id],{membership:true,groupId:g?.id||null,chance,roll,accepted});
  if(!accepted){ctx.refused?.(host);return {ok:false,message:'Proposition déclinée.',chance};}
- if(g){g.members.push(target.id);g.memberships[target.id]={joined:s.time,nextCheck:s.time+R.departureGrace};target.lastFormation=s.time;ctx.joined?.(target);}
+ if(g){g.members.push(target.id);g.memberships[target.id]={joined:s.time,nextCheck:s.time+rule(s,'groups.departureGrace')};target.lastFormation=s.time;ctx.joined?.(target);}
  else {g=ctx.create([host.id,target.id],{manual:true,name,origin:manual?'player':'autonome'});if(!g)return {ok:false,message:'Création refusée : nom indisponible.'};}
  s.groupState.metrics.accepted++;return {ok:true,message:`${target.name} rejoint « ${g.name} ».`,groupId:g.id,chance};
 }
 export function considerMembership(s,a,b,ctx){
  if(!pairEligible(s,a,b))return;
  const options=[{host:a,target:b,g:null},...activeGroups(s,a.id).filter(g=>!membershipReason(s,a,b,g)).map(g=>({host:a,target:b,g})),...activeGroups(s,b.id).filter(g=>!membershipReason(s,b,a,g)).map(g=>({host:b,target:a,g}))].filter(o=>!membershipReason(s,o.host,o.target,o.g));
- if(!options.length)return;const weights=options.map(o=>(o.g?R.recruitmentWeight:1)*(1+(o.g?attachment(s,o.target,o.g).value:18)/25)),total=weights.reduce((a,b)=>a+b,0);let roll=ctx.random()*total,index=0;while(index<weights.length-1&&(roll-=weights[index])>=0)index++;const o=options[index];return proposeMembership(s,o.host,o.target,o.g,ctx);
+ if(!options.length)return;const weights=options.map(o=>(o.g?rule(s,'groups.recruitmentWeight'):1)*(1+(o.g?attachment(s,o.target,o.g).value:18)/25)),total=weights.reduce((a,b)=>a+b,0);let roll=ctx.random()*total,index=0;while(index<weights.length-1&&(roll-=weights[index])>=0)index++;const o=options[index];return proposeMembership(s,o.host,o.target,o.g,ctx);
 }
 export function initializeGroupState(s){s.groupState={nextRequestId:1,requests:[],proposals:{},metrics:{eligible:0,proposed:0,accepted:0,adoptions:0,practiceRequests:0,practices:0,departures:0,dissolutions:0,relations:{attempts:0,admitted:0,favorable:0,neutral:0,unfavorable:0,gained:0,lost:0,erosion:0}}};}
 export function initializeGroupData(s,g,random){
  g.initialGenre=g.genre;g.genre=g.initialGenre=g.founders.length?person(s,g.founders[Math.floor(random()*g.founders.length)])?.genre||g.genre:g.genre;
  g.state=g.archivedAt===null?'active':'dissolved';g.dissolvedReason=g.state==='dissolved'?'Archive historique':null;g.finalMembers=g.state==='dissolved'?[...g.members]:[];
- g.showReputation=g.reputation;g.memberships=Object.fromEntries(g.members.map(id=>[id,{joined:s.time,nextCheck:s.time+R.departureGrace}]));
- g.nextAdoption=s.time+Math.floor(random()*R.decisionMinutes)+1;g.nextPractice=s.time+Math.floor(random()*R.decisionMinutes)+1;
+ g.showReputation=g.reputation;g.memberships=Object.fromEntries(g.members.map(id=>[id,{joined:s.time,nextCheck:s.time+rule(s,'groups.departureGrace')}]));
+ g.nextAdoption=s.time+Math.floor(random()*rule(s,'groups.decisionMinutes'))+1;g.nextPractice=s.time+Math.floor(random()*rule(s,'groups.decisionMinutes'))+1;
  for(const row of g.repertoire)row.active??=true;
 }
 export function adoptionReason(s,g,song){if(!activeGroup(g)||!song)return 'Groupe ou chanson introuvable.';if(song.ownerGroupId)return 'Cette chanson appartient déjà à un groupe.';if(!song.authors.some(id=>g.members.includes(id)))return 'Aucun auteur n’est membre du groupe.';return null;}
@@ -94,7 +95,7 @@ export function requestRehearsal(s,g,songId,place,ctx){
  if(!ctx.validPlace?.(place))return {ok:false,message:'Lieu de répétition indisponible.'};
  if(!activeGroup(g)||!g.repertoire.some(r=>r.songId===songId&&r.active!==false))return {ok:false,message:'Choisis un morceau actif du répertoire.'};
  if(s.groupState.requests.some(x=>x.groupId===g.id&&['open','playing'].includes(x.status)))return {ok:false,message:'Une répétition de ce groupe est déjà en préparation ou en cours.'};
- const req={id:'rehearsal-'+s.groupState.nextRequestId++,groupId:g.id,songId,place,created:s.time,expires:s.time+R.invitationMinutes,status:'open',firstArrival:null,started:null,invited:[...g.members]};s.groupState.requests.push(req);
+ const req={id:'rehearsal-'+s.groupState.nextRequestId++,groupId:g.id,songId,place,created:s.time,expires:s.time+rule(s,'groups.invitationMinutes'),status:'open',firstArrival:null,started:null,invited:[...g.members]};s.groupState.requests.push(req);
  for(const id of g.members){const p=person(s,id);p.invitationQueue.push({id:req.id+':'+id,requestId:req.id,created:s.time,expires:req.expires,status:'pending',resolved:null,reason:null});}
  s.groupState.metrics.practiceRequests++;ctx.emit('group',`« ${g.name} » appelle une répétition.`,g.members,{groupId:g.id,requestId:req.id,songId});return {ok:true,message:'Invitations à pratiquer ajoutées aux files.',requestId:req.id};
 }
@@ -125,7 +126,7 @@ export function rehearsalReady(s,p,ctx){
  if(req.status==='open'){
   req.firstArrival??=s.time;
   if(present.length>=2){req.status='playing';req.started=s.time;s.groupState.metrics.practices++;ctx.emit('group',`« ${g.name} » commence sa répétition.`,present.map(x=>x.id),{groupId:g.id,requestId:id});}
-  else if(s.time>=req.expires||s.time-req.firstArrival>=R.waitMinutes){req.status='closed';for(const q of present)ctx.close(q,'cancelled');return false;}
+  else if(s.time>=req.expires||s.time-req.firstArrival>=rule(s,'groups.waitMinutes')){req.status='closed';for(const q of present)ctx.close(q,'cancelled');return false;}
   else{p.action.waited++;const row=s.activities.find(x=>x.id===p.action.activityId);if(row)row.status='waiting';return false;}
  }
  return true;
@@ -161,17 +162,17 @@ export function groupsMinute(s,ctx){
  }
  for(const p of s.people){
   const groups=activeGroups(s,p.id).sort((a,b)=>attachment(s,p,a).value-attachment(s,p,b).value);
-  for(const g of groups){const m=g.memberships[p.id];if(!m||s.time<m.nextCheck)continue;m.nextCheck=s.time+R.departureMinutes;
-   if(ctx.closeShow?.(p,g))continue;const score=attachment(s,p,g).value,alternative=groups.some(x=>x!==g&&attachment(s,p,x).value-score>=R.alternativeGap);
-   const chance=Math.min(.3,(score<R.lowAttachment?R.departureChance:0)+(alternative?R.alternativeChance:0));if(chance&&ctx.random()<chance){leaveGroup(s,g,p,alternative?'Autre groupe plus attirant.':'Attachement faible.',ctx);break;}
+  for(const g of groups){const m=g.memberships[p.id];if(!m||s.time<m.nextCheck)continue;m.nextCheck=s.time+rule(s,'groups.departureMinutes');
+   if(ctx.closeShow?.(p,g))continue;const score=attachment(s,p,g).value,alternative=groups.some(x=>x!==g&&attachment(s,p,x).value-score>=rule(s,'groups.alternativeGap'));
+   const chance=Math.min(.3,(score<rule(s,'groups.lowAttachment')?rule(s,'groups.departureChance'):0)+(alternative?rule(s,'groups.alternativeChance'):0));if(chance&&ctx.random()<chance){leaveGroup(s,g,p,alternative?'Autre groupe plus attirant.':'Attachement faible.',ctx);break;}
   }
  }
  const active=s.groups.filter(g=>activeGroup(g)&&(s.time>=g.nextAdoption||s.time>=g.nextPractice));for(let i=active.length-1;i>0;i--){const j=Math.floor(ctx.random()*(i+1));[active[i],active[j]]=[active[j],active[i]];}
  for(const g of active){
-  if(s.time>=g.nextAdoption){g.nextAdoption=s.time+R.decisionMinutes;let songs=s.songs.filter(x=>!adoptionReason(s,g,x));if(songs.some(x=>!x.weak))songs=songs.filter(x=>!x.weak);const song=weighted(songs,x=>1+x.quality/10+(x.genre===g.genre?2:0),ctx.random);if(song&&ctx.random()<clamp(.15+song.quality/200+(song.genre===g.genre?.15:0),.15,.8))adoptSong(s,g,song,ctx);}
-  if(s.time>=g.nextPractice){g.nextPractice=s.time+R.decisionMinutes;const rows=g.repertoire.filter(r=>r.active!==false);if(rows.length&&ctx.random()<(g.development<R.fragileCoordination?R.fragileRehearsalChance:R.rehearsalChance)){const row=weighted(rows,r=>1+(100-r.mastery)/20,ctx.random);requestRehearsal(s,g,row.songId,ctx.place(),ctx);}}
+  if(s.time>=g.nextAdoption){g.nextAdoption=s.time+rule(s,'groups.decisionMinutes');let songs=s.songs.filter(x=>!adoptionReason(s,g,x));if(songs.some(x=>!x.weak))songs=songs.filter(x=>!x.weak);const song=weighted(songs,x=>1+x.quality/10+(x.genre===g.genre?2:0),ctx.random);if(song&&ctx.random()<clamp(.15+song.quality/200+(song.genre===g.genre?.15:0),.15,.8))adoptSong(s,g,song,ctx);}
+  if(s.time>=g.nextPractice){g.nextPractice=s.time+rule(s,'groups.decisionMinutes');const rows=g.repertoire.filter(r=>r.active!==false);if(rows.length&&ctx.random()<(g.development<rule(s,'groups.fragileCoordination')?rule(s,'groups.fragileRehearsalChance'):rule(s,'groups.rehearsalChance'))){const row=weighted(rows,r=>1+(100-r.mastery)/20,ctx.random);requestRehearsal(s,g,row.songId,ctx.place(),ctx);}}
  }
- for(const [key,time]of Object.entries(s.groupState.proposals))if(s.time-time>R.pairDelay)delete s.groupState.proposals[key];
+ for(const [key,time]of Object.entries(s.groupState.proposals))if(s.time-time>rule(s,'groups.pairDelay'))delete s.groupState.proposals[key];
 }
 export function upgradeGroups(s,random,ctx){
  initializeGroupState(s);s.legacyV71={trust:{},sharedRepertoires:[],propertyResolutions:[],confirmedBookings:[]};
