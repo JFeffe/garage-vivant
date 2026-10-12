@@ -13,7 +13,7 @@ function prepared(){const s=restore(legacy);for(const p of s.people){p.sleep.nex
 const controlled=s=>({...groupContext(s),random:()=>0});
 
 test('Real V7.1 migration archives trust and resolves shared repertoire without rewriting authors or mastery',()=>{
- const before=copy(legacy),s=restore(legacy),song=s.songs[0],g1=s.groups[0],g2=s.groups[1];assert.deepEqual(legacy,before);assert.equal(s.version,'0.7.2');assert.equal(song.ownerGroupId,g1.id);assert.equal(song.adoptedAt,null);assert.equal(g1.repertoire[0].mastery,60);assert.equal(g2.repertoire.length,0);assert.equal(s.legacyV71.sharedRepertoires[0].mastery,30);assert.equal(s.people[0].songMastery[song.id],44);assert.deepEqual(song.authors,legacy.songs[0].authors);
+ const before=copy(legacy),s=restore(legacy),song=s.songs[0],g1=s.groups[0],g2=s.groups[1];assert.deepEqual(legacy,before);assert.equal(s.version,'0.7.3');assert.equal(song.ownerGroupId,g1.id);assert.equal(song.adoptedAt,null);assert.equal(g1.repertoire[0].mastery,60);assert.equal(g2.repertoire.length,0);assert.equal(s.legacyV71.sharedRepertoires[0].mastery,30);assert.equal(s.people[0].songMastery[song.id],44);assert.deepEqual(song.authors,legacy.songs[0].authors);
  for(const [key,r]of Object.entries(legacy.rels)){assert(!('trust'in s.rels[key]));assert.equal(s.legacyV71.trust[key],r.trust);assert.equal(s.rels[key].affinity,r.affinity);}
  assert(s.bookings[0].legacySetlist);assert(s.legacyV71.confirmedBookings.includes(s.bookings[0].id));assert.deepEqual(restore(s),s);
  const twin=restore(s);step(s,250);step(twin,250);assert.deepEqual(s,twin);
@@ -24,7 +24,7 @@ test('Adoption and authors survive departure, deactivation and terminal dissolut
  const s=prepared(),g=s.groups[0],song=s.songs[0],author=s.people[0],row=g.repertoire[0];
  assert(command(s,{type:'repertoire',actorId:author.id,groupId:g.id,songId:song.id,remove:true}).ok);assert.equal(row.active,false);assert.equal(row.mastery,60);assert.equal(song.ownerGroupId,g.id);
  assert(command(s,{type:'repertoire',actorId:author.id,groupId:g.id,songId:song.id}).ok);assert.equal(row.active,true);assert.equal(row.mastery,60);
- assert(command(s,{type:'leaveGroup',actorId:author.id,groupId:g.id}).ok);assert.equal(g.state,'dissolved');assert.equal(g.members.length,0);assert(song.authors.includes(author.id));assert.equal(song.ownerGroupId,g.id);assert.equal(author.songMastery[song.id],44);assert.equal(row.mastery,60);assert.equal(g.alumni.length,2);
+ assert(command(s,{type:'leaveGroup',actorId:author.id,groupId:g.id}).ok);assert.equal(g.state,'dissolved');assert.equal(g.members.length,0);assert(song.authors.includes(author.id));assert.equal(song.ownerGroupId,g.id);assert.equal(author.songMastery[song.id],44);assert.equal(row.mastery,60);assert.equal(g.alumni.length,2);const archivedHTML=bandsHTML(s,g.id,'',true);assert(archivedHTML.includes('Archives (1)'));assert(archivedHTML.includes('Dissolution définitive'));assert(archivedHTML.includes(song.title));assert(!archivedHTML.includes('data-rehearse=')&&!archivedHTML.includes('data-open-shows='));
  assert(!command(s,{type:'repertoire',actorId:author.id,groupId:s.groups[1].id,songId:song.id}).ok);assert(!command(s,{type:'revive',actorId:author.id,groupId:g.id}).ok);const metrics=copy(s.groupState.metrics);assert(!dissolveGroup(s,g,'again',groupContext(s)));assert.deepEqual(s.groupState.metrics,metrics);restore(s);
 });
 

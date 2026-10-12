@@ -1,6 +1,6 @@
 # DDD — Six actions, sac et défausse
 
-Version 0.7.2. Six intentions d’éveil : Détente, Socialiser, Pratiquer, Jam, Composer et Déchéance. Dormir est hors sac. Former un groupe passe par proposition et acceptation après un échange favorable admissible, sans jeton dédié.
+Version 0.7.4. Six intentions d’éveil : Détente, Socialiser, Pratiquer, Jam, Composer et Déchéance. Dormir est hors sac. Former un groupe passe par proposition et acceptation après un échange favorable admissible, sans jeton dédié.
 
 ## Pige et inventaire
 
@@ -17,6 +17,8 @@ Une édition accepte une quantité entière de 0 à 100. Une hausse acquiert imm
 À la création, chaque action reçoit une fourchette personnelle persistante : base × facteur individuel tiré dans [0,8 ; 1,2], puis minimum ×0,65 et maximum ×1,4, arrondis. Bases d’équilibrage : Détente 45, Socialiser 90, Pratiquer 65, Jam 85, Composer 75 et Déchéance 50 minutes. Ces bases ne sont pas des durées fixes.
 
 Chaque séance tire une durée indicative entre ses bornes. Détente se termine à cette durée. Les autres activités musicales et les excès évaluent leur poursuite par cycles de 15 minutes. Avant la borne minimale, elles continuent sauf énergie sous 12 ; à la borne maximale elles terminent au prochain cycle. Entre les bornes, la probabilité de départ est `0,1 + pression + satisfaction + dépassement`, plafonnée à 0,85. Pression = `max(0 ; (35 − min(énergie, plaisir, social))/100)` ; satisfaction +0,35 si social >85 en discussion ou expression >90 en Jam/composition ; dépassement +0,25 après la durée indicative.
+
+Dans une pratique collective, chaque participant décrémente son propre cycle. Le choix de contenu partagé ne réinitialise pas le compteur des autres : leur départ reste évalué à leurs propres échéances. La tolérance de fin au prochain cycle est au plus 15 minutes au-delà du maximum personnel.
 
 Après chaque échange social, le destinataire évalue son départ. La fatigue ou sa borne personnelle supérieure peuvent aussi terminer sa participation pendant la boucle minute. Socialiser n’est pas limité à 50 minutes. Le sommeil et les engagements conservent leurs priorités. Une interruption termine la séance ; ses effets et son travail déjà produits sont acquis.
 

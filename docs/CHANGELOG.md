@@ -1,3 +1,11 @@
+# V0.7.4 — 11 octobre 2026
+
+Accès explicite aux groupes dissous par Groupes → Archives, compteurs et listes séparées, fiche conservée lors d’une dissolution et liens de propriétaire corrects. Répertoires, membres historiques, spectacles et histoire conservés. Format 0.7.3 inchangé, aucun comportement moteur modifié. [DDD Groupes](./gdd/groupes.md), [tests G25–G27](./PLAN_TEST_V7.md).
+
+# V0.7.3 — 11 octobre 2026
+
+Quatre corrections après seize parties de quinze jours : morceau annoncé, cycles individuels de départ, expiration en cours et fin des coauteurs. Passage V7.2 sans tirage ni ajout de champ, rapports reproductibles et tests de non-régression intégrés à la CI. DDD et plan de test complet actualisés. [Bilan et limites](./AUDIT_V7_3.md).
+
 # V0.7.2 — 11 octobre 2026
 
 Groupes autonomes, propositions et acceptations, confiance retirée, attachement dérivé, agrégats, couleur/réputation, adoption exclusive, invitations hors sac, trajets prioritaires et dissolution terminale. Migration V7.1 avec archives de confiance et anciens répertoires partagés, setlists confirmées conservées. Fiches et libellés lisibles, quinze DDD et réception multi-graines. Voir [réalisation](./PLAN_V7_2.md) et [rapport](./BALANCE_V7_2.md). Plan de test complet V7 à V7.2 intégré à la navigation/recherche ; publication de main après validation.

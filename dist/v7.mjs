@@ -1,5 +1,5 @@
-import { attachment } from './groups.mjs?v=0.7.2';
-import { GROUP_RULES } from './group-rules.mjs?v=0.7.2';
+import { attachment } from './groups.mjs?v=0.7.4';
+import { GROUP_RULES } from './group-rules.mjs?v=0.7.4';
 // V7 rules shared by simulation, inspectors and documentation tests.
 export const BAG_ACTIONS = ["relax", "social", "practice", "jam", "write", "decadence"];
 export const BAG_SAMPLES = [

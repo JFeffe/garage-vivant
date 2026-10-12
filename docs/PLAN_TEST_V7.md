@@ -1,8 +1,30 @@
-# Plan de test — V7 complète à V7.2
+# Plan de test — V7 complète à V7.4
 
-Référence : **version 0.7.2**, 11 octobre 2026. Ce plan couvre les systèmes conservés de la V7, les actions de la V7.1, les groupes de la V7.2 et leurs raccords à la scène. Les [quinze DDD](./gdd/documentation.md) décrivent les règles actuelles ; les anciens plans conservent aussi des propositions non réalisées.
+Référence : **interface 0.7.4, format 0.7.3**, 11 octobre 2026. Ce plan couvre les systèmes conservés de la V7, les actions de la V7.1, les groupes de la V7.2 et leurs raccords à la scène, puis les quatre transitions corrigées en V7.3 et l’accès aux archives V7.4. Les [quinze DDD](./gdd/documentation.md) décrivent les règles actuelles ; les anciens plans conservent aussi des propositions non réalisées.
 
 Les tests ci-dessous constituent une liste à exécuter, pas une déclaration que chaque essai manuel a déjà réussi. La réception automatisée disponible est détaillée à la fin. Aucun essai ne doit ajouter une règle, offrir des relations, créer un groupe de secours ou modifier silencieusement une sauvegarde pour réussir.
+
+## Ce soir : commencer par les archives et la 7.3
+
+Recharger et vérifier **0.7.4**, exporter sa partie, puis faire G25–G27 pour les archives et R01–R10. Tester ensuite C73-01 à C73-05 ci-dessous avant la boucle complète « composer → adopter → répéter → spectacle ». Le [bilan des seize parties simulées](./AUDIT_V7_3.md) distingue défauts corrigés et points d’équilibre ; il ne remplace pas cette réception humaine.
+
+| ID / priorité | Essai | Résultat attendu |
+|---|---|---|
+| C73-01 P1 | Appeler une répétition d’un morceau dans un groupe avec plusieurs œuvres ; laisser passer plusieurs cycles, puis recharger | Morceau de la demande, travail réel et maîtrise créditée restent alignés ; aucune autre œuvre ne gagne de maîtrise collective pour cet appel |
+| C73-02 P1 | Deux membres pratiquent ensemble avec fourchettes différentes ; observer leurs départs | Chacun décide à son propre cycle ; le meneur ne retarde pas celui des autres ; aucun dépassement au-delà de maximum + 15 min de travail |
+| C73-03 P1 | Demande encore en cours à son échéance (fixture moteur pour isoler ce cas rare) | Demande fermée, participations terminées, aucun gain collectif après échéance, sac non remboursé |
+| C73-04 P1 | Finir une œuvre coécrite alors que l’autre auteur travaille encore ou est en trajet | Une seule chanson, auteurs/contributions conservés ; séances du projet terminées ; une nouvelle composition passe par un nouveau choix d’action |
+| C73-05 P0 | Importer une vraie sauvegarde V7.2, exporter puis recharger la V7.3 | Chansons, maîtrises, groupes, projets, sacs, seuils et RNG conservés ; seul numéro de format modifié ; copie avant migration conservée ; pas de réparation d’un import corrompu |
+
+### Points de ressenti à consigner
+
+| ID / priorité | Partie naturelle | Observation demandée, sans succès imposé |
+|---|---|---|
+| E73-01 P2 | Huit personnages, quinze jours, paramètres par défaut | Le plaisir presque toujours rempli rend-il ce besoin sans enjeu ? Noter aussi exaltation/détresse et actions effectivement vues |
+| E73-02 P2 | Quatre personnages, mêmes paramètres | Recherche sociale et refus trop fréquents ? Distinguer solitude, manque d’occasions et conflit ; relever le temps critique social |
+| E73-03 P2 | Suivre un musicien et ses compositions pendant quinze jours | Plateaux/percements perceptibles, talent/écriture trop rapides, nombre d’œuvres et séances par œuvre adaptés ? |
+| E73-05 P2 | Observer la déchéance naturelle puis isoler chaînes et absence extrême au laboratoire | Ces cas sont rares dans les seize parties ; distinguer faible fréquence, seuil jamais atteint et règle qui ne fonctionne pas |
+| E73-04 P1 | Suivre les vrais spectacles | La résolution automatique du banc de simulation ne juge ni qualité du show, ni son, ni mise en scène ; jouer ces séquences et faire les essais audio/appareil ci-dessous |
 
 ## 1. Ordre de passage
 
@@ -22,7 +44,7 @@ Un résultat probabiliste ne doit pas être garanti dans une séance isolée. S�
 
 ## 2. Préparer et conserver les preuves
 
-1. Vérifier le numéro 0.7.2 dans le jeu et les notes de version. Après publication, recharger pour récupérer les nouveaux modules.
+1. Vérifier le numéro 0.7.4 dans le jeu et les notes de version. Après publication, recharger pour récupérer les nouveaux modules.
 2. Exporter sa partie avant les essais. Conserver l’original sans l’écraser ; utiliser une origine locale ou un autre profil de navigateur pour les fixtures et manipulations.
 3. Noter version, commit, graine si connue, population, paramètres, navigateur, appareil, taille d’écran et heure simulée de départ.
 4. Utiliser Pause pendant les mesures. Un affichage en lecture continue peut évoluer entre deux captures.
@@ -184,6 +206,10 @@ Source : [Groupes](./gdd/groupes.md). Les valeurs ci-dessous sont celles de V7.2
 | G22 P0 | Coordination positive très faible, puis zéro ; moins de deux membres | Récupération possible tant que positif ; zéro/sous deux terminal, demandes/réservations fermées, aucune résurrection |
 | G23 P0 | Recharger groupe dissous puis demander reprise ou nouvelle adoption | État terminal conservé, reprise refusée ; œuvres/historique gardés, aucun transfert de secours |
 | G24 P1 | Adoption, plusieurs minutes, puis vrai show et replay | Réputation catalogue recalculée sans crédit répété ; part spectacle appliquée une fois ; moral existant conservé |
+| G25 P1 | Groupes actifs et dissous présents ; cliquer Archives, rechercher et consulter une fiche | Boutons avec compteurs, catégorie Archives distincte ; répertoire/maîtrise, fondateurs/anciens membres, date/motif, histoire et shows accessibles ; aucune commande d’activité active |
+| G26 P1 | Groupe consulté qui se dissout ; lien de propriétaire d’une chanson depuis une autre catégorie/recherche | Fiche conservée dans Archives ; lien ouvre le bon groupe et retire une recherche incompatible, pas une autre fiche par défaut |
+| G27 P0 | Export/rechargement d’une partie avec groupe dissous après une vraie prestation | Même groupe et historique, propriétaire et maîtrise conservés ; archive accessible après recharge ; aucune réactivation, suppression ou migration 0.7.4 de format |
+
 
 ## 9. Déchéance et engagements de scène
 
@@ -229,7 +255,7 @@ La clarté fait partie de la réception : une valeur juste mais cachée peut emp
 | U11 P1 | Son OFF/ON puis inspection, skip et show suivant | Bouton visible, démarrage sonore à l’initiative du joueur, tir/contact distincts ; aucun bruit continu gossant ou boucle doublée |
 | U12 P2 | Effets réduits puis capture comparative | Résultats et cibles inchangés, secousses/recul/éclats retirés, jauges et indications conservées |
 | U13 P1 | Recherche jeu et VitePress : adoption, défausse, seuils, Solitaire, plan de test | Résultats actuels, liens/ancres valides, navigation clavier ; plan accessible par architecture documentaire et VitePress |
-| U14 P1 | Version puis notes, fermer/revenir/recharger | v0.7.2 et note correcte ; notes lues conservées, pause/focus restaurés |
+| U14 P1 | Version puis notes, fermer/revenir/recharger | v0.7.4 et note correcte ; notes lues conservées, pause/focus restaurés |
 | U15 P1 | Nom avec accents, apostrophes et contenu de type HTML | Nom affiché comme texte, jamais exécuté ; unicité normalisée ; contrôles dans leurs cartes |
 
 Matrice minimale de scène : **1440×900, 1200×768, 900×850, 390×844, 390×667, 844×390**. Vérifier titre, nom du groupe, cartes, decks, foule, commandes et jauges sans défilement extérieur. Le quartier et les fiches peuvent défiler ; leur contenu ne doit pas déborder horizontalement.
@@ -242,11 +268,11 @@ Source : [Technique](./gdd/technique.md). Utiliser les JSON historiques de `test
 
 | ID / priorité | Essai | Résultat attendu |
 |---|---|---|
-| V01 P0 | Import V1/V2/V3/V4/V5/V6/V7.0/V7.1 | Conversion 0.7.2 validée sur copie ; productions, compétences, auteurs et traces conservés selon migration documentée |
+| V01 P0 | Import V1/V2/V3/V4/V5/V6/V7.0/V7.1/V7.2 | Conversion 0.7.3 validée sur copie ; productions, compétences, auteurs et traces conservés selon migration documentée |
 | V02 P0 | Vraie fixture `tests/v071-world.json` | Confiance archivée sans affinité offerte ; une chanson partagée attribuée à la meilleure maîtrise puis date/identifiant |
 | V03 P0 | Ancien partage, réservation confirmée et auteur qui quitte | Maîtrises personnelles conservées, entrée perdante archivée, arbitrage traçable, exception de setlist historique enregistrée |
 | V04 P0 | Groupe archivé, zéro Coordination ou moins de deux membres à l’import | État terminal, histoire et œuvres gardées, engagements futurs annulés ; aucune reprise offerte |
-| V05 P0 | Recharger une partie 0.7.2 en trajet, attente, pratique, sommeil ou show | Aucun reroll, nouvelle migration ou reset de délai ; mêmes commandes produisent le même futur |
+| V05 P0 | Recharger une partie 0.7.3 en trajet, attente, pratique, sommeil ou show | Aucun reroll, nouvelle migration ou reset de délai ; mêmes commandes produisent le même futur |
 | V06 P0 | Exporter/importer, comparer monde à pause égale | Aucune perte de demandes, files, propriété, seuils, références ou RNG ; préférences d’interface séparées |
 | V07 P0 | Corrompre copie : NaN, compteurs, sac, références, propriétaire ou état terminal | Rejet explicite ; sauvegarde valide précédente non remplacée ni réparée silencieusement |
 | V08 P0 | Sauvegarde locale illisible, rechargement puis attente | Pas d’écrasement automatique ; nouvelle partie/import seulement sur action explicite |
@@ -268,7 +294,7 @@ Commande reproductible : `npm run audit:groups`. Elle simule vingt graines avec 
 | Stabilité prolongée sur trois graines | À J90 : 8 groupes actifs âgés d’au moins 30 j, 19/19 attachés en groupe unique | Échantillon limité à ces trois parties |
 | Sauvegarde et futur | Rechargements et continuation conformes | Pas seulement une validation de schéma |
 
-Le [rapport](./BALANCE_V7_2.md) et ses [données](./BALANCE_V7_2.json) constituent la référence. Le script réécrit le JSON ; conserver le rapport initial avant un nouvel équilibrage et comparer les mêmes réglages. Une graine isolée sans groupe à J10 ne justifie pas une mécanique de secours.
+Le [rapport](./BALANCE_V7_2.md) et ses [données](./BALANCE_V7_2.json) constituent la référence. La commande courante écrit `BALANCE_V7_3.json` ; la référence V7.2 reste conservée. Comparer les mêmes réglages et lire aussi le [bilan V7.3](./AUDIT_V7_3.md). Une graine isolée sans groupe à J10 ne justifie pas une mécanique de secours.
 
 Compléments manuels à mesurer sans les annoncer déjà réussis : populations 2/4/12/24, sacs édités, paramètres extrêmes mais valides, évolution d’une vraie partie V7.1 importée, rotations de membres et lisibilité d’un grand catalogue. Les critères chiffrés à huit personnages ne se transfèrent pas automatiquement aux autres configurations. Relever une file interminable, une famine de pige, une succession permanente de duos ou une disparition d’œuvres ; conserver la partie pour diagnostic.
 
@@ -293,7 +319,7 @@ Les quatorze identifiants du [registre](./gdd/raccords-v7.md) doivent être visi
 | `song-transfer` | Propriété conservée après départ/dissolution, pas de transfert ou duplication |
 | `group-social-meeting` | Social dans activités existantes, pas de nouvelle réunion autonome |
 
-Ne pas exiger ces mécanismes pour accepter la V7.2. Si un raccord restant actif casse le jeu, consigner un défaut réel ; ne pas le masquer en remplissant le sac, restaurant la Coordination, inventant un remplaçant ou transférant les chansons.
+Ne pas exiger ces mécanismes pour accepter la V7.3. Si un raccord restant actif casse le jeu, consigner un défaut réel ; ne pas le masquer en remplissant le sac, restaurant la Coordination, inventant un remplaçant ou transférant les chansons.
 
 ## 14. Commandes et couverture déjà automatisée
 
@@ -303,6 +329,7 @@ Avec Node 22, depuis la racine du dépôt :
 npm ci --ignore-scripts
 npm test
 npm run audit:groups
+npm run audit:simulation
 npx playwright install --with-deps chromium
 npm run docs:build
 npm run test:browser
@@ -316,15 +343,19 @@ Pour une partie locale indépendante : `python3 -m http.server 8000 --directory 
 | `engine`, `systems`, `v4`, `v5`, `v6` | Simulation, données, carrière, calendrier, contraintes, setlists et versions historiques |
 | `v7` | Sac, pressions, sources de traits, admission, partenaire, sommeil, romance, migrations et continuation |
 | `v71` | Six actions, retraits différés, projets séparés, plateaux, qualité relative, noms et déchéance |
+| `v73` | Quatre défauts de transition reproduits, vraie V7.2 conservée, validation stricte et continuation déterministe |
 | `v72` | Vraie V7.1, propriétaire unique, attachement/agrégats, file/attente, présence, dissolution et corruption |
 | `runtime`, `show` | Horloges, gel du quartier, scène, vitesses, reprise, skip/replay et résultats uniques |
 | `interface`, `docs` | Rendu, valeurs cachées, contenu échappé, traits/raccords, versions, liens et termes cherchables |
 | `browser`, `show-layout` | Chromium, desktop/tactile, scroll/focus, contrôles, catalogue, recherches, scènes et six viewports |
+| `audit:simulation` | Seize parties de quinze jours, invariants observés, validation quotidienne et continuation 240 min ; résultats avant/après séparés |
 | `audit:groups` | Émergence/stabilité multi-graines, métriques, rechargements et prolongement à J90 |
 
 La réception de la PR V7.2 a réussi ces commandes : `npm test` rapporte 20 tests, zéro échec ; [CI 29](https://github.com/jutrasimon/garage-vivant/actions/runs/38106457451) verte. Ce nombre agrège des suites contenant de nombreuses assertions ; il ne signifie pas que toutes les lignes de ce plan ont été jouées par une personne. La CI du dernier commit et celle de `main` restent les références pour la publication correspondante.
 
-Les mesures CI sont conservées dans `equilibrage-v72`, les captures dans `interface-v7`. Les captures CI expirent après sept jours : conserver celles nécessaires à un défaut avant expiration. Aucune couverture chiffrée de code, validation de plaisir humain ou certification d’appareil réel n’est revendiquée.
+Les mesures V7.3 sont conservées dans `equilibrage-v73` et `simulations-v73`, les captures dans `interface-v7`. Les captures CI expirent après sept jours : conserver celles nécessaires à un défaut avant expiration. Aucune couverture chiffrée de code, validation de plaisir humain ou certification d’appareil réel n’est revendiquée.
+
+La réception V7.3, ses mesures et leurs limites sont dans le [bilan V7.3](./AUDIT_V7_3.md). Le passage de format n’offre aucun groupe, remise à zéro ou récompense. Les tests humains de ce plan restent à renseigner.
 
 ## 15. Compte rendu et décision
 

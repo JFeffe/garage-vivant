@@ -1,4 +1,4 @@
-import { decadenceCount } from "./v71.mjs?v=0.7.2";
+import { decadenceCount } from "./v71.mjs?v=0.7.4";
 import {restoreBandLive} from './bandlive.mjs?v=4';
 // New songs match the two broad V7 axes; legacy performances keep exact matching.
 export function emotionCompatible(song,fan,version=7){return song===fan||version>=7&&(song==='exaltation'&&['joy','excitement','affection'].includes(fan)||song==='distress'&&['sadness','anger','fear'].includes(fan));}

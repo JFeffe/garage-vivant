@@ -1,6 +1,6 @@
-import { GROUP_RULES as GROUP_RULES } from './group-rules.mjs?v=0.7.2';
-import { musicalChemistry, pairEligible, membershipReason, considerMembership, initializeGroupData, resolveInvitation, rehearsalReady, upgradeGroups, validateGroups, leaveGroup } from './groups.mjs?v=0.7.2';
-import { V71_RULES, initializeV71, setupAction, chooseInstrument, shouldLeave, musicName, reserveMusicName, classifySongs, upgradeV71, validateV71, decadenceCount } from "./v71.mjs?v=0.7.2";
+import { GROUP_RULES as GROUP_RULES } from './group-rules.mjs?v=0.7.4';
+import { musicalChemistry, pairEligible, membershipReason, considerMembership, initializeGroupData, resolveInvitation, rehearsalReady, upgradeGroups, validateGroups, leaveGroup } from './groups.mjs?v=0.7.4';
+import { V71_RULES, initializeV71, setupAction, chooseInstrument, shouldLeave, musicName, reserveMusicName, classifySongs, upgradeV71, validateV71, decadenceCount } from "./v71.mjs?v=0.7.4";
 import {
   NEED_DRAIN,
   ACTIVITY_EFFECTS,
@@ -19,13 +19,13 @@ import {
   interactionProbabilities,
   coolRelationV7,
   validateV7,
-} from "./v7.mjs?v=0.7.2";
+} from "./v7.mjs?v=0.7.4";
 import {
   initializeV6Person,
   upgradeV6,
   markGrief,
   repairGrief,
-} from "./social.mjs?v=0.7.2";
+} from "./social.mjs?v=0.7.4";
 import {
   initializePerson,
   initializeGroup,
@@ -41,8 +41,8 @@ import {
   departForShow,
   refreshOpportunity,
   validateLife,
-} from "./life.mjs?v=0.7.2";
-export const VERSION = "0.7.2";
+} from "./life.mjs?v=0.7.4";
+export const VERSION = "0.7.3";
 export const NEEDS = {
   energy: "Énergie",
   social: "Lien social",
@@ -1530,6 +1530,10 @@ function releaseSong(s, p) {
   p.draft = defaultDraft();
   p.songProgress = 0;
   refreshReputation(s, p);
+  for(const id of project.authors){
+    const author=s.people.find(x=>x.id===id);
+    if(author!==p&&author?.action?.key==='write'&&author.action.projectId===project.id)finish(s,author);
+  }
   return song;
 }
 
@@ -1864,7 +1868,7 @@ function practiceMinute(s,p){
  a.cycles++;
  if(shouldLeave(p,()=>rand(s))){finish(s,p);return;}
  const group=s.groups.find(g=>g.id===a.groupId&&g.archivedAt===null);
- if(group&&members.length>1){if(members[0]===p){const options={groupId:group.id,songId:group.repertoire.some(r=>r.active!==false)?pick(s,group.repertoire.filter(r=>r.active!==false)).songId:a.songId};for(const q of members){choosePractice(s,q,options);q.action.cycleRemaining=V71_RULES.cycleMinutes;}}else a.cycleRemaining=V71_RULES.cycleMinutes;}
+ if(group&&members.length>1){if(members[0]===p){const options={groupId:group.id,songId:a.rehearsalId?a.songId:group.repertoire.some(r=>r.active!==false)?pick(s,group.repertoire.filter(r=>r.active!==false)).songId:a.songId};for(const q of members)choosePractice(s,q,options);}a.cycleRemaining=V71_RULES.cycleMinutes;}
  else{choosePractice(s,p,a.rehearsalId?{groupId:a.groupId,songId:a.songId}:{});a.cycleRemaining=V71_RULES.cycleMinutes;}
 }
 function projectMaintenance(s){
@@ -1899,6 +1903,7 @@ export function step(s, minutes = 1) {
       }
       if(!p.action)continue;
       const action = p.action;
+      if(action.key==='write'&&s.projects.some(x=>x.id===action.projectId&&x.status==='finished')){finish(s,p);continue;}
       if (action.route.length) {
         const t = action.route[0],
           distance = Math.hypot(t.x - p.x, t.y - p.y),
@@ -2420,6 +2425,7 @@ export function restore(input) {
       "0.6.0",
       "0.7.0",
       "0.7.1",
+      "0.7.2",
       VERSION,
     ].includes(input.version) ||
     !Array.isArray(input.people) ||
@@ -2431,7 +2437,7 @@ export function restore(input) {
   )
     throw Error("Sauvegarde incompatible ou incomplète.");
   const raw = JSON.parse(JSON.stringify(input));
-  if (input.version !== VERSION && !["0.7.0","0.7.1"].includes(input.version)) {
+  if (input.version !== VERSION && !["0.7.0","0.7.1","0.7.2"].includes(input.version)) {
     migrate(raw);
     for (const p of raw.people)
       p.legacyActionCounts = {
@@ -2441,7 +2447,13 @@ export function restore(input) {
     upgradeV6(raw);
     upgradeV7(raw);
   }
-  if(input.version!==VERSION){if(input.version!=="0.7.1")upgradeV71(raw,()=>rand(raw));upgradeGroups(raw,()=>rand(raw),groupContext(raw));}
+  if(input.version!==VERSION){
+    if(input.version!=="0.7.2"){
+      if(input.version!=="0.7.1")upgradeV71(raw,()=>rand(raw));
+      upgradeGroups(raw,()=>rand(raw),groupContext(raw));
+    }
+    raw.version=VERSION;
+  }
   const num = (v, min = 0, max = 100) =>
     Number.isFinite(v) && v >= min && v <= max;
   const source = (x) =>

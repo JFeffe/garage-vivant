@@ -1,4 +1,4 @@
-import {GROUP_RULES as R} from './group-rules.mjs?v=0.7.2';
+import {GROUP_RULES as R} from './group-rules.mjs?v=0.7.4';
 const clamp=(v,a=0,b=100)=>Math.max(a,Math.min(b,v));
 const mean=xs=>xs.length?xs.reduce((n,x)=>n+x,0)/xs.length:0;
 const person=(s,id)=>s.people.find(p=>p.id===id);
@@ -93,10 +93,14 @@ export function requestRehearsal(s,g,songId,place,ctx){
  for(const id of g.members){const p=person(s,id);p.invitationQueue.push({id:req.id+':'+id,requestId:req.id,created:s.time,expires:req.expires,status:'pending',resolved:null,reason:null});}
  s.groupState.metrics.practiceRequests++;ctx.emit('group',`« ${g.name} » appelle une répétition.`,g.members,{groupId:g.id,requestId:req.id,songId});return {ok:true,message:'Invitations à pratiquer ajoutées aux files.',requestId:req.id};
 }
+function rehearsalAvailable(s,req){
+ const g=s.groups.find(g=>g.id===req?.groupId);
+ return !!req&&['open','playing'].includes(req.status)&&s.time<req.expires&&activeGroup(g)&&g.repertoire.some(r=>r.songId===req.songId&&r.active!==false);
+}
 export function resolveInvitation(s,p,ctx){
  for(const inv of p.invitationQueue.filter(x=>x.status==='pending').sort((a,b)=>a.created-b.created||a.id.localeCompare(b.id))){
   const req=s.groupState.requests.find(x=>x.id===inv.requestId),g=s.groups.find(x=>x.id===req?.groupId);
-  const invalid=!req||!['open','playing'].includes(req.status)||s.time>=inv.expires||!activeGroup(g)||!g.members.includes(p.id)||!g.repertoire.some(r=>r.songId===req.songId&&r.active!==false);
+  const invalid=!rehearsalAvailable(s,req)||s.time>=inv.expires||!g.members.includes(p.id);
   let reason=invalid?'Invitation expirée ou activité indisponible.':p.needs.energy<15?'Énergie insuffisante.':ctx.nearShow?.(p,req)?'Spectacle trop proche.':null;
   const chance=reason?null:clamp(.55+attachment(s,p,g).value/250+(p.needs.energy-50)/300-p.emotions.distress/700,.1,.95),roll=reason?null:ctx.random(),accepted=!reason&&roll<chance;
   inv.status=accepted?'accepted':invalid?'expired':'refused';inv.resolved=s.time;inv.reason=reason||(accepted?'Participation acceptée.':'Invitation déclinée.');inv.chance=chance;inv.roll=roll;
@@ -108,7 +112,10 @@ export function resolveInvitation(s,p,ctx){
 export function rehearsalReady(s,p,ctx){
  const id=p.action?.rehearsalId;if(!id)return true;
  const req=s.groupState.requests.find(x=>x.id===id),g=s.groups.find(x=>x.id===req?.groupId);
- if(!req||!activeGroup(g)||!['open','playing'].includes(req.status)||!g.members.includes(p.id)||!g.repertoire.some(r=>r.songId===req.songId&&r.active!==false)){ctx.close(p,'interrupted');return false;}
+ if(!rehearsalAvailable(s,req)){if(req){req.status='closed';for(const q of s.people.filter(q=>q.action?.rehearsalId===id))ctx.close(q,'cancelled');}else ctx.close(p,'interrupted');return false;}
+ if(!g.members.includes(p.id)){ctx.close(p,'interrupted');return false;}
+ // The request, including a request saved in V7.2, names the actual piece.
+ p.action.songId=req.songId;p.action.content='song';
  const present=s.people.filter(q=>q.action?.rehearsalId===id&&!q.action.route.length&&!q.engagement);
  if(req.status==='open'){
   req.firstArrival??=s.time;
@@ -139,7 +146,7 @@ export function groupsMinute(s,ctx){
  for(const p of s.people)for(const inv of p.invitationQueue)if(inv.status==='pending'&&s.time>=inv.expires){inv.status='expired';inv.resolved=s.time;inv.reason='Délai écoulé.';}
  for(const req of s.groupState.requests){
   const participants=s.people.filter(p=>p.action?.rehearsalId===req.id);
-  if(req.status==='playing'&&!participants.length||req.status==='open'&&s.time>=req.expires||!activeGroup(s.groups.find(g=>g.id===req.groupId))||!s.groups.find(g=>g.id===req.groupId)?.repertoire.some(r=>r.songId===req.songId&&r.active!==false))req.status='closed';
+  if(!rehearsalAvailable(s,req)||req.status==='playing'&&!participants.length)req.status='closed';
   if(req.status==='closed')for(const p of participants)ctx.close(p,'cancelled');
  }
  for(const p of s.people)p.invitationQueue=p.invitationQueue.filter(x=>x.status==='pending'||s.time-(x.resolved??x.created)<1440);

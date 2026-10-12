@@ -1,8 +1,10 @@
-# Garage vivant — Guide V7.2
+# Garage vivant — Guide V7.4
 
 [Jouer à Garage vivant](https://jutrasimon.github.io/garage-vivant/)
 
-**Version 0.7.2.** Les voisins pigent six actions d’éveil dans leur sac : Détente, Socialiser, Pratiquer, Jam, Composer et Déchéance. Dormir reste hors sac. Durées personnelles, projets persistants et demandes de participation rythment leur vie ; les règles V7 des besoins, émotions, traits et relations restent en place.
+**Version 0.7.4.** Les voisins pigent six actions d’éveil dans leur sac : Détente, Socialiser, Pratiquer, Jam, Composer et Déchéance. Dormir reste hors sac. Durées personnelles, projets persistants et demandes de participation rythment leur vie ; les règles V7 des besoins, émotions, traits et relations restent en place.
+
+La [V7.3](./AUDIT_V7_3.md) corrige quatre transitions observées en simulation : morceau annoncé, départ individuel en répétition, expiration d’une séance en cours et fin des coauteurs. Aucun nouveau système ajouté.
 
 ## Observer et comprendre
 
@@ -10,13 +12,15 @@ La fiche montre sac, défausse, retraits en attente, fourchettes et séance. Une
 
 Pratiquer prépare la technique et les morceaux sans combler l’expression. Ensemble, il faut un morceau et un groupe commun. Jam commence solo, accueille d’autres musiciens et peut continuer seul ; il n’avance pas directement le répertoire ni la coordination. Composer développe plusieurs projets sur plusieurs séances. Déchéance lie excès rapprochés, jetons nuisibles et cartes ajoutées aux shows.
 
-Les [quinze DDD](./gdd/documentation.md) décrivent les règles effectivement codées. Commence par [Actions](./gdd/actions.md), [Interactions](./gdd/interactions.md), [Musique](./gdd/musique.md) ou [Déchéance](./gdd/decheance.md). Les [raccords débranchés](./gdd/raccords-v7.md) sont aussi visibles dans Réglages. Le [plan de test complet V7 à V7.2](./PLAN_TEST_V7.md) propose un parcours rapide puis la réception de tous les systèmes, avec preuves et limites.
+Les [quinze DDD](./gdd/documentation.md) décrivent les règles effectivement codées. Commence par [Actions](./gdd/actions.md), [Interactions](./gdd/interactions.md), [Musique](./gdd/musique.md) ou [Déchéance](./gdd/decheance.md). Les [raccords débranchés](./gdd/raccords-v7.md) sont aussi visibles dans Réglages. Le [plan de test complet V7 à V7.4](./PLAN_TEST_V7.md) propose un parcours rapide puis la réception de tous les systèmes, avec preuves et limites.
 
 ## Groupes autonomes
 
 Les groupes ont leurs initiatives : adopter des chansons, appeler une pratique, réserver un spectacle. Leur fiche donne Coordination, réputation, compétences des membres, attachement, répertoire et histoire. Une proposition de groupe reste incertaine ; l’attachement à un groupe établi freine les nouvelles associations. La confiance n’est plus une dimension active.
 
 La chanson garde ses auteurs, et son propriétaire unique apparaît dans le catalogue. Le groupe la conserve après départ d’un auteur. Répéter place une invitation dans la file personnelle, à consulter à la fin de l’activité avant la prochaine pige. Le premier arrivé attend sans gains ; deux membres présents commencent. Un spectacle confirmé prend priorité et calcule les départs depuis les positions réelles. Une dissolution est définitive. [DDD Groupes](./gdd/groupes.md).
+
+Dans **Groupes → Archives**, retrouve les groupes dissous, leurs anciens membres, morceaux, spectacles et histoire. Les boutons Actifs/Archives indiquent leur nombre ; un groupe consulté qui se dissout reste accessible dans sa fiche.
 
 ## Classer les compositions
 

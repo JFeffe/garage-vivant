@@ -1,6 +1,6 @@
 # DDD — Pratique, Jam et apprentissage
 
-Version 0.7.2. Pratiquer développe la technique et prépare les morceaux. Jam favorise l’expression libre et les rencontres. Composer développe une œuvre persistante : [Compositions et catalogue](./compositions.md).
+Version 0.7.4. Pratiquer développe la technique et prépare les morceaux. Jam favorise l’expression libre et les rencontres. Composer développe une œuvre persistante : [Compositions et catalogue](./compositions.md).
 
 ## Instruments, apprentissage et plateaux
 
@@ -16,7 +16,7 @@ Une séance alterne instruments, technique et morceaux par cycles de 15 minutes.
 
 Un personnage peut travailler ses œuvres et les morceaux de ses groupes. Le travail solo du morceau augmente sa maîtrise personnelle de 0,08/min. Cette valeur est distincte de la compétence instrumentale et de la maîtrise collective.
 
-La pratique collective exige un groupe actif commun et un morceau. Une personne ayant pigé Pratiquer peut demander à rejoindre une pratique de morceau ; après acceptation, elle se déplace vers son partenaire. La séance attribue explicitement groupe et morceau ; des appartenances multiples ne créditent pas tous les groupes. Le contenu collectif change ensemble à la fin des cycles.
+La pratique collective exige un groupe actif commun et un morceau. Une personne ayant pigé Pratiquer peut demander à rejoindre une pratique de morceau ; après acceptation, elle se déplace vers son partenaire. La séance attribue explicitement groupe et morceau ; des appartenances multiples ne créditent pas tous les groupes. Une pratique collective spontanée peut changer de morceau ensemble à la fin des cycles. Un appel Répéter garde le morceau annoncé jusqu’à sa fin ; les instruments peuvent encore varier. Chaque participant conserve son propre compteur de cycle et son choix de départ : le meneur ne remet pas le temps des autres à zéro.
 
 Avec au moins deux membres effectivement présents, la répétition augmente Coordination de `0,07 × min(1 ; présents/4)`/min. La maîtrise collective du morceau augmente de `0,12 × (0,65 + coordination/200) × min(1 ; présents/membres du groupe)`/min. Une paire ne reçoit ce crédit qu’une fois par minute. Le compteur de répétition et les moments du groupe avancent à chaque cycle travaillé. Une personne seule peut continuer son travail personnel.
 
