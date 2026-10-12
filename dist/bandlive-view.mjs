@@ -1,5 +1,6 @@
-import {RULES,INSTRUMENTS,SPECIALS,restoreBandLive,cardById,cardDefinition,currentSong,availableSongs,chooseSong,canPlay,playCard,endTurn} from './bandlive.mjs?v=3';
-import {resolveBandLivePlan,createBandLiveFromWorld} from './bandlive-roster.mjs?v=3';
+import {RULES,INSTRUMENTS,SPECIALS,restoreBandLive,cardById,cardDefinition,currentSong,availableSongs,chooseSong,canPlay,playCard,endTurn} from './bandlive.mjs?v=4';
+import {resolveBandLivePlan,createBandLiveFromWorld} from './bandlive-roster.mjs?v=4';
+import {createConcertReplay,resolveBandLiveConcert} from './bandlive-concert.mjs?v=4';
 import {NEEDS,PERSONALITY} from './engine.mjs?v=0.7.2';
 import {instrumentArt,drawStageBackdrop} from './show-view.mjs?v=0.7.2';
 import {decorateCube,enableAudio,playSound} from './v5-view.mjs?v=0.7.2';
@@ -33,12 +34,21 @@ function fanTooltip(game,fan){
   return `<strong>${esc(fan.name)}${styleIcon(fan.favorite)}</strong><p>Résistance : ${fan.hp}/${fan.max}<br>Style favori : ${esc(fan.favorite)}<br>${fan.conquered?'Conquis : reste dans le public.':fan.intent==='solo'?'Attend un Solo : cette carte lui inflige +3 puissance.':'S’ennuie : récupère 3 résistance à la fin du tour.'}</p><small>Une chanson de son style ajoute +2 puissance aux cartes qui le touchent.</small>`;
 }
 
-export function createBandLiveModule({getWorld,onOpen,onReturn,onDisable,canStart,notify,getReducedEffects=()=>false,getPlan=()=>({})}) {
+export function createBandLiveModule({getWorld,onOpen,onReturn,onDisable,canStart,notify,getReducedEffects=()=>false,getPlan=()=>({}),onConcertStart,onConcertUpdate,onConcertCancel}) {
   const root=document.querySelector('#bandlive-view'),nav=document.querySelector('#bandlive-nav'),toggle=document.querySelector('#bandlive-enabled');
   let enabled=false,game=null,preparing=false,draft={groupId:'',memberIds:null,seed:2040,audienceSize:RULES.minAudience},selectedCard=null,activeCard=null,dragPointer=null,ghost=null,animation=null,sound=false,storageProblem=false;
   try{const saved=JSON.parse(localStorage.getItem(STORAGE)||'null');if(saved){enabled=!!saved.enabled;if(saved.draft)draft=saved.draft;if(saved.game)game=restoreBandLive(saved.game);}}catch{notify('La répétition BandLive enregistrée ne peut pas être reprise. Le quartier est disponible.');}
+  let rehearsalGame=game,liveId=null,lastReport=null;
+  const liveShow=()=>{const s=getWorld().performance;return liveId&&s?.id===liveId&&s.bandLive&&getWorld().showEventId?s:null;};
+  function syncConcert(){
+    const show=getWorld().performance;
+    if(show?.bandLive&&!show.preview&&getWorld().showEventId){if(!liveId)rehearsalGame=game;liveId=show.id;game=show.bandLive.game;preparing=false;}
+    else if(liveId){liveId=null;game=rehearsalGame;preparing=!game;}
+    nav.hidden=!enabled&&!liveId;
+  }
+  syncConcert();
   const tooltip=document.createElement('div');tooltip.id='bandlive-tooltip';tooltip.className='bl-tooltip';tooltip.role='tooltip';tooltip.hidden=true;document.body.append(tooltip);
-  function persist(){try{localStorage.setItem(STORAGE,JSON.stringify({enabled,draft,game}));storageProblem=false;}catch{if(!storageProblem)notify('La répétition ne peut pas être enregistrée dans ce navigateur.');storageProblem=true;}}
+  function persist(){if(liveShow()&&liveShow().bandLive.game===game)onConcertUpdate?.();else if(!liveId)rehearsalGame=game;try{localStorage.setItem(STORAGE,JSON.stringify({enabled,draft,game:liveId?rehearsalGame:game}));storageProblem=false;}catch{if(!storageProblem)notify('La répétition ne peut pas être enregistrée dans ce navigateur.');storageProblem=true;}}
   function hideTip(){tooltip.hidden=true;root.querySelectorAll('[aria-describedby="bandlive-tooltip"]').forEach(el=>el.removeAttribute('aria-describedby'));}
   function showTip(target){
     const style=target.closest('[data-bl-style]'),actorEl=target.closest('[data-bl-actor]'),fanEl=target.closest('[data-bl-fan]');
@@ -71,14 +81,20 @@ export function createBandLiveModule({getWorld,onOpen,onReturn,onDisable,canStar
     }).join('')}${!cards.length?'<span class="bl-empty-hand">Aucune carte en main</span>':''}</div>`;
   }
   function showHTML(){
-    const song=currentSong(game),won=game.phase==='won',lost=game.phase==='lost',finished=won||lost,choosing=game.phase==='choose';
-    return `<div class="bl-arena"><div class="bl-hud"><div><span class="eyebrow">BANDLIVE · RÉPÉTITION</span><h2>${esc(game.groupName)}</h2><p>${song?`${esc(song.title)} · ${esc(song.style)} · ${['Couplet','Refrain','Finale'][game.section-1]} · passage ${game.usedSongs.length}/2`:'Les chansons du groupe. Six tours. Tout le public à conquérir.'}</p></div><button id="bl-setup" class="text-button">Changer le band</button><div class="bl-resources"><span><b data-bl-energy>${game.energy}/3</b> Énergie</span><span><b data-bl-tempo>${game.tempo}/10</b> Tempo</span><span><b>${game.turn}/6</b> Tour</span><span><b>${game.fans.filter(f=>f.hp===0).length}/${game.fans.length}</b> Conquis</span>${game.boost?`<span class="bl-boost"><b>+${game.boost}</b> Prochaine puissance · ce tour</span>`:''}</div></div>${choosing?`<div class="bl-song-choice"><b>${game.turn?(game.songs.length===1?'Reprise de la chanson · −2 tempo au départ':'Choisis la deuxième chanson · −2 tempo au départ'):'Choisis la première chanson'}</b>${availableSongs(game).map(s=>`<button data-bl-song="${esc(s.id)}"><strong>${esc(s.title)}</strong>${styleIcon(s.style)}<small>${esc(s.style)} · 3 tours · finale : 3 puissance sur tout le public</small></button>`).join('')}</div>`:''}<div class="bl-viewport"><div class="bl-world" style="--bl-players:${game.actors.length};--bl-min-width:${Math.max(800,game.actors.length*205)}px"><canvas class="bl-effects" aria-hidden="true"></canvas><div class="bl-musicians">${game.actors.map(actor=>`<section class="bl-musician"><div class="bl-musician-info" data-bl-actor="${esc(actor.id)}" tabindex="0" aria-label="Informations de ${esc(actor.name)}">${cubeHTML(actor,'actor')}<div class="bl-name"><b>${esc(actor.name)}</b>${styleIcon(actor.genre)}</div><small>${INSTRUMENTS[actor.instrument]}</small></div>${handHTML(actor)}</section>`).join('')}</div><div class="bl-audience" data-bl-target="audience" tabindex="0" role="group" aria-label="Zone du public. Dépose ici une carte collective ou de préparation."><span class="bl-zone-label">LE PUBLIC</span><div class="bl-fans">${game.fans.map(fan=>`<div class="bl-fan-wrap"><span class="bl-intent">${fan.hp===0?'Conquis !':fan.intent==='solo'?'Attend un Solo':'S’ennuie · +3 en fin de tour'}</span><button class="bl-fan ${fan.hp===0?'bl-conquered':''}" data-bl-fan="${fan.id}" data-bl-target="${fan.id}" aria-label="${esc(fan.name)} · ${fan.hp}/${fan.max} · ${fan.hp===0?'Conquis':fan.intent==='solo'?'Attend un Solo':'S’ennuie'}">${cubeHTML(fan,'fan')}<span class="bl-name"><b>${esc(fan.name)}</b>${styleIcon(fan.favorite)}</span><span class="bl-resistance" role="progressbar" aria-label="Résistance de ${esc(fan.name)}" aria-valuemin="0" aria-valuemax="${fan.max}" aria-valuenow="${fan.hp}"><i style="width:${fan.hp/fan.max*100}%"></i></span><span class="bl-hp">${fan.hp}/${fan.max}</span></button></div>`).join('')}</div><span class="bl-drop-hint">Cartes collectives et préparations → dépose dans cette zone</span></div></div></div><div class="bl-controls"><p id="bl-help" role="status">${finished?(won?'Tout le public est conquis !':'Le show est terminé. Il reste du public à conquérir.'):choosing?'Choisis une chanson pour piger ta main.':selectedCard?'Choisis un spectateur ou la zone du public.':'Glisse une carte vers le public, ou sélectionne-la puis choisis sa cible.'}</p><span class="bl-piles">Pioche ${game.deck.length} · Main ${game.hand.length} · Défausse ${game.discard.length}</span>${game.phase==='play'?`<button id="bl-end" class="primary" ${animation?'disabled':''}>Fin du tour →</button>`:''}<button id="bl-sound" aria-pressed="${sound}">Son : ${sound?'ON':'OFF'}</button>${finished?'<button id="bl-return" class="primary">Retour au quartier · continuer</button><button id="bl-replay">Rejouer la répétition</button>':''}</div><details class="bl-log"><summary>Déroulement du show · ${game.played} cartes jouées</summary><div>${game.logs.map(line=>`<p>${esc(line)}</p>`).join('')}</div></details></div>`;
+    const song=currentSong(game),won=game.phase==='won',lost=game.phase==='lost',finished=won||lost,choosing=game.phase==='choose',live=liveShow();
+    const eyebrow=live?`BANDLIVE · ${esc(live.opportunityName)}`:game.songOrder?'BANDLIVE · REPLAY SANS RÉCOMPENSE':'BANDLIVE · RÉPÉTITION';
+    const record=live&&getWorld().showHistory.find(r=>r.id===live.id);
+    const effect=(label,key)=>{const e=record?.effects;return e?`<span><b>${Math.round(e.before[key])} → ${Math.round(e.after[key])}</b> ${label}</span>`:'';};
+    const report=finished&&live?`<section class="bl-concert-result panel"><span class="eyebrow">BILAN DU SPECTACLE</span><h3>${won?'Tout le public est conquis !':'Le show est terminé.'}</h3><div class="bl-result-values"><span><b>${live.result.score}/100</b> Accueil du public</span><span><b>${live.sourceOpportunity.organizer?.exigence||30}/100</b> Attentes de la scène</span>${effect('Réputation','reputation')}${effect('Moral','morale')}${effect('Coordination','development')}</div><ul>${(record?.musicianEffects||[]).map(p=>`<li>${esc(p.name)} · énergie ${Math.round(p.energyBefore)} → ${Math.round(p.energyAfter)}</li>`).join('')}</ul><p>Le bilan dépend de l’accueil du public et des attentes de cette scène. Ce résultat compte dans la partie et reste dans l’historique du groupe.</p></section>`:'';
+    const waiting=live&&getWorld().bookings.some(b=>b.opportunityId===live.opportunityId&&['booked','assembling'].includes(b.status));
+    return `<div class="bl-arena"><div class="bl-hud"><div><span class="eyebrow">${eyebrow}</span><h2>${esc(game.groupName)}</h2><p>${song?`${esc(song.title)} · ${esc(song.style)} · ${['Couplet','Refrain','Finale'][game.section-1]} · passage ${game.usedSongs.length}/2`:'Les chansons du groupe. Six tours. Tout le public à conquérir.'}</p></div>${live?'':'<button id="bl-setup" class="text-button">Changer le band</button>'}<div class="bl-resources"><span><b data-bl-energy>${game.energy}/3</b> Énergie</span><span><b data-bl-tempo>${game.tempo}/10</b> Tempo</span><span><b>${game.turn}/6</b> Tour</span><span><b>${game.fans.filter(f=>f.hp===0).length}/${game.fans.length}</b> Conquis</span>${game.boost?`<span class="bl-boost"><b>+${game.boost}</b> Prochaine puissance · ce tour</span>`:''}</div></div>${choosing?`<div class="bl-song-choice"><b>${game.songOrder?(game.turn?'Deuxième passage de la setlist · −2 tempo au départ':'Setlist réservée · première chanson'):game.turn?(game.songs.length===1?'Reprise de la chanson · −2 tempo au départ':'Choisis la deuxième chanson · −2 tempo au départ'):'Choisis la première chanson'}</b>${availableSongs(game).map(s=>`<button data-bl-song="${esc(s.id)}"><strong>${esc(s.title)}</strong>${styleIcon(s.style)}<small>${esc(s.style)} · 3 tours · finale : 3 puissance sur tout le public</small></button>`).join('')}</div>`:''}<div class="bl-viewport"><div class="bl-world" style="--bl-players:${game.actors.length};--bl-min-width:${Math.max(800,game.actors.length*205)}px"><canvas class="bl-effects" aria-hidden="true"></canvas><div class="bl-musicians">${game.actors.map(actor=>`<section class="bl-musician"><div class="bl-musician-info" data-bl-actor="${esc(actor.id)}" tabindex="0" aria-label="Informations de ${esc(actor.name)}">${cubeHTML(actor,'actor')}<div class="bl-name"><b>${esc(actor.name)}</b>${styleIcon(actor.genre)}</div><small>${INSTRUMENTS[actor.instrument]}</small></div>${handHTML(actor)}</section>`).join('')}</div><div class="bl-audience" data-bl-target="audience" tabindex="0" role="group" aria-label="Zone du public. Dépose ici une carte collective ou de préparation."><span class="bl-zone-label">LE PUBLIC</span><div class="bl-fans">${game.fans.map(fan=>`<div class="bl-fan-wrap"><span class="bl-intent">${fan.hp===0?'Conquis !':fan.intent==='solo'?'Attend un Solo':'S’ennuie · +3 en fin de tour'}</span><button class="bl-fan ${fan.hp===0?'bl-conquered':''}" data-bl-fan="${fan.id}" data-bl-target="${fan.id}" aria-label="${esc(fan.name)} · ${fan.hp}/${fan.max} · ${fan.hp===0?'Conquis':fan.intent==='solo'?'Attend un Solo':'S’ennuie'}">${cubeHTML(fan,'fan')}<span class="bl-name"><b>${esc(fan.name)}</b>${styleIcon(fan.favorite)}</span><span class="bl-resistance" role="progressbar" aria-label="Résistance de ${esc(fan.name)}" aria-valuemin="0" aria-valuemax="${fan.max}" aria-valuenow="${fan.hp}"><i style="width:${fan.hp/fan.max*100}%"></i></span><span class="bl-hp">${fan.hp}/${fan.max}</span></button></div>`).join('')}</div><span class="bl-drop-hint">Cartes collectives et préparations → dépose dans cette zone</span></div></div></div>${report}<div class="bl-controls"><p id="bl-help" role="status">${finished?(won?'Tout le public est conquis !':'Le show est terminé. Il reste du public à conquérir.'):choosing?'Choisis une chanson pour piger ta main.':selectedCard?'Choisis un spectateur ou la zone du public.':'Glisse une carte vers le public, ou sélectionne-la puis choisis sa cible.'}</p><span class="bl-piles">Pioche ${game.deck.length} · Main ${game.hand.length} · Défausse ${game.discard.length}</span>${game.phase==='play'?`<button id="bl-end" class="primary" ${animation?'disabled':''}>Fin du tour →</button>`:''}<button id="bl-sound" aria-pressed="${sound}">Son : ${sound?'ON':'OFF'}</button>${live&&!finished?'<button id="bl-cancel" class="text-button">Interrompre le show</button>':''}${finished?`<button id="bl-return" class="primary">${waiting?'Continuer la soirée →':'Retour au quartier · continuer'}</button>${live?'':'<button id="bl-replay">Rejouer la répétition</button>'}`:''}</div><details class="bl-log"><summary>Déroulement du show · ${game.played} cartes jouées</summary><div>${game.logs.map(line=>`<p>${esc(line)}</p>`).join('')}</div></details></div>`;
   }
   function render(){
     const previousViewport=root.querySelector('.bl-viewport'),scroll=previousViewport?{x:previousViewport.scrollLeft,y:previousViewport.scrollTop}:null;
     hideTip();root.innerHTML=game&&!preparing?showHTML():setupHTML();
     const viewport=root.querySelector('.bl-viewport');if(viewport&&scroll){viewport.scrollLeft=scroll.x;viewport.scrollTop=scroll.y;}
     if(game&&!preparing){for(const canvas of root.querySelectorAll('[data-bl-cube]')){const actor=canvas.dataset.blCubeType==='actor'?game.actors.find(a=>a.id===canvas.dataset.blCube):game.fans.find(f=>f.id===canvas.dataset.blCube);drawCube(canvas,actor,actor.hp===0);}drawEffects();}
+    if(liveShow()&&['won','lost'].includes(game.phase)&&!animation&&lastReport!==game){root.querySelector('.bl-concert-result')?.scrollIntoView({block:'start'});lastReport=game;}
   }
   function announce(message){const help=root.querySelector('#bl-help');if(help)help.textContent=message;}
   function clearDrag(){
@@ -164,11 +180,13 @@ export function createBandLiveModule({getWorld,onOpen,onReturn,onDisable,canStar
       const plan=initializeDraft();if(!plan.ready){notify(plan.reason);return render();}
       game=createBandLiveFromWorld(getWorld(),draft);preparing=false;persist();render();
     }else if(target.id==='bl-end'&&!animation){endTurn(game);selectedCard=null;persist();render();}
-    else if(target.id==='bl-setup'){animation=null;clearDrag();selectedCard=null;preparing=true;initializeDraft();render();}
+    else if(target.id==='bl-cancel'&&liveShow()){onConcertCancel?.();syncConcert();render();}
+    else if(target.id==='bl-setup'&&!liveShow()){animation=null;clearDrag();selectedCard=null;preparing=true;initializeDraft();render();}
     else if(target.id==='bl-resume'){preparing=false;render();}
-    else if(target.id==='bl-return'&&['won','lost'].includes(game.phase)){animation=null;clearDrag();selectedCard=null;persist();onReturn();}
-    else if(target.id==='bl-replay'){
+    else if(target.id==='bl-return'&&['won','lost'].includes(game.phase)){animation=null;clearDrag();selectedCard=null;persist();const concert=!!liveShow();onReturn({concert});if(concert)syncConcert();}
+    else if(target.id==='bl-replay'&&!liveShow()){
       animation=null;clearDrag();selectedCard=null;
+      if(game.songOrder){game=createConcertReplay(game);preparing=false;persist();render();return;}
       draft={groupId:game.groupId||'',memberIds:game.actors.map(a=>a.id),seed:game.seed,audienceSize:game.fans.length};
       const plan=initializeDraft();
       if(!game.groupId||plan.group?.id!==game.groupId||!plan.ready){preparing=true;return render();}
@@ -182,10 +200,13 @@ export function createBandLiveModule({getWorld,onOpen,onReturn,onDisable,canStar
     else if(event.target.id==='bl-seed'){const seed=Number(event.target.value);if(Number.isInteger(seed)&&seed>=0&&seed<=4294967295)draft.seed=seed;else event.target.value=draft.seed;persist();}
     else if(event.target.id==='bl-audience-size'){const size=Number(event.target.value);if(Number.isInteger(size)&&size>=RULES.minAudience&&size<=RULES.maxAudience)draft.audienceSize=size;else event.target.value=draft.audienceSize;persist();}
   });
-  toggle.checked=enabled;nav.hidden=!enabled;
-  toggle.addEventListener('change',()=>{enabled=toggle.checked;nav.hidden=!enabled;hideTip();clearDrag();persist();if(!enabled)onDisable();});
+  toggle.checked=enabled;nav.hidden=!enabled&&!liveId;
+  toggle.addEventListener('change',()=>{enabled=toggle.checked;nav.hidden=!enabled&&!liveId;hideTip();clearDrag();persist();if(!enabled)onDisable();});
   document.addEventListener('click',event=>{
-    const button=event.target.closest('[data-bandlive-open]');if(!button||!enabled)return;
+    const concertButton=event.target.closest('[data-bandlive-concert]');
+    if(concertButton&&enabled){const result=onConcertStart?.();if(!result?.ok){notify(result?.message||'Le spectacle ne peut pas commencer.');return;}syncConcert();onOpen();return;}
+    const button=event.target.closest('[data-bandlive-open]');if(!button)return;
+    syncConcert();if(!enabled&&!liveId)return;if(liveShow()){onOpen();return;}
     const plan=getPlan(),groupId=button.dataset.bandliveGroup||plan.groupId;
     if(!game||button.dataset.bandliveGroup||groupId&&groupId!==game.groupId){animation=null;clearDrag();selectedCard=null;draft.groupId=groupId||draft.groupId;draft.memberIds=button.dataset.bandliveGroup?null:plan.members||null;preparing=true;initializeDraft();}
     onOpen();
@@ -193,8 +214,12 @@ export function createBandLiveModule({getWorld,onOpen,onReturn,onDisable,canStar
   const observer=new ResizeObserver(()=>{hideTip();drawEffects();});observer.observe(root);
   return {
     enabled:()=>enabled,
-    refresh(){initializeDraft();render();},
+    active:()=>!!(getWorld().performance?.bandLive&&getWorld().showEventId),
+    sync:syncConcert,
+    refresh(){syncConcert();lastReport=null;initializeDraft();render();},
+    replayConcert(snapshot){if(!enabled||!canStart()){notify(!enabled?'Active BandLive dans Réglages pour revoir ce show.':'Termine la soirée avant de revoir un show.');return false;}animation=null;clearDrag();selectedCard=null;liveId=null;game=createConcertReplay(snapshot);rehearsalGame=game;preparing=false;persist();onOpen();return true;},
+    concertEntryHTML(show){if(show?.bandLive&&getWorld().showEventId)return '<div class="panel bl-entry"><b>Ce spectacle se joue avec BandLive.</b><button data-bandlive-open class="primary">Reprendre BandLive ↗</button></div>';if(!enabled||!show||show.preview||show.status!=='playing'||show.tick||show.presentationStarted)return '';const plan=resolveBandLiveConcert(getWorld());return `<div class="panel bl-entry"><div><b>Jouer ce spectacle avec BandLive</b><p>${plan.ready?`${plan.profile.label} · ${plan.profile.audienceSize} spectateurs · setlist réservée · le résultat compte dans la partie.`:esc(plan.reason)}</p></div><button data-bandlive-concert class="primary" ${plan.ready?'':'disabled'}>Jouer avec BandLive ↗</button></div>`;},
     leave(){hideTip();clearDrag();},
-    entryHTML(){return enabled?'<div class="panel bl-entry"><div><b>BandLive · le show jouable</b><p>Les groupes du quartier, leurs chansons et jusqu’à six musiciens. 3 à 12 spectateurs · 3 énergie · 5 cartes · 6 tours.</p></div><button data-bandlive-open class="primary">Essayer BandLive ↗</button></div>':'';},
+    entryHTML(){return enabled?'<div class="panel bl-entry"><div><b>BandLive · le show jouable</b><p>Réserve un show avec deux à six musiciens et une ou deux compositions, puis choisis BandLive à l’arrivée sur scène. Les répétitions restent sans récompense.</p></div><button data-bandlive-open class="primary">Essayer BandLive ↗</button></div>':'';},
   };
 }

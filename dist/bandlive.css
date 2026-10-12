@@ -11,3 +11,9 @@ body.bandlive-mode header nav{gap:16px}.workspace.bandlive-layout{grid-template-
 @media(max-width:920px){body.bandlive-mode header nav{gap:9px}.workspace.bandlive-layout>main{padding:0 12px 14px}.bl-hud{padding:16px}.bl-hud h2{font-size:25px}.bl-resources{gap:10px 16px}.bl-resources b{font-size:16px}.bl-viewport{max-height:480px}}
 @media(max-width:620px){#bandlive-nav:not([hidden]){font-size:10px}body:has(#bandlive-nav:not([hidden])) header nav{gap:5px;overflow-x:auto;justify-content:flex-start}body:has(#bandlive-nav:not([hidden])) header nav button{flex:none;padding-inline:5px}.bl-member-picker,.bl-reference{grid-template-columns:1fr}.bl-setup>label{align-items:flex-start;flex-direction:column;gap:7px}.bl-setup h2{font-size:26px}.bl-hud{padding:14px 12px}.bl-hud h2{font-size:22px}.bl-hud>button{max-width:90px;padding:5px}.bl-resources{font-size:11px;gap:8px 12px}.bl-viewport{max-height:430px}.bl-controls{padding:12px;gap:10px}.bl-controls p{font-size:11px}.bl-song-choice{padding:14px 12px}.bl-song-choice>button{min-width:0;flex-basis:100%}.bl-entry{align-items:flex-start}.bl-entry button{width:100%}}
 @media(prefers-reduced-motion:reduce){.bl-card,.bl-resistance>i{transition:none}}
+.bl-concert-result {margin:0 12px;padding:18px;background:#213b31;color:#e9eedf;border-color:#aec59244;}
+.bl-concert-result h3 {margin:8px 0 12px;}
+.bl-result-values {display:flex;flex-wrap:wrap;gap:14px 24px;}
+.bl-result-values span {display:flex;flex-direction:column;gap:3px;}
+.bl-result-values b {font-size:1.1rem;}
+.bl-concert-result ul {display:flex;flex-wrap:wrap;gap:8px 20px;padding-left:20px;}

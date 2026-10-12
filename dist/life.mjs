@@ -282,6 +282,7 @@ function book(s, cmd) {
 export function command(s, cmd) {
   if (!cmd || typeof cmd.type !== "string")
     return result(false, "Commande invalide.");
+  if(s.performance?.bandLive&&s.showEventId&&['preview','replay','skip'].includes(cmd.type))return result(false,'Termine ou interromps le show BandLive avant de lancer une autre prestation.');
   if (
     s.performance?.status === "playing" &&
     !["avatar", "cancelBooking", "cancelPerformance", "skip"].includes(cmd.type)
@@ -814,7 +815,7 @@ export function completePerformance(s) {
   return true;
 }
 export function playTicks(s, ticks) {
-  if (s.performance?.status !== "playing") return;
+  if (s.performance?.status !== "playing" || s.performance.bandLive) return;
   advancePerformance(s.performance, ticks);
   if (s.performance.status !== "finished") return;
   const old = s.performance,
@@ -1126,5 +1127,6 @@ export function validateLife(s) {
   )
     throw Error("Identifiant de réservation invalide.");
   if (s.performance) validatePerformance(s.performance);
+  if(s.performance?.bandLive){const show=s.performance,live=show.bandLive,b=s.bookings.find(b=>b.id===live.bookingId);if(!b||b.performanceId!==show.id||b.groupId!==show.groupId||b.opportunityId!==show.opportunityId||b.status!==(show.status==='finished'?'played':'playing')||live.game.actors.some(a=>!b.members.includes(a.id)))throw Error('Engagement BandLive incohérent.');}
   validateCalendar(s);
 }
