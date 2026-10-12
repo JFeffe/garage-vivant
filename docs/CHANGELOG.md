@@ -1,3 +1,7 @@
+# V0.7.8 — 11 octobre 2026
+
+Le test de lecture des patch notes utilise la version courante plutôt que V0.7.5. [Notes](./versions.md#v078).
+
 # V0.7.7 — 11 octobre 2026
 
 Correction de la référence de défilement du test tactile BandLive qui bloquait la publication. Le test contrôle la position au relâchement du doigt, après le défilement automatique intentionnel. [Notes](./versions.md#v077).

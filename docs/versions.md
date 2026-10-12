@@ -1,5 +1,11 @@
 # Notes de version
 
+## V0.7.8 — Vérification des notes de la version courante {#v078}
+
+11 octobre 2026. Le test navigateur des notes suit désormais la dernière entrée de `PATCH_NOTES`, au lieu d’attendre la lecture de V0.7.5. Le bouton ouvre les nouveautés courantes et leur lecture est bien enregistrée. Cette correction complète les contrôles de publication de BandLive.
+
+Interface **0.7.8**, sauvegardes **0.7.3** inchangées. BandLive : **Réglages → Activer BandLive**.
+
 ## V0.7.7 — Publication BandLive débloquée {#v077}
 
 11 octobre 2026. Le contrôle tactile compare maintenant le défilement après la carte à sa position au relâchement du doigt. Il tient ainsi compte du défilement automatique voulu pendant le glissement, tout en vérifiant que le rendu conserve la position. Les contrôles navigateur restent obligatoires avant publication.
