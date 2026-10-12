@@ -20,11 +20,13 @@ Les dates se renouvellent continuellement. Un gros événement revient toutes le
 
 **Essayer maintenant** est une répétition générale sans récompense. Un replay reproduit le tirage et n’ajoute aucune conséquence; les douze dernières prestations gardent la trace de leur dernière chanson. **Interrompre** un vrai show ne donne pas de récompense et coûte de l’énergie.
 
-## BandLive · répétition expérimentale
+## BandLive · module optionnel
 
-Activer **BandLive** dans **Réglages**, puis **Jouer avec BandLive** depuis un groupe, ouvrir son onglet ou **Essayer BandLive** depuis Shows. Choisir **deux à six membres** du groupe : leurs instruments construisent la pioche commune. Jouer les compositions actives de son répertoire, avec leurs titres, styles et auteurs. Une chanson unique peut être reprise au deuxième passage ; un groupe sans composition doit en adopter une avant de prendre la scène. Les groupes existants plus grands sont conservés, avec six musiciens maximum sélectionnés pour BandLive.
+Activer **BandLive** dans **Réglages**. Dans **Shows**, réserver un créneau avec deux à six musiciens et une ou deux compositions, puis **Avancer jusqu’au show** et **Jouer avec BandLive** avant la première chanson. La setlist réservée donne deux passages de trois tours ; une chanson unique est reprise. Le lieu fixe huit, dix ou douze spectateurs et leurs styles. Le bilan applique les conséquences classiques et s’enregistre une seule fois. **Continuer la soirée** conserve le groupe suivant ; **Retour au quartier · continuer** reprend la même partie après le dernier show.
 
-Le joueur choisit de trois à douze spectateurs et glisse ses cartes sur eux. Trois points d’énergie par tour, cinq cartes pigées et deux passages de trois tours. Solo et Improvisation consomment le tempo commun. Le module est désactivé par défaut et sa répétition est enregistrée séparément, sans récompense ni modification du quartier. À la victoire ou à la fin des six tours, **Retour au quartier · continuer** reprend la partie à sa dernière vitesse de lecture. Les anciennes répétitions restent lisibles. Le calendrier conserve les spectacles classiques. [Règles, cartes et limites](docs/BANDLIVE.md).
+**Jouer avec BandLive** depuis Groupes et **Essayer BandLive** restent des répétitions sans récompense, avec trois à douze spectateurs au choix. Cartes sous leur musicien, glisser-déposer souris/toucher, cinq cartes et trois points d’énergie par tour, infobulles et tempo consommé par la guitare et le saxophone.
+
+Le module est désactivé par défaut. Une désactivation conserve le show interactif en cours jusqu’à sa fin ou son interruption. La répétition reste sauvegardée séparément ; les vrais shows voyagent avec l’export du quartier. Le replay d’un show historique ne redonne aucun gain. Les anciennes sauvegardes et les spectacles classiques restent utilisables. [Règles, cartes et sauvegardes](docs/BANDLIVE.md) · [4 200 simulations d’équilibrage](docs/BANDLIVE_BALANCE.md).
 
 ## Quartier V7.2
 
@@ -70,7 +72,9 @@ npx playwright install --with-deps chromium
 npm run test:browser
 ```
 
-Pour jouer localement : `python3 -m http.server 8000 --directory dist`, puis `http://localhost:8000/`. `npm run audit:groups` rejoue les 20 graines sur 30 jours, dont trois prolongées à 90 jours, et produit le rapport JSON. Le build crée la documentation et son index de recherche. Les douze suites couvrent les règles V7.2, imports réels V1–V7, déterminisme, compositions, engagements, setlists, skip/replay, récompenses uniques, 100 jours de calendrier et cohérence documentaire. Chromium couvre ordinateur et tactile, rendu, recherche VitePress et parcours de jeu. Le viewport tactile ne remplace pas un test sur appareil réel.
+Pour jouer localement : `python3 -m http.server 8000 --directory dist`, puis `http://localhost:8000/`. `npm run docs:build` puis `npm run bandlive:test-file` créent `BandLive-test/LANCER-BandLive.html`, un essai autonome à ouvrir dans Chrome avec ses sauvegardes séparées.
+
+`npm run audit:groups` rejoue les 20 graines sur 30 jours, dont trois prolongées à 90 jours, et produit le rapport JSON. Le build crée la documentation et son index de recherche. Les douze suites couvrent les règles V7.2, imports réels V1–V7, déterminisme, compositions, engagements, setlists, skip/replay, récompenses uniques, 100 jours de calendrier et cohérence documentaire. Chromium couvre ordinateur et tactile, rendu, recherche VitePress et parcours de jeu. Le viewport tactile ne remplace pas un test sur appareil réel.
 
 La CI vérifie les PR sans publier; `main` publie jeu et doc après validation. Captures dans `interface-v7`. Voir [PLAN_V7_1](docs/PLAN_V7_1.md), [PLAN_V7](docs/PLAN_V7.md), [DDD](docs/gdd/documentation.md), [historique](docs/CHANGELOG.md) et [contribution](CONTRIBUTING.md). L’équilibrage des profils et probabilités reste provisoire et demande un essai avec joueurs.
 
