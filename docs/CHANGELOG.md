@@ -1,3 +1,7 @@
+# V0.7.13 — 12 octobre 2026
+
+Qualité des chansons, formules et mini-personnages. [Notes complètes](./versions.md#v0713).
+
 # V0.7.12 — 12 octobre 2026
 
 BandLive lisible et pratique des musiciens. [Notes complètes](./versions.md#v0712).

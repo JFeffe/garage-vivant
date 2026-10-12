@@ -36,3 +36,12 @@ nav{gap:18px}button:disabled{opacity:.45;cursor:not-allowed}.eyebrow{display:blo
 .design-toolbar input[type=search],.design-value input{border:1px solid #b4bfb4;border-radius:7px;padding:8px;background:var(--white);color:var(--ink)}.design-heading a{color:var(--green)}.design-footer [role=status]{color:var(--ink)}.design-toolbar .design-check{font-size:12px}
 
 .pending-actions{padding:12px;background:#f0ecd9;border:1px solid #ccc9b0;border-radius:8px;margin:10px 0}.pending-actions small{display:block}.pending-actions li{margin:9px 0}.group-link{text-align:left}.person-instrument{display:block;font-size:10px;color:#64745b}
+
+/* Composition categories and readable explanations in the balancing workshop. */
+.song-quality{display:inline-block!important;padding:2px 7px;border:1px solid currentColor;border-radius:12px;font-size:11px;font-weight:700;line-height:1.4;white-space:nowrap}
+.song-quality-rough{color:#795950;background:#f1e7e1}.song-quality-modest{color:#54635d;background:#e8eeea}.song-quality-catchy{color:#386248;background:#e0eee0}.song-quality-hit{color:#74561a;background:#f6ebc9}
+.design-context{margin-top:10px;font-size:12px;min-width:0}.design-context summary{cursor:pointer;color:#385b40;line-height:1.5;padding:5px 0}.design-context summary:focus-visible{outline:2px solid #476f4e;outline-offset:3px}
+.design-context>div{padding:8px 12px;background:#eef1e7;border-radius:8px}.design-context p{line-height:1.6}.design-formula code{display:block;white-space:normal;overflow-wrap:anywhere;margin-top:6px;font-size:12px;color:#294a35}.design-example{border-left:3px solid #96ab81;padding-left:9px}
+
+.design-value{align-self:start}
+@media(max-width:640px){.design-context>div{padding:8px}.design-row:has(.design-context[open]){grid-template-columns:minmax(0,1fr)}.design-row:has(.design-context[open]) .design-value{max-width:190px}}

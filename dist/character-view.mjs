@@ -3,6 +3,17 @@ export const ACCESSORIES={hair:'Cheveux',glasses:'Lunettes',cap:'Casquette',brow
 export const MOVEMENTS={calm:'Calme',nervous:'Nerveux',flamboyant:'Flamboyant',shy:'Timide'};
 const escape=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const characterName=p=>p.nickname?`${p.name} « ${p.nickname} »`:p.name;
+// y is the bottom of the head; the tiny body extends 0.32 head widths below it.
+export function drawMicroBody(ctx,x,y,size,p){
+ ctx.save();ctx.fillStyle=p.color||'#82a98b';ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=size*.12;ctx.lineCap='round';
+ ctx.beginPath();ctx.roundRect(x-size*.19,y-size*.05,size*.38,size*.25,size*.08);ctx.fill();
+ ctx.beginPath();
+ ctx.moveTo(x-size*.19,y+size*.04);ctx.lineTo(x-size*.3,y+size*.14);
+ ctx.moveTo(x+size*.19,y+size*.04);ctx.lineTo(x+size*.3,y+size*.14);
+ ctx.moveTo(x-size*.1,y+size*.18);ctx.lineTo(x-size*.12,y+size*.26);
+ ctx.moveTo(x+size*.1,y+size*.18);ctx.lineTo(x+size*.12,y+size*.26);ctx.stroke();
+ ctx.fillStyle='#00000018';ctx.beginPath();ctx.roundRect(x-size*.12,y+size*.04,size*.24,size*.12,size*.04);ctx.fill();ctx.restore();
+}
 export function decorateCube(ctx,x,y,size,p,t=0) {
   const a=p.identity?.accessory,top=y-size;
   ctx.save();ctx.lineWidth=Math.max(1,size*.07);ctx.strokeStyle='#33423b';ctx.fillStyle='#39413b';
@@ -16,6 +27,7 @@ export function decorateCube(ctx,x,y,size,p,t=0) {
   ctx.restore();
 }
 export function drawCharacter(ctx,x,y,size,p){
+ drawMicroBody(ctx,x,y,size,p);
  ctx.save();ctx.fillStyle=p.color;ctx.beginPath();ctx.roundRect(x-size/2,y-size,size,size,3);ctx.fill();
  ctx.fillStyle='#ffffff38';ctx.fillRect(x-size/2,y-size,size, size*.2);
  ctx.fillStyle='#00000015';ctx.fillRect(x+size*.3,y-size*.8,size*.2,size*.8);

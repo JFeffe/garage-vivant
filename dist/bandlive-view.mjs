@@ -1,11 +1,12 @@
-import {songTurns} from './song-rules.mjs?v=0.7.12';
-import {groupLinkHTML} from './group-link.mjs?v=0.7.12';
-import {RULES,INSTRUMENTS,SPECIALS,restoreBandLive,cardById,cardDefinition,currentSong,availableSongs,chooseSong,canPlay,playCard,endTurn,powerAgainst,totalTurns,sectionName} from './bandlive.mjs?v=0.7.12';
-import {resolveBandLivePlan,createBandLiveFromWorld} from './bandlive-roster.mjs?v=0.7.12';
-import {createConcertReplay,resolveBandLiveConcert} from './bandlive-concert.mjs?v=0.7.12';
-import {NEEDS,PERSONALITY} from './engine.mjs?v=0.7.12';
-import {instrumentArt,drawStageBackdrop} from './show-view.mjs?v=0.7.12';
-import {decorateCube,enableAudio,playSound} from './v5-view.mjs?v=0.7.12';
+import {drawMicroBody} from './character-view.mjs?v=0.7.13';
+import {songTurns} from './song-rules.mjs?v=0.7.13';
+import {groupLinkHTML} from './group-link.mjs?v=0.7.13';
+import {RULES,INSTRUMENTS,SPECIALS,restoreBandLive,cardById,cardDefinition,currentSong,availableSongs,chooseSong,canPlay,playCard,endTurn,powerAgainst,totalTurns,sectionName} from './bandlive.mjs?v=0.7.13';
+import {resolveBandLivePlan,createBandLiveFromWorld} from './bandlive-roster.mjs?v=0.7.13';
+import {createConcertReplay,resolveBandLiveConcert} from './bandlive-concert.mjs?v=0.7.13';
+import {NEEDS,PERSONALITY} from './engine.mjs?v=0.7.13';
+import {instrumentArt,drawStageBackdrop} from './show-view.mjs?v=0.7.13';
+import {decorateCube,enableAudio,playSound} from './v5-view.mjs?v=0.7.13';
 
 const STORAGE='garage-vivant-bandlive-v1';
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -28,7 +29,7 @@ function drawCube(canvas,actor,conquered=false){
   const ctx=canvas.getContext('2d');ctx.clearRect(0,0,144,144);
   const box=(x,y,size)=>{ctx.fillStyle=actor.color||'#82a98b';ctx.beginPath();ctx.roundRect(x,y,size,size,7);ctx.fill();ctx.fillStyle='#ffffff35';ctx.fillRect(x,y,size,9);ctx.fillStyle='#223932';ctx.fillRect(x+size*.32,y+size*.32,size*.09,size*.09);ctx.fillRect(x+size*.58,y+size*.32,size*.09,size*.09);};
   if(conquered&&reaction(actor)==='explosion'){for(let i=0;i<9;i++)box(16+i%3*38,20+Math.floor(i/3)*38,29);}
-  else {box(26,35,92);decorateCube(ctx,72,127,92,actor);}
+  else {drawMicroBody(ctx,72,107,78,actor);box(33,29,78);decorateCube(ctx,72,107,78,actor);}
 }
 function actorTooltip(actor){
   const traits=Object.entries(actor.personality).map(([key,value])=>`${esc(PERSONALITY[key]||key)} ${Math.round(value)}`).join(' · '),needs=Object.entries(actor.needs).map(([key,value])=>`${esc(NEEDS[key]||key)} : ${Math.round(value)}/100`).join('<br>');

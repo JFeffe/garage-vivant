@@ -1,6 +1,6 @@
 # DDD — Atelier d’équilibrage
 
-Version 0.7.11. **Réglages → Atelier d’équilibrage** permet de modifier les paramètres exposés du moteur sans toucher au code. Ce module ne crée aucune règle de jeu : les valeurs de référence sont celles de V0.7.10.
+Version 0.7.13. **Réglages → Atelier d’équilibrage** permet de modifier les paramètres exposés du moteur sans toucher au code. Ce module ne crée aucune règle de jeu : les valeurs de référence sont celles de V0.7.10.
 
 ## Parcours de conception
 
@@ -139,3 +139,9 @@ Les références ci-dessous proviennent du catalogue partagé du moteur. Elles n
 | Marge d’arrivée | 10 | min | 0 à 1440 |
 | Déchéance permettant une absence | 90 | points | 0 à 100 |
 | Risque d’absence par point | 0.02 | probabilité / point | 0 à 0.2 |
+
+## Lire les calculs dans l’Atelier
+
+Chaque réglage dispose d’un volet **Comprendre le calcul et ses conditions**, utilisable au clavier et au toucher. Les formules utilisent les valeurs du brouillon et se mettent à jour pendant la saisie. Les explications précisent les déclencheurs, multiplicateurs, plafonds et exceptions ; les exemples de besoins montrent des gains ou pertes bruts, avant les autres effets et les limites des jauges.
+
+Le volet ne simule pas une prédiction de la partie : les caractéristiques des personnages et les tirages aléatoires continuent d’intervenir. Les modifications restent en attente jusqu’à **Appliquer les changements**.
