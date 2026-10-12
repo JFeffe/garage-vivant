@@ -1,10 +1,10 @@
-import { membershipChance, membershipReason, attachment } from './groups.mjs?v=0.7.4';
-import {drawShowStage} from './show-view.mjs?v=0.7.4';
-export {bandsHTML,rapinHTML,showSetupHTML,showStatusHTML,seasonHTML} from './v6-view.mjs?v=0.7.4';
-import {SKILLS,ACTIONS,EMOTIONS,stamp,round,clamp,groupsOf,compositionProject,scores} from './engine.mjs?v=0.7.4';
-import {CARDS,CURSES,INTENTIONS,activeDeck,availableCards,SHOW_TICKS,PHRASE_TICKS} from './stage.mjs?v=0.7.4';
-import {bandStage,nextCurse,eligibleSongs,availability,isArchivedSong,seasonSummary,acceptance} from './life.mjs?v=0.7.4';
-import {resolveShowPlan} from './show-planning.mjs?v=0.7.4';
+import { membershipChance, membershipReason, attachment } from './groups.mjs?v=0.7.5-bandlive5';
+import {drawShowStage} from './show-view.mjs?v=0.7.5-bandlive5';
+export {bandsHTML,rapinHTML,showSetupHTML,showStatusHTML,seasonHTML} from './v6-view.mjs?v=0.7.5-bandlive5';
+import {SKILLS,ACTIONS,EMOTIONS,stamp,round,clamp,groupsOf,compositionProject,scores} from './engine.mjs?v=0.7.5-bandlive5';
+import {CARDS,CURSES,INTENTIONS,activeDeck,availableCards,SHOW_TICKS,PHRASE_TICKS} from './stage.mjs?v=0.7.5-bandlive5';
+import {bandStage,nextCurse,eligibleSongs,availability,isArchivedSong,seasonSummary,acceptance} from './life.mjs?v=0.7.5-bandlive5';
+import {resolveShowPlan} from './show-planning.mjs?v=0.7.5-bandlive5';
 export const escapeHTML = x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const esc=escapeHTML;
 const person=(s,id)=>s.people.find(p=>p.id===id);

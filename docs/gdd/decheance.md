@@ -1,6 +1,6 @@
 # DDD — Déchéance, chaînes et paquets contaminés
 
-Version 0.7.4. La déchéance agit dans le quartier et pendant les spectacles. La jauge existante reste bornée de 0 à 100 ; l’historique des épisodes sert à mesurer les excès rapprochés.
+Version 0.7.5. La déchéance agit dans le quartier et pendant les spectacles. La jauge existante reste bornée de 0 à 100 ; l’historique des épisodes sert à mesurer les excès rapprochés.
 
 ## Action et chaînes
 

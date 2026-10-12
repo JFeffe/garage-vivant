@@ -18,10 +18,10 @@ const template=restore(JSON.parse(await readFile('tests/v071-world.json','utf8')
 world.songs=Array.from({length:4},(_,i)=>({...structuredClone(template),id:i+1,projectId:null,title:['La mémoire du canal','Les rues de verre','Un écho dans la ville','La chanson des huit'][i],genre:['Punk','Pop','Jazz','Folk'][i],groupId:i<3?group.id:largeGroup.id,ownerGroupId:i<3?group.id:largeGroup.id,adoptedAt:world.time}));world.nextSongId=5;
 for(const g of [group,largeGroup])g.repertoire=world.songs.filter(s=>s.ownerGroupId===g.id).map(s=>({songId:s.id,mastery:60,rehearsals:0,active:true}));
 assert.deepEqual(restore(world),world);
-const actors=world.people.slice(0,4).map((p,i)=>({...p,instrument:['guitar','drums','bass','sax'][i]}));
-function fixture(audienceSize=3){
-  const game=createBandLive({people:actors,groupName:group.name,songs:[{id:'punk',title:'Rébellion nocturne',style:'Punk'},{id:'pop',title:'Sous les néons',style:'Pop'}],seed:12,audienceSize});chooseSong(game,'punk');game.tempo=4;
-  const hand=[game.cards[0].id,game.cards[3].id,game.cards[8].id,game.cards[13].id,game.cards[18].id];game.deck=game.cards.map(c=>c.id).filter(id=>!hand.includes(id));game.hand=hand;return game;
+const actors=world.people.slice(0,6).map((p,i)=>({...p,instrument:['guitar','drums','bass','sax','keys','voice'][i]}));
+function fixture(audienceSize=3,memberCount=4){
+  const game=createBandLive({people:actors.slice(0,memberCount),groupName:group.name,songs:[{id:'punk',title:'Rébellion nocturne',style:'Punk'},{id:'pop',title:'Sous les néons',style:'Pop'}],seed:12,audienceSize});chooseSong(game,'punk');game.tempo=4;
+  const hand=[0,3,8,13,18].filter(i=>game.cards[i]).map(i=>game.cards[i].id);game.deck=game.cards.map(c=>c.id).filter(id=>!hand.includes(id));game.hand=hand;return game;
 }
 async function load(page,state=null,sourceWorld=world){
   page.on('pageerror',error=>errors.push(error.stack));await page.addInitScript(({world,state})=>{if(!localStorage.getItem('garage-vivant-v1'))localStorage.setItem('garage-vivant-v1',JSON.stringify(world));if(state&&!localStorage.getItem('garage-vivant-bandlive-v1'))localStorage.setItem('garage-vivant-bandlive-v1',JSON.stringify(state));},{world:sourceWorld,state});await page.goto(url);await page.locator('#profile .profile-head').waitFor({state:'attached'});await page.locator('#speed').fill('0');
@@ -29,6 +29,37 @@ async function load(page,state=null,sourceWorld=world){
 async function data(page){return page.evaluate(()=>JSON.parse(localStorage.getItem('garage-vivant-bandlive-v1')).game);}
 async function idle(page){await page.waitForFunction(()=>!document.querySelector('#bl-end')||!document.querySelector('#bl-end').disabled);}
 async function drag(page,id,target,targetPosition){await page.locator(`[data-bl-card="${id}"]`).dragTo(page.locator(target),{sourcePosition:{x:8,y:42},targetPosition});await idle(page);}
+async function stageGeometry(page){
+  return page.evaluate(()=>{
+    const rect=selector=>{const {x,y,width,height}=document.querySelector(selector).getBoundingClientRect();return {x,y,width,height};};
+    return {musicians:rect('.bl-musicians'),actor:rect('[data-bl-actor]'),card:rect('[data-bl-card]'),main:document.querySelector('#main').scrollTop,horizontal:document.querySelector('.bl-viewport').scrollLeft};
+  });
+}
+async function audienceOffset(page){return page.locator('.bl-audience-viewport').evaluate(el=>el.scrollTop);}
+async function centerFan(page,id){
+  await page.locator(`[data-bl-fan="${id}"]`).evaluate(el=>{
+    const viewport=el.closest('.bl-audience-viewport'),fan=el.getBoundingClientRect(),box=viewport.getBoundingClientRect();
+    viewport.scrollTop+=fan.top+fan.height/2-box.top-box.height/2;
+  });
+}
+async function touchDrag(page,id,targetId,{edge=false}={}){
+  const source=await page.locator(`[data-bl-card="${id}"]`).boundingBox(),start={x:source.x+40,y:source.y+42};
+  const cdp=await page.context().newCDPSession(page);
+  const move=async point=>cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[point]});
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[start]});
+  if(edge){
+    const audience=await page.locator('.bl-audience-viewport').boundingBox();
+    const finish={x:Math.min(audience.x+audience.width/6,page.viewportSize().width-55),y:audience.y+audience.height-5};
+    for(let step=1;step<=8;step++)await move({x:start.x+(finish.x-start.x)*step/8,y:start.y+(finish.y-start.y)*step/8});
+    await page.waitForFunction(()=>{const el=document.querySelector('.bl-audience-viewport');return el.scrollTop>=el.scrollHeight-el.clientHeight-1;});
+  }
+  const target=await page.locator(`[data-bl-fan="${targetId}"]`).boundingBox(),finish={x:target.x+target.width/2,y:target.y+target.height/2};
+  assert(start.x>0&&finish.x<page.viewportSize().width&&start.y>0&&finish.y<page.viewportSize().height,'Touch card and last-row target are on screen');
+  for(let step=1;step<=8;step++)await move(edge?finish:{x:start.x+(finish.x-start.x)*step/8,y:start.y+(finish.y-start.y)*step/8});
+  const offset=await audienceOffset(page);
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await idle(page);await cdp.detach();
+  return offset;
+}
 let page;
 try{
   page=await browser.newPage({viewport:{width:1440,height:1000}});await load(page);assert(await page.locator('#bandlive-nav').isHidden());
@@ -58,17 +89,57 @@ try{
   await page.locator('#bl-end').click();const next=await data(page);assert.equal(next.turn,2);assert.equal(next.energy,3);assert.equal(next.hand.length,5);assert.equal(next.boost,0);
   await page.close();
 
-  page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});await load(page,{enabled:true,game:fixture(6)});await page.locator('#bandlive-nav').click();
-  assert.equal(await page.locator('[data-bl-fan]').count(),6);
-  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
-  const viewport=page.locator('.bl-viewport');await viewport.evaluate(el=>el.scrollTop=110);await page.locator('#main').evaluate(el=>el.scrollTop=80);
-  const card=page.locator(`[data-bl-card="${fixture().cards[0].id}"]`),fan=page.locator('[data-bl-fan="f0"]');
-  const source=await card.boundingBox(),target=await fan.boundingBox(),start={x:source.x+8,y:source.y+42},finish={x:target.x+target.width/2,y:target.y+target.height/2};
-  assert(start.x>=0&&finish.x<390&&start.y>0&&finish.y<844,'Touch drag has visible start and end targets');
-  const cdp=await page.context().newCDPSession(page);await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[start]});
-  for(let step=1;step<=8;step++)await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:start.x+(finish.x-start.x)*step/8,y:start.y+(finish.y-start.y)*step/8}]});
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await idle(page);assert.equal((await data(page)).played,1,'Actual touch events play the card');assert.equal((await data(page)).energy,2);assert.equal(await page.locator('.bl-ghost').count(),0);assert(await viewport.evaluate(el=>el.scrollTop>0),'Playing preserves the scrolled touch arena');
-  await page.locator('[data-bl-fan="f5"]').scrollIntoViewIfNeeded();assert(await page.locator('[data-bl-fan="f5"]').isVisible());assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
+  // The public is the only vertical scroller, for every supported formation.
+  for(const sample of [
+    {width:1440,height:1000,members:2,fans:3},
+    {width:1280,height:720,members:3,fans:6},
+    {width:1024,height:600,members:4,fans:12},
+    {width:1920,height:1080,members:5,fans:12},
+    {width:390,height:844,members:6,fans:12,touch:true},
+    {width:360,height:640,members:2,fans:6,touch:true},
+    {width:320,height:568,members:6,fans:12,touch:true},
+  ]){
+    const {width,height,members,fans,touch=false}=sample,game=fixture(fans,members),targetId=`f${Math.floor((fans-1)/3)*3}`;
+    page=await browser.newPage({viewport:{width,height},isMobile:touch,hasTouch:touch});await load(page,{enabled:true,game});await page.locator('#bandlive-nav').click();
+    await page.locator('.bl-viewport').evaluate(el=>{el.scrollIntoView({block:'start',inline:'nearest'});el.scrollLeft=16;});
+    await page.mouse.move(0,0);
+    const fixed=await stageGeometry(page),publicViewport=page.locator('.bl-audience-viewport');
+    await publicViewport.evaluate(el=>el.scrollTop=el.scrollHeight);
+    assert.deepEqual(await stageGeometry(page),fixed,`${width}×${height}: public scrolling keeps musicians and cards fixed`);
+    if(fans>3)assert(await audienceOffset(page)>0,'Larger crowds have their own vertical overflow');
+    assert.equal(await page.locator('.bl-viewport').evaluate(el=>el.scrollTop),0,'The horizontal stage never scrolls vertically');
+    assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'The stage cannot widen the document');
+    await centerFan(page,targetId);
+    const offset=await audienceOffset(page),source=await page.locator('[data-bl-card]').first().boundingBox(),target=await page.locator(`[data-bl-fan="${targetId}"]`).boundingBox();
+    const main=await page.locator('#main').boundingBox();
+    assert(source.y>=main.y&&source.y+source.height<=main.y+main.height,'The whole card stays in the visible stage');
+    assert(target.y+target.height/2>main.y&&target.y+target.height/2<main.y+main.height,'The last-row drop target is visible with the card');
+    if(touch)await touchDrag(page,game.cards[0].id,targetId);
+    else{await page.locator(`[data-bl-card="${game.cards[0].id}"]`).dragTo(page.locator(`[data-bl-fan="${targetId}"]`),{sourcePosition:{x:40,y:42}});await idle(page);}
+    const played=await data(page);assert.equal(played.played,1);assert(played.fans.find(f=>f.id===targetId).hp<game.fans.find(f=>f.id===targetId).hp,'The last-row spectator receives the card');
+    assert(Math.abs(await audienceOffset(page)-offset)<=1,'Card play and the animation-completion render preserve public scroll');
+    const after=await stageGeometry(page);assert.deepEqual(after.musicians,fixed.musicians);assert.equal(after.main,fixed.main);assert.equal(after.horizontal,fixed.horizontal,'Card play preserves horizontal stage scroll too');
+    assert.equal(await page.locator('.bl-ghost').count(),0);
+    await page.screenshot({path:`test-results/bandlive-scroll-${width}x${height}.png`});await page.close();
+  }
+
+  // The same edge-scroll path is used by a native mouse drag.
+  page=await browser.newPage({viewport:{width:1280,height:720}});const mouseGame=fixture(12,6);
+  await load(page,{enabled:true,game:mouseGame});await page.locator('#bandlive-nav').click();await page.locator('.bl-viewport').evaluate(el=>el.scrollIntoView({block:'start'}));
+  const mouseFixed=await page.locator('.bl-musicians').boundingBox(),mouseCard=await page.locator('[data-bl-card]').first().boundingBox(),mousePublic=await page.locator('.bl-audience-viewport').boundingBox();
+  await page.mouse.move(mouseCard.x+40,mouseCard.y+42);await page.mouse.down();await page.mouse.move(mouseCard.x+40,mouseCard.y+58,{steps:4});
+  await page.mouse.move(mousePublic.x+mousePublic.width/6,mousePublic.y+mousePublic.height-5,{steps:8});
+  await page.waitForFunction(()=>{const el=document.querySelector('.bl-audience-viewport');return el.scrollTop>=el.scrollHeight-el.clientHeight-1;});
+  const mouseFan=await page.locator('[data-bl-fan="f9"]').boundingBox();await page.mouse.move(mouseFan.x+mouseFan.width/2,mouseFan.y+mouseFan.height/2,{steps:4});
+  const mouseOffset=await audienceOffset(page);await page.mouse.up();await idle(page);
+  assert.equal((await data(page)).played,1,'A native mouse drag auto-scrolls to the final public row');assert(mouseOffset>0);assert.equal(await audienceOffset(page),mouseOffset);assert.deepEqual(await page.locator('.bl-musicians').boundingBox(),mouseFixed);await page.close();
+
+  // A held finger at the public edge must keep scrolling even without more moves.
+  page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});const touchGame=fixture(12);
+  await load(page,{enabled:true,game:touchGame});await page.locator('#bandlive-nav').click();await page.locator('.bl-viewport').evaluate(el=>el.scrollIntoView({block:'start'}));
+  const touchFixed=await page.locator('.bl-musicians').boundingBox();
+  const touchOffset=await touchDrag(page,touchGame.cards[0].id,'f9',{edge:true});
+  assert.equal((await data(page)).played,1,'An actual touch drag auto-scrolls to the final public row');assert(touchOffset>0);assert.equal(await audienceOffset(page),touchOffset);assert.deepEqual(await page.locator('.bl-musicians').boundingBox(),touchFixed);
   await page.screenshot({path:'test-results/bandlive-touch.png'});await page.close();
 
   page=await browser.newPage({viewport:{width:1440,height:1000}});await load(page,{enabled:true});await page.locator('#bandlive-nav').click();await page.locator('#bl-group').selectOption(largeGroup.id);
@@ -98,5 +169,5 @@ try{
 
   page=await browser.newPage({viewport:{width:1440,height:1000}});await load(page,{enabled:true},createWorld(205,8));await page.locator('#bandlive-nav').click();assert(await page.locator('#bl-start').isDisabled());assert.equal(await page.locator('[data-bl-member]').count(),0);await page.locator('#bandlive-view [data-open-groups]').click();assert(await page.locator('#groups-view').isVisible());await page.close();
   const legacy=JSON.parse(await readFile('tests/bandlive-v1.json','utf8'));page=await browser.newPage({viewport:{width:1440,height:1000}});await load(page,{enabled:true,game:legacy});await page.locator('#bandlive-nav').click();assert.equal(await page.locator('[data-bl-actor]').count(),8);assert.deepEqual(await data(page),legacy);await page.locator('#bl-end').click();assert.equal((await data(page)).turn,2);await page.close();
-  assert.deepEqual(errors,[]);console.log('BandLive navigateur : groupes et compositions réels, six musiciens maximum, public de 3 à 12, sauvegarde et replay du public, retour au quartier après victoire et dernier tour, reprise de la simulation, anciens shows, drag/drop souris et tactile, infobulles et désactivation vérifiés.');
+  assert.deepEqual(errors,[]);console.log('BandLive navigateur : groupes et compositions réels, six musiciens maximum, public de 3 à 12, sauvegarde et replay du public, retour au quartier après victoire et dernier tour, reprise de la simulation, anciens shows, public seul défilant, musiciens et cartes fixes, conservation des deux scrolls, dernières rangées en drag/drop souris et tactile, petits et grands écrans, infobulles et désactivation vérifiés.');
 }finally{await page?.close().catch(()=>{});await browser.close();await new Promise(resolve=>server.close(resolve));}

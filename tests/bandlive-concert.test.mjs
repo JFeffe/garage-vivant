@@ -56,6 +56,48 @@ test('the next band retains the venue audience and proceeds classically in the s
   const {world}=preparedConcert({following:true});const original=world.performance.fans.length;beginBandLiveConcert(world);finishWithoutCards(world);assert.equal(world.performance.fans.length,8);const previous=followingConcertPerformance(world.performance);assert.equal(previous.fans.length,original);
   assert(nextSlot(world,previous));assert(!world.performance.bandLive);assert.equal(world.performance.fans.length,original);skipShow(world);assert.equal(world.showHistory.length,2);assert.equal(nextSlot(world),false);assert.equal(world.showEventId,null);restore(world);
 });
+test('direct next-slot transitions restore the full venue audience after reload without changing results or rewards',()=>{
+  for(const options of [{},{venue:'park'}]){
+    let {world}=preparedConcert({...options,following:true});
+    const original=structuredClone(world.performance.fans);
+    beginBandLiveConcert(world);finishWithoutCards(world);
+    world=restore(JSON.parse(JSON.stringify(world)));
+    const previous=world.performance,before=structuredClone(world),game=previous.bandLive.game;
+    assert(previous.fans.length<original.length);
+    assert(nextSlot(world));
+    assert(!world.performance.bandLive);
+    assert.deepEqual(world.performance.fans,original.map((fan,i)=>{
+      const liveFan=game.fans[Math.floor(i*game.fans.length/original.length)];
+      return {...fan,meter:Math.min(30,(1-liveFan.hp/liveFan.max)*100*.2),reacted:false,reactedAt:null,lastHit:null,receptivity:Math.min(1.1,fan.receptivity)};
+    }));
+    assert.deepEqual(world.performance.initialFans,world.performance.fans);
+    assert.deepEqual(previous,before.performance,'The completed show remains an exact replay snapshot');
+    assert.deepEqual(world.showHistory,before.showHistory,'Advancing grants no additional result');
+    assert.deepEqual(world.people,before.people,'Advancing does not reapply musician consequences');
+    assert.deepEqual(world.groups.find(g=>g.id===previous.groupId),before.groups.find(g=>g.id===previous.groupId),'Advancing does not reapply band rewards');
+    assert.deepEqual(restore(JSON.parse(JSON.stringify(world))),world);
+    skipShow(world);assert.equal(world.showHistory.length,2);assert.equal(world.showHistory.find(r=>r.id!==previous.id).total,original.length);
+    assert.equal(world.showHistory.find(r=>r.id===previous.id).total,game.fans.length);
+    assert.equal(world.showHistory.find(r=>r.id===previous.id).mode,'bandlive');
+  }
+});
+test('interrupted next-slot transitions carry the live audience welcome without granting a BandLive result',()=>{
+  const {world,bookingId}=preparedConcert({following:true});
+  const {game}=beginBandLiveConcert(world);chooseSong(game,'song-1');
+  const card=game.hand.find(id=>game.cards.find(c=>c.id===id).kind==='note');
+  assert(playCard(game,card,game.fans[0].id).ok);
+  const previous=world.performance,expected=followingConcertPerformance(previous);
+  assert(expected.fans.some(f=>f.meter>0));
+  assert(command(world,{type:'cancelPerformance',actorId:game.actors[0].id}).ok);
+  const snapshot=structuredClone(previous);
+  assert(nextSlot(world,previous));
+  assert(!world.performance.bandLive);
+  assert.deepEqual(world.performance.fans,expected.fans.map(f=>({...f,meter:Math.min(30,f.meter*.2),reacted:false,reactedAt:null,lastHit:null,receptivity:Math.min(1.1,f.receptivity)})));
+  assert.deepEqual(previous,snapshot);assert.equal(world.showHistory.length,0);
+  assert.equal(world.bookings.find(b=>b.id===bookingId).status,'cancelled');
+  assert.deepEqual(restore(JSON.parse(JSON.stringify(world))),world);
+  skipShow(world);assert.equal(world.showHistory.length,1);assert(!world.showHistory[0].mode);
+});
 test('interruption reuses cancellation, grants no result and releases the performers',()=>{
   const {world,bookingId}=preparedConcert();beginBandLiveConcert(world);const game=world.performance.bandLive.game;chooseSong(game,'song-1');const actorId=game.actors[0].id;assert(command(world,{type:'cancelPerformance',actorId}).ok);assert.equal(world.performance,null);assert.equal(world.showHistory.length,0);assert.equal(world.bookings.find(b=>b.id===bookingId).status,'cancelled');assert(world.people.every(p=>!p.engagement));restore(world);
 });

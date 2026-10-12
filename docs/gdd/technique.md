@@ -1,6 +1,6 @@
 # DDD — Architecture, sauvegardes et validation
 
-Version d’interface : 0.7.4. Format du monde : 0.7.3. L’application reste statique, sans dépendance de simulation à l’exécution ni compte serveur.
+Version d’interface : 0.7.5. Format du monde : 0.7.3. L’application reste statique, sans dépendance de simulation à l’exécution ni compte serveur.
 
 ## Modules et responsabilités
 
@@ -106,3 +106,9 @@ Les corrections s’appliquent à la prochaine transition : l’appel garde son 
 ## Correctif d’interface V7.4 — Archives des groupes
 
 Le navigateur de groupes sépare Actifs et Archives, conserve la sélection lors d’une dissolution et ouvre le bon état depuis les liens de propriétaire. Seuls filtres et sélection de vue changent ; aucune donnée, migration, politique de dissolution ni tirage du moteur modifié. Les groupes dissous étaient déjà stockés dans `world.groups`. `RELEASE_VERSION` et les paramètres de cache des ressources passent à 0.7.4 ; `VERSION` reste à 0.7.3, afin de ne pas migrer une sauvegarde inchangée. Le test Chromium suit une vraie prestation terminée, dissout son groupe dans une fixture contrôlée, puis vérifie archive, répertoire, anciens membres, bilan de show, navigation depuis une chanson et export/rechargement sur ordinateur et téléphone.
+
+## Réglage de formation et recrutement V7.5
+
+La version livrée est 0.7.5 ; le format du monde reste 0.7.3. Les délais et probabilités de `group-rules.mjs` distinguent désormais nouvelle formation et recrutement dans le band existant, via les mêmes politiques et transitions de `groups.mjs`. Aucun champ, migration, quota ou ordonnanceur supplémentaire. Les sauvegardes gardent groupes, historiques, horodatages et hasard ; les prochains choix appliquent les nouveaux coefficients. Une continuation exacte est garantie entre sauvegarde et rechargement exécutés avec la même version de règles, pas entre deux équilibrages différents.
+
+L’audit accepte un chemin de sortie, conserve une [référence V7.4](../BALANCE_V7_5_BASELINE.json) séparée et publie tailles, première arrivée à trois membres, stabilité et multigroupe dans le [bilan V7.5](../BALANCE_V7_5.md). La simulation complète produit `AUDIT_V7_5.json` ; les rapports V7.2/V7.3 ne sont plus écrasés par la CI courante. Les tests ciblés couvrent recrutement successif, candidat indisponible, liens réciproques, refus et temporisation, sélection d’un groupe existant et freins au multigroupe.

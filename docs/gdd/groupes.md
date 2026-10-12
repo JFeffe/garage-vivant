@@ -1,6 +1,6 @@
 # DDD — Groupes autonomes, attachement et adoption
 
-Version 0.7.4. Le groupe est une entité persistante. Il prend des initiatives virtuelles ; ses membres réalisent les pratiques et spectacles avec leurs besoins et positions. Aucune personnalité, action de sac ou ressource fictive de groupe.
+Version 0.7.5. Le groupe est une entité persistante. Il prend des initiatives virtuelles ; ses membres réalisent les pratiques et spectacles avec leurs besoins et positions. Aucune personnalité, action de sac ou ressource fictive de groupe.
 
 ## Identité et données
 
@@ -14,17 +14,22 @@ Chaque compétence existante affiche moyenne, minimum et maximum des membres act
 
 Une paire est admissible si affinité dans les deux sens ≥12 **ou** amour dans les deux sens ≥25, et tension dans les deux sens <60. La chimie aide l’acceptation ; elle n’est pas obligatoire. Le seuil d’affinité est un réglage de cette première passe, révisé après l’audit ; ce n’est pas une amitié maximale. Aucun champ confiance.
 
-Les partenaires doivent être éveillés, hors engagement et n’avoir ni créé ni rejoint de groupe depuis 48 h. Aucune attente initiale aux nouveaux personnages. Après un échange favorable admissible, choisir parmi nouvelle paire et groupes de chaque partenaire accessibles à l’autre. Poids : `1 + attrait/25` ; nouvelle paire utilise 18. Un groupe commun actif interdit de recréer ce même duo. Pour recruter, les mêmes liens doivent exister avec au moins la moitié des membres.
+Les partenaires doivent être éveillés et hors engagement. Créer un nouveau groupe demande 48 h depuis la dernière formation ou adhésion chez chacun. Pour **recruter dans un groupe existant**, seul le candidat attend 24 h depuis sa dernière formation ou adhésion : un membre peut proposer de compléter son propre groupe dès sa création. Aucune attente initiale aux nouveaux personnages. Après un échange favorable admissible, choisir parmi nouvelle paire et groupes de chaque partenaire accessibles à l’autre. Poids : `1 + attrait/25`, multiplié par 1,5 pour un groupe existant ; nouvelle paire utilise 18. Un groupe commun actif interdit de recréer ce même duo. Pour recruter, les mêmes liens doivent exister avec au moins la moitié des membres.
 
-Probabilité de proposition autonome : `0,22 / (1 + nombre de groupes de l’initiateur²) × max(0,05 ; 1 − meilleur attachement/100)`. Ce tirage ne crée rien à lui seul. Une paire reçoit au plus une proposition toutes les 24 h, refus compris.
+Probabilité de proposition autonome :
 
-Probabilité d’acceptation :
+- Nouvelle formation : `0,28 / (1 + nombre de groupes de l’initiateur²) × max(0,05 ; 1 − meilleur attachement/100)`.
+- Recrutement : `0,12 / (1 + nombre de ses autres groupes²) × max(0,05 ; 1 − meilleur attachement à ces autres groupes/100)`.
+
+Le groupe que l’on cherche à compléter est exclu de la pénalité du recruteur : être attaché à son propre band ne doit pas l’empêcher d’y inviter quelqu’un. Les autres appartenances continuent de freiner une proposition. Ce tirage ne crée rien à lui seul. Une paire reçoit au plus une proposition toutes les 24 h, refus compris, que la proposition soit une formation ou un recrutement.
+
+Probabilité d’acceptation inchangée :
 
 `borne(0,4 + affinité destinataire→initiateur/200 + amour/400 + chimie/1000 − tension/250 + attrait du groupe/500 ; 0,1 ; 0,95) / (1 + 0,75 × groupes actuels du destinataire) × max(0,1 ; 1 − son meilleur attachement/100)`.
 
-L’attrait utilise le calcul d’attachement au groupe proposé ; pour un duo neuf, Coordination 18 et réputation 0. Une acceptation ajoute le membre ou crée le groupe, puis fixe le délai de 48 h chez les deux partenaires. Les chances, tirages et décisions sont journalisés. Un refus donne détresse base +3 à l’initiateur. Les invitations manuelles utilisent les mêmes règles et acceptations ; seul le tirage pour émettre une proposition est omis. La création directe de laboratoire reste une intervention explicite et distincte.
+L’attrait utilise le calcul d’attachement au groupe proposé ; pour un duo neuf, Coordination 18 et réputation 0. Une création fixe la date de dernière formation chez les deux fondateurs ; un recrutement fixe seulement celle du nouvel adhérent, sans réinitialiser celle de son recruteur. La grâce initiale de départ reste 48 h pour chaque nouvelle appartenance. Les chances d’acceptation, tirages et décisions sont journalisés. Un refus donne détresse base +3 à l’initiateur. Les invitations manuelles utilisent les mêmes règles et acceptations ; seul le tirage pour émettre une proposition est omis. La création directe de laboratoire reste une intervention explicite et distincte.
 
-Ces freins rendent l’expérimentation possible et le multigroupe moins probable lorsqu’un groupe fonctionne. Il n’existe ni plafond arbitraire d’appartenances, ni quota de groupes, ni formation forcée au jour 10.
+Ces réglages V7.5 favorisent la croissance des duos et rendent la première formation un peu plus probable, tout en conservant les freins d’acceptation d’un musicien déjà engagé ailleurs. Il n’existe ni plafond arbitraire d’appartenances ou d’effectif, ni quota de groupes, ni formation ou recrutement forcé. Les tailles trois ou quatre sont une intention d’équilibre, pas une limite ajoutée. [Comparaison sur les mêmes graines](../BALANCE_V7_5.md).
 
 ## Attachement individuel
 
@@ -99,7 +104,7 @@ La [migration](./technique.md) archive confiance, résout les anciens répertoir
 
 La fiche personnelle montre la file, son ordre, les échéances, les réponses et motifs ; les liens d’auteur et de propriétaire ouvrent leur fiche. Les fiches de groupe donnent identité, compétences, attachement, détail de réputation, répertoire possédé/actif, appels, dates des prochaines décisions et historique. Le quartier distingue le nombre de groupes actifs des archives. Dans Groupes, deux boutons toujours visibles donnent Actifs et Archives avec leur nombre total ; Archives affiche exclusivement les groupes dissous. La recherche filtre la catégorie courante. Si le groupe consulté se dissout, sa fiche reste ouverte dans Archives. Un lien depuis le propriétaire d’une chanson ou une invitation ouvre la bonne catégorie et efface seulement une recherche incompatible avec le groupe ciblé. Les archives montrent motif/date de dissolution, anciens membres, fondateurs, répertoire et maîtrise conservés, shows et histoire ; aucune commande d’adoption, de répétition, de recrutement ou de réservation active. La consultation, l’export et le rechargement ne suppriment ni ne réactivent ces groupes. Les libellés d’activité du quartier sont dessinés après les effets, dans des rectangles distincts des cubes, noms, bulles et autres libellés. Des traits de liaison gardent leur association lorsque la foule oblige à les décaler. La bande d’activités sous la carte garde chaque nom et activité en texte lisible à la taille de l’écran, y compris sur mobile. Aucun texte essentiel n’est uniquement au survol.
 
-Les coefficients sont réunis dans `group-rules.mjs`, les politiques et transitions dans `groups.mjs`, les raccords de moteur dans `groupContext`. `npm run audit:groups` rejoue 20 graines sur 30 jours et en prolonge trois à 90 jours, vérifie les sauvegardes aux jours 3/5/10/30 et la continuation. Les résultats et limites se trouvent dans le [rapport d’équilibrage](../BALANCE_V7_2.md). Ces mesures ne garantissent pas toute partie, population ou configuration.
+Les coefficients sont réunis dans `group-rules.mjs`, les politiques et transitions dans `groups.mjs`, les raccords de moteur dans `groupContext`. `npm run audit:groups` rejoue 20 graines sur 30 jours et en prolonge trois à 90 jours, vérifie les sauvegardes aux jours 3/5/10/30 et la continuation. Les résultats et limites se trouvent dans le [rapport d’équilibrage V7.5](../BALANCE_V7_5.md). Ces mesures ne garantissent pas toute partie, population ou configuration.
 
 ## Réception V7.3
 

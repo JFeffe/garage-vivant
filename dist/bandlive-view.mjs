@@ -1,9 +1,9 @@
-import {RULES,INSTRUMENTS,SPECIALS,restoreBandLive,cardById,cardDefinition,currentSong,availableSongs,chooseSong,canPlay,playCard,endTurn} from './bandlive.mjs?v=4';
-import {resolveBandLivePlan,createBandLiveFromWorld} from './bandlive-roster.mjs?v=4';
-import {createConcertReplay,resolveBandLiveConcert} from './bandlive-concert.mjs?v=4';
-import {NEEDS,PERSONALITY} from './engine.mjs?v=0.7.4';
-import {instrumentArt,drawStageBackdrop} from './show-view.mjs?v=0.7.4';
-import {decorateCube,enableAudio,playSound} from './v5-view.mjs?v=0.7.4';
+import {RULES,INSTRUMENTS,SPECIALS,restoreBandLive,cardById,cardDefinition,currentSong,availableSongs,chooseSong,canPlay,playCard,endTurn} from './bandlive.mjs?v=0.7.5-bandlive5';
+import {resolveBandLivePlan,createBandLiveFromWorld} from './bandlive-roster.mjs?v=0.7.5-bandlive5';
+import {createConcertReplay,resolveBandLiveConcert} from './bandlive-concert.mjs?v=0.7.5-bandlive5';
+import {NEEDS,PERSONALITY} from './engine.mjs?v=0.7.5-bandlive5';
+import {instrumentArt,drawStageBackdrop} from './show-view.mjs?v=0.7.5-bandlive5';
+import {decorateCube,enableAudio,playSound} from './v5-view.mjs?v=0.7.5-bandlive5';
 
 const STORAGE='garage-vivant-bandlive-v1';
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -36,7 +36,7 @@ function fanTooltip(game,fan){
 
 export function createBandLiveModule({getWorld,onOpen,onReturn,onDisable,canStart,notify,getReducedEffects=()=>false,getPlan=()=>({}),onConcertStart,onConcertUpdate,onConcertCancel}) {
   const root=document.querySelector('#bandlive-view'),nav=document.querySelector('#bandlive-nav'),toggle=document.querySelector('#bandlive-enabled');
-  let enabled=false,game=null,preparing=false,draft={groupId:'',memberIds:null,seed:2040,audienceSize:RULES.minAudience},selectedCard=null,activeCard=null,dragPointer=null,ghost=null,animation=null,sound=false,storageProblem=false;
+  let enabled=false,game=null,preparing=false,draft={groupId:'',memberIds:null,seed:2040,audienceSize:RULES.minAudience},selectedCard=null,activeCard=null,dragPointer=null,dragPoint=null,dragFrame=null,ghost=null,animation=null,sound=false,storageProblem=false;
   try{const saved=JSON.parse(localStorage.getItem(STORAGE)||'null');if(saved){enabled=!!saved.enabled;if(saved.draft)draft=saved.draft;if(saved.game)game=restoreBandLive(saved.game);}}catch{notify('La répétition BandLive enregistrée ne peut pas être reprise. Le quartier est disponible.');}
   let rehearsalGame=game,liveId=null,lastReport=null;
   const liveShow=()=>{const s=getWorld().performance;return liveId&&s?.id===liveId&&s.bandLive&&getWorld().showEventId?s:null;};
@@ -87,18 +87,20 @@ export function createBandLiveModule({getWorld,onOpen,onReturn,onDisable,canStar
     const effect=(label,key)=>{const e=record?.effects;return e?`<span><b>${Math.round(e.before[key])} → ${Math.round(e.after[key])}</b> ${label}</span>`:'';};
     const report=finished&&live?`<section class="bl-concert-result panel"><span class="eyebrow">BILAN DU SPECTACLE</span><h3>${won?'Tout le public est conquis !':'Le show est terminé.'}</h3><div class="bl-result-values"><span><b>${live.result.score}/100</b> Accueil du public</span><span><b>${live.sourceOpportunity.organizer?.exigence||30}/100</b> Attentes de la scène</span>${effect('Réputation','reputation')}${effect('Moral','morale')}${effect('Coordination','development')}</div><ul>${(record?.musicianEffects||[]).map(p=>`<li>${esc(p.name)} · énergie ${Math.round(p.energyBefore)} → ${Math.round(p.energyAfter)}</li>`).join('')}</ul><p>Le bilan dépend de l’accueil du public et des attentes de cette scène. Ce résultat compte dans la partie et reste dans l’historique du groupe.</p></section>`:'';
     const waiting=live&&getWorld().bookings.some(b=>b.opportunityId===live.opportunityId&&['booked','assembling'].includes(b.status));
-    return `<div class="bl-arena"><div class="bl-hud"><div><span class="eyebrow">${eyebrow}</span><h2>${esc(game.groupName)}</h2><p>${song?`${esc(song.title)} · ${esc(song.style)} · ${['Couplet','Refrain','Finale'][game.section-1]} · passage ${game.usedSongs.length}/2`:'Les chansons du groupe. Six tours. Tout le public à conquérir.'}</p></div>${live?'':'<button id="bl-setup" class="text-button">Changer le band</button>'}<div class="bl-resources"><span><b data-bl-energy>${game.energy}/3</b> Énergie</span><span><b data-bl-tempo>${game.tempo}/10</b> Tempo</span><span><b>${game.turn}/6</b> Tour</span><span><b>${game.fans.filter(f=>f.hp===0).length}/${game.fans.length}</b> Conquis</span>${game.boost?`<span class="bl-boost"><b>+${game.boost}</b> Prochaine puissance · ce tour</span>`:''}</div></div>${choosing?`<div class="bl-song-choice"><b>${game.songOrder?(game.turn?'Deuxième passage de la setlist · −2 tempo au départ':'Setlist réservée · première chanson'):game.turn?(game.songs.length===1?'Reprise de la chanson · −2 tempo au départ':'Choisis la deuxième chanson · −2 tempo au départ'):'Choisis la première chanson'}</b>${availableSongs(game).map(s=>`<button data-bl-song="${esc(s.id)}"><strong>${esc(s.title)}</strong>${styleIcon(s.style)}<small>${esc(s.style)} · 3 tours · finale : 3 puissance sur tout le public</small></button>`).join('')}</div>`:''}<div class="bl-viewport"><div class="bl-world" style="--bl-players:${game.actors.length};--bl-min-width:${Math.max(800,game.actors.length*205)}px"><canvas class="bl-effects" aria-hidden="true"></canvas><div class="bl-musicians">${game.actors.map(actor=>`<section class="bl-musician"><div class="bl-musician-info" data-bl-actor="${esc(actor.id)}" tabindex="0" aria-label="Informations de ${esc(actor.name)}">${cubeHTML(actor,'actor')}<div class="bl-name"><b>${esc(actor.name)}</b>${styleIcon(actor.genre)}</div><small>${INSTRUMENTS[actor.instrument]}</small></div>${handHTML(actor)}</section>`).join('')}</div><div class="bl-audience" data-bl-target="audience" tabindex="0" role="group" aria-label="Zone du public. Dépose ici une carte collective ou de préparation."><span class="bl-zone-label">LE PUBLIC</span><div class="bl-fans">${game.fans.map(fan=>`<div class="bl-fan-wrap"><span class="bl-intent">${fan.hp===0?'Conquis !':fan.intent==='solo'?'Attend un Solo':'S’ennuie · +3 en fin de tour'}</span><button class="bl-fan ${fan.hp===0?'bl-conquered':''}" data-bl-fan="${fan.id}" data-bl-target="${fan.id}" aria-label="${esc(fan.name)} · ${fan.hp}/${fan.max} · ${fan.hp===0?'Conquis':fan.intent==='solo'?'Attend un Solo':'S’ennuie'}">${cubeHTML(fan,'fan')}<span class="bl-name"><b>${esc(fan.name)}</b>${styleIcon(fan.favorite)}</span><span class="bl-resistance" role="progressbar" aria-label="Résistance de ${esc(fan.name)}" aria-valuemin="0" aria-valuemax="${fan.max}" aria-valuenow="${fan.hp}"><i style="width:${fan.hp/fan.max*100}%"></i></span><span class="bl-hp">${fan.hp}/${fan.max}</span></button></div>`).join('')}</div><span class="bl-drop-hint">Cartes collectives et préparations → dépose dans cette zone</span></div></div></div>${report}<div class="bl-controls"><p id="bl-help" role="status">${finished?(won?'Tout le public est conquis !':'Le show est terminé. Il reste du public à conquérir.'):choosing?'Choisis une chanson pour piger ta main.':selectedCard?'Choisis un spectateur ou la zone du public.':'Glisse une carte vers le public, ou sélectionne-la puis choisis sa cible.'}</p><span class="bl-piles">Pioche ${game.deck.length} · Main ${game.hand.length} · Défausse ${game.discard.length}</span>${game.phase==='play'?`<button id="bl-end" class="primary" ${animation?'disabled':''}>Fin du tour →</button>`:''}<button id="bl-sound" aria-pressed="${sound}">Son : ${sound?'ON':'OFF'}</button>${live&&!finished?'<button id="bl-cancel" class="text-button">Interrompre le show</button>':''}${finished?`<button id="bl-return" class="primary">${waiting?'Continuer la soirée →':'Retour au quartier · continuer'}</button>${live?'':'<button id="bl-replay">Rejouer la répétition</button>'}`:''}</div><details class="bl-log"><summary>Déroulement du show · ${game.played} cartes jouées</summary><div>${game.logs.map(line=>`<p>${esc(line)}</p>`).join('')}</div></details></div>`;
+    return `<div class="bl-arena"><div class="bl-hud"><div><span class="eyebrow">${eyebrow}</span><h2>${esc(game.groupName)}</h2><p>${song?`${esc(song.title)} · ${esc(song.style)} · ${['Couplet','Refrain','Finale'][game.section-1]} · passage ${game.usedSongs.length}/2`:'Les chansons du groupe. Six tours. Tout le public à conquérir.'}</p></div>${live?'':'<button id="bl-setup" class="text-button">Changer le band</button>'}<div class="bl-resources"><span><b data-bl-energy>${game.energy}/3</b> Énergie</span><span><b data-bl-tempo>${game.tempo}/10</b> Tempo</span><span><b>${game.turn}/6</b> Tour</span><span><b>${game.fans.filter(f=>f.hp===0).length}/${game.fans.length}</b> Conquis</span>${game.boost?`<span class="bl-boost"><b>+${game.boost}</b> Prochaine puissance · ce tour</span>`:''}</div></div>${choosing?`<div class="bl-song-choice"><b>${game.songOrder?(game.turn?'Deuxième passage de la setlist · −2 tempo au départ':'Setlist réservée · première chanson'):game.turn?(game.songs.length===1?'Reprise de la chanson · −2 tempo au départ':'Choisis la deuxième chanson · −2 tempo au départ'):'Choisis la première chanson'}</b>${availableSongs(game).map(s=>`<button data-bl-song="${esc(s.id)}"><strong>${esc(s.title)}</strong>${styleIcon(s.style)}<small>${esc(s.style)} · 3 tours · finale : 3 puissance sur tout le public</small></button>`).join('')}</div>`:''}<div class="bl-viewport"><div class="bl-world" style="--bl-players:${game.actors.length};--bl-min-width:${Math.max(800,game.actors.length*205)}px"><canvas class="bl-effects" aria-hidden="true"></canvas><div class="bl-musicians">${game.actors.map(actor=>`<section class="bl-musician"><div class="bl-musician-info" data-bl-actor="${esc(actor.id)}" tabindex="0" aria-label="Informations de ${esc(actor.name)}">${cubeHTML(actor,'actor')}<div class="bl-name"><b>${esc(actor.name)}</b>${styleIcon(actor.genre)}</div><small>${INSTRUMENTS[actor.instrument]}</small></div>${handHTML(actor)}</section>`).join('')}</div><div class="bl-audience-viewport" tabindex="0" role="region" aria-label="Public · défilement vertical"><div class="bl-audience" data-bl-target="audience" tabindex="0" role="group" aria-label="Zone du public. Dépose ici une carte collective ou de préparation."><span class="bl-zone-label">LE PUBLIC</span><div class="bl-fans">${game.fans.map(fan=>`<div class="bl-fan-wrap"><span class="bl-intent">${fan.hp===0?'Conquis !':fan.intent==='solo'?'Attend un Solo':'S’ennuie · +3 en fin de tour'}</span><button class="bl-fan ${fan.hp===0?'bl-conquered':''}" data-bl-fan="${fan.id}" data-bl-target="${fan.id}" aria-label="${esc(fan.name)} · ${fan.hp}/${fan.max} · ${fan.hp===0?'Conquis':fan.intent==='solo'?'Attend un Solo':'S’ennuie'}">${cubeHTML(fan,'fan')}<span class="bl-name"><b>${esc(fan.name)}</b>${styleIcon(fan.favorite)}</span><span class="bl-resistance" role="progressbar" aria-label="Résistance de ${esc(fan.name)}" aria-valuemin="0" aria-valuemax="${fan.max}" aria-valuenow="${fan.hp}"><i style="width:${fan.hp/fan.max*100}%"></i></span><span class="bl-hp">${fan.hp}/${fan.max}</span></button></div>`).join('')}</div><span class="bl-drop-hint">Cartes collectives et préparations → dépose dans cette zone</span></div></div></div></div>${report}<div class="bl-controls"><p id="bl-help" role="status">${finished?(won?'Tout le public est conquis !':'Le show est terminé. Il reste du public à conquérir.'):choosing?'Choisis une chanson pour piger ta main.':selectedCard?'Choisis un spectateur ou la zone du public.':'Glisse une carte vers le public, ou sélectionne-la puis choisis sa cible.'}</p><span class="bl-piles">Pioche ${game.deck.length} · Main ${game.hand.length} · Défausse ${game.discard.length}</span>${game.phase==='play'?`<button id="bl-end" class="primary" ${animation?'disabled':''}>Fin du tour →</button>`:''}<button id="bl-sound" aria-pressed="${sound}">Son : ${sound?'ON':'OFF'}</button>${live&&!finished?'<button id="bl-cancel" class="text-button">Interrompre le show</button>':''}${finished?`<button id="bl-return" class="primary">${waiting?'Continuer la soirée →':'Retour au quartier · continuer'}</button>${live?'':'<button id="bl-replay">Rejouer la répétition</button>'}`:''}</div><details class="bl-log"><summary>Déroulement du show · ${game.played} cartes jouées</summary><div>${game.logs.map(line=>`<p>${esc(line)}</p>`).join('')}</div></details></div>`;
   }
   function render(){
-    const previousViewport=root.querySelector('.bl-viewport'),scroll=previousViewport?{x:previousViewport.scrollLeft,y:previousViewport.scrollTop}:null;
+    const previousViewport=root.querySelector('.bl-viewport'),previousAudience=root.querySelector('.bl-audience-viewport');
+    const scroll=previousViewport?{x:previousViewport.scrollLeft,y:previousAudience?.scrollTop||0}:null;
     hideTip();root.innerHTML=game&&!preparing?showHTML():setupHTML();
-    const viewport=root.querySelector('.bl-viewport');if(viewport&&scroll){viewport.scrollLeft=scroll.x;viewport.scrollTop=scroll.y;}
+    const viewport=root.querySelector('.bl-viewport'),audience=root.querySelector('.bl-audience-viewport');
+    if(viewport&&scroll){viewport.scrollLeft=scroll.x;if(audience)audience.scrollTop=scroll.y;}
     if(game&&!preparing){for(const canvas of root.querySelectorAll('[data-bl-cube]')){const actor=canvas.dataset.blCubeType==='actor'?game.actors.find(a=>a.id===canvas.dataset.blCube):game.fans.find(f=>f.id===canvas.dataset.blCube);drawCube(canvas,actor,actor.hp===0);}drawEffects();}
     if(liveShow()&&['won','lost'].includes(game.phase)&&!animation&&lastReport!==game){root.querySelector('.bl-concert-result')?.scrollIntoView({block:'start'});lastReport=game;}
   }
   function announce(message){const help=root.querySelector('#bl-help');if(help)help.textContent=message;}
   function clearDrag(){
-    activeCard=null;dragPointer=null;ghost?.remove();ghost=null;root.classList.remove('bl-dragging');root.querySelectorAll('.bl-drop-active,.bl-drop-valid').forEach(el=>el.classList.remove('bl-drop-active','bl-drop-valid'));
+    activeCard=null;dragPointer=null;dragPoint=null;if(dragFrame!==null)cancelAnimationFrame(dragFrame);dragFrame=null;ghost?.remove();ghost=null;root.classList.remove('bl-dragging');root.querySelectorAll('.bl-drop-active,.bl-drop-valid').forEach(el=>el.classList.remove('bl-drop-active','bl-drop-valid'));
   }
   function startDrag(id){
     if(!game||!canPlay(game,id)||animation)return false;
@@ -113,16 +115,44 @@ export function createBandLiveModule({getWorld,onOpen,onReturn,onDisable,canStar
     if(c.target==='single'){if(target.dataset.blTarget!=='audience'&&!target.classList.contains('bl-conquered'))target.classList.add('bl-drop-active');}
     else root.querySelector('.bl-audience')?.classList.add('bl-drop-active');
   }
+  function dropAtPoint(x,y){
+    const target=document.elementFromPoint(x,y)?.closest('[data-bl-target]');
+    return target&&root.contains(target)?target:null;
+  }
+  function moveDrag(x,y){
+    dragPoint={x,y};highlightDrop(dropAtPoint(x,y));
+    if(dragFrame!==null)return;
+    let previous=performance.now();
+    function scrollFrame(now){
+      if(!activeCard||!dragPoint){dragFrame=null;return;}
+      const viewport=root.querySelector('.bl-viewport'),audience=root.querySelector('.bl-audience-viewport');
+      const r=viewport.getBoundingClientRect(),a=audience.getBoundingClientRect(),{x,y}=dragPoint;
+      const left=Math.max(0,r.left),right=Math.min(innerWidth,r.right),top=Math.max(0,r.top),bottom=Math.min(innerHeight,r.bottom);
+      const step=Math.min(32,now-previous)*.6;previous=now;
+      const velocity=(point,start,end)=>point<start+35?-Math.max(0,1-(point-start)/35):point>end-35?Math.max(0,1-(end-point)/35):0;
+      if(x>=left&&x<=right&&y>=top&&y<=bottom){
+        viewport.scrollLeft+=velocity(x,left,right)*step;
+        const audienceTop=Math.max(top,a.top),audienceBottom=Math.min(bottom,a.bottom);
+        if(y>=audienceTop&&y<=audienceBottom)audience.scrollTop+=velocity(y,audienceTop,audienceBottom)*step;
+        highlightDrop(dropAtPoint(x,y));
+      }
+      dragFrame=requestAnimationFrame(scrollFrame);
+    }
+    dragFrame=requestAnimationFrame(scrollFrame);
+  }
   function pointFor(selector){
     const world=root.querySelector('.bl-world').getBoundingClientRect(),el=root.querySelector(selector),r=el?.getBoundingClientRect();
-    return r?{x:r.left+r.width/2-world.left,y:r.top+r.height/2-world.top}:null;
+    if(!r)return null;
+    const clip=el.closest('.bl-audience-viewport')?.getBoundingClientRect(),centerY=r.top+r.height/2;
+    if(clip&&(centerY<clip.top||centerY>clip.bottom))return null;
+    return {x:r.left+r.width/2-world.left,y:centerY-world.top};
   }
   function perform(id,targetId){
     if(animation)return false;
     const card=cardById(game,id),origin=card&&pointFor(`[data-bl-actor="${CSS.escape(card.actorId)}"] .bl-cube`),r=playCard(game,id,targetId);
     clearDrag();selectedCard=null;
     if(!r.ok){announce(r.message);return false;}
-    const hits=r.event.hits.map(hit=>({...hit,...pointFor(`[data-bl-fan="${CSS.escape(hit.id)}"] .bl-cube`)}));
+    const hits=r.event.hits;
     animation={started:performance.now(),origin,hits,event:r.event,shot:false,impact:false};
     if(sound)playSound({type:'card',instrument:card.instrument});
     persist();render();requestAnimationFrame(animate);return true;
@@ -134,8 +164,9 @@ export function createBandLiveModule({getWorld,onOpen,onReturn,onDisable,canStar
     const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);ctx.save();ctx.scale(w/900,(root.querySelector('.bl-musicians')?.offsetHeight||315)/360);drawStageBackdrop(ctx,{stageBottom:360});ctx.restore();
     if(!animation)return;
     const elapsed=(performance.now()-animation.started)/1000,reduced=getReducedEffects(),p=Math.min(1,Math.max(0,(elapsed-.12)/.22));
-    for(const hit of animation.hits){
-      if(!animation.origin||hit.x==null)continue;const origin=animation.origin;
+    for(const eventHit of animation.hits){
+      const position=pointFor(`[data-bl-fan="${CSS.escape(eventHit.id)}"] .bl-cube`);
+      if(!animation.origin||!position)continue;const origin=animation.origin,hit={...eventHit,...position};
       if(elapsed<.34){ctx.strokeStyle='#ecc78699';ctx.lineWidth=2;ctx.setLineDash([4,8]);ctx.beginPath();ctx.moveTo(origin.x,origin.y);ctx.lineTo(hit.x,hit.y);ctx.stroke();ctx.setLineDash([]);if(!reduced){ctx.fillStyle='#fff5d7';ctx.beginPath();ctx.arc(origin.x+(hit.x-origin.x)*p,origin.y+(hit.y-origin.y)*p,5,0,Math.PI*2);ctx.fill();}}
       else{const age=elapsed-.34;ctx.strokeStyle=`rgba(236,199,134,${Math.max(0,1-age/.5)})`;ctx.lineWidth=3;ctx.beginPath();ctx.arc(hit.x,hit.y,reduced?44:12+age*145,0,Math.PI*2);ctx.stroke();ctx.font='700 17px system-ui';ctx.textAlign='center';ctx.lineWidth=4;ctx.strokeStyle='#172e2b';ctx.strokeText(`−${hit.power}`,hit.x,hit.y-58-(reduced?0:age*25));ctx.fillStyle='#f2dfaa';ctx.fillText(`−${hit.power}`,hit.x,hit.y-58-(reduced?0:age*25));if(!reduced&&age<.18){ctx.fillStyle='#f2dfaa';ctx.fillText('BANG !',hit.x,hit.y+55);}}
     }
@@ -150,8 +181,9 @@ export function createBandLiveModule({getWorld,onOpen,onReturn,onDisable,canStar
   }
   root.addEventListener('dragstart',event=>{const card=event.target.closest('[data-bl-card]');if(!card||!startDrag(card.dataset.blCard))return event.preventDefault();event.dataTransfer.setData('application/x-bandlive-card',activeCard);event.dataTransfer.effectAllowed='move';});
   root.addEventListener('dragend',clearDrag);
-  root.addEventListener('dragover',event=>{if(!activeCard)return;const target=event.target.closest('[data-bl-target]');if(target){event.preventDefault();event.dataTransfer.dropEffect='move';highlightDrop(target);}});
-  root.addEventListener('drop',event=>{if(!activeCard)return;event.preventDefault();const target=event.target.closest('[data-bl-target]'),id=activeCard;if(target)perform(id,target.dataset.blTarget);else clearDrag();});
+  root.addEventListener('dragleave',event=>{if(!root.contains(event.relatedTarget)){dragPoint=null;highlightDrop(null);}});
+  root.addEventListener('dragover',event=>{if(!activeCard)return;event.preventDefault();event.dataTransfer.dropEffect='move';moveDrag(event.clientX,event.clientY);});
+  root.addEventListener('drop',event=>{if(!activeCard)return;event.preventDefault();const target=dropAtPoint(event.clientX,event.clientY),id=activeCard;if(target)perform(id,target.dataset.blTarget);else clearDrag();});
   root.addEventListener('pointerdown',event=>{
     if(event.pointerType==='mouse')return;
     const card=event.target.closest('[data-bl-card]');if(!card||!startDrag(card.dataset.blCard))return;
@@ -159,10 +191,9 @@ export function createBandLiveModule({getWorld,onOpen,onReturn,onDisable,canStar
   });
   root.addEventListener('pointermove',event=>{
     if(dragPointer!==event.pointerId)return;
-    event.preventDefault();ghost.style.left=event.clientX-50+'px';ghost.style.top=event.clientY-70+'px';highlightDrop(document.elementFromPoint(event.clientX,event.clientY)?.closest('[data-bl-target]'));
-    const viewport=root.querySelector('.bl-viewport'),r=viewport.getBoundingClientRect();if(event.clientX<r.left+35)viewport.scrollLeft-=18;if(event.clientX>r.right-35)viewport.scrollLeft+=18;if(event.clientY<r.top+35)viewport.scrollTop-=18;if(event.clientY>r.bottom-35)viewport.scrollTop+=18;
+    event.preventDefault();ghost.style.left=event.clientX-50+'px';ghost.style.top=event.clientY-70+'px';moveDrag(event.clientX,event.clientY);
   });
-  root.addEventListener('pointerup',event=>{if(dragPointer!==event.pointerId)return;const id=activeCard,target=document.elementFromPoint(event.clientX,event.clientY)?.closest('[data-bl-target]');root.releasePointerCapture(event.pointerId);if(target)perform(id,target.dataset.blTarget);else clearDrag();});
+  root.addEventListener('pointerup',event=>{if(dragPointer!==event.pointerId)return;const id=activeCard,target=dropAtPoint(event.clientX,event.clientY);root.releasePointerCapture(event.pointerId);if(target)perform(id,target.dataset.blTarget);else clearDrag();});
   // Native HTML dragging cancels its mouse pointer. Only cancel a captured
   // touch/pen drag here; mouse dragging finishes through drop/dragend.
   root.addEventListener('pointercancel',event=>{if(dragPointer===event.pointerId)clearDrag();});
@@ -174,7 +205,7 @@ export function createBandLiveModule({getWorld,onOpen,onReturn,onDisable,canStar
     if(event.target.closest('[data-bl-style]'))return;
     const target=event.target.closest('button,[data-bl-target]');if(!target)return;
     if(target.dataset.blSong){chooseSong(game,target.dataset.blSong);persist();render();}
-    else if(target.dataset.blCard){selectedCard=selectedCard===target.dataset.blCard?null:target.dataset.blCard;render();root.querySelector(`[data-bl-card="${CSS.escape(target.dataset.blCard)}"]`)?.focus();}
+    else if(target.dataset.blCard){selectedCard=selectedCard===target.dataset.blCard?null:target.dataset.blCard;render();root.querySelector(`[data-bl-card="${CSS.escape(target.dataset.blCard)}"]`)?.focus({preventScroll:true});}
     else if(target.dataset.blTarget&&selectedCard)perform(selectedCard,target.dataset.blTarget);
     else if(target.id==='bl-start'){
       const plan=initializeDraft();if(!plan.ready){notify(plan.reason);return render();}
@@ -211,6 +242,7 @@ export function createBandLiveModule({getWorld,onOpen,onReturn,onDisable,canStar
     if(!game||button.dataset.bandliveGroup||groupId&&groupId!==game.groupId){animation=null;clearDrag();selectedCard=null;draft.groupId=groupId||draft.groupId;draft.memberIds=button.dataset.bandliveGroup?null:plan.members||null;preparing=true;initializeDraft();}
     onOpen();
   });
+  root.addEventListener('scroll',hideTip,true);
   const observer=new ResizeObserver(()=>{hideTip();drawEffects();});observer.observe(root);
   return {
     enabled:()=>enabled,
