@@ -1,5 +1,15 @@
 # Notes de version
 
+## V0.7.13 — Qualité des chansons, formules et mini-personnages {#v0713}
+
+12 octobre 2026.
+
+- BandLive utilise toute la largeur, une scène éclairée et une foule entièrement visible sur grand écran. Les cartes restent dans la main de leur musicien, sous son personnage. Le preview affiche les dégâts et la résistance restante au-dessus de la carte déplacée.
+- Les chansons affichent quatre catégories de qualité : **Bancale** (moins de 25), **Modeste** (25 à moins de 50), **Accrocheuse** (50 à moins de 80) et **Hit** (80 à 100). Le score reste visible dans le catalogue, les fiches et les répertoires. Ces catégories sont descriptives : aucun bonus BandLive pour le moment.
+- Chaque paramètre de l’**Atelier d’équilibrage** propose une section dépliable avec sa formule, ses conditions, ses limites et, quand pertinent, un exemple chiffré. Les formules suivent les valeurs préparées ; le jeu change seulement après application.
+- Les personnages ont de minuscules corps, bras et jambes, dans leurs portraits, sur la carte et sur les scènes classique et BandLive. Les accessoires et réactions visuelles sont conservés.
+- Compatibilité : les anciennes chansons sont classées à partir de leur qualité enregistrée. Aucun changement de format de sauvegarde, de durée des chansons ou de mécanique de combat.
+
 ## V0.7.12 — BandLive lisible et pratique des musiciens {#v0712}
 
 12 octobre 2026.

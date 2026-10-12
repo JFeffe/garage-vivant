@@ -1,6 +1,6 @@
 # DDD — Compositions, chansons et catalogue
 
-Version 0.7.12. Les séances de composition développent des projets persistants. Le catalogue conserve les œuvres et permet de masquer les productions peu utiles sans les supprimer.
+Version 0.7.13. Les séances de composition développent des projets persistants. Le catalogue conserve les œuvres et permet de masquer les productions peu utiles sans les supprimer.
 
 ## Plusieurs projets et coauteurs
 
@@ -69,3 +69,9 @@ Le crédit **Composition :** est explicite dans le catalogue, le détail du morc
 La pratique ne modifie ni cette durée ni la qualité ni les champs historiques de maîtrise. Elle entraîne les compétences individuelles. Les anciennes maîtrises sont conservées pour la compatibilité des sauvegardes et des spectacles classiques, sans nouvelles progressions.
 
 **Recomposer** ouvre explicitement un projet d’écriture lié au morceau. Un auteur vivant ou un membre du groupe propriétaire peut le lancer; sommeil, show et engagement conservent leurs restrictions. Une seule recomposition active par morceau est permise. L’œuvre existante reste disponible pendant le travail. À la fin, son identifiant et sa propriété restent inchangés; qualité et durée sont recalculées, les anciens scores sont conservés dans les révisions. Le résultat peut être meilleur ou moins bon. Les concerts déjà commencés gardent leur copie.
+
+## Catégories de qualité
+
+La qualité de composition détermine une catégorie descriptive : **Bancale** sous 25, **Modeste** de 25 à moins de 50, **Accrocheuse** de 50 à moins de 80, **Hit** de 80 à 100. Les seuils s’appliquent au score exact, y compris aux chansons anciennes. Le score reste visible et une recomposition peut changer de catégorie.
+
+Ce classement ne donne aucun bonus à BandLive pour le moment. Il n’introduit ni expérience ni niveau de chanson. Le drapeau historique `hit`, calculé selon la résonance lors de la composition, reste indépendant de cette catégorie de qualité et conserve ses effets existants.

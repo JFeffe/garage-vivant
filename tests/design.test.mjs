@@ -31,3 +31,10 @@ test('custom need drain and action effects change the real minute simulation',()
  const b=structuredClone(a);applyDesign(b,designProfile({'needs.energy':.5,'effects.relax.energy':.8}));step(a,1);step(b,1);
  const expected=(.8-.5)-(.16-.065);assert(Math.abs((b.people[0].needs.energy-a.people[0].needs.energy)-expected)<1e-8);
 });
+
+ test('every workshop parameter has an explanation, with staged values and no state changes', async()=>{
+ const {designContext}=await import('../dist/design-context.mjs');const s=createWorld(20,3),before=JSON.stringify(s);
+ for(const field of DESIGN_FIELDS){const c=designContext(field.id,s);assert(c.formula.length>10,field.id);assert(c.context.length>30,field.id);}
+ const staged=designContext('groups.proposal',s,{'groups.proposal':.8});assert.match(staged.formula,/0,8/);assert.match(staged.example,/20 %/);
+ const needs=designContext('needs.energy',s,{'needs.energy':.1});assert.match(needs.example,/6 points/);assert.equal(JSON.stringify(s),before);
+});

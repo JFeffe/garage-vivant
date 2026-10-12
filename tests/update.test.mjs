@@ -87,3 +87,10 @@ test('a following band can choose BandLive; a jam is blocked for its setlist, no
  skipShow(world);assert(nextSlot(world));assert.equal(world.performance.groupId,group.id);assert(resolveBandLiveConcert(world).ready);
  const jam=preparedConcert({following:true}).world;skipShow(jam);assert(nextSlot(jam));const plan=resolveBandLiveConcert(jam);assert(!plan.ready);assert(plan.reason.includes('jams'));assert.deepEqual(restore(jam),jam);
 });
+
+test('song quality categories derive from score without changing songs or fixed durations',async()=>{
+ const {songQualityTier,songQualityHTML}=await import('../dist/song-rules.mjs');
+ for(const [quality,label] of [[0,'Bancale'],[24.99,'Bancale'],[25,'Modeste'],[49.99,'Modeste'],[50,'Accrocheuse'],[79.99,'Accrocheuse'],[80,'Hit'],[100,'Hit']]){
+ const song={quality,turns:3,hit:false},before=JSON.stringify(song);assert.equal(songQualityTier(song).label,label);assert(songQualityHTML(song).includes(label));assert.equal(JSON.stringify(song),before);
+ }
+});

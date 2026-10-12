@@ -44,7 +44,7 @@ async function centerFan(page,id){
   });
 }
 async function touchDrag(page,id,targetId,{edge=false}={}){
-  const source=await page.locator(`[data-bl-card="${id}"]`).boundingBox(),start={x:source.x+40,y:source.y+42};
+  const source=await page.locator(`[data-bl-card="${id}"]`).boundingBox(),start={x:source.x+10,y:source.y+42};
   const cdp=await page.context().newCDPSession(page);
   const move=async point=>cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[point]});
   await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[start]});
@@ -90,7 +90,19 @@ try{
   await page.locator('#bl-end').click();const next=await data(page);assert.equal(next.turn,2);assert.equal(next.energy,3);assert.equal(next.hand.length,5);assert.equal(next.boost,0);
   await page.close();
 
-  // The public is the only vertical scroller, for every supported formation.
+  // The photographed regression: choosing a song with two musicians and ten fans.
+  page=await browser.newPage({viewport:{width:1908,height:909}});
+  const waitingGame=createBandLive({people:actors.slice(0,2),groupName:'Les Effets Sauvages',songs:[{id:'first',title:'Depuis que le temps nous emporte sans un mot',style:'Punk'}],seed:12,audienceSize:10});
+  await load(page,{enabled:true,game:waitingGame});await page.locator('#bandlive-nav').click();
+  assert.equal(await page.locator('.bl-card-table').count(),0,'No empty reserved hand before choosing a song');
+  assert.equal(await page.locator('.bl-arena > .bl-song-choice [data-bl-song]').count(),1,'Song choice stays compact above the stage');
+  assert(await page.locator('.bl-arena').evaluate(el=>el.clientWidth>=innerWidth-20),'Arena uses the available width');
+  assert(await page.locator('.bl-audience-viewport').evaluate(el=>el.scrollHeight<=el.clientHeight+1),'Entire desktop crowd is exposed');
+  await page.screenshot({path:'test-results/bandlive-redesign-choose.png'});
+  await page.locator('[data-bl-song]').click();assert.equal(await page.locator('.bl-card').count(),5);for(const card of await page.locator('[data-bl-card]').all())assert(await card.evaluate(el=>el.closest('.bl-musician').querySelector('[data-bl-actor]').dataset.blActor===el.dataset.blCard.split(':')[0]),'Cards stay attached to their musician');
+  await page.screenshot({path:'test-results/bandlive-redesign-play.png'});await page.close();
+
+  // Desktop exposes the full crowd; narrow screens keep a separate public scroller.
   for(const sample of [
     {width:1440,height:1000,members:2,fans:3},
     {width:1280,height:720,members:3,fans:6},
@@ -107,7 +119,7 @@ try{
     const fixed=await stageGeometry(page),publicViewport=page.locator('.bl-audience-viewport');
     await publicViewport.evaluate(el=>el.scrollTop=el.scrollHeight);
     assert.deepEqual(await stageGeometry(page),fixed,`${width}×${height}: public scrolling keeps musicians and cards fixed`);
-    if(fans>8)assert(await audienceOffset(page)>0,'Larger crowds have their own vertical overflow');
+    if(fans>8&&width<1000)assert(await audienceOffset(page)>0,'Narrow screens retain public scrolling');if(width>=1000)assert.equal(await audienceOffset(page),0,'Desktop shows the entire crowd without nested scrolling');
     assert.equal(await page.locator('.bl-viewport').evaluate(el=>el.scrollTop),0,'The horizontal stage never scrolls vertically');
     assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'The stage cannot widen the document');
     await centerFan(page,targetId);
@@ -118,7 +130,7 @@ try{
     // Dragging can intentionally auto-scroll; rendering must preserve the release position.
     let releaseOffset=offset;
     if(touch)releaseOffset=await touchDrag(page,game.cards[0].id,targetId);
-    else{await page.locator(`[data-bl-card="${game.cards[0].id}"]`).dragTo(page.locator(`[data-bl-fan="${targetId}"]`),{sourcePosition:{x:40,y:42}});await idle(page);}
+    else{await page.mouse.move(source.x+10,source.y+42);await page.mouse.down();await page.mouse.move(source.x+10,source.y+58,{steps:4});await page.mouse.move(target.x+target.width/2,target.y+target.height/2,{steps:10});await page.mouse.up();await idle(page);}
     const played=await data(page);assert.equal(played.played,1);assert(played.fans.find(f=>f.id===targetId).hp<game.fans.find(f=>f.id===targetId).hp,'The last-row spectator receives the card');
     assert(Math.abs(await audienceOffset(page)-releaseOffset)<=1,'Card play and the animation-completion render preserve public scroll');
     const after=await stageGeometry(page);assert.deepEqual(after.musicians,fixed.musicians);assert.equal(after.main,fixed.main);assert.equal(after.horizontal,fixed.horizontal,'Card play preserves horizontal stage scroll too');
@@ -127,10 +139,10 @@ try{
   }
 
   // The same edge-scroll path is used by a native mouse drag.
-  page=await browser.newPage({viewport:{width:1280,height:720}});const mouseGame=fixture(12,6);
+  page=await browser.newPage({viewport:{width:900,height:720}});const mouseGame=fixture(12,6);
   await load(page,{enabled:true,game:mouseGame});await page.locator('#bandlive-nav').click();await page.locator('.bl-viewport').evaluate(el=>el.scrollIntoView({block:'start'}));
   const mouseFixed=await page.locator('.bl-musicians').boundingBox(),mouseCard=await page.locator('[data-bl-card]').first().boundingBox(),mousePublic=await page.locator('.bl-audience-viewport').boundingBox();
-  await page.mouse.move(mouseCard.x+40,mouseCard.y+42);await page.mouse.down();await page.mouse.move(mouseCard.x+40,mouseCard.y+58,{steps:4});
+  await page.mouse.move(mouseCard.x+10,mouseCard.y+42);await page.mouse.down();await page.mouse.move(mouseCard.x+10,mouseCard.y+58,{steps:4});
   await page.mouse.move(mousePublic.x+mousePublic.width/6,mousePublic.y+mousePublic.height-5,{steps:8});
   await page.waitForFunction(()=>{const el=document.querySelector('.bl-audience-viewport');return el.scrollTop>=el.scrollHeight-el.clientHeight-1;});
   const mouseFan=await page.locator('[data-bl-fan="f9"]').boundingBox();await page.mouse.move(mouseFan.x+mouseFan.width/2,mouseFan.y+mouseFan.height/2,{steps:4});

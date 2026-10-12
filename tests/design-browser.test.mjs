@@ -15,7 +15,7 @@ try{
  await page.locator('[data-view="settings"]').click();
  const proposal=page.locator('[data-design-value="groups.proposal"]');assert.equal(await proposal.inputValue(),'0.315');
  await page.locator('[data-design-search]').fill('chance de proposer un groupe');assert.equal(await page.locator('.design-row').count(),1);
- await proposal.fill('0.6');assert(await page.locator('.design-summary').textContent().then(s=>s.includes('1 changement')));
+ await page.locator('[data-design-context="groups.proposal"] summary').click();await proposal.fill('0.6');assert((await page.locator('[data-design-context="groups.proposal"] code').textContent()).includes('0,6'));assert((await page.locator('[data-design-context="groups.proposal"] .design-example').textContent()).includes('15 %'));assert(await page.locator('.design-summary').textContent().then(s=>s.includes('1 changement')));
  const before=await page.evaluate(()=>JSON.parse(localStorage.getItem('garage-vivant-v1')||'{}').design);assert.equal(before,undefined);
  await page.locator('[data-design-apply]').click();assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('garage-vivant-v1')).design.values['groups.proposal']),.6);
  await page.reload();await page.locator('[data-view="settings"]').click();assert.equal(await proposal.inputValue(),'0.6');
@@ -28,8 +28,8 @@ try{
  await page.locator('[data-design-modified]').check();assert.equal(await page.locator('.design-row').count(),1);
  await page.locator('[data-design-reset]').click();assert.equal(await page.locator('.design-row').count(),0);await page.locator('[data-design-apply]').click();assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('garage-vivant-v1')).design.values),{});
  await page.locator('[data-design-modified]').uncheck();await page.locator('[data-design-category]').selectOption('formation');
- await page.locator('#main').evaluate(el=>el.scrollTop=0);await page.screenshot({path:'test-results/design-desktop.png'});
- await page.setViewportSize({width:390,height:844});await page.locator('#main').evaluate(el=>el.scrollTop=0);
+ await page.locator('[data-design-context="groups.proposal"] summary').click();await page.locator('[data-design-context="groups.proposal"]').scrollIntoViewIfNeeded();await page.screenshot({path:'test-results/design-desktop.png'});
+ await page.setViewportSize({width:390,height:844});await page.locator('[data-design-context="groups.proposal"]').scrollIntoViewIfNeeded();
  assert(await page.locator('#design-dashboard').evaluate(el=>el.scrollWidth<=el.clientWidth+1),'No horizontal overflow in dashboard');await page.screenshot({path:'test-results/design-mobile.png'});
  assert.deepEqual(errors,[]);console.log('Design dashboard passed: staged edits, actual saved values, reload, validation, profile import/export, reset, filters and mobile width.');
 }finally{await browser.close();await new Promise(r=>server.close(r));}

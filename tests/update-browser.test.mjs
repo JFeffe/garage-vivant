@@ -28,8 +28,8 @@ try{
   const card=game.cards[3],fan=game.fans[0],power=powerAgainst(game,card,fan);
   if(touch){await page.locator(`[data-bl-card="${card.id}"]`).click();await page.locator('[data-bl-fan="f0"]').focus();}
   else{const source=await page.locator(`[data-bl-card="${card.id}"]`).boundingBox(),target=await page.locator('[data-bl-fan="f0"]').boundingBox();await page.mouse.move(source.x+30,source.y+40);await page.mouse.down();await page.mouse.move(source.x+30,source.y+55,{steps:4});await page.mouse.move(target.x+target.width/2,target.y+target.height/2,{steps:8});}
-  assert.equal(await page.locator('[data-bl-preview="f0"]').textContent(),`−${power} → ${Math.max(0,fan.hp-power)}/${fan.max}`);
-  const before=await page.evaluate(()=>JSON.parse(localStorage.getItem('garage-vivant-bandlive-v1')).game);assert.equal(before.played,0);
+  assert.equal(await page.locator('[data-bl-preview="f0"]').textContent(),`${power} dégâtsRésistance restante : ${Math.max(0,fan.hp-power)} / ${fan.max}`);
+  assert(await page.locator('[data-bl-preview="f0"]').evaluate(el=>Number(getComputedStyle(el.parentElement).zIndex)>(document.querySelector('.bl-ghost')?Number(getComputedStyle(document.querySelector('.bl-ghost')).zIndex):0)),'Damage appears above the dragged card');const before=await page.evaluate(()=>JSON.parse(localStorage.getItem('garage-vivant-bandlive-v1')).game);assert.equal(before.played,0);
   await page.screenshot({path:`test-results/update-preview-${touch?'touch':'desktop'}.png`});
   if(touch)await page.locator('[data-bl-fan="f0"]').click();else await page.mouse.up();await page.waitForFunction(()=>!document.querySelector('#bl-end').disabled);
   const after=await page.evaluate(()=>JSON.parse(localStorage.getItem('garage-vivant-bandlive-v1')).game);assert.equal(after.fans[0].hp,Math.max(0,fan.hp-power));assert.equal(after.tempo,0);assert.equal(after.boost,0);

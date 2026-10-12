@@ -12,7 +12,7 @@ Les identités, couleurs, instruments, styles et informations des musiciens prov
 
 - Choisir de **3 à 12 spectateurs** avant de prendre la scène. Trois restent sélectionnés par défaut. Un public plus grand augmente le défi sans changer les cartes, l’énergie ou la durée des chansons.
 - Chaque musicien apporte trois **Note** (1 énergie, 6 puissance sur une cible) et deux exemplaires de sa carte spéciale.
-- La pioche est commune. Cinq cartes sont pigées au début de chaque tour, puis affichées dans une main commune avec le nom de leur propriétaire. Chaque exemplaire est distinct.
+- La pioche est commune. Cinq cartes sont pigées au début de chaque tour, puis réparties dans la main de chaque musicien, sous son personnage. Chaque exemplaire est distinct.
 - Le band dispose de trois points d’énergie par tour. Les cartes gratuites restent jouables à zéro énergie.
 - Glisser une carte ciblée sur un spectateur. Déposer une carte collective ou de préparation dans la zone du public. Le glisser-déposer fonctionne à la souris et au toucher ; sélectionner une carte puis sa cible offre aussi un accès au clavier.
 - Le public défile verticalement dans sa propre zone ; les musiciens et leurs cartes restent visibles. Pendant un glisser-déposer, approcher la carte du bord du public fait défiler ses rangées. Le défilement est conservé après avoir joué une carte.
@@ -94,3 +94,9 @@ Les réactions « Explosion », « En transe » et « Ému aux larmes » sont d�
 L’éligibilité d’un vrai show est expliquée dans la préparation et près du bouton : deux à six musiciens, une ou deux compositions sans jam, engagement valide, première chanson non commencée. Le rang du band dans la soirée n’est pas une condition. Une setlist incompatible reste jouable dans le mode classique.
 
 Le format BandLive 4 accepte deux passages de trois à cinq tours. Les formats 1–3 restent interprétés avec leurs anciennes durées. La reprise valide le passage, le tour et les résultats sans reroll. Les répétitions et replays restent isolés du quartier.
+
+## Présentation de la scène
+
+Le plateau utilise toute la largeur disponible. Chaque musicien conserve ses propres cartes sous son personnage ; aucun panneau de main commune. Sur grand écran, le public est entièrement visible, sans défilement interne. Les petits écrans conservent un plateau horizontal et une foule défilante pour garder des cibles utilisables. Le choix de chanson ne réserve plus un espace de cartes vide.
+
+Le preview affiche **X dégâts** et **Résistance restante : Y / maximum**, au-dessus de la carte déplacée. Les cartes collectives affichent les résultats par spectateur. Les calculs, règles, sauvegardes et réactions cosmétiques restent inchangés.
