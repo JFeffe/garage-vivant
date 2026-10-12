@@ -1,5 +1,5 @@
-import { decadenceCount } from "./v71.mjs?v=0.7.11";
-import {restoreBandLive} from './bandlive.mjs?v=0.7.11';
+import { decadenceCount } from "./v71.mjs?v=0.7.12";
+import {restoreBandLive} from './bandlive.mjs?v=0.7.12';
 // New songs match the two broad V7 axes; legacy performances keep exact matching.
 export function emotionCompatible(song,fan,version=7){return song===fan||version>=7&&(song==='exaltation'&&['joy','excitement','affection'].includes(fan)||song==='distress'&&['sadness','anger','fear'].includes(fan));}
 // The stage is a deterministic simulation. Rendering and audio never change it.
@@ -213,7 +213,7 @@ export function validatePerformance(s) {
 for(const key of Object.keys(expected))if(typeof expected[key]==='object'?Object.keys(expected[key]).some(k=>expected[key][k]!==s.result[key]?.[k]):expected[key]!==s.result[key])throw Error('Bilan de spectacle incohérent.');}
   if(s.bandLive){
     const live=s.bandLive,game=restoreBandLive(live.game),terminal=['won','lost'].includes(game.phase);
-    if(live.version!==1||live.performanceId!==s.id||typeof live.bookingId!=='string'||game.version!==3||game.groupId!==s.groupId||game.seed!==s.seed||game.actors.length!==s.actors.length||game.actors.some(a=>!s.actors.some(p=>p.id===a.id&&p.instrument===a.instrument))||!Array.isArray(live.originalFans)||live.originalFans.length<8||live.originalFans.length>36||!Array.isArray(live.songResults)||live.songResults.length>game.usedSongs.length||game.fans.length<8||s.preview||terminal!==(s.status==='finished'))throw Error('Prestation BandLive invalide.');
+    if(live.version!==1||live.performanceId!==s.id||typeof live.bookingId!=='string'||![3,4].includes(game.version)||game.groupId!==s.groupId||game.seed!==s.seed||game.actors.length!==s.actors.length||game.actors.some(a=>!s.actors.some(p=>p.id===a.id&&p.instrument===a.instrument))||!Array.isArray(live.originalFans)||live.originalFans.length<8||live.originalFans.length>36||!Array.isArray(live.songResults)||live.songResults.length>game.usedSongs.length||game.fans.length<8||s.preview||terminal!==(s.status==='finished'))throw Error('Prestation BandLive invalide.');
     if(terminal&&(s.fans.length!==game.fans.length||s.fans.some((f,i)=>f.id!==game.fans[i].id||Math.abs(f.meter-(1-game.fans[i].hp/game.fans[i].max)*100)>.000001||f.reacted!==(game.fans[i].hp===0))))throw Error('Public BandLive incohérent.');
     if(!Array.isArray(game.songOrder)||live.profile?.audienceSize!==game.fans.length||JSON.stringify(live.profile?.audienceRules)!==JSON.stringify(game.audienceRules))throw Error('Scène BandLive incohérente.');
     validatePerformance({...s,bandLive:undefined,status:'playing',applied:false,tick:0,nextCue:0,actors:s.actors.map(a=>({...a,played:[]})),fans:live.originalFans,events:[],zones:[],impacts:[]});

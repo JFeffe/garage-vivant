@@ -1,5 +1,6 @@
-import {CARDS} from './stage.mjs?v=0.7.11';
-import {eventAge,songSeconds,actorPosition,stageGeometry,cardContext,showBeat,actorSize} from './show-playback.mjs?v=0.7.11';
+import {groupLinkHTML} from './group-link.mjs?v=0.7.12';
+import {CARDS} from './stage.mjs?v=0.7.12';
+import {eventAge,songSeconds,actorPosition,stageGeometry,cardContext,showBeat,actorSize} from './show-playback.mjs?v=0.7.12';
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const names={guitar:'Guitare',bass:'Basse',drums:'Batterie',voice:'Chant',keys:'Clavier',sax:'Saxophone',trumpet:'Trompette',percussion:'Percussions'};
 const colors={rhythm:'#a9c995',impact:'#e4bd75',emotion:'#d3a8c3',support:'#9fc8d2',curse:'#d39280'};
@@ -43,16 +44,16 @@ export function instrumentArt(instrument,tag='impact') {
   };
   return `<svg class="card-art" viewBox="0 0 112 112" aria-hidden="true" style="color:${colors[tag]}"><g stroke="#466c5b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="currentColor">${drawings[instrument]||drawings.guitar}</g></svg>`;
 }
-export function showTitleHTML(show) {
+export function showTitleHTML(show,group=null) {
   const cards=cardEvents(show),phrase=cards.at(-1)?.phrase??0;
-  return `<div class="live-show-title"><span class="eyebrow">${show.preview?'ESSAI':'EN DIRECT'} · ${esc(show.role||'Prestation')} · ${esc(show.opportunityName)}</span><h2>Groupe · « ${esc(show.groupName)} »</h2><p>Chanson · « ${esc(show.song.title)} » <span>· morceau ${(show.songIndex||0)+1}/${show.setlist?.length||1} · phrase ${phrase+1}/5</span></p><div class="song-progress"><div class="bar"><i style="width:${songSeconds(show)/30*100}%"></i></div><b data-song-time>${Math.floor(songSeconds(show))} / 30 s</b></div></div>`;
+  return `<div class="live-show-title"><span class="eyebrow">${show.preview?'ESSAI':'EN DIRECT'} · ${esc(show.role||'Prestation')} · ${esc(show.opportunityName)}</span><h2>${groupLinkHTML(group,show.groupName)}</h2><p>Chanson · « ${esc(show.song.title)} » <span>· morceau ${(show.songIndex||0)+1}/${show.setlist?.length||1} · phrase ${phrase+1}/5</span></p><div class="song-progress"><div class="bar"><i style="width:${songSeconds(show)/30*100}%"></i></div><b data-song-time>${Math.floor(songSeconds(show))} / 30 s</b></div></div>`;
 }
-export function showOverlayHTML(show,{ready=false,geometry={width:900,height:650,scale:1,ox:0,oy:0}}={}) {
+export function showOverlayHTML(show,{ready=false,group=null,geometry={width:900,height:650,scale:1,ox:0,oy:0}}={}) {
   const beat=showBeat(show,geometry),event=beat.event;
   const position=(x,y)=>`left:${(geometry.ox+x*geometry.scale)/geometry.width*100}%;top:${(geometry.oy+y*geometry.scale)/geometry.height*100}%`;
   const actors=show.actors.map((a,i)=>{const pos=actorPosition(show,i);return `<button class="stage-actor-anchor" data-stage-actor="${a.id}" style="${position(pos.x,pos.y-18)}" aria-label="Inspecter ${esc(a.name)}"></button>`;}).join('');
   const decks=show.actors.map((a,i)=>{const pos=actorPosition(show,i);return `<button class="stage-deck" data-stage-deck="${a.id}" data-key="deck-${a.id}" style="${position(pos.x,pos.deckY)}" aria-label="Voir le deck de ${esc(a.name)} : ${a.played.length} sur 5 cartes jouées"><span class="deck-backs"><i></i><i></i><i></i></span><small>${a.played.length}/5</small></button>`;}).join('');
-  if(ready)return `${actors}${decks}<div class="show-ready"><span class="eyebrow">LE QUARTIER ATTEND</span><h3>${esc(show.groupName)}</h3><p>5 cartes par musicien · 30 secondes par chanson.<br>Inspecte les decks, puis lance le show.</p><button id="start-show" class="primary">▶ Lancer le show</button></div>`;
+  if(ready)return `${actors}${decks}<div class="show-ready"><span class="eyebrow">LE QUARTIER ATTEND</span><h3>${groupLinkHTML(group,show.groupName)}</h3><p>5 cartes par musicien · 30 secondes par chanson.<br>Inspecte les decks, puis lance le show.</p><button id="start-show" class="primary">▶ Lancer le show</button></div>`;
   if(!event)return `${actors}${decks}<div class="show-count-in">Place à la musique…</div>`;
   const state=`<span hidden data-show-phase="${beat.phase}" data-card-event="${event.id}" data-shot-actor="${event.actorId}" data-source-x="${beat.origin.x}" data-source-y="${beat.origin.y}"></span>`;
   if(beat.phase!=='reveal')return `${actors}${decks}${state}`;

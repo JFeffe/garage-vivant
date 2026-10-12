@@ -1,4 +1,4 @@
-import {DESIGN_FIELDS,DESIGN_CATEGORIES,designProfile,validateDesign,applyDesign,rule} from './design-rules.mjs?v=0.7.11';
+import {DESIGN_FIELDS,DESIGN_CATEGORIES,designProfile,validateDesign,applyDesign,rule} from './design-rules.mjs?v=0.7.12';
 const number=n=>new Intl.NumberFormat('fr-CA',{maximumFractionDigits:5}).format(n);
 const normalize=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 export function mountDesignDashboard(root,{world,onApply}) {

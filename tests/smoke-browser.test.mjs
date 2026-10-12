@@ -1,3 +1,4 @@
+import {sep} from 'node:path';
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
 import {readFile,mkdir} from 'node:fs/promises';
@@ -11,7 +12,7 @@ const server=createServer(async(req,res)=>{
   try{
     const url=new URL(req.url,'http://localhost').pathname.replace(/^\/garage-vivant(?=\/)/,'');
     const path=resolve(root,'.'+(url==='/'?'/index.html':url));
-    assert(path.startsWith(root+'/'));
+    assert(path.startsWith(root+sep));
     res.setHeader('Content-Type',({'.html':'text/html','.mjs':'text/javascript','.js':'text/javascript','.css':'text/css','.json':'application/json'})[extname(path)]||'application/octet-stream');
     res.end(await readFile(path));
   }catch{res.writeHead(404);res.end();}

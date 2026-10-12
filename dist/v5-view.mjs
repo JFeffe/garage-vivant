@@ -1,13 +1,14 @@
-import {rule} from './design-rules.mjs?v=0.7.11';
-import {decorateCube} from './character-view.mjs?v=0.7.11';
-export {decorateCube} from './character-view.mjs?v=0.7.11';
-import { membershipChance, membershipReason, attachment } from './groups.mjs?v=0.7.11';
-import {drawShowStage} from './show-view.mjs?v=0.7.11';
-export {bandsHTML,rapinHTML,showSetupHTML,showStatusHTML,seasonHTML} from './v6-view.mjs?v=0.7.11';
-import {SKILLS,ACTIONS,EMOTIONS,stamp,round,clamp,groupsOf,compositionProject,scores} from './engine.mjs?v=0.7.11';
-import {CARDS,CURSES,INTENTIONS,activeDeck,availableCards,SHOW_TICKS,PHRASE_TICKS} from './stage.mjs?v=0.7.11';
-import {bandStage,nextCurse,eligibleSongs,availability,isArchivedSong,seasonSummary,acceptance} from './life.mjs?v=0.7.11';
-import {resolveShowPlan} from './show-planning.mjs?v=0.7.11';
+import {groupLinkHTML} from './group-link.mjs?v=0.7.12';
+import {rule} from './design-rules.mjs?v=0.7.12';
+import {decorateCube} from './character-view.mjs?v=0.7.12';
+export {decorateCube} from './character-view.mjs?v=0.7.12';
+import { membershipChance, membershipReason, attachment } from './groups.mjs?v=0.7.12';
+import {drawShowStage} from './show-view.mjs?v=0.7.12';
+export {bandsHTML,rapinHTML,showSetupHTML,showStatusHTML,seasonHTML} from './v6-view.mjs?v=0.7.12';
+import {SKILLS,ACTIONS,EMOTIONS,stamp,round,clamp,groupsOf,compositionProject,scores} from './engine.mjs?v=0.7.12';
+import {CARDS,CURSES,INTENTIONS,activeDeck,availableCards,SHOW_TICKS,PHRASE_TICKS} from './stage.mjs?v=0.7.12';
+import {bandStage,nextCurse,eligibleSongs,availability,isArchivedSong,seasonSummary,acceptance} from './life.mjs?v=0.7.12';
+import {resolveShowPlan} from './show-planning.mjs?v=0.7.12';
 export const escapeHTML = x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const esc=escapeHTML;
 const person=(s,id)=>s.people.find(p=>p.id===id);
@@ -19,9 +20,9 @@ export function quickHTML(s,p) {
   const booking=s.bookings.find(b=>['applied','booked','assembling','playing'].includes(b.status)&&b.members.includes(p.id));
   const queue=p.invitationQueue.map(inv=>{
     const req=s.groupState.requests.find(r=>r.id===inv.requestId),g=s.groups.find(g=>g.id===req?.groupId),song=s.songs.find(x=>x.id===req?.songId),status={pending:'En attente',accepted:'Acceptée',refused:'Déclinée',expired:'Expirée',cancelled:'Annulée'}[inv.status];
-    return `<div class="queue-entry" data-key="${inv.id}"><button data-group-select="${g.id}" class="text-button">Groupe · ${esc(g.name)}</button><small>Chanson · « ${esc(song.title)} » · ${status} · échéance ${stamp(inv.expires)}</small><small>${inv.status==='pending'?'Examinée à la fin de l’activité actuelle, avant la prochaine pige.':esc(inv.reason)}${inv.chance!=null?' · chance '+round(inv.chance*100)+' %':''}</small></div>`;
+    return `<div class="queue-entry" data-key="${inv.id}">${groupLinkHTML(g)}<small>Chanson · « ${esc(song.title)} » · ${status} · échéance ${stamp(inv.expires)}</small><small>${inv.status==='pending'?'Examinée à la fin de l’activité actuelle, avant la prochaine pige.':esc(inv.reason)}${inv.chance!=null?' · chance '+round(inv.chance*100)+' %':''}</small></div>`;
   }).join('');
-  return `<section class="quick-profile" data-stable="quick"><div class="player-row"><span class="pill ${s.playerId===p.id?'member':''}">${s.playerId===p.id?'Ton musicien':'Autonome'}</span>${s.playerId!==p.id?`<button class="text-button" data-avatar="${p.id}">Incarner ↗</button>`:''}</div><div class="quick-needs"><span>Énergie <b>${round(p.needs.energy)}</b></span><span>Déchéance <b>${round(p.decadence)}</b></span></div><div class="engagement-note">${booking?`Prochain engagement : ${esc([...s.season.opportunities,...(s.eventArchive||[])].find(o=>o.id===booking.opportunityId)?.name)} · ${stamp(booking.time)}`:'Aucun engagement. Choisis une occasion dans Shows.'}</div><div class="inline-actions">${groupsOf(s,p).map(g=>`<button data-group-select="${g.id}" class="text-button">Groupe · ${esc(g.name)} · attachement ${round(attachment(s,p,g).value)}</button>`).join('')||'<span class="muted">Aucun groupe actif.</span>'}</div><details class="personal-queue" data-key="queue-${p.id}"><summary>Invitations · ${p.invitationQueue.filter(x=>x.status==='pending').length} en attente</summary><p class="muted">Cette file est indépendante du sac Rapin.</p>${queue||'<p class="muted">Aucune invitation récente.</p>'}</details><div class="quick-actions">${['relax','practice','write','social','jam','decadence'].map(key=>`<button data-force="${key}">${ACTIONS[key].icon} ${ACTIONS[key].label}</button>`).join('')}</div></section>`;
+  return `<section class="quick-profile" data-stable="quick"><div class="player-row"><span class="pill ${s.playerId===p.id?'member':''}">${s.playerId===p.id?'Ton musicien':'Autonome'}</span>${s.playerId!==p.id?`<button class="text-button" data-avatar="${p.id}">Incarner ↗</button>`:''}</div><div class="quick-needs"><span>Énergie <b>${round(p.needs.energy)}</b></span><span>Déchéance <b>${round(p.decadence)}</b></span></div><div class="engagement-note">${booking?`Prochain engagement : ${esc([...s.season.opportunities,...(s.eventArchive||[])].find(o=>o.id===booking.opportunityId)?.name)} · ${stamp(booking.time)}`:'Aucun engagement. Choisis une occasion dans Shows.'}</div><div class="inline-actions">${groupsOf(s,p).map(g=>`<span>${groupLinkHTML(g)} · attachement ${round(attachment(s,p,g).value)}</span>`).join('')||'<span class="muted">Aucun groupe actif.</span>'}</div><details class="personal-queue" data-key="queue-${p.id}"><summary>Invitations · ${p.invitationQueue.filter(x=>x.status==='pending').length} en attente</summary><p class="muted">Cette file est indépendante du sac Rapin.</p>${queue||'<p class="muted">Aucune invitation récente.</p>'}</details><div class="quick-actions">${['relax','practice','write','social','jam','decadence'].map(key=>`<button data-force="${key}">${ACTIONS[key].icon} ${ACTIONS[key].label}</button>`).join('')}</div></section>`;
 }
 export function decadenceHTML(p,time=0) {
   const next=nextCurse(p),curses=activeDeck(p).filter(id=>CARDS[id].tag==='curse').map(id=>CARDS[id]);
@@ -35,7 +36,7 @@ export function deckEditorHTML(p) {
 }
 export function invitationHTML(s,groupId=null){
  const host=person(s,s.playerId),g=groupId?s.groups.find(g=>g.id===groupId):null;
- return `<h2>${g?'Inviter dans « '+esc(g.name)+' »':'Former un groupe avec '+esc(host.name)}</h2><p>Une proposition, puis une acceptation. Nouvelle formation : ${rule(s,'groups.membershipDelay')} min après une adhésion. Recrutement : seul le candidat attend ${rule(s,'groups.recruitmentDelay')} min. Une proposition par paire chaque ${rule(s,'groups.pairDelay')} min.</p><div class="invitation-list">${s.people.filter(p=>p!==host&&!g?.members.includes(p.id)).map(p=>{const key=[host.id,p.id].sort().join(':'),remaining=(s.groupState.proposals[key]??-1e9)+rule(s,'groups.pairDelay')-s.time,reason=membershipReason(s,host,p,g)||(remaining>0?'Nouvelle proposition dans '+round(remaining/60)+' h.':null);return `<div class="invitation-row"><span><b>${esc(p.name)}</b><small>${SKILLS[p.instrument]} · ${esc(p.genre)} · ${round(membershipChance(s,host,p,g)*100)} % d’acceptation</small>${reason?`<small>${esc(reason)}</small>`:''}</span><button data-invite="${p.id}:${groupId||''}" ${reason?'disabled':''}>Proposer</button></div>`;}).join('')}</div>`;
+ return `<h2>${g?'Inviter dans '+groupLinkHTML(g):'Former un groupe avec '+esc(host.name)}</h2><p>Une proposition, puis une acceptation. Nouvelle formation : ${rule(s,'groups.membershipDelay')} min après une adhésion. Recrutement : seul le candidat attend ${rule(s,'groups.recruitmentDelay')} min. Une proposition par paire chaque ${rule(s,'groups.pairDelay')} min.</p><div class="invitation-list">${s.people.filter(p=>p!==host&&!g?.members.includes(p.id)).map(p=>{const key=[host.id,p.id].sort().join(':'),remaining=(s.groupState.proposals[key]??-1e9)+rule(s,'groups.pairDelay')-s.time,reason=membershipReason(s,host,p,g)||(remaining>0?'Nouvelle proposition dans '+round(remaining/60)+' h.':null);return `<div class="invitation-row"><span><b>${esc(p.name)}</b><small>${SKILLS[p.instrument]} · ${esc(p.genre)} · ${round(membershipChance(s,host,p,g)*100)} % d’acceptation</small>${reason?`<small>${esc(reason)}</small>`:''}</span><button data-invite="${p.id}:${groupId||''}" ${reason?'disabled':''}>Proposer</button></div>`;}).join('')}</div>`;
 }
 
 

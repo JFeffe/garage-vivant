@@ -1,3 +1,4 @@
+import {sep} from 'node:path';
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
 import {readFile,mkdir} from 'node:fs/promises';
@@ -9,7 +10,7 @@ import {showBeat,songSeconds,musicalTick,stageGeometry} from '../dist/show-playb
 
 const root=resolve('dist');
 const server=createServer(async(req,res)=>{
-  try{const path=resolve(root,'.'+(req.url.split('?')[0]==='/'?'/index.html':req.url.split('?')[0]));if(!path.startsWith(root+'/'))throw Error();
+  try{const path=resolve(root,'.'+(req.url.split('?')[0]==='/'?'/index.html':req.url.split('?')[0]));if(!path.startsWith(root+sep))throw Error();
     res.setHeader('Content-Type',({'.html':'text/html','.mjs':'text/javascript','.css':'text/css','.js':'text/javascript','.json':'application/json'})[extname(path)]||'application/octet-stream');res.end(await readFile(path));
   }catch{res.writeHead(404);res.end();}
 });

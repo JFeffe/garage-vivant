@@ -1,6 +1,6 @@
 # DDD — Compositions, chansons et catalogue
 
-Version 0.7.10. Les séances de composition développent des projets persistants. Le catalogue conserve les œuvres et permet de masquer les productions peu utiles sans les supprimer.
+Version 0.7.12. Les séances de composition développent des projets persistants. Le catalogue conserve les œuvres et permet de masquer les productions peu utiles sans les supprimer.
 
 ## Plusieurs projets et coauteurs
 
@@ -20,7 +20,7 @@ Sous 25 % : idée ; ensuite : ébauche ; à la cible : prête. La finalisation s
 
 ## Qualité et provenance
 
-La qualité garde le calcul existant : compétences + expression émotionnelle + ensemble + traits + variation − surcharge, borné 0–100. Pour plusieurs auteurs présents, la part compétences est pondérée par leurs minutes de contribution ; à défaut, elle utilise le compositeur courant. Compétences = écriture ×0,45 + instrument ×0,25. Expression = intensité/100 × (6 + créativité ×0,12). Surcharge = `max(0 ; intensité−72) × (100−stabilité)/190`. Ensemble est borné 0–12 ; variation est tirée entre 3 et 13. Les traits de qualité existants restent actifs.
+La qualité garde le calcul existant : compétences + expression émotionnelle + ensemble + affinités + traits + variation − surcharge, borné 0–100. Pour plusieurs auteurs présents, la part compétences est pondérée par leurs minutes de contribution ; à défaut, elle utilise le compositeur courant. Compétences = écriture ×0,45 + instrument ×0,25. Expression = intensité/100 × (6 + créativité ×0,12). Surcharge = `max(0 ; intensité−72) × (100−stabilité)/190`. Ensemble est borné 0–12 ; variation est tirée entre 3 et 13. Les traits de qualité existants restent actifs. Le terme affinités est la moyenne des affinités directionnelles entre contributeurs, multipliée par 0,1 (−10 à +10); un auteur seul reçoit zéro.
 
 Les premières 75 minutes créatives échantillonnées gardent l’origine émotionnelle. Exaltation et détresse donnent les tonalités correspondantes ; sous 10 d’intensité, posée. Les sources du projet réunissent les événements réellement présents, sans inventer de souvenir. Une idée de jam peut nourrir le prochain projet une fois par auteur dans les 24 heures.
 
@@ -34,11 +34,11 @@ Le classement faible est automatique et réévaluable. L’archive manuelle rest
 
 Les chansons faibles restent jouables. L’adoption autonome écarte les faibles si des œuvres non faibles sont admissibles, puis pondère qualité et genre selon [Groupes](./groupes.md). Elle ne possède pas de filtre supplémentaire pour l’archive manuelle. L’archive du catalogue masque l’œuvre sans désactiver une entrée de répertoire ni retirer la propriété ; mettre de côté au répertoire exclut le morceau des nouveaux choix de pratique et setlist. Aucun classement ne supprime une setlist confirmée ou un spectacle historique.
 
-## Catalogue et maîtrise
+## Catalogue et durée
 
 Dans Journal, Compositions et chansons propose recherche par titre/auteur/groupe, filtres combinables par auteur, groupe, rattachement personnel/collectif, genre, type, état et plage de qualité des chansons. États : actifs, tous, faibles, archives et abandons. Le potentiel d’un projet n’est pas présenté comme une note finale.
 
-Tri par qualité croissante/décroissante, date, avancement et maîtrise du contexte choisi. Sans auteur ou groupe choisi, aucune maîtrise globale n’est inventée. La fiche distingue compétence instrumentale, maîtrise individuelle du morceau et maîtrise par chaque groupe. Les rattachements de création et les répertoires qui utilisent l’œuvre sont distincts.
+Tri par qualité croissante/décroissante, date et avancement. La fiche affiche une durée fixe, sans niveau par musicien ou par morceau. Les rattachements de création et les répertoires qui utilisent l’œuvre sont distincts.
 
 La liste affiche jusqu’à 50 résultats puis Voir davantage. La fiche d’un projet actif permet de demander à un de ses auteurs de le reprendre par la commande d’action existante ; le personnage peut refuser et le sommeil garde sa priorité. Les détails s’ouvrent dans une fenêtre ; fermer retrouve filtres et position. La fiche personnage propose un accès au catalogue filtré et limite ses projets affichés à cinq. Les nouvelles identités de groupes/auteurs actualisent les choix sans reconstruire un contrôle en cours d’édition.
 
@@ -54,10 +54,18 @@ Liens : [Actions](./actions.md), [Musique](./musique.md), [Shows](./shows.md), [
 
 ## Auteurs et propriétaire du morceau
 
-Les individus restent les auteurs permanents. Le contexte `groupId` de création ne transfère rien automatiquement. Une chanson finalisée commence avec `ownerGroupId: null`, puis un groupe peut l’adopter. Le groupe devient son seul propriétaire, conserve sa maîtrise et la garde après départ d’un auteur ou dissolution. L’auteur la voit encore dans son catalogue, avec le groupe propriétaire cliquable.
+Les individus restent les auteurs permanents. Le contexte `groupId` de création ne transfère rien automatiquement. Une chanson finalisée commence avec `ownerGroupId: null`, puis un groupe peut l’adopter. Le groupe devient son seul propriétaire, la garde après départ d’un auteur ou dissolution. L’auteur la voit encore dans son catalogue, avec le groupe propriétaire cliquable.
 
-Filtres de groupe et de rattachement utilisent le propriétaire pour les chansons terminées ; les projets gardent leur contexte de création. La maîtrise personnelle dépend du musicien sélectionné, la maîtrise collective du propriétaire. Mettre un morceau de côté conserve propriété et maîtrise. Aucune copie ni deuxième adoption. Le [DDD Groupes](./groupes.md) décrit admissibilité, choix autonome, commandes et migration des anciens répertoires partagés.
+Filtres de groupe et de rattachement utilisent le propriétaire pour les chansons terminées ; les projets gardent leur contexte de création. Mettre un morceau de côté conserve sa propriété, sa qualité et sa durée. Aucune copie ni deuxième adoption. Le [DDD Groupes](./groupes.md) décrit admissibilité, choix autonome, commandes et migration des anciens répertoires partagés.
 
 ## Crédit de composition visible · V7.10
 
 Le crédit **Composition :** est explicite dans le catalogue, le détail du morceau, la fiche du personnage, le répertoire du groupe et les chansons disponibles à adopter. Tous les coauteurs sont affichés; leur nom ouvre leur fiche tant qu’ils vivent dans le quartier. Le surnom apparaît aussi si présent. Le propriétaire est une information séparée; adopter une chanson ne remplace jamais ses auteurs. Après suppression d’un auteur, son dernier nom reste lisible sans lien vers une fiche inexistante.
+
+## Durée fixe et recomposition
+
+À la finalisation, un tirage unique fixe 3, 4 ou 5 tours. Pour une qualité q entre 0 et 100 : P(5) = 10 % + q/2 %, P(4) = 30 %, P(3) = 60 % − q/2 %. Le tirage appartient au RNG du quartier et sa valeur est sauvegardée. Une ancienne chanson sans valeur reste à trois tours sans migration aléatoire.
+
+La pratique ne modifie ni cette durée ni la qualité ni les champs historiques de maîtrise. Elle entraîne les compétences individuelles. Les anciennes maîtrises sont conservées pour la compatibilité des sauvegardes et des spectacles classiques, sans nouvelles progressions.
+
+**Recomposer** ouvre explicitement un projet d’écriture lié au morceau. Un auteur vivant ou un membre du groupe propriétaire peut le lancer; sommeil, show et engagement conservent leurs restrictions. Une seule recomposition active par morceau est permise. L’œuvre existante reste disponible pendant le travail. À la fin, son identifiant et sa propriété restent inchangés; qualité et durée sont recalculées, les anciens scores sont conservés dans les révisions. Le résultat peut être meilleur ou moins bon. Les concerts déjà commencés gardent leur copie.

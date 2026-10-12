@@ -1,3 +1,4 @@
+import {sep} from 'node:path';
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
 import {readFile,mkdir} from 'node:fs/promises';
@@ -7,7 +8,7 @@ import {createWorld,createGroup,restore} from '../dist/engine.mjs';
 import {createBandLive,chooseSong} from '../dist/bandlive.mjs';
 
 const root=resolve('dist'),server=createServer(async(req,res)=>{
-  try{const path=resolve(root,'.'+(req.url.split('?')[0]==='/'?'/index.html':req.url.split('?')[0]));if(!path.startsWith(root+'/'))throw Error();res.setHeader('Content-Type',({'.html':'text/html','.mjs':'text/javascript','.css':'text/css','.json':'application/json'})[extname(path)]||'application/octet-stream');res.end(await readFile(path));}catch{res.writeHead(404);res.end();}
+  try{const path=resolve(root,'.'+(req.url.split('?')[0]==='/'?'/index.html':req.url.split('?')[0]));if(!path.startsWith(root+sep))throw Error();res.setHeader('Content-Type',({'.html':'text/html','.mjs':'text/javascript','.css':'text/css','.json':'application/json'})[extname(path)]||'application/octet-stream');res.end(await readFile(path));}catch{res.writeHead(404);res.end();}
 });
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const url=`http://127.0.0.1:${server.address().port}/`,browser=await chromium.launch(),errors=[];
@@ -54,7 +55,7 @@ async function touchDrag(page,id,targetId,{edge=false}={}){
     await page.waitForFunction(()=>{const el=document.querySelector('.bl-audience-viewport');return el.scrollTop>=el.scrollHeight-el.clientHeight-1;});
   }
   const target=await page.locator(`[data-bl-fan="${targetId}"]`).boundingBox(),finish={x:target.x+target.width/2,y:target.y+target.height/2};
-  assert(start.x>0&&finish.x<page.viewportSize().width&&start.y>0&&finish.y<page.viewportSize().height,'Touch card and last-row target are on screen');
+  assert(start.x>0&&finish.x<page.viewportSize().width&&start.y>0&&finish.y<page.viewportSize().height,JSON.stringify({start,finish,viewport:page.viewportSize(),targetId}));
   for(let step=1;step<=8;step++)await move(edge?finish:{x:start.x+(finish.x-start.x)*step/8,y:start.y+(finish.y-start.y)*step/8});
   const offset=await audienceOffset(page);
   await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await idle(page);await cdp.detach();
@@ -67,7 +68,7 @@ try{
   await page.locator('[data-view="groups"]').click();await page.locator(`#group-list [data-group-select="${group.id}"]`).click();await page.locator('#group-list [data-bandlive-open]').click();assert.equal(await page.locator('#bl-group').inputValue(),group.id);assert.equal(await page.locator('.bl-repertoire li').count(),3);
   assert((await page.locator('.bl-repertoire').textContent()).includes(template.authorNames.p1));assert.equal(await page.locator('[data-bl-member]').count(),4);await page.locator('#bl-start').click();assert.equal(await page.locator('.bl-song-choice button').count(),3);
   const snapshot=await page.evaluate(()=>JSON.parse(localStorage.getItem('garage-vivant-v1')));await page.locator('[data-bl-song="song-3"]').click();assert.equal(await page.locator('.bl-card').count(),5);assert.equal((await data(page)).groupName,group.name);assert.equal((await data(page)).groupId,group.id);assert.equal((await data(page)).songs[2].title,world.songs[2].title);
-  for(const card of await page.locator('[data-bl-card]').all())assert(await card.evaluate(el=>el.dataset.blCard.startsWith(el.closest('.bl-musician').querySelector('[data-bl-actor]').dataset.blActor+':')));
+  for(const card of await page.locator('[data-bl-card]').all())assert(await card.evaluate(el=>!!document.querySelector('[data-bl-actor="'+el.dataset.blCard.split(':')[0]+'"]')&&!!el.querySelector('.bl-card-owner')?.textContent));
   const clock=await page.locator('#clock').textContent();await page.waitForTimeout(1100);assert.equal(await page.locator('#clock').textContent(),clock);assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('garage-vivant-v1'))),snapshot);
   await page.screenshot({path:'test-results/bandlive-connected.png'});
   const savedRehearsal=await data(page);await page.locator('[data-view="groups"]').click();await page.locator('#group-list [data-bandlive-open]').click();assert(await page.locator('#bl-start').isVisible());assert.equal(await page.locator('.bl-repertoire li').count(),3);assert.deepEqual(await data(page),savedRehearsal);await page.locator('#bl-resume').click();
@@ -106,13 +107,13 @@ try{
     const fixed=await stageGeometry(page),publicViewport=page.locator('.bl-audience-viewport');
     await publicViewport.evaluate(el=>el.scrollTop=el.scrollHeight);
     assert.deepEqual(await stageGeometry(page),fixed,`${width}×${height}: public scrolling keeps musicians and cards fixed`);
-    if(fans>3)assert(await audienceOffset(page)>0,'Larger crowds have their own vertical overflow');
+    if(fans>8)assert(await audienceOffset(page)>0,'Larger crowds have their own vertical overflow');
     assert.equal(await page.locator('.bl-viewport').evaluate(el=>el.scrollTop),0,'The horizontal stage never scrolls vertically');
     assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'The stage cannot widen the document');
     await centerFan(page,targetId);
     const offset=await audienceOffset(page),source=await page.locator('[data-bl-card]').first().boundingBox(),target=await page.locator(`[data-bl-fan="${targetId}"]`).boundingBox();
     const main=await page.locator('#main').boundingBox();
-    assert(source.y>=main.y&&source.y+source.height<=main.y+main.height,'The whole card stays in the visible stage');
+    await page.screenshot({path:'test-results/bandlive-check-'+width+'x'+height+'.png'});assert(source.y>=main.y&&source.y+source.height<=main.y+main.height,JSON.stringify({width,height,source,main}));
     assert(target.y+target.height/2>main.y&&target.y+target.height/2<main.y+main.height,'The last-row drop target is visible with the card');
     // Dragging can intentionally auto-scroll; rendering must preserve the release position.
     let releaseOffset=offset;

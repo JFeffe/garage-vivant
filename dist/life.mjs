@@ -1,9 +1,9 @@
-import {rule} from './design-rules.mjs?v=0.7.11';
-import { followingConcertPerformance } from './bandlive-concert.mjs?v=0.7.11';
-import { initializeGroupState, proposeMembership, requestRehearsal, adoptSong, refreshGroup, groupsMinute, leaveGroup, dissolveGroup, activeGroup } from './groups.mjs?v=0.7.11';
-import { plateauGain, decadenceCount, availableMusicName, musicName } from "./v71.mjs?v=0.7.11";
-import { editTokens } from "./v7.mjs?v=0.7.11";
-import { initializeV6Person } from "./social.mjs?v=0.7.11";
+import {rule} from './design-rules.mjs?v=0.7.12';
+import { followingConcertPerformance } from './bandlive-concert.mjs?v=0.7.12';
+import { initializeGroupState, proposeMembership, requestRehearsal, adoptSong, refreshGroup, groupsMinute, leaveGroup, dissolveGroup, activeGroup } from './groups.mjs?v=0.7.12';
+import { plateauGain, decadenceCount, availableMusicName, musicName } from "./v71.mjs?v=0.7.12";
+import { editTokens } from "./v7.mjs?v=0.7.12";
+import { initializeV6Person } from "./social.mjs?v=0.7.12";
 import {
   initializeCalendar,
   upgradeCalendar,
@@ -15,7 +15,7 @@ import {
   morale,
   moraleEffect,
   validateCalendar,
-} from "./calendar.mjs?v=0.7.11";
+} from "./calendar.mjs?v=0.7.12";
 import {
   clamp,
   round,
@@ -27,12 +27,13 @@ import {
   relationship,
   createGroup,
   formationEligible,
+  startRecomposition,
   PLACES,
   GENRES,
   ACTIONS,
   step,
   refreshReputation,
-} from "./engine.mjs?v=0.7.11";
+} from "./engine.mjs?v=0.7.12";
 import {
   CARDS,
   CURSES,
@@ -42,7 +43,7 @@ import {
   createPerformance,
   advancePerformance,
   validatePerformance,
-} from "./stage.mjs?v=0.7.11";
+} from "./stage.mjs?v=0.7.12";
 
 export function initializePerson(p) {
   initializeV6Person(p);
@@ -187,8 +188,7 @@ export function groupRehearsal(s, j, present) {
   const row=g?.repertoire.find(r=>r.songId===j.songId);
   if(!g||!row||row.active===false||present.length<2||present.some(p=>!g.members.includes(p.id)))return;
   g.lastWorked=s.time;
-  g.development=clamp(g.development+0.07*Math.min(1,present.length/4));
-  row.mastery=clamp(row.mastery+0.12*(0.65+g.development/200)*Math.min(1,present.length/g.members.length));
+  // Group progression belongs to shows; rehearsals train individual musicians.
   if (j.elapsed % 15 === 0) {
     if (row) row.rehearsals++;
     g.moments.unshift({
@@ -337,6 +337,8 @@ export function command(s, cmd) {
       return invite(s, cmd);
     case "rehearse":
       return rehearse(s, cmd);
+    case "recompose":
+      return startRecomposition(s,actor,Number(cmd.songId));
     case "book":
       return book(s, cmd);
     case "modifyBooking":
@@ -758,7 +760,7 @@ export function completePerformance(s) {
     });
     g.moments = g.moments.slice(0, 12);
     const song = g.repertoire.find((x) => x.songId === show.song.id);
-    if (song) song.mastery = clamp(song.mastery + 3);
+    // Retain legacy mastery in saves, without adding a level to the song.
   }
   if (g) {
     record.effects = {

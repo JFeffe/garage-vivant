@@ -1,6 +1,6 @@
 [▶ Jouer à Garage vivant](https://jutrasimon.github.io/garage-vivant/)
 
-# Garage vivant · v0.7.11
+# Garage vivant · v0.7.12
 
 Une simulation autonome de musiciens dans une banlieue. Les personnages sont des cubes avec personnalité, émotions, compétences et relations. Ils composent, montent des bands et tentent leur chance devant un public physique. Le joueur peut observer, régler leurs sacs ou intervenir.
 
@@ -32,7 +32,7 @@ Les dates se renouvellent continuellement. Un gros événement revient toutes le
 
 ## BandLive · module optionnel
 
-Activer **BandLive** dans **Réglages**. Dans **Shows**, réserver un créneau avec deux à six musiciens et une ou deux compositions, puis **Avancer jusqu’au show** et **Jouer avec BandLive** avant la première chanson. La setlist réservée donne deux passages de trois tours ; une chanson unique est reprise. Le lieu fixe huit, dix ou douze spectateurs et leurs styles. Le bilan applique les conséquences classiques et s’enregistre une seule fois. **Continuer la soirée** conserve le groupe suivant ; **Retour au quartier · continuer** reprend la même partie après le dernier show.
+Activer **BandLive** dans **Réglages**. Dans **Shows**, réserver un créneau avec deux à six musiciens et une ou deux compositions, puis **Avancer jusqu’au show** et **Jouer avec BandLive** avant la première chanson. La setlist réservée donne deux passages de 3 à 5 tours selon les compositions (3 pour les anciens morceaux) ; une chanson unique est reprise. Le lieu fixe huit, dix ou douze spectateurs et leurs styles. Le bilan applique les conséquences classiques et s’enregistre une seule fois. **Continuer la soirée** conserve le groupe suivant ; **Retour au quartier · continuer** reprend la même partie après le dernier show.
 
 **Jouer avec BandLive** depuis Groupes et **Essayer BandLive** restent des répétitions sans récompense, avec trois à douze spectateurs au choix. Cartes sous leur musicien, glisser-déposer souris/toucher, cinq cartes et trois points d’énergie par tour, infobulles et tempo consommé par la guitare et le saxophone.
 
@@ -44,9 +44,9 @@ Six actions d’éveil : Détente, Socialiser, Pratiquer, Jam, Composer et Déch
 
 Une admission sociale initiale ouvre la séance. Les échanges donnent ensuite directement un résultat favorable, neutre ou défavorable ; le destinataire décide de rester ou partir. La proposition rare d’une activité utilise les actions existantes. Les groupes passent par proposition et acceptation, avec freins au multigroupe. La confiance est retirée ; la romance conserve ses règles.
 
-Pratiquer développe technique, instruments et maîtrise de morceaux sans expression par défaut. La pratique collective demande un morceau et un groupe commun. L’apprentissage progresse par petits gains et percées. Jam commence solo, accueille d’autres musiciens et continue après leurs départs ; aucun gain direct de répertoire, coordination ou réputation.
+Pratiquer développe les compétences individuelles des musiciens sans expression par défaut. La pratique collective demande un morceau et un groupe commun. L’apprentissage progresse par petits gains et percées. Jam commence solo, accueille d’autres musiciens et continue après leurs départs ; aucun gain direct de répertoire, coordination ou réputation.
 
-Composer développe plusieurs projets séparés, sur plusieurs séances, avec coauteurs de groupe, contributions, élan lié aux deux axes et abandon des projets délaissés. Le catalogue réunit projets et chansons : filtres, qualité relative, auteurs, rattachement, maîtrise, archives et tri. Les nouvelles banques de noms distinguent groupes et chansons et empêchent les doublons persistants.
+Composer développe plusieurs projets séparés, sur plusieurs séances, avec coauteurs de groupe, contributions, élan lié aux deux axes et abandon des projets délaissés. Le catalogue réunit projets et chansons : filtres, qualité relative, auteurs, rattachement, durée fixe, archives et tri. Les nouvelles banques de noms distinguent groupes et chansons et empêchent les doublons persistants.
 
 Déchéance cumule des épisodes rapprochés et lie la quantité de jetons nuisibles aux cartes ajoutées au paquet de show. La récupération ne retire pas secrètement les jetons encore dans le sac.
 
@@ -105,3 +105,13 @@ Version et notes : `npm run release:prepare -- VERSION --title "Titre" --notes-f
 ## Atelier d’équilibrage
 
 Réglages expose les paramètres de groupes, relations, besoins, effets d’actions et présence aux shows. Les modifications préparées sont validées puis appliquées au monde ; la sauvegarde les conserve. Export/import de profils, recherche, filtre des valeurs personnalisées et remise à zéro. [Guide, portée et limites](docs/gdd/equilibrage.md). Tests ciblés : `node --test tests/design.test.mjs` et `node tests/design-browser.test.mjs`.
+
+## Prochain quartier et lisibilité
+
+Un nouveau quartier commence avec trois personnages. Les relations initiales sont partielles et directionnelles pour toutes les paires; les groupes de départ conservent des liens plus forts. Avec assez de voisins, les groupes moyens comptent trois ou quatre membres, les grands jusqu’à six et le mode variable évite de répartir huit voisins en quatre duos. Les parties existantes ne sont pas réinitialisées.
+
+Les pratiques collectives apparaissent sur la carte. Le sac affiche les invitations à traiter avant la prochaine pige, avec leur groupe, leur chanson et leur échéance. Une invitation reste soumise à l’acceptation; la prochaine pige aléatoire n’est pas prédite. Les instruments figurent dans la liste des personnages.
+
+Une nouvelle chanson reçoit 3, 4 ou 5 tours à sa composition. Une meilleure qualité augmente la probabilité de cinq tours; la pratique n’ajoute ni niveau de morceau ni progression au groupe. La fiche d’une chanson propose **Recomposer** : un projet distinct, sur plusieurs séances, remplace la qualité et la durée seulement à son achèvement. La progression du groupe vient des shows.
+
+Dans BandLive, musiciens et foule sont compacts; la main commune indique le propriétaire de chaque carte. Le survol pendant un drag, ou la sélection puis le focus d’une cible, affiche les dégâts et la résistance restante. Pioche et défausse sont consultables sans révéler l’ordre du prochain tirage. Explosion, transe et émotion restent purement visuelles.

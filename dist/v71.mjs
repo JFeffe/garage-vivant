@@ -1,4 +1,4 @@
-import {editTokens} from './v7.mjs?v=0.7.11';
+import {editTokens} from './v7.mjs?v=0.7.12';
 // Rules chosen for V7.1, using the existing needs, emotions and musical records.
 export const ACTION_KEYS = ['relax','social','practice','jam','write','decadence'];
 export const V71_RULES = Object.freeze({cycleMinutes:15,searchMinutes:30,abandonMinutes:14*1440,chainMinutes:12*60,weakGap:12,referenceSongs:5,secondaryChance:.15,learningPlateau:2});
@@ -103,6 +103,11 @@ export function upgradeV71(s,random){
 }
 export function validateV71(s){
  const finite=(x,a=0,b=1e9)=>Number.isFinite(x)&&x>=a&&x<=b;
+ for(const song of s.songs){
+  if(song.turns!==undefined&&![3,4,5].includes(song.turns))throw Error('Durée de composition invalide.');
+  if(song.revisions!==undefined&&(!Array.isArray(song.revisions)||song.revisions.some(r=>!finite(r.time)||!finite(r.quality,0,100)||![3,4,5].includes(r.turns))))throw Error('Historique de recomposition invalide.');
+ }
+ for(const project of s.projects)if(project.recompositionOf!==undefined&&!s.songs.some(song=>song.id===project.recompositionOf))throw Error('Recomposition sans morceau source.');
  if(!Array.isArray(s.musicNames)||new Set(s.musicNames.map(x=>x.normalized)).size!==s.musicNames.length||s.musicNames.some(x=>!['group','song'].includes(x.kind)||typeof x.name!=='string'||!x.name.trim()||x.normalized!==normalizeName(x.name)))throw Error('Registre musical invalide.');
  for(const p of s.people){
   if(!p.actionRanges||ACTION_KEYS.some(k=>!finite(p.actionRanges[k]?.min,1)||!finite(p.actionRanges[k]?.max,p.actionRanges[k].min)))throw Error('Fourchettes invalides.');
