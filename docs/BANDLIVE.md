@@ -95,11 +95,15 @@ L’éligibilité d’un vrai show est expliquée dans la préparation et près 
 
 Le format BandLive 4 accepte deux passages de trois à cinq tours. Les formats 1–3 restent interprétés avec leurs anciennes durées. La reprise valide le passage, le tour et les résultats sans reroll. Les répétitions et replays restent isolés du quartier.
 
-## Présentation de la scène
+## Présentation de la scène · Minuit 0.7.19
 
-Le plateau utilise toute la largeur disponible. Chaque musicien conserve ses propres cartes sous son personnage ; aucun panneau de main commune. Le public défile indépendamment pour garder les musiciens et leurs cartes accessibles. Les petits écrans conservent un plateau horizontal et une foule défilante pour garder des cibles utilisables. Le choix de chanson ne réserve plus un espace de cartes vide.
+La scène Three.js utilise la DA Minuit : sol, speakers, instruments, spots au plafond et lumières arrière. Les huit instruments utilisent des modèles simples, et les personnages conservent leur couleur, accessoires et petits corps. Musiciens et foule dansent à des rythmes individuels. Le renderer est chargé lorsque la scène est ouverte et réutilisé entre les cartes. Sans WebGL, les portraits et commandes restent disponibles.
 
-Le preview affiche **+X conquête** et **Conquête : Y / objectif**, au-dessus de la carte déplacée. Les cartes collectives affichent les résultats par spectateur. Le preview inclut aussi les réactions en chaîne des nouveaux bonus de conquête, sans modifier le show ni sa sauvegarde.
+Les cinq cartes réellement présentes dans la main sont regroupées par musicien, en éventail. Le grand aperçu à droite conserve leur description pendant le drag. Un petit jeton et un popup prune/menthe affichent près du curseur le résultat exact calculé par le moteur, sans cacher le spectateur ciblé. Les effets directs, les chaînes et les statuts sont également détaillés dans l’aperçu. Les arcs partent des musiciens ; les projectiles passent au-dessus des cartes. Au téléphone, l’aperçu est compact et la scène peut se déplacer horizontalement.
+
+**Disposition** permet de placer un musicien et sa main séparément, régler la taille complète de la main et son éventail, annuler et restaurer le placement initial. Ces réglages sont des préférences locales de présentation ; ils ne créent aucune carte et ne changent pas le show. Les mains n’ont aucun collider. Les spectateurs conservent une protection de 86 × 112 et restent dans leurs places logiques, visibles en mode Disposition. De petits décalages et une danse individuelle gardent la foule organique ; rangées, colonnes et voisins restent ceux du moteur, sans modifier les bonus de conquête.
+
+Le public défile indépendamment des mains. La sélection puis le choix de cible au clavier restent possibles, comme les deux cibles et la défausse demandées par certaines cartes. Le bouton Son et les effets réduits sont conservés. Choix des chansons, pioche/défausse, programmation, bilan, échange de carte et retour au quartier suivent le parcours existant.
 
 ## Bonus de conquête (0.7.15)
 

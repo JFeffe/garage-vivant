@@ -1,5 +1,15 @@
 # Notes de version
 
+## V0.7.19 — BandLive · scène Minuit et visée {#v0719}
+
+12 octobre 2026.
+
+- BandLive adopte la scène Minuit : sol, speakers, spots au plafond, instruments et personnages animés, avec les couleurs et accessoires du jeu.
+- Les vraies cartes de chaque musicien apparaissent en éventail. Le drag garde un aperçu à droite, montre son résultat exact près du curseur et trace un arc depuis le musicien. Les projectiles passent au-dessus des cartes.
+- Disposition permet de déplacer musiciens et mains séparément et de régler taille et éventail. Les spectateurs restent dans leurs places logiques pour préserver les rangées et voisins ; les mains ne poussent rien.
+- Règles de cartes, conquêtes, decks, chansons, soirées, bilan et récompenses conservés. Le tactile, le clavier, le son et les effets réduits restent disponibles.
+- Activation : Réglages → Activer BandLive. Le module reste facultatif. Les positions sont des préférences locales ; elles ne changent ni les cartes ni les règles.
+
 ## V0.7.18 — BandLive : premières parties et soirée complète {#v0718}
 
 12 octobre 2026.

@@ -14,14 +14,14 @@ const expected=previewCard(g,id,'f0').game;
 await mkdir('test-results',{recursive:true});
 try{
  for(const size of [{width:1440,height:1000},{width:1280,height:720},{width:390,height:844}]){
-  const page=await browser.newPage({viewport:size,hasTouch:size.width<600});page.on('pageerror',e=>errors.push(e.message));
+  const page=await browser.newPage({reducedMotion:'reduce',viewport:size,hasTouch:size.width<600});page.on('pageerror',e=>errors.push(e.message));
   await page.addInitScript(({world,g})=>{if(!localStorage.getItem('garage-vivant-v1'))localStorage.setItem('garage-vivant-v1',JSON.stringify(world));if(!localStorage.getItem('garage-vivant-bandlive-v1'))localStorage.setItem('garage-vivant-bandlive-v1',JSON.stringify({enabled:true,game:g}));},{world,g});
   await page.goto(url);await page.locator('#bandlive-nav').click();
   assert.equal(await page.locator('.bl-conquest-bonus').count(),12);
   const positions=await page.locator('.bl-fan-wrap').evaluateAll(els=>els.map(el=>({x:el.getBoundingClientRect().x,y:el.getBoundingClientRect().y})));
   assert.equal(positions[0].y,positions[3].y);assert(positions[4].y>positions[0].y);assert(Math.abs(positions[4].x-positions[0].x)<1);
   await page.locator('[data-bl-fan="f0"]').scrollIntoViewIfNeeded();await page.locator('[data-bl-fan="f0"]').focus();assert((await page.locator('#bandlive-tooltip').innerText()).includes('Onde de choc'));assert.equal(await page.locator('.bl-conquest-area').count(),2,JSON.stringify({size,tooltip:await page.locator('#bandlive-tooltip').isVisible(),active:await page.evaluate(()=>document.activeElement.outerHTML.slice(0,150))}));
-  await page.locator(`[data-bl-card="${id}"]`).click({position:{x:8,y:42}});await page.locator('[data-bl-fan="f0"]').focus();
+  await page.locator(`[data-bl-card="${id}"]`).click({position:{x:30,y:45}});await page.locator('[data-bl-fan="f0"]').focus();
   const p=page.locator('.bl-preview-layer [data-bl-preview="f1"]');assert(await p.isVisible());assert((await p.textContent()).includes('100 / 100'));
   assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('garage-vivant-bandlive-v1')).game),g,'Preview must not modify saved state');
   await page.screenshot({path:`test-results/conquest-preview-${size.width}.png`});

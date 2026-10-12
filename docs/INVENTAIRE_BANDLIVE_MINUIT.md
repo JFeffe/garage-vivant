@@ -13,7 +13,7 @@ Le portage consiste à installer la scène et les interactions du prototype V17 
 - Apparence partagée : `dist/character-view.mjs`, `dist/show-view.mjs`, `dist/v5-view.mjs`.
 - Parcours décrits dans `docs/BANDLIVE.md` et tests `tests/bandlive*.mjs`.
 
-Audit du code et vérifications ciblées des calculs. Aucun portage de l’interface ni contrôle visuel navigateur n’est effectué dans cette branche à ce stade. Les écrans du labo déjà approuvés restent la référence. Le placement personnalisé enregistré dans le navigateur n’est pas contenu dans le dépôt du labo.
+Audit initial du code et vérifications ciblées des calculs. Le portage 0.7.19 est maintenant réalisé sur cette branche : places du public bornées, règles conservées et parcours navigateur vérifiés. Les écrans du labo déjà approuvés restent la référence. Le placement personnalisé enregistré dans le navigateur n’est pas contenu dans le dépôt du labo.
 
 ## Visuel à conserver
 
@@ -168,6 +168,6 @@ Réutiliser les tests moteur existants `bandlive`, `bandlive-conquest`, `bandliv
 
 Parcours indispensables : 2/4/6 musiciens ; huit instruments ; mains vides et plusieurs cartes du même musicien ; publics 3/8/10/12 ; chaînes et statuts ; duo et Variation ; vraie soirée avec deux groupes ; échange unique ; rechargement/export/import ; interruption ; retour et reprise du quartier ; desktop 1280 × 720 et mobile 390 × 844 ; projeté au-dessus des cartes ; aucun overlay n’intercepte le drag.
 
-Pour la livraison, `CONTRIBUTING.md` exige `test:quick`, `docs:build`, `test:smoke`, version supérieure au dernier main et patch notes/cache synchronisés. Cette branche d’inventaire ne réserve pas encore un numéro de livraison et n’est pas prête à fusionner. Aucun conflit Git ne peut être déclaré pour un portage non encore écrit. **Aucune PR ouverte** n’était présente dans ce dépôt au contrôle de l’audit ; les zones de concurrence les plus probables restent `bandlive-view.mjs`, `bandlive.css`, `bandlive.mjs`, le contrat des personnages et les fichiers de release/cache.
+Pour la livraison, `CONTRIBUTING.md` exige `test:quick`, `docs:build`, `test:smoke`, version supérieure au dernier main et patch notes/cache synchronisés. Le portage utilise 0.7.19 ; ce numéro doit être actualisé si une autre livraison est intégrée avant sa fusion. Aucun conflit Git ne peut être déclaré pour un portage non encore écrit. **Aucune PR ouverte** n’était présente dans ce dépôt au contrôle de l’audit ; les zones de concurrence les plus probables restent `bandlive-view.mjs`, `bandlive.css`, `bandlive.mjs`, le contrat des personnages et les fichiers de release/cache.
 
 Le principal travail est donc un **portage de vue avec adaptation des données et des parcours**, accompagné d’une convention lisible pour la topologie du public. Aucun nouveau moteur de jeu, backend ou système de récompense n’est requis.

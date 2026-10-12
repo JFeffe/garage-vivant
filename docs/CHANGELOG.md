@@ -1,3 +1,7 @@
+# V0.7.19 — 12 octobre 2026
+
+BandLive · scène Minuit et visée. [Notes complètes](./versions.md#v0719).
+
 # V0.7.18 — 12 octobre 2026
 
 BandLive : premières parties et soirée complète. [Notes complètes](./versions.md#v0718).
