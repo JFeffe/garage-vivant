@@ -1,5 +1,18 @@
 # Notes de version
 
+## V0.7.6 — BandLive : à toi de jouer les spectacles {#v076}
+
+11 octobre 2026. Notes ajoutées rétroactivement pour la [PR #11](https://github.com/jutrasimon/garage-vivant/pull/11), initialement fusionnée sans nouveau numéro de version.
+
+- **Activation : Réglages → Activer BandLive.** L’onglet BandLive apparaît ensuite ; le module est désactivé par défaut.
+- Jouez les spectacles réservés du calendrier avec les musiciens confirmés et les compositions prévues : deux à six musiciens, une ou deux chansons, deux passages de trois tours. Les spectacles non admissibles restent classiques.
+- Répétez avec les groupes et chansons du quartier, sans récompense, devant trois à douze spectateurs.
+- Les vrais spectacles appliquent une seule fois les conséquences habituelles et conservent leur bilan dans l’historique. Rechargement, export/import et replay sont pris en charge.
+- Correction du démarrage avec les anciens modules en cache ; public complet conservé pour le groupe suivant, peu importe le bouton de sortie utilisé.
+- Numéro visible et notes de version désormais obligatoires dans chaque PR fusionnée vers main, y compris les corrections et la documentation.
+
+Interface **0.7.6** ; format de sauvegarde **0.7.3** inchangé. Après publication réussie, rechargez le jeu : le bouton de version doit afficher **v0.7.6**. Cliquez dessus pour lire ces notes.
+
 ## V0.7.5 — Des bands plus faciles à former et compléter {#v075}
 
 11 octobre 2026. Ajustement des règles existantes après comparaison sur les mêmes graines. [Mesures et limites](./BALANCE_V7_5.md).

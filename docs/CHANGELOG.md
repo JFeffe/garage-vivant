@@ -1,3 +1,7 @@
+# V0.7.6 — 11 octobre 2026
+
+Publication rétroactive de BandLive (PR #11) : spectacles interactifs optionnels, répétitions, sauvegarde et résultats uniques. Activation dans Réglages → Activer BandLive. Corrections du cache et du public du groupe suivant. Version et patch notes obligatoires pour chaque fusion vers main. [Notes complètes](./versions.md#v076). Format 0.7.3 inchangé.
+
 # V0.7.5 — 11 octobre 2026
 
 Formation légèrement favorisée et recrutement de son propre band libéré de la pénalité multigroupe du recruteur. Délai du candidat 24 h ; pas de remise à zéro de celui du recruteur. Affinités, refus, tension et freins du candidat conservés. Aucun quota ni recrutement forcé. [Règles](./gdd/groupes.md), [comparaison](./BALANCE_V7_5.md), tests G28–G30 du [plan complet](./PLAN_TEST_V7.md). Format 0.7.3 inchangé.
