@@ -78,3 +78,7 @@ Les nouveaux choix de setlist utilisent uniquement les morceaux possédés actif
 ## Consultation et suppression V7.10
 
 Ouvrir Shows conserve la vitesse du quartier. Un spectacle effectif garde son interruption prioritaire du monde. La suppression d’un personnage est bloquée pendant une représentation; hors représentation, elle annule ses réservations à venir plutôt que conserver une formation incomplète. Les historiques de spectacles restent consultables.
+
+## Paramètres personnalisables · V0.7.11
+
+Les paramètres exposés de ce domaine se règlent dans [l’Atelier d’équilibrage](./equilibrage.md). Les chiffres de référence de ce DDD décrivent les valeurs par défaut ; le profil de la partie peut les remplacer. Les formules et conditions non exposées sont conservées.

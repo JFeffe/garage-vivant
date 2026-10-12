@@ -120,3 +120,7 @@ L’audit accepte un chemin de sortie, conserve une [référence V7.4](../BALANC
 L’interface est 0.7.10, format du monde 0.7.3 avec surnom facultatif. `createWorld(seed,count,{setup})` est explicite : l’API moteur garde `none` pour les tests et laboratoires; l’interface crée par défaut `varied`. `seedStartingGroups` utilise le RNG du monde et `createGroup`; jamais appliqué à l’import. Les identifiants, sauvegardes et archives existantes ne sont pas réécrits.
 
 Le journal copie désormais les identifiants des participants à la création d’un événement. Il ne conserve plus la référence mutable à la liste des membres d’un groupe; un recrutement ne modifie donc pas les anciens événements ni la continuité après rechargement.
+
+## Paramètres personnalisables · V0.7.11
+
+Les paramètres exposés de ce domaine se règlent dans [l’Atelier d’équilibrage](./equilibrage.md). Les chiffres de référence de ce DDD décrivent les valeurs par défaut ; le profil de la partie peut les remplacer. Les formules et conditions non exposées sont conservées.

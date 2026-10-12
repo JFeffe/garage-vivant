@@ -1,12 +1,13 @@
-import {decorateCube} from './character-view.mjs?v=0.7.10';
-export {decorateCube} from './character-view.mjs?v=0.7.10';
-import { membershipChance, membershipReason, attachment } from './groups.mjs?v=0.7.10';
-import {drawShowStage} from './show-view.mjs?v=0.7.10';
-export {bandsHTML,rapinHTML,showSetupHTML,showStatusHTML,seasonHTML} from './v6-view.mjs?v=0.7.10';
-import {SKILLS,ACTIONS,EMOTIONS,stamp,round,clamp,groupsOf,compositionProject,scores} from './engine.mjs?v=0.7.10';
-import {CARDS,CURSES,INTENTIONS,activeDeck,availableCards,SHOW_TICKS,PHRASE_TICKS} from './stage.mjs?v=0.7.10';
-import {bandStage,nextCurse,eligibleSongs,availability,isArchivedSong,seasonSummary,acceptance} from './life.mjs?v=0.7.10';
-import {resolveShowPlan} from './show-planning.mjs?v=0.7.10';
+import {rule} from './design-rules.mjs?v=0.7.11';
+import {decorateCube} from './character-view.mjs?v=0.7.11';
+export {decorateCube} from './character-view.mjs?v=0.7.11';
+import { membershipChance, membershipReason, attachment } from './groups.mjs?v=0.7.11';
+import {drawShowStage} from './show-view.mjs?v=0.7.11';
+export {bandsHTML,rapinHTML,showSetupHTML,showStatusHTML,seasonHTML} from './v6-view.mjs?v=0.7.11';
+import {SKILLS,ACTIONS,EMOTIONS,stamp,round,clamp,groupsOf,compositionProject,scores} from './engine.mjs?v=0.7.11';
+import {CARDS,CURSES,INTENTIONS,activeDeck,availableCards,SHOW_TICKS,PHRASE_TICKS} from './stage.mjs?v=0.7.11';
+import {bandStage,nextCurse,eligibleSongs,availability,isArchivedSong,seasonSummary,acceptance} from './life.mjs?v=0.7.11';
+import {resolveShowPlan} from './show-planning.mjs?v=0.7.11';
 export const escapeHTML = x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const esc=escapeHTML;
 const person=(s,id)=>s.people.find(p=>p.id===id);
@@ -34,7 +35,7 @@ export function deckEditorHTML(p) {
 }
 export function invitationHTML(s,groupId=null){
  const host=person(s,s.playerId),g=groupId?s.groups.find(g=>g.id===groupId):null;
- return `<h2>${g?'Inviter dans « '+esc(g.name)+' »':'Former un groupe avec '+esc(host.name)}</h2><p>Une proposition, puis une acceptation. Nouvelle formation : 48 h après une adhésion. Recrutement : seul le candidat attend 24 h. Une proposition par paire chaque 24 h.</p><div class="invitation-list">${s.people.filter(p=>p!==host&&!g?.members.includes(p.id)).map(p=>{const key=[host.id,p.id].sort().join(':'),remaining=(s.groupState.proposals[key]??-1e9)+1440-s.time,reason=membershipReason(s,host,p,g)||(remaining>0?'Nouvelle proposition dans '+round(remaining/60)+' h.':null);return `<div class="invitation-row"><span><b>${esc(p.name)}</b><small>${SKILLS[p.instrument]} · ${esc(p.genre)} · ${round(membershipChance(s,host,p,g)*100)} % d’acceptation</small>${reason?`<small>${esc(reason)}</small>`:''}</span><button data-invite="${p.id}:${groupId||''}" ${reason?'disabled':''}>Proposer</button></div>`;}).join('')}</div>`;
+ return `<h2>${g?'Inviter dans « '+esc(g.name)+' »':'Former un groupe avec '+esc(host.name)}</h2><p>Une proposition, puis une acceptation. Nouvelle formation : ${rule(s,'groups.membershipDelay')} min après une adhésion. Recrutement : seul le candidat attend ${rule(s,'groups.recruitmentDelay')} min. Une proposition par paire chaque ${rule(s,'groups.pairDelay')} min.</p><div class="invitation-list">${s.people.filter(p=>p!==host&&!g?.members.includes(p.id)).map(p=>{const key=[host.id,p.id].sort().join(':'),remaining=(s.groupState.proposals[key]??-1e9)+rule(s,'groups.pairDelay')-s.time,reason=membershipReason(s,host,p,g)||(remaining>0?'Nouvelle proposition dans '+round(remaining/60)+' h.':null);return `<div class="invitation-row"><span><b>${esc(p.name)}</b><small>${SKILLS[p.instrument]} · ${esc(p.genre)} · ${round(membershipChance(s,host,p,g)*100)} % d’acceptation</small>${reason?`<small>${esc(reason)}</small>`:''}</span><button data-invite="${p.id}:${groupId||''}" ${reason?'disabled':''}>Proposer</button></div>`;}).join('')}</div>`;
 }
 
 

@@ -1,3 +1,7 @@
+# V0.7.11 — 12 octobre 2026
+
+Atelier d’équilibrage par partie. [Notes complètes](./versions.md#v0711).
+
 # V0.7.10 — 12 octobre 2026
 
 Personnages personnalisables, crédits de composition visibles, options de carte et groupes de départ. Intégration de BandLive et du circuit de publication rapide V0.7.9. Format des sauvegardes inchangé. [Notes complètes](./versions.md#v0710) et [bilan, validations et limites](./BILAN_V7_10.md). Aucun éditeur d’équilibrage ajouté.

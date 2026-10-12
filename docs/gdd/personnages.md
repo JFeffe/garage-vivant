@@ -66,3 +66,7 @@ Le bouton **Nom et apparence** ouvre l’éditeur. Le nom reste l’identité pr
 **Supprimer** demande une confirmation. Au moins un voisin reste dans le quartier. Pendant un spectacle, la suppression est refusée sans mutation. Les activités sont fermées, les relations actives et partenaires sont nettoyés, les réservations à venir du personnage sont annulées. Les groupes passent par leur départ normal, avec dissolution définitive sous deux membres; leurs archives restent accessibles. Les compositions et projets conservent l’auteur et son dernier nom. Le rôle joueur passe au premier voisin restant si nécessaire. Aucun remplacement automatique n’est créé.
 
 Un ancien monde sans surnom conserve son contenu et son RNG; le champ facultatif est validé quand présent. Aucune migration de skin ni réinitialisation.
+
+## Paramètres personnalisables · V0.7.11
+
+Les paramètres exposés de ce domaine se règlent dans [l’Atelier d’équilibrage](./equilibrage.md). Les chiffres de référence de ce DDD décrivent les valeurs par défaut ; le profil de la partie peut les remplacer. Les formules et conditions non exposées sont conservées.

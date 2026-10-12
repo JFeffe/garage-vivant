@@ -1,9 +1,9 @@
-import {RULES,INSTRUMENTS,SPECIALS,restoreBandLive,cardById,cardDefinition,currentSong,availableSongs,chooseSong,canPlay,playCard,endTurn} from './bandlive.mjs?v=0.7.10';
-import {resolveBandLivePlan,createBandLiveFromWorld} from './bandlive-roster.mjs?v=0.7.10';
-import {createConcertReplay,resolveBandLiveConcert} from './bandlive-concert.mjs?v=0.7.10';
-import {NEEDS,PERSONALITY} from './engine.mjs?v=0.7.10';
-import {instrumentArt,drawStageBackdrop} from './show-view.mjs?v=0.7.10';
-import {decorateCube,enableAudio,playSound} from './v5-view.mjs?v=0.7.10';
+import {RULES,INSTRUMENTS,SPECIALS,restoreBandLive,cardById,cardDefinition,currentSong,availableSongs,chooseSong,canPlay,playCard,endTurn} from './bandlive.mjs?v=0.7.11';
+import {resolveBandLivePlan,createBandLiveFromWorld} from './bandlive-roster.mjs?v=0.7.11';
+import {createConcertReplay,resolveBandLiveConcert} from './bandlive-concert.mjs?v=0.7.11';
+import {NEEDS,PERSONALITY} from './engine.mjs?v=0.7.11';
+import {instrumentArt,drawStageBackdrop} from './show-view.mjs?v=0.7.11';
+import {decorateCube,enableAudio,playSound} from './v5-view.mjs?v=0.7.11';
 
 const STORAGE='garage-vivant-bandlive-v1';
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

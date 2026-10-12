@@ -46,3 +46,7 @@ Propositions de groupe et admissions utilisent leurs règles communes documenté
 Confiance est supprimée de l’état courant, des effets, des poids, des réglages et de la matrice. La migration garde ses anciennes valeurs dans une archive inerte `legacyV71.trust`, sans les convertir en affinité. Les autres liens ne sont pas remis à zéro. Les anciennes traces peuvent encore mentionner cette dimension comme donnée historique.
 
 Liens : [interactions](./interactions.md), [musique](./musique.md), [traits](./traits.md), [sauvegardes](./technique.md).
+
+## Paramètres personnalisables · V0.7.11
+
+Les paramètres exposés de ce domaine se règlent dans [l’Atelier d’équilibrage](./equilibrage.md). Les chiffres de référence de ce DDD décrivent les valeurs par défaut ; le profil de la partie peut les remplacer. Les formules et conditions non exposées sont conservées.
