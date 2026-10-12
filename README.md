@@ -1,6 +1,6 @@
 [▶ Jouer à Garage vivant](https://jutrasimon.github.io/garage-vivant/)
 
-# Garage vivant · v0.7.14
+# Garage vivant · v0.7.18
 
 Une simulation autonome de musiciens dans une banlieue. Les personnages sont des cubes avec personnalité, émotions, compétences et relations. Ils composent, montent des bands et tentent leur chance devant un public physique. Le joueur peut observer, régler leurs sacs ou intervenir.
 
@@ -32,7 +32,10 @@ Les dates se renouvellent continuellement. Un gros événement revient toutes le
 
 ## BandLive · module optionnel
 
-Activer **BandLive** dans **Réglages**. Dans **Shows**, réserver un créneau avec deux à six musiciens et une ou deux compositions, puis **Avancer jusqu’au show** et **Jouer avec BandLive** avant la première chanson. La setlist réservée donne deux passages de 3 à 5 tours selon les compositions (3 pour les anciens morceaux) ; une chanson unique est reprise. Le lieu fixe huit, dix ou douze spectateurs et leurs styles. Le bilan applique les conséquences classiques et s’enregistre une seule fois. **Continuer la soirée** conserve le groupe suivant ; **Retour au quartier · continuer** reprend la même partie après le dernier show.
+Les nouveaux shows BandLive donnent à chaque spectateur un bonus de conquête visible : Onde de choc, Vague d’enthousiasme, Percée dans la foule, Sous les projecteurs ou Chœur du public. Le public garde quatre colonnes maximum sur tous les écrans ; le preview inclut les réactions en chaîne. [Effets et durées](docs/BANDLIVE.md#bonus-de-conquête-0715).
+
+
+Activer **BandLive** dans **Réglages**. Dans **Shows**, réserver un créneau avec deux à six musiciens et une ou deux compositions, puis **Avancer jusqu’au show** et **Jouer avec BandLive** avant la première chanson. Choisir deux passages dans le répertoire actif du groupe, de 3 à 5 tours selon les compositions (3 pour les anciens morceaux) ; une chanson unique est reprise. Le lieu fixe huit, dix ou douze spectateurs et leurs styles. Le bilan applique les conséquences classiques et s’enregistre une seule fois. **Continuer la soirée** conserve le groupe suivant ; **Retour au quartier · continuer** reprend la même partie après le dernier show.
 
 **Jouer avec BandLive** depuis Groupes et **Essayer BandLive** restent des répétitions sans récompense, avec trois à douze spectateurs au choix. Cartes sous leur musicien, glisser-déposer souris/toucher, cinq cartes et trois points d’énergie par tour, infobulles et tempo consommé par la guitare et le saxophone.
 

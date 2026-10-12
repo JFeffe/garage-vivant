@@ -1,3 +1,19 @@
+# V0.7.18 — 12 octobre 2026
+
+BandLive : premières parties et soirée complète. [Notes complètes](./versions.md#v0718).
+
+# V0.7.17 — 12 octobre 2026
+
+BandLive : public agrandi et choix des chansons (test local). [Notes complètes](./versions.md#v0717).
+
+# V0.7.16 — 12 octobre 2026
+
+BandLive : decks par instrument (test local). [Notes complètes](./versions.md#v0716).
+
+# V0.7.15 — 12 octobre 2026
+
+BandLive : bonus de conquête dans le public. [Notes complètes](./versions.md#v0715).
+
 # V0.7.14 — 12 octobre 2026
 
 Des mini-personnages bien droits. [Notes complètes](./versions.md#v0714).

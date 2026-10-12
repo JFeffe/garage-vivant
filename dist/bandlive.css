@@ -76,3 +76,31 @@ body.bandlive-mode header nav{gap:16px}.workspace.bandlive-layout{grid-template-
 @media(max-width:620px){.bl-preview-layer .bl-damage-preview{min-width:60px;padding:6px 5px}.bl-damage-preview strong{font-size:15px}.bl-damage-preview span{font-size:9px}.bl-preview-layer .bl-preview-single{padding:9px 12px}.bl-preview-single strong{font-size:20px}.bl-preview-single span{font-size:11px}}
 
 @media(min-width:1000px) and (min-height:801px) and (max-height:1000px){.bl-stage-sign span{display:none}.bl-stage-sign{padding:8px 0 3px}.bl-stage-sign b{font-size:12px}.bl-musician-info .bl-cube{width:50px;height:50px}.bl-fan .bl-cube{width:44px;height:44px}.bl-audience{margin-top:18px}.bl-musicians{padding-bottom:12px}}
+
+/* Stable conquest board: the inline column count is shared with the rules. */
+.bl-conquest-bonus{display:flex;flex-direction:column;gap:2px;max-width:100%;font-size:10px;line-height:1.25;color:#ecdba9;min-height:34px}
+.bl-conquest-bonus small{font-size:8px;text-transform:uppercase;letter-spacing:.5px;color:#acbda1}
+.bl-conquest-bonus b{font-weight:650;overflow-wrap:anywhere}
+.bl-conquered .bl-conquest-bonus{opacity:.65}
+.bl-conquest-status{font-size:9px;line-height:1.3;color:#d7c1ff}
+.bl-fan.bl-conquest-area{outline:2px dashed #d9b8ff;outline-offset:2px;background:#d9b8ff18}
+@media(max-width:620px){.bl-conquest-bonus{font-size:9px}.bl-conquest-bonus small{font-size:7px}}
+
+/* Keep all crowd rows reachable while the musicians and their cards stay in place. */
+@media(min-width:1000px){.bl-conquest-board .bl-audience-viewport{height:clamp(135px,30dvh,320px);min-height:135px;max-height:none;overflow-y:auto;overscroll-behavior:contain}.bl-conquest-board .bl-audience{margin-top:12px}}
+
+/* Persistent five-card decks and post-show exchange. */
+.bl-reward,.bl-card-choice{color:#e8eedc;background:#203a30;padding:22px;margin:16px 24px;border:1px solid #aec59266}
+.bl-reward p,.bl-card-choice p{line-height:1.6}.bl-reward h4{margin:22px 0 10px}.bl-reward-actors,.bl-deck-choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px}
+.bl-reward-actors button,.bl-deck-choices button{display:flex;flex-direction:column;gap:8px;text-align:left;background:#fff9e8;color:#213d33;padding:14px;min-width:0;white-space:normal;height:auto}
+.bl-deck-choices span{font-size:12px;line-height:1.5}.bl-deck-choices small,.bl-reward-actors small{font-size:11px}.bl-special-choices{grid-template-columns:repeat(3,minmax(0,1fr))}
+.bl-reward button[aria-pressed="true"]{outline:3px solid #e9bd58;outline-offset:1px;background:#fff0c5}.bl-reward button:disabled{opacity:.45}
+.bl-reward button:focus-visible,.bl-card-choice button:focus-visible{outline:3px solid #d9b8ff;outline-offset:2px}
+@media(max-width:620px){.bl-reward,.bl-card-choice{margin:12px 8px;padding:16px}.bl-special-choices{grid-template-columns:1fr}.bl-deck-choices{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}}
+
+/* More of the audience visible at once; scrolling still leaves cards on stage. */
+.bl-evening{margin:14px 24px;color:#dce8d3;background:#203a30;padding:12px 18px}.bl-evening summary{cursor:pointer;font-weight:650}.bl-evening ol{display:grid;gap:8px;padding-left:20px}.bl-evening li{padding:7px 10px}.bl-evening li[aria-current]{background:#ffffff15;border-left:3px solid #e9bd58}.bl-evening li span{display:block;font-size:12px;margin-top:4px;color:#c4d3b9}.bl-evening p{font-size:12px;line-height:1.5;margin:10px 0 0}
+.bl-conquest-board .bl-audience-viewport{height:clamp(240px,44dvh,420px);min-height:0;max-height:none}
+@media(min-width:1000px){.bl-conquest-board .bl-audience-viewport{height:clamp(340px,calc(100dvh - 430px),580px)}}
+@media(min-width:700px) and (max-height:800px){.bl-conquest-board .bl-audience-viewport{height:clamp(230px,calc(100dvh - 450px),350px)}}
+.bl-arena>.bl-song-choice{flex-wrap:wrap}.bl-arena>.bl-song-choice>b{flex-basis:100%;max-width:none}.bl-arena>.bl-song-choice>button{flex:1 1 260px;max-width:480px}

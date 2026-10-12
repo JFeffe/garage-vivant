@@ -37,7 +37,7 @@ try{
   await page.addInitScript(world=>{if(!localStorage.getItem('garage-vivant-v1')){localStorage.setItem('garage-vivant-v1',JSON.stringify(world));localStorage.setItem('garage-vivant-bandlive-v1',JSON.stringify({enabled:true,game:null}));}},world);
   await page.goto(url);await page.locator('#profile .profile-head').waitFor({state:'attached'});
   await page.locator('[data-view="shows"]').click();await page.locator('[data-bandlive-concert]').click();
-  await page.locator('[data-bl-song]').click();
+  await page.locator('[data-bl-song]').first().click();
   const live=await page.evaluate(()=>JSON.parse(localStorage.getItem('garage-vivant-v1')).performance.bandLive.game);
   await page.reload();await page.locator('#profile .profile-head').waitFor({state:'attached'});
   assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('garage-vivant-v1')).performance.bandLive.game),live);
