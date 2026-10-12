@@ -57,8 +57,8 @@ async function touchDrag(page,id,targetId,{edge=false}={}){
   const target=await page.locator(`[data-bl-fan="${targetId}"]`).boundingBox(),finish={x:target.x+target.width/2,y:target.y+target.height/2};
   assert(start.x>0&&finish.x<page.viewportSize().width&&start.y>0&&finish.y<page.viewportSize().height,JSON.stringify({start,finish,viewport:page.viewportSize(),targetId}));
   for(let step=1;step<=8;step++)await move(edge?finish:{x:start.x+(finish.x-start.x)*step/8,y:start.y+(finish.y-start.y)*step/8});
-  const offset=await audienceOffset(page);
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await idle(page);await cdp.detach();
+  await page.evaluate(()=>document.querySelector('#bandlive-view').addEventListener('pointerup',()=>{window.testReleaseScroll=document.querySelector('.bl-audience-viewport').scrollTop;},{capture:true,once:true}));
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});const offset=await page.evaluate(()=>window.testReleaseScroll);await idle(page);await cdp.detach();
   return offset;
 }
 let page;
@@ -82,7 +82,7 @@ try{
   await drag(page,note,'[data-bl-fan="f0"]');after=await data(page);assert.equal(after.energy,2);assert.equal(after.boost,0);assert.equal(after.fans[0].hp,13);assert.equal(after.tempo,5);
   await drag(page,sax,'.bl-audience',{x:10,y:10});after=await data(page);assert.deepEqual(after.fans.map(f=>f.hp),[6,15,20]);assert.equal(after.energy,1);assert.equal(after.tempo,0);assert.equal(after.hand.length,2);
   await page.locator('[data-bl-actor]').first().hover();assert((await page.locator('#bandlive-tooltip').textContent()).includes('Maîtrise'));await page.locator('[data-bl-actor]').first().click();assert.equal(await page.locator('#dialog').evaluate(el=>el.open),false);
-  await page.locator('[data-bl-fan="f0"]').hover();assert((await page.locator('#bandlive-tooltip').textContent()).includes('Résistance'));await page.locator('[data-bl-fan="f0"]').click();assert.equal(await page.locator('#dialog').evaluate(el=>el.open),false);
+  await page.locator('[data-bl-fan="f0"]').hover();assert((await page.locator('#bandlive-tooltip').textContent()).includes('Conquête'));await page.locator('[data-bl-fan="f0"]').click();assert.equal(await page.locator('#dialog').evaluate(el=>el.open),false);
   await page.locator('[data-bl-fan="f0"] [data-bl-style]').hover();assert.equal((await page.locator('#bandlive-tooltip').textContent()).trim(),'Punk');
   await page.reload();await page.locator('#bandlive-nav').click();assert.deepEqual(await data(page),after,'Reload resumes the same turn and hand');
   await page.screenshot({path:'test-results/bandlive-desktop.png'});
@@ -97,7 +97,7 @@ try{
   assert.equal(await page.locator('.bl-card-table').count(),0,'No empty reserved hand before choosing a song');
   assert.equal(await page.locator('.bl-arena > .bl-song-choice [data-bl-song]').count(),1,'Song choice stays compact above the stage');
   assert(await page.locator('.bl-arena').evaluate(el=>el.clientWidth>=innerWidth-20),'Arena uses the available width');
-  assert(await page.locator('.bl-audience-viewport').evaluate(el=>el.scrollHeight>el.clientHeight),'Conquest rows remain reachable in the public scroller');
+  assert(await page.locator('.bl-audience-viewport').evaluate(el=>el.clientHeight>=300),'The audience has a larger viewing area');
   await page.screenshot({path:'test-results/bandlive-redesign-choose.png'});
   await page.locator('[data-bl-song]').click();assert.equal(await page.locator('.bl-card').count(),5);for(const card of await page.locator('[data-bl-card]').all())assert(await card.evaluate(el=>el.closest('.bl-musician').querySelector('[data-bl-actor]').dataset.blActor===el.dataset.blCard.split(':')[0]),'Cards stay attached to their musician');
   await page.screenshot({path:'test-results/bandlive-redesign-play.png'});await page.close();
@@ -119,7 +119,7 @@ try{
     const fixed=await stageGeometry(page),publicViewport=page.locator('.bl-audience-viewport');
     await publicViewport.evaluate(el=>el.scrollTop=el.scrollHeight);
     assert.deepEqual(await stageGeometry(page),fixed,`${width}×${height}: public scrolling keeps musicians and cards fixed`);
-    if(fans>8)assert(await audienceOffset(page)>0,'Large conquest crowds retain public scrolling');
+    if(await publicViewport.evaluate(el=>el.scrollHeight>el.clientHeight+1))assert(await audienceOffset(page)>0,'Crowds that exceed the enlarged area retain public scrolling');
     assert.equal(await page.locator('.bl-viewport').evaluate(el=>el.scrollTop),0,'The horizontal stage never scrolls vertically');
     assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'The stage cannot widen the document');
     await centerFan(page,targetId);
@@ -130,9 +130,9 @@ try{
     // Dragging can intentionally auto-scroll; rendering must preserve the release position.
     let releaseOffset=offset;
     if(touch)releaseOffset=await touchDrag(page,game.cards[0].id,targetId);
-    else{await page.mouse.move(source.x+10,source.y+42);await page.mouse.down();await page.mouse.move(source.x+10,source.y+58,{steps:4});await page.mouse.move(target.x+target.width/2,target.y+target.height/2,{steps:10});await page.mouse.up();await idle(page);}
+    else{await page.evaluate(()=>document.querySelector('#bandlive-view').addEventListener('drop',()=>{window.testReleaseScroll=document.querySelector('.bl-audience-viewport').scrollTop;},{capture:true,once:true}));await page.mouse.move(source.x+10,source.y+42);await page.mouse.down();await page.mouse.move(source.x+10,source.y+58,{steps:4});await page.mouse.move(target.x+target.width/2,target.y+target.height/2,{steps:10});await page.mouse.up();releaseOffset=await page.evaluate(()=>window.testReleaseScroll);await idle(page);}
     const played=await data(page);assert.equal(played.played,1);assert(played.fans.find(f=>f.id===targetId).hp<game.fans.find(f=>f.id===targetId).hp,'The last-row spectator receives the card');
-    assert(Math.abs(await audienceOffset(page)-releaseOffset)<=1,'Card play and the animation-completion render preserve public scroll');
+    assert(Math.abs(await audienceOffset(page)-releaseOffset)<=1,JSON.stringify({width,height,releaseOffset,after:await audienceOffset(page),scroll:await publicViewport.evaluate(el=>({height:el.clientHeight,content:el.scrollHeight}))}));
     const after=await stageGeometry(page);assert.deepEqual(after.musicians,fixed.musicians);assert.equal(after.main,fixed.main);assert.equal(after.horizontal,fixed.horizontal,'Card play preserves horizontal stage scroll too');
     assert.equal(await page.locator('.bl-ghost').count(),0);
     await page.screenshot({path:`test-results/bandlive-scroll-${width}x${height}.png`});await page.close();

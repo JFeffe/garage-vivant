@@ -1,5 +1,46 @@
 # Notes de version
 
+## V0.7.18 — BandLive : premières parties et soirée complète {#v0718}
+
+12 octobre 2026.
+
+Les premières parties et la tête d’affiche s’enchaînent maintenant dans BandLive. La programmation affiche les groupes, leur rôle et leur progression dans la soirée. Après une prestation, le groupe compatible suivant ouvre directement son propre choix de chansons, avec ses musiciens et ses decks.
+
+L’accueil transmis reste celui du jeu : chaque spectateur conserve 20 % de l’accueil obtenu avec le groupe précédent, dans la limite de 30 %. Les barres commencent partiellement remplies et l’accueil initial est indiqué dans la programmation. Les replays des nouvelles prestations retrouvent ce même accueil de départ.
+
+Chaque groupe conserve ses deux passages et son bilan individuel. Un échange de carte facultatif est proposé après chaque prestation BandLive terminée. Les interruptions ne donnent pas d’échange. Les jams, les setlists de plus de deux morceaux et les formations de plus de six musiciens restent en spectacle classique, avec une explication. Désactiver BandLive laisse la prestation en cours se terminer, puis revient au mode classique.
+
+Cette livraison comprend aussi les essais 0.7.16 et 0.7.17 : decks mémorisés par musicien et instrument, deux nouvelles spéciales par instrument, échange après spectacle, barres de conquête qui se remplissent, public agrandi et choix des chansons dans tout le répertoire actif. Les cinq effets de conquête de zone restent disponibles.
+
+Activation : **Réglages → Activer BandLive**, réserver un créneau de première partie ou de tête d’affiche dans **Shows**, puis **Jouer avec BandLive** à l’arrivée sur scène. Le module reste facultatif et désactivé par défaut. Les sauvegardes et les spectacles classiques sont conservés.
+
+## V0.7.17 — BandLive : public agrandi et choix des chansons (test local) {#v0717}
+
+12 octobre 2026.
+
+Build local de test, sans publication GitHub.
+
+- Zone du public agrandie sur ordinateur et téléphone pour voir davantage de spectateurs simultanément. Les positions et les quatre colonnes restent stables ; le défilement reste disponible.
+- Au début d’un spectacle BandLive, choix parmi toutes les chansons actives du groupe. Au deuxième passage, choix parmi les chansons restantes ; un répertoire d’une seule chanson permet sa reprise.
+- Une réservation n’impose plus la chanson du spectacle interactif. L’historique conserve les compositions réellement jouées et les replays leur répertoire d’origine.
+- Les spectacles en cours des builds précédents bénéficient du choix du répertoire à la reprise, sans réinitialiser leur progression ni leurs decks. Les spectacles terminés restent inchangés.
+- Le fichier de test prépare un groupe disposant de plusieurs chansons pour vérifier immédiatement le sélecteur. Les decks par instrument, l’échange après spectacle et les cinq effets de conquête sont conservés.
+
+## V0.7.16 — BandLive : decks par instrument (test local) {#v0716}
+
+12 octobre 2026.
+
+Build local de test, sans publication GitHub : progression des decks BandLive.
+
+- Chaque musicien commence avec les cinq cartes habituelles : trois Note et deux spéciales de son instrument.
+- Après un spectacle BandLive terminé, gagné ou perdu, choisis un participant et remplace une de ses cinq cartes par une des trois spéciales de son instrument. Un seul échange facultatif par spectacle.
+- Seize nouvelles cartes : deux par instrument, avec alternance entre musiciens, cibles de zone, pioche, défausse, préparation et tempo. Les cartes actuelles restent disponibles.
+- Chaque instrument conserve son propre deck pour chaque musicien. Revenir à un ancien instrument restitue les cartes acquises. Les decks se consultent dans la fiche du musicien, sous DECKS BANDLIVE.
+- Les barres du public se remplissent vers la conquête. Les prévisualisations affichent le gain et la conquête finale.
+- Sauvegarde, export/import et replays conservent leurs decks. Les répétitions, replays et spectacles interrompus n’accordent pas d’échange. Les spectacles classiques gardent leurs règles.
+
+Pour tester : activer BandLive dans Réglages puis lancer un nouveau spectacle ; le fichier de test autonome en prépare déjà un. Cette version sert à valider les règles et l’interface ; les nouvelles cartes n’ont pas encore fait l’objet d’une campagne d’équilibrage.
+
 ## V0.7.15 — BandLive : bonus de conquête dans le public {#v0715}
 
 12 octobre 2026.

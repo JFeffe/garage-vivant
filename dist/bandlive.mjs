@@ -1,19 +1,9 @@
-import {songTurns} from './song-rules.mjs?v=0.7.15';
+import {songTurns} from './song-rules.mjs?v=0.7.18';
 // BandLive keeps its own RNG and decks. Concert outcomes are connected separately.
 export const RULES = Object.freeze({minMembers:2,maxMembers:6,minAudience:3,maxAudience:12,energy:3,hand:5,turns:6,songTurns:3,tempoMax:10,finale:3,boredom:3,styleBonus:2,soloBonus:3});
 export const STYLES = Object.freeze(['Indie','Punk','Folk','Métal','Jazz','Électro','Ska','Pop']);
-export const INSTRUMENTS = Object.freeze({guitar:'Guitare',drums:'Batterie',bass:'Basse',voice:'Chant',keys:'Clavier',sax:'Saxophone',trumpet:'Trompette',percussion:'Percussions'});
-export const SPECIALS = Object.freeze(Object.fromEntries(Object.entries({
-  guitar:{name:'Solo',cost:2,target:'single',power:8,useTempo:true,solo:true,description:'8 puissance + tout le tempo sur un spectateur. Consomme le tempo.'},
-  drums:{name:'Pulsation',cost:1,target:'audience',tempo:4,description:'+4 tempo.'},
-  bass:{name:'Soutien',cost:0,target:'audience',tempo:1,boost:3,description:'+1 tempo. +3 puissance à la prochaine carte de puissance du tour.'},
-  voice:{name:'Refrain',cost:2,target:'audience',power:5,description:'5 puissance sur tous les spectateurs.'},
-  keys:{name:'Accord',cost:1,target:'audience',power:2,tempo:2,description:'+2 tempo. 2 puissance sur tous les spectateurs.'},
-  sax:{name:'Improvisation',cost:1,target:'audience',power:0,useTempo:true,description:'Tout le tempo en puissance sur chaque spectateur. Consomme le tempo.'},
-  trumpet:{name:'Fanfare',cost:0,target:'audience',tempo:2,description:'+2 tempo.'},
-  percussion:{name:'Roulement',cost:1,target:'audience',tempo:1,boost:5,description:'+1 tempo. +5 puissance à la prochaine carte de puissance du tour.'},
-}).map(([key,value])=>[key,Object.freeze(value)])));
-export const NOTE = Object.freeze({name:'Note',cost:1,target:'single',power:6,description:'6 puissance sur un spectateur.'});
+import {INSTRUMENTS,SPECIALS,NOTE,definitionFor,musicianDeck,validateDeck} from './bandlive-cards.mjs?v=0.7.18';
+export {INSTRUMENTS,SPECIALS,NOTE} from './bandlive-cards.mjs?v=0.7.18';
 
 export const CONQUEST_EFFECTS = Object.freeze({
   shock:{name:'Onde de choc',icon:'✺',description:'3 puissance aux voisins immédiats (gauche, droite, devant et derrière).'},
@@ -23,7 +13,7 @@ export const CONQUEST_EFFECTS = Object.freeze({
   chorus:{name:'Chœur du public',icon:'♫',description:'Les autres spectateurs de la rangée adoptent le style de la chanson actuelle jusqu’à sa fin.'},
 });
 export const audienceColumns=game=>game.conquestVersion===1?Math.min(4,game.fans.length):game.fans.length>6?Math.ceil(game.fans.length/2):game.fans.length;
-export const favoriteStyle=fan=>fan.chorusStyle||fan.favorite;
+export const favoriteStyle=fan=>fan.turnStyle||fan.chorusStyle||fan.favorite;
 // Board positions are independent of screen size and never collapse after a conquest.
 export function conquestTargets(game,fan){
   if(game.conquestVersion!==1)return [];
@@ -53,7 +43,7 @@ function shuffle(game,items) {
   return items;
 }
 function log(game,message){game.logs.push(message);}
-export function cardDefinition(card){return card.kind==='note'?NOTE:SPECIALS[card.instrument];}
+export function cardDefinition(card){return definitionFor(card.instrument,card.kind);}
 export function cardById(game,id){return game.cards.find(card=>card.id===id);}
 
 const AUDIENCE=[
@@ -71,16 +61,17 @@ function createAudience(songs,count,rules=null){
 }
 
 export function createBandLive(options) { return createGame(options,RULES.maxMembers); }
-function createGame({people,groupId=null,groupName='Le band du quartier',songs,seed=2040,audienceSize=RULES.minAudience,audienceRules=null,songOrder=null,conquestEffects=true},memberLimit) {
+function createGame({people,groupId=null,groupName='Le band du quartier',songs,seed=2040,audienceSize=RULES.minAudience,audienceRules=null,songOrder=null,conquestEffects=true,freeSetlist=false},memberLimit) {
   if(!Array.isArray(people)||people.length<RULES.minMembers||people.length>memberLimit||people.some(p=>!p||typeof p.id!=='string'||!p.id||typeof p.name!=='string'||!SPECIALS[p.instrument])||new Set(people.map(p=>p.id)).size!==people.length)throw Error('Choisis de deux à six musiciens du groupe.');
   if(!Array.isArray(songs)||!songs.length||new Set(songs.map(s=>s.id)).size!==songs.length||songs.some(s=>!s||!s.id||!s.title||!s.style||s.turns!==undefined&&![3,4,5].includes(s.turns)))throw Error('Choisis une chanson du répertoire.');
   if(groupId!==null&&(typeof groupId!=='string'||!groupId))throw Error('Groupe invalide.');
   if(!Number.isInteger(audienceSize)||audienceSize<RULES.minAudience||audienceSize>RULES.maxAudience)throw Error('Choisis de trois à douze spectateurs.');
   if(audienceRules&&(!Array.isArray(audienceRules.styles)||!audienceRules.styles.length||new Set(audienceRules.styles).size!==audienceRules.styles.length||audienceRules.styles.some(s=>!STYLES.includes(s))||!Number.isInteger(audienceRules.resistancePercent)||audienceRules.resistancePercent<20||audienceRules.resistancePercent>200))throw Error('Public BandLive invalide.');
   if(songOrder&&(!Array.isArray(songOrder)||songOrder.length!==2||songOrder.some(id=>!songs.some(s=>s.id===id))))throw Error('La setlist BandLive doit prévoir deux passages.');
-  const actors=people.map(p=>({id:p.id,name:p.name,instrument:p.instrument,genre:p.genre,color:p.color,identity:structuredClone(p.identity||{}),personality:structuredClone(p.personality||{}),skill:p.skills?.[p.instrument]??p.skill??0,needs:structuredClone(p.needs||{}),exaltation:p.exaltation??p.emotions?.exaltation??0,distress:p.distress??p.emotions?.distress??0}));
-  const cards=actors.flatMap(actor=>Array.from({length:5},(_,i)=>({id:`${actor.id}:${i}`,actorId:actor.id,instrument:actor.instrument,kind:i<3?'note':'special'})));
+  const actors=people.map(p=>({id:p.id,name:p.name,instrument:p.instrument,bandLiveDeck:[...validateDeck(p.bandLiveDeck||musicianDeck(p))],genre:p.genre,color:p.color,identity:structuredClone(p.identity||{}),personality:structuredClone(p.personality||{}),skill:p.skills?.[p.instrument]??p.skill??0,needs:structuredClone(p.needs||{}),exaltation:p.exaltation??p.emotions?.exaltation??0,distress:p.distress??p.emotions?.distress??0}));
+  const cards=actors.flatMap(actor=>actor.bandLiveDeck.map((kind,i)=>({id:`${actor.id}:${i}`,actorId:actor.id,instrument:actor.instrument,kind})));
   const game={version:songs.some(s=>s.turns!==undefined)?4:audienceRules||songOrder?3:2,seed:seed>>>0,rng:seed>>>0,groupId,groupName,actors,cards,songs:structuredClone(songs),usedSongs:[],songId:null,phase:'choose',turn:0,section:0,energy:3,tempo:0,boost:0,hand:[],deck:cards.map(c=>c.id),discard:[],played:0,logs:['Le band prend la scène. Choisis la première chanson.'],events:[],fans:createAudience(songs,audienceSize,audienceRules)};
+  if(freeSetlist){if(songOrder)throw Error('Le choix libre ne peut pas imposer un ordre.');game.freeSetlist=true;}
   if(game.version>=3){game.audienceRules=structuredClone(audienceRules);game.songOrder=songOrder&&[...songOrder];}
   shuffle(game,game.deck);
   // Preserve ENCORE's varied opening hand, without looping for a two-person band.
@@ -114,7 +105,7 @@ function startTurn(game) {
 }
 export function chooseSong(game,id) {
   if(game.phase!=='choose'||!availableSongs(game).some(song=>song.id===id))return {ok:false,message:'Cette chanson ne peut pas être choisie.'};
-  game.fans.forEach(fan=>{delete fan.chorusStyle;delete fan.spotlight;});
+  game.fans.forEach(fan=>{delete fan.chorusStyle;delete fan.spotlight;delete fan.turnStyle;delete fan.noBoredom;});
   game.songId=id;game.usedSongs.push(id);game.section=0;
   if(game.turn)game.tempo=Math.max(0,game.tempo-2);
   startTurn(game);
@@ -122,12 +113,24 @@ export function chooseSong(game,id) {
 }
 export function canPlay(game,id) {
   const card=cardById(game,id);
-  return !!card&&game.phase==='play'&&game.hand.includes(id)&&game.energy>=cardDefinition(card).cost;
+  return !!card&&game.phase==='play'&&game.hand.includes(id)&&game.energy>=cardDefinition(card).cost&&(!cardDefinition(card).discard||game.hand.length>1)&&(!cardDefinition(card).twoTargets||game.fans.filter(f=>f.hp>0).length>=2)&&(!cardDefinition(card).oncePerTurn||!game.events.some(e=>e.type==='card'&&e.turn===game.turn&&e.cardId===id));
 }
-export function powerAgainst(game,card,fan) {
-  const definition=cardDefinition(card);
-  if(!Object.hasOwn(definition,'power'))return 0;
-  return definition.power+(definition.useTempo?game.tempo:0)+game.boost+(favoriteStyle(fan)===currentSong(game)?.style?RULES.styleBonus:0)+(fan.spotlight?2:0)+(definition.solo&&fan.intent==='solo'?RULES.soloBonus:0);
+const alternates=(game,card)=>{const prev=game.events.findLast(e=>e.type==='card'&&e.turn===game.turn);return !!prev&&prev.actorId!==card.actorId;};
+function neighboring(game,a,b){const n=audienceColumns(game),i=game.fans.indexOf(a),j=game.fans.indexOf(b);return Math.abs(Math.floor(i/n)-Math.floor(j/n))+Math.abs(i%n-j%n)===1;}
+export function cardTargets(game,card,fan,second){
+  const d=cardDefinition(card),alive=game.fans.filter(f=>f.hp>0),i=game.fans.indexOf(fan),cols=audienceColumns(game);
+  if(d.target==='audience')return alive;
+  if(!fan||fan.hp===0)return [];
+  if(d.twoTargets)return [fan,second].filter(Boolean);
+  if(d.shape==='row')return alive.filter(f=>Math.floor(game.fans.indexOf(f)/cols)===Math.floor(i/cols));
+  if(d.shape==='sides')return [fan,...alive.filter(f=>f!==fan&&Math.floor(game.fans.indexOf(f)/cols)===Math.floor(i/cols)&&Math.abs(game.fans.indexOf(f)-i)===1)];
+  if(d.shape==='behind'){for(let j=i+cols;j<game.fans.length;j+=cols)if(game.fans[j].hp>0)return [fan,game.fans[j]];}
+  return [fan];
+}
+export function powerAgainst(game,card,fan,base=cardDefinition(card).power) {
+  const d=cardDefinition(card);
+  if(!Object.hasOwn(d,'power'))return 0;
+  return base+(d.useTempo?game.tempo:0)+(d.consumeTempo?Math.min(game.tempo,d.consumeTempo):0)+game.boost+(favoriteStyle(fan)===currentSong(game)?.style?RULES.styleBonus:0)+(fan.spotlight?2:0)+(d.solo&&fan.intent==='solo'?RULES.soloBonus:0)+(alternates(game,card)?d.alternatePower||0:0)+(game.tempo>=d.tempoThreshold?d.thresholdPower||0:0)+(d.conqueredNeighborPower&&game.fans.some(f=>f.hp===0&&neighboring(game,fan,f))?d.conqueredNeighborPower:0);
 }
 function conquer(game,fan,queue) {
   if(fan.hp===0&&!fan.conquered){fan.conquered=true;log(game,`${fan.name} est conquis !`);if(game.conquestVersion===1)queue.push(fan);}
@@ -150,29 +153,42 @@ function resolveConquests(game,queue){
   return events;
 }
 // Use the real resolver on a copy so previews include chains and never consume resources.
-export function previewCard(game,id,targetId=null){
-  const after=structuredClone(game),result=playCard(after,id,targetId);
+export function previewCard(game,id,targetId=null,options={}){
+  const after=structuredClone(game),result=playCard(after,id,targetId,options);
   return result.ok?{...result,game:after}:result;
 }
 function checkVictory(game) {
   if(game.fans.every(fan=>fan.hp===0)){game.phase='won';log(game,'Tout le public est conquis. Show réussi !');return true;}
   return false;
 }
-export function playCard(game,id,targetId=null) {
+export function playCard(game,id,targetId=null,{secondTargetId=null,discardId=null}={}) {
   if(!canPlay(game,id))return {ok:false,message:'Cette carte ne peut pas être jouée : vérifie ta main et ton énergie.'};
-  const card=cardById(game,id),definition=cardDefinition(card),fan=game.fans.find(f=>f.id===targetId);
-  if(definition.target==='single'&&(!fan||fan.hp===0))return {ok:false,message:'Dépose cette carte sur un spectateur encore à conquérir.'};
-  const powerCard=Object.hasOwn(definition,'power'),targets=powerCard?(definition.target==='single'?[fan]:game.fans.filter(f=>f.hp>0)):[];
-  // Snapshot power before consuming tempo or the next-card bonus. Zero-power
-  // Improvisation still is a power card and consumes those resources.
-  const queue=[],hits=targets.map(f=>({id:f.id,before:f.hp,power:powerAgainst(game,card,f)}));
-  game.energy-=definition.cost;game.hand.splice(game.hand.indexOf(id),1);game.discard.push(id);game.played++;
-  for(const hit of hits){const f=game.fans.find(f=>f.id===hit.id);f.hp=Math.max(0,f.hp-hit.power);hit.after=f.hp;hit.gain=hit.before-hit.after;conquer(game,f,queue);}
-  if(powerCard){game.boost=0;if(definition.useTempo)game.tempo=0;}
-  if(definition.tempo)game.tempo=Math.min(RULES.tempoMax,game.tempo+definition.tempo);
-  if(definition.boost)game.boost+=definition.boost;
-  const event={id:game.events.length+1,type:'card',turn:game.turn,cardId:id,actorId:card.actorId,name:definition.name,hits,tempo:game.tempo,boost:game.boost};
-  game.events.push(event);log(game,`${definition.name} · ${INSTRUMENTS[card.instrument]}${hits.length?' : '+hits.map(h=>`${game.fans.find(f=>f.id===h.id).name} −${h.power}`).join(', '):''}.`);
+  const card=cardById(game,id),d=cardDefinition(card),fan=game.fans.find(f=>f.id===targetId),second=game.fans.find(f=>f.id===secondTargetId);
+  if(d.target==='single'&&(!fan||fan.hp===0))return {ok:false,message:'Choisis un spectateur encore à conquérir.'};
+  if(d.twoTargets&&(!second||second===fan||second.hp===0))return {ok:false,message:'Choisis deux spectateurs distincts encore à conquérir.'};
+  if(d.discard&&(!game.hand.includes(discardId)||discardId===id))return {ok:false,message:'Choisis une autre carte de ta main à défausser.'};
+  const powerCard=Object.hasOwn(d,'power'),targets=cardTargets(game,card,fan,second),alternate=alternates(game,card);
+  // Snapshot every target before effects, resource consumption or conquest chains.
+  const planned=powerCard?targets.map((f,i)=>({id:f.id,power:powerAgainst(game,card,f,i>0&&d.secondaryPower!==undefined?d.secondaryPower:d.power)})):[],queue=[],hits=[];
+  game.energy-=d.cost;game.hand.splice(game.hand.indexOf(id),1);game.discard.push(id);game.played++;
+  if(d.discard){game.hand.splice(game.hand.indexOf(discardId),1);game.discard.push(discardId);}
+  for(const hit of planned){
+    const f=game.fans.find(f=>f.id===hit.id),strikes=d.strikes||1;
+    for(let n=0;n<strikes&&f.hp>0;n++){
+      const power=Math.floor(hit.power/strikes)+(n<hit.power%strikes?1:0),before=f.hp;
+      f.hp=Math.max(0,f.hp-power);hits.push({id:f.id,before,after:f.hp,gain:before-f.hp,power});conquer(game,f,queue);
+    }
+  }
+  const directConquests=new Set(hits.filter(h=>h.after===0).map(h=>h.id)).size;
+  if(powerCard){game.boost=0;if(d.useTempo)game.tempo=0;else if(d.consumeTempo)game.tempo=Math.max(0,game.tempo-d.consumeTempo);}
+  const tempo=(d.tempo||0)+(alternate?d.alternateTempo||0:0)+Math.min(d.tempoCap||0,directConquests*(d.tempoOnConquest||0));
+  game.tempo=Math.min(RULES.tempoMax,game.tempo+tempo);
+  if(d.boost)game.boost+=d.boost;
+  for(const f of targets.filter(f=>f.hp>0)){if(d.turnStyle)f.turnStyle=currentSong(game).style;if(d.noBoredom)f.noBoredom=true;}
+  // Draw before resolving chains: their conquests never award the card's rewards.
+  draw(game,(d.draw||0)+(directConquests?d.drawOnConquest||0:0));
+  const event={id:game.events.length+1,type:'card',turn:game.turn,cardId:id,actorId:card.actorId,name:d.name,hits,tempo:game.tempo,boost:game.boost,...(discardId?{discardId}:{}),...(secondTargetId?{secondTargetId}:{})};
+  game.events.push(event);log(game,`${d.name} · ${INSTRUMENTS[card.instrument]}${hits.length?' : '+hits.map(h=>`${game.fans.find(f=>f.id===h.id).name} +${h.gain} conquête`).join(', '):''}.`);
   const effects=resolveConquests(game,queue);
   checkVictory(game);
   return {ok:true,event,effects};
@@ -186,11 +202,12 @@ export function endTurn(game) {
     game.events.push({id:game.events.length+1,type:'finale',turn:game.turn,hits});
     log(game,'Finale : 3 puissance sur tout le public.');
     resolveConquests(game,queue);
-    game.fans.forEach(fan=>{delete fan.chorusStyle;delete fan.spotlight;});
+    game.fans.forEach(fan=>{delete fan.chorusStyle;delete fan.spotlight;delete fan.turnStyle;});
     if(checkVictory(game))return {ok:true};
   }
   game.fans.forEach(fan=>{delete fan.spotlight;});
-  for(const fan of game.fans)if(fan.hp>0&&fan.intent==='bored'){fan.hp=Math.min(fan.max,fan.hp+RULES.boredom);log(game,`${fan.name} s’ennuie : +3 à sa barre.`);}
+  for(const fan of game.fans)if(fan.hp>0&&fan.intent==='bored'&&!fan.noBoredom){fan.hp=Math.min(fan.max,fan.hp+RULES.boredom);log(game,`${fan.name} s’ennuie : −3 conquête.`);}
+  game.fans.forEach(fan=>{delete fan.turnStyle;delete fan.noBoredom;});
   if(game.usedSongs.length===2&&game.section===passageTurns(game)){game.phase='lost';log(game,'Fin du show. Il reste du public à conquérir.');}
   else if(game.section===passageTurns(game)){game.phase='choose';log(game,'Choisis la chanson du deuxième passage. Son départ retire 2 tempo.');}
   else startTurn(game);
@@ -203,12 +220,13 @@ export function restoreBandLive(input) {
   const game=structuredClone(input);
   const object=value=>value&&typeof value==='object'&&!Array.isArray(value);
   if(game.actors.some(a=>!a||!object(a.identity)||!object(a.personality)||!object(a.needs)||!Number.isFinite(a.skill)||typeof a.genre!=='string'||typeof a.color!=='string'))fail();
+  for(const actor of game.actors)if(actor.bandLiveDeck!==undefined)validateDeck(actor.bandLiveDeck);
   // Older rehearsals could have more than six musicians. Keep their snapshots
   // playable without permitting oversized new formations.
   if(game.version>=2&&game.groupId!==null&&(typeof game.groupId!=='string'||!game.groupId))fail();
   if(game.version>=3&&(!Object.hasOwn(game,'audienceRules')||!Object.hasOwn(game,'songOrder')))fail();
   const expected=createGame({people:game.actors,groupId:game.groupId,groupName:game.groupName,songs:game.songs,seed:game.seed,audienceRules:game.audienceRules,songOrder:game.songOrder},game.version===1?24:RULES.maxMembers).cards;
-  if(!Number.isInteger(game.seed)||game.seed<0||game.seed>4294967295||!Number.isInteger(game.rng)||game.rng<0||game.rng>4294967295||typeof game.groupName!=='string'||!Number.isInteger(game.played)||game.played<0||game.played>50)fail();
+  if(!Number.isInteger(game.seed)||game.seed<0||game.seed>4294967295||!Number.isInteger(game.rng)||game.rng<0||game.rng>4294967295||typeof game.groupName!=='string'||!Number.isInteger(game.played)||game.played<0||game.played>500)fail();
   if(!Number.isInteger(game.turn)||game.turn<0||game.turn>(game.version>=4?10:6)||!Number.isInteger(game.section)||game.section<0||game.section>(game.version>=4?5:3))fail();
   if(!Number.isInteger(game.energy)||game.energy<0||game.energy>3||!Number.isInteger(game.tempo)||game.tempo<0||game.tempo>10||!Number.isInteger(game.boost)||game.boost<0||game.boost>500)fail();
   if(!Array.isArray(game.cards)||JSON.stringify(game.cards)!==JSON.stringify(expected)||!Array.isArray(game.deck)||!Array.isArray(game.hand)||!Array.isArray(game.discard)||game.hand.length>5)fail();
@@ -222,6 +240,9 @@ export function restoreBandLive(input) {
   if(game.phase==='choose'&&game.turn>0&&(lengths.length!==1||game.section!==lengths[0]))fail();
   if(game.phase==='play'&&(!currentSong(game)||game.turn<1||game.section<1)||game.phase==='lost'&&(game.usedSongs.length!==2||game.section!==lengths.at(-1)))fail();
   if(!Array.isArray(game.fans)||game.fans.length<RULES.minAudience||game.fans.length>RULES.maxAudience||new Set(game.fans.map(f=>f?.id)).size!==game.fans.length||game.fans.some(f=>!f||typeof f.id!=='string'||!f.id||typeof f.name!=='string'||!Number.isInteger(f.max)||f.max<1||f.max>1000||!Number.isInteger(f.hp)||f.hp<0||f.hp>f.max||!['bored','solo'].includes(f.intent)||!(game.audienceRules?.styles||game.songs.map(s=>s.style)).includes(f.favorite)||!!f.conquered!==(f.hp===0)))fail();
+  for(const f of game.fans){if(f.turnStyle!==undefined&&(game.turn===0||game.phase==='choose'||f.turnStyle!==currentSong(game)?.style)||f.noBoredom!==undefined&&(f.noBoredom!==true||game.turn===0||game.phase==='choose'))fail();}
+  if(game.initialFanHp!==undefined&&(!Array.isArray(game.initialFanHp)||game.initialFanHp.length!==game.fans.length||game.initialFanHp.some((hp,i)=>!Number.isInteger(hp)||hp<1||hp>game.fans[i].max)))fail();
+  if(game.freeSetlist!==undefined&&(game.freeSetlist!==true||game.songOrder!==null||game.version<3))fail();
   if(game.conquestVersion!==undefined&&game.conquestVersion!==1)fail();
   for(const fan of game.fans){
     if(game.conquestVersion===1){

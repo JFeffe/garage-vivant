@@ -1,13 +1,14 @@
-import {songQualityHTML} from './song-rules.mjs?v=0.7.15';
-import {groupLinkHTML} from './group-link.mjs?v=0.7.15';
-import {mountDesignDashboard} from './design-dashboard.mjs?v=0.7.15';
-import {characterPortrait,characterName,drawCharacter,ACCESSORIES,MOVEMENTS} from './character-view.mjs?v=0.7.15';
-import {readMapOptions,saveMapOptions,mapOptionsHTML,MAP_DEFAULTS} from './map-options.mjs?v=0.7.15';
+import {changeBandLiveInstrument,musicianDeck,definitionFor} from './bandlive-cards.mjs?v=0.7.18';
+import {songQualityHTML} from './song-rules.mjs?v=0.7.18';
+import {groupLinkHTML} from './group-link.mjs?v=0.7.18';
+import {mountDesignDashboard} from './design-dashboard.mjs?v=0.7.18';
+import {characterPortrait,characterName,drawCharacter,ACCESSORIES,MOVEMENTS} from './character-view.mjs?v=0.7.18';
+import {readMapOptions,saveMapOptions,mapOptionsHTML,MAP_DEFAULTS} from './map-options.mjs?v=0.7.18';
 const mapOptions=readMapOptions(localStorage);
-import { placeActivityLabels } from './map-labels.mjs?v=0.7.15';
-import { createBandLiveModule } from './bandlive-view.mjs?v=0.7.15';
-import {beginBandLiveConcert,commitBandLiveConcert,followingConcertPerformance} from './bandlive-concert.mjs?v=0.7.15';
-import {compositionCreditHTML,DEFAULT_FILTERS,catalogueControls,catalogueHTML as musicCatalogueHTML,songDetailsHTML} from "./catalogue.mjs?v=0.7.15";
+import { placeActivityLabels } from './map-labels.mjs?v=0.7.18';
+import { createBandLiveModule } from './bandlive-view.mjs?v=0.7.18';
+import {beginBandLiveConcert,commitBandLiveConcert} from './bandlive-concert.mjs?v=0.7.18';
+import {compositionCreditHTML,DEFAULT_FILTERS,catalogueControls,catalogueHTML as musicCatalogueHTML,songDetailsHTML} from "./catalogue.mjs?v=0.7.18";
 let catalogueFilters={...DEFAULT_FILTERS};
 import {
   thresholdsHTML,
@@ -16,13 +17,13 @@ import {
   exchangeTrace,
   sessionHTML,
   rapinHTML,
-} from "./v7-view.mjs?v=0.7.15";
+} from "./v7-view.mjs?v=0.7.18";
 import {
   effectiveTraits,
   updateTraits,
   TRAIT_CATALOG,
   BAG_ACTIONS,
-} from "./v7.mjs?v=0.7.15";
+} from "./v7.mjs?v=0.7.18";
 import {
   createShowClock,
   advanceShowClock,
@@ -32,22 +33,22 @@ import {
   songKey,
   stageGeometry,
   showBeat,
-} from "./show-playback.mjs?v=0.7.15";
+} from "./show-playback.mjs?v=0.7.18";
 import {
   showOverlayHTML,
   showResourcesHTML,
   deckInspectionHTML,
   cardInspectionHTML,
-} from "./show-view.mjs?v=0.7.15";
-import { setupDocSearch } from "./doc-search.mjs?v=0.7.15";
-import { calendarHTML } from "./v6-view.mjs?v=0.7.15";
-import { pendingBooking, eventById } from "./calendar.mjs?v=0.7.15";
-import { editBag } from "./social.mjs?v=0.7.15";
+} from "./show-view.mjs?v=0.7.18";
+import { setupDocSearch } from "./doc-search.mjs?v=0.7.18";
+import { calendarHTML } from "./v6-view.mjs?v=0.7.18";
+import { pendingBooking, eventById } from "./calendar.mjs?v=0.7.18";
+import { editBag } from "./social.mjs?v=0.7.18";
 import {
   profileMarkup,
   changeModule,
   resetLayout,
-} from "./profile-layout.mjs?v=0.7.15";
+} from "./profile-layout.mjs?v=0.7.18";
 import {
   VERSION,
   NEEDS,
@@ -86,7 +87,7 @@ import {
   compositionProject,
   journalEntries,
   chemistryKnowledge,
-} from "./engine.mjs?v=0.7.15";
+} from "./engine.mjs?v=0.7.18";
 import {
   command,
   bandStage,
@@ -99,23 +100,23 @@ import {
   seasonSummary,
   initializeLife,
   newSeason,
-  nextSlot,
+  nextBandLiveSlot,
   skipShow,
   completePerformance,
-} from "./life.mjs?v=0.7.15";
+} from "./life.mjs?v=0.7.18";
 import {
   CARDS,
   CURSES,
   INTENTIONS,
   SHOW_TICKS,
   createPerformance,
-} from "./stage.mjs?v=0.7.15";
-import { resolveShowPlan } from "./show-planning.mjs?v=0.7.15";
+} from "./stage.mjs?v=0.7.18";
+import { resolveShowPlan } from "./show-planning.mjs?v=0.7.18";
 import {
   reconcile,
   createViewPositions,
   withReadingAnchor,
-} from "./ui-state.mjs?v=0.7.15";
+} from "./ui-state.mjs?v=0.7.18";
 import {
   quickHTML,
   skillHTML,
@@ -130,14 +131,14 @@ import {
   drawStage,
   enableAudio,
   playSound,
-} from "./v5-view.mjs?v=0.7.15";
+} from "./v5-view.mjs?v=0.7.18";
 import {
   createPlayback,
   snapSpeed,
   setPlaybackSpeed,
   advancePlayback,
   updatePositions,
-} from "./runtime.mjs?v=0.7.15";
+} from "./runtime.mjs?v=0.7.18";
 const playback = createPlayback();
 const $ = (q) => document.querySelector(q),
   $$ = (q) => [...document.querySelectorAll(q)],
@@ -467,7 +468,7 @@ function renderProfile(force = false) {
         .map(([k, v]) => rangeEditor("emotions", k, v.label, p.emotions[k]))
         .join(
           "",
-        )}</details><details id="identity-edit"><summary>IDENTITÉ & TRAITS · MODIFIER</summary><div class="editor"><label class="edit-row">Nom<input data-identity="name" maxlength="24" value="${esc(p.name)}"></label><label class="edit-row">Surnom<input data-identity="nickname" maxlength="24" value="${esc(p.nickname||'')}"></label>${Object.entries({accessory:ACCESSORIES,movement:MOVEMENTS,accent:{'':'Sans foulard',scarf:'Foulard'}}).map(([key,values])=>`<label class="edit-row">${{accessory:'Accessoire',movement:'Allure',accent:'Accent'}[key]}<select data-appearance="${key}">${Object.entries(values).map(([value,label])=>`<option value="${value}" ${value===(p.identity[key]||'')?'selected':''}>${label}</option>`).join('')}</select></label>`).join('')}<label class="edit-row">Âge<input data-identity="age" type="number" min="18" max="90" value="${p.age}"></label><label class="edit-row">Couleur<input data-identity="color" type="color" value="${esc(p.color)}"></label><label class="edit-row">Instrument<select data-identity="instrument">${Object.entries(
+        )}</details>${bandLive.enabled()?personBandLiveDecks(p):''}<details id="identity-edit"><summary>IDENTITÉ & TRAITS · MODIFIER</summary><div class="editor"><label class="edit-row">Nom<input data-identity="name" maxlength="24" value="${esc(p.name)}"></label><label class="edit-row">Surnom<input data-identity="nickname" maxlength="24" value="${esc(p.nickname||'')}"></label>${Object.entries({accessory:ACCESSORIES,movement:MOVEMENTS,accent:{'':'Sans foulard',scarf:'Foulard'}}).map(([key,values])=>`<label class="edit-row">${{accessory:'Accessoire',movement:'Allure',accent:'Accent'}[key]}<select data-appearance="${key}">${Object.entries(values).map(([value,label])=>`<option value="${value}" ${value===(p.identity[key]||'')?'selected':''}>${label}</option>`).join('')}</select></label>`).join('')}<label class="edit-row">Âge<input data-identity="age" type="number" min="18" max="90" value="${p.age}"></label><label class="edit-row">Couleur<input data-identity="color" type="color" value="${esc(p.color)}"></label><label class="edit-row">Instrument<select data-identity="instrument">${Object.entries(
         SKILLS,
       )
         .filter(([k]) => k !== "writing")
@@ -1197,7 +1198,8 @@ document.addEventListener("input", (e) => {
   }
   if (el.dataset.identity) {
     const k = el.dataset.identity;
-    if(k!=="name"||el.value.trim())p[k] = k === "age" ? clamp(Number(el.value), 18, 90) : el.value;
+    if(k==="instrument")changeBandLiveInstrument(p,el.value);
+    else if(k!=="name"||el.value.trim())p[k] = k === "age" ? clamp(Number(el.value), 18, 90) : el.value;
     renderPeople();
   }
   if(el.dataset.appearance){p.identity[el.dataset.appearance]=el.value||null;renderPeople();}
@@ -2205,13 +2207,14 @@ document.addEventListener("click", (e) => {
   }
   if (el.id === "next-slot") {
     restorePreview();
-    if (nextSlot(world)) {
+    if (nextEveningSlot()) {
       showPaused = false;
       showBudget = 0;
       lastShowId = null;
       showSpeed = 1;
       $("#show-speed").value = "1";
     } else finishLive();
+    if(world.performance?.bandLive&&world.showEventId)changeView('bandlive');
     renderShows();
     save();
   }
@@ -2386,9 +2389,9 @@ document.addEventListener("click", (e) => {
       renderShows();
       return;
     }
-    if (liveEvent && !nextSlot(world)) finishLive();
+    if (liveEvent && !nextEveningSlot()) finishLive();
     showingPerformance = false;
-    changeView("shows");
+    changeView(world.performance?.bandLive&&world.showEventId?'bandlive':'shows');
     $("#main").scrollTop = 0;
     save();
   }
@@ -2411,13 +2414,14 @@ document.addEventListener("click", (e) => {
     showPaused = false;
     showBudget = 0;
     if (liveEvent) {
-      if (!nextSlot(world, interrupted)) finishLive();
+      if (!nextEveningSlot(interrupted)) finishLive();
       else {
         showingPerformance = true;
         showSpeed = 1;
         $("#show-speed").value = "1";
       }
     } else setPlaybackSpeed(playback, 0);
+    if(world.performance?.bandLive&&world.showEventId)changeView('bandlive');
     renderShows();
     save();
   }
@@ -2677,12 +2681,17 @@ function finishLive() {
   changeView("map");
   save();
 }
+function nextEveningSlot(previous=world.performance){
+  const result=nextBandLiveSlot(world,previous,bandLive.enabled());
+  if(result.reason)notify(`Le groupe suivant joue en spectacle classique. ${result.reason}`);
+  return result.advanced;
+}
 function continueBandLiveConcert(cancel=false) {
   const previous=world.performance;
   if(!previous?.bandLive)return;
   if(cancel){const result=command(world,{type:'cancelPerformance',actorId:previous.actors[0].id});if(!result.ok){notify(result.message);return;}notify(result.message);}
-  if(nextSlot(world,followingConcertPerformance(previous))){
-    liveEvent=true;showingPerformance=true;showPaused=true;showClock=null;showBudget=0;lastShowId=null;showSpeed=1;$("#show-speed").value='1';changeView('shows');
+  if(nextEveningSlot(previous)){
+    liveEvent=true;showingPerformance=true;showPaused=true;showClock=null;showBudget=0;lastShowId=null;showSpeed=1;$("#show-speed").value='1';changeView(world.performance.bandLive?'bandlive':'shows');
   }else{finishLive();setSpeed(playback.resumeSpeed);}
   render();save();
 }
@@ -2814,3 +2823,8 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('change',e=>{const key=e.target.dataset.mapOption;if(key&&Object.hasOwn(MAP_DEFAULTS,key)){mapOptions[key]=e.target.checked;saveMapOptions(localStorage,mapOptions);render();}});
 $('#map-controls').innerHTML=mapOptionsHTML(mapOptions);
+
+function personBandLiveDecks(p){
+  const instruments=[p.instrument,...Object.keys(p.bandLiveDecks||{}).filter(i=>i!==p.instrument)];
+  return `<details id="bandlive-person-decks"><summary>DECKS BANDLIVE · ${instruments.length} instrument(s)</summary><p>5 cartes par instrument. Un échange possible après chaque spectacle BandLive terminé.</p>${instruments.map(i=>`<h4>${SKILLS[i]}${i===p.instrument?' · instrument actuel':''}</h4><ul>${musicianDeck(p,i).map(kind=>{const c=definitionFor(i,kind);return `<li><b>${esc(c.name)}</b> · ${c.cost} énergie<br><small>${esc(c.description)}</small></li>`;}).join('')}</ul>`).join('')}</details>`;
+}

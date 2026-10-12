@@ -6,7 +6,7 @@ BandLive peut maintenant jouer un **vrai spectacle réservé**, avec les conséq
 
 BandLive accepte **deux à six musiciens** du groupe. Ils sont tous sélectionnés par défaut jusqu’à six ; une case non cochée est désactivée lorsque six membres sont déjà choisis. Pour les groupes existants plus grands, choisir une formation de scène sans retirer de membres du quartier. La limite est aussi vérifiée par le moteur, pas seulement par l’interface.
 
-Les identités, couleurs, instruments, styles et informations des musiciens proviennent du quartier. Leurs cartes restent liées à leur instrument : trois Note et deux cartes spéciales. Le décor de scène, les illustrations d’instruments, les accessoires des cubes et le son réutilisent ceux de Garage vivant.
+Les identités, couleurs, instruments, styles et informations des musiciens proviennent du quartier. Leurs decks sont conservés par musicien et par instrument : au départ, trois Note et deux exemplaires de la spéciale initiale. Le décor de scène, les illustrations d’instruments, les accessoires des cubes et le son réutilisent ceux de Garage vivant.
 
 ## Jouer une répétition
 
@@ -35,7 +35,7 @@ Le tempo est commun, limité à dix comme dans ENCORE et conservé entre les tou
 
 ## Répétition : chansons et public
 
-Le public compte entre trois et douze spectateurs, disposés sur plusieurs rangées. Les trois premiers commencent avec 24, 20 et 25 résistance ; les suivants reprennent ces valeurs et les styles du répertoire. Conquérir **tout** le public gagne immédiatement. Les cartes collectives et les finales touchent tous les spectateurs encore à conquérir, quel que soit leur nombre. Deux passages utilisent chacun la durée fixe de la composition (3, 4 ou 5 tours). Les morceaux historiques sans durée et les concerts des anciens formats gardent trois tours par passage. **Toutes** les compositions actives possédées par le groupe sont proposées, avec leurs titres, styles, auteurs et durées. Choisir la première chanson au départ, puis une autre pour le deuxième passage. Si une seule chanson est disponible, la reprendre au deuxième passage conserve les deux passages, sans fabriquer de morceau.
+Le public compte entre trois et douze spectateurs, disposés sur plusieurs rangées. Les trois premières barres ont pour objectifs 24, 20 et 25 conquête ; les suivants reprennent ces valeurs et les styles du répertoire. Conquérir **tout** le public gagne immédiatement. Les cartes collectives et les finales touchent tous les spectateurs encore à conquérir, quel que soit leur nombre. Deux passages utilisent chacun la durée fixe de la composition (3, 4 ou 5 tours). Les morceaux historiques sans durée et les concerts des anciens formats gardent trois tours par passage. **Toutes** les compositions actives possédées par le groupe sont proposées, avec leurs titres, styles, auteurs et durées. Choisir la première chanson au départ, puis une autre pour le deuxième passage. Si une seule chanson est disponible, la reprendre au deuxième passage conserve les deux passages, sans fabriquer de morceau.
 
 Sans groupe actif, la préparation donne accès à **Groupes** pour en créer un. Sans chanson active, elle invite à adopter une composition depuis ce même écran ; prendre la scène reste désactivé. Une chanson mise de côté ou possédée par un autre groupe n’est pas proposée. Les nouvelles répétitions relisent les membres, instruments et chansons actuels. Une répétition commencée conserve ses copies pour permettre la reprise du même tour.
 
@@ -46,7 +46,7 @@ Les règles restantes reprennent ENCORE : une chanson du style favori ajoute deu
 1. Activer **BandLive** dans **Réglages**.
 2. Dans **Shows**, réserver une date avec **deux à six musiciens** et **une ou deux compositions** du groupe. Les déplacements, confirmations et candidatures restent ceux du calendrier.
 3. **Avancer jusqu’au show**, puis choisir **Jouer avec BandLive** avant de lancer la première chanson. Le spectacle classique reste disponible.
-4. Jouer la setlist réservée dans son ordre. Une composition unique est reprise au deuxième passage ; chaque composition conserve sa durée de trois à cinq tours. La victoire peut arrêter la prestation avant le deuxième passage.
+4. Choisir la première chanson parmi tout le répertoire actif du groupe, puis une autre au deuxième passage. Si le groupe n’a qu’une composition active, elle est reprise ; chaque composition conserve sa durée de trois à cinq tours. La victoire peut arrêter la prestation avant le deuxième passage.
 5. Consulter le bilan puis **Retour au quartier · continuer**. Si un autre groupe attend, **Continuer la soirée** ouvre sa prestation ; le quartier reprend après la dernière.
 
 Les jams, les setlists de plus de deux morceaux et les formations de plus de six musiciens restent jouables dans le spectacle classique. La préparation indique pourquoi BandLive n’est pas disponible pour cet engagement. Aucun membre du quartier n’est retiré pour satisfaire la limite du module.
@@ -59,11 +59,11 @@ Le lieu fixe le public interactif :
 | Parc ou Canal | 10 | 19, 16, 20 |
 | Grande scène | 12 | 24, 20, 25 |
 
-Les styles favoris proviennent de la scène, même s’ils ne figurent pas dans le répertoire choisi. Les cartes, l’énergie et les durées des compositions ne dépendent pas du lieu. Ce public compact ne change ni les capacités des lieux ni la foule du groupe suivant, qui conserve le public classique de la soirée, y compris en passant par **Shows → Groupe suivant / terminer la soirée**, **Retour aux dates**, ou en interrompant la prestation. BandLive reprend aussi l’accueil transmis par le groupe précédent : une foule déjà réceptive commence avec des barres partiellement entamées.
+Les styles favoris proviennent de la scène, même s’ils ne figurent pas dans le répertoire choisi. Les cartes, l’énergie et les durées des compositions ne dépendent pas du lieu. Ce public compact ne change ni les capacités des lieux ni la foule du groupe suivant, qui conserve le public classique de la soirée, y compris en passant par **Shows → Groupe suivant / terminer la soirée**, **Retour aux dates**, ou en interrompant la prestation. BandLive reprend aussi l’accueil transmis par le groupe précédent : une foule déjà réceptive commence avec des barres partiellement remplies.
 
 **Victoire BandLive** signifie conquérir tout le public. Le **bilan du calendrier** tient aussi compte des spectateurs partiellement touchés : accueil entre 0 et 100, comparé aux attentes de la scène. Une prestation sans victoire totale peut donc recevoir un accueil favorable. Le bilan affiche ces deux informations et leurs effets.
 
-La fin applique les règles de spectacle existantes : coordination, réputation de spectacle, moral temporaire, renommée, émotions et liens des musiciens. Le coût d’énergie est de 15 par musicien ; **Tout donner** ajoute 1,5 par carte BandLive réellement jouée par ce musicien et conserve son effet de déchéance. Le bilan affiche les énergies avant et après. Aucun nouveau système de monnaie ou de récompense n’est ajouté.
+La fin applique les règles de spectacle existantes : coordination, réputation de spectacle, moral temporaire, renommée, émotions et liens des musiciens. Le coût d’énergie est de 15 par musicien ; **Tout donner** ajoute 1,5 par carte BandLive réellement jouée par ce musicien et conserve son effet de déchéance. Le bilan affiche les énergies avant et après. Un échange de carte facultatif s’ajoute après un spectacle BandLive terminé (voir les decks par instrument ci-dessous).
 
 Le résultat entre dans l’historique du groupe **une seule fois**. Recharger, rouvrir le bilan ou rejouer l’historique ne redonne aucun gain. **Rejouer BandLive · répétition** utilise la formation, les chansons, la foule et la graine enregistrées, sans effet sur le monde actuel. **Interrompre le show** réutilise l’annulation du calendrier : pas de résultat ni de récompense, coût d’interruption existant et libération des musiciens.
 
@@ -87,7 +87,7 @@ Les tests de calendrier couvrent les confirmations et déplacements réels, la s
 
 ## Interface et frontière des systèmes (0.7.12)
 
-Le preview appelle le même calcul que la carte jouée : puissance de base, tempo consommable, bonus de prochaine puissance, style favori et attente de Solo. Il affiche la résistance restante après plafonnement à zéro et ne consomme rien. Les cartes collectives prévisualisent toutes leurs cibles. Les piles consultables sont regroupées par musicien, sans ordre de tirage.
+Le preview appelle le même calcul que la carte jouée : puissance de base, tempo consommable, bonus de prochaine puissance, style favori et attente de Solo. Il affiche la conquête obtenue, plafonnée à l’objectif et ne consomme rien. Les cartes collectives prévisualisent toutes leurs cibles. Les piles consultables sont regroupées par musicien, sans ordre de tirage.
 
 Les nouveaux shows attribuent un bonus de conquête réel à chaque spectateur (voir ci-dessous). Les anciennes réactions « Explosion », « En transe » et « Ému aux larmes » restent des animations : leur apparence ne définit pas le bonus. Compétences, affinités, besoins et qualité du quartier ne modifient pas les dégâts BandLive. Les raccords existants au calendrier et au bilan sont conservés.
 
@@ -97,9 +97,9 @@ Le format BandLive 4 accepte deux passages de trois à cinq tours. Les formats 1
 
 ## Présentation de la scène
 
-Le plateau utilise toute la largeur disponible. Chaque musicien conserve ses propres cartes sous son personnage ; aucun panneau de main commune. Sur grand écran, le public est entièrement visible, sans défilement interne. Les petits écrans conservent un plateau horizontal et une foule défilante pour garder des cibles utilisables. Le choix de chanson ne réserve plus un espace de cartes vide.
+Le plateau utilise toute la largeur disponible. Chaque musicien conserve ses propres cartes sous son personnage ; aucun panneau de main commune. Le public défile indépendamment pour garder les musiciens et leurs cartes accessibles. Les petits écrans conservent un plateau horizontal et une foule défilante pour garder des cibles utilisables. Le choix de chanson ne réserve plus un espace de cartes vide.
 
-Le preview affiche **X dégâts** et **Résistance restante : Y / maximum**, au-dessus de la carte déplacée. Les cartes collectives affichent les résultats par spectateur. Le preview inclut aussi les réactions en chaîne des nouveaux bonus de conquête, sans modifier le show ni sa sauvegarde.
+Le preview affiche **+X conquête** et **Conquête : Y / objectif**, au-dessus de la carte déplacée. Les cartes collectives affichent les résultats par spectateur. Le preview inclut aussi les réactions en chaîne des nouveaux bonus de conquête, sans modifier le show ni sa sauvegarde.
 
 ## Bonus de conquête (0.7.15)
 
@@ -117,8 +117,44 @@ Le public forme des rangées de **quatre places maximum**, identiques sur ordina
 
 Une carte termine tous ses effets avant les conquêtes : on calcule d’abord toutes ses cibles avec les bonus présents avant la carte, puis on consomme les ressources. Les conquêtes simultanées déclenchent ensuite leur effet dans l’ordre des places (de gauche à droite, du devant au fond). Les nouvelles conquêtes sont ajoutées à la suite de cette file. Chaque spectateur déclenche une seule fois. Les dégâts d’effet sont fixes : ni tempo, ni style, ni projecteurs ne les amplifient. Les finales peuvent aussi déclencher des effets, avant l’ennui. Les projecteurs expirent à la fin du tour ; le chœur expire à la fin du passage, même si la même chanson est reprise.
 
-Le preview utilise une copie du même moteur et montre tous les dégâts directs et secondaires, la résistance finale et les nouveaux bonus temporaires. Une victoire par réaction en chaîne termine le show et applique le bilan normal une seule fois.
+Le preview utilise une copie du même moteur et montre tous les dégâts directs et secondaires, la conquête finale et les nouveaux bonus temporaires. Une victoire par réaction en chaîne termine le show et applique le bilan normal une seule fois.
 
 Le format de sauvegarde du quartier est inchangé. Le champ optionnel `conquestVersion: 1` distingue les nouveaux shows ; chaque spectateur y conserve son effet et ses statuts. Les shows et replays historiques sans ce champ gardent leurs règles d’origine, sans ajouter rétroactivement de bonus. Recharger ou exporter/importer conserve exactement les effets. Les nouveaux shows et répétitions utilisent les bonus.
 
 Validation ciblée : `node --test tests/bandlive-conquest.test.mjs` et `node tests/bandlive-conquest-browser.test.mjs` (zones, chaînes, durée, preview, reprise, ancien format, bilan du calendrier et trois tailles d’écran).
+
+
+## Decks par instrument — intégrés en 0.7.18 après le test 0.7.16
+
+Chaque musicien possède cinq cartes pour chacun de ses instruments. Un instrument jamais joué commence avec trois Note et deux spéciales initiales. Changer d’instrument sélectionne son autre deck ; revenir restitue exactement les cartes acquises. La fiche du musicien affiche ses decks BandLive. Un spectacle capture uniquement les cinq cartes de l’instrument joué ; un replay conserve ce snapshot historique.
+
+Après un vrai spectacle BandLive terminé, gagné ou perdu, un échange facultatif est proposé : choisir un participant, une des cinq cartes de son deck, puis une des trois spéciales de l’instrument joué. Les doublons sont autorisés ; remplacer une carte par elle-même est inutile et bloqué. Un seul échange pour tout le groupe et tout le spectacle, conservé après rechargement. Continuer sans échange passe définitivement ce choix. Aucune récompense pour un spectacle interrompu, une répétition ou un replay. Le spectacle classique n’est pas concerné.
+
+Les deux nouvelles spéciales par instrument sont décrites dans le sélecteur d’échange et la référence des cartes. Alternance signifie la carte précédente jouée dans le même tour par un autre musicien. Les récompenses de carte comptent uniquement ses conquêtes directes, jamais les chaînes. Double frappe répartit les bonus une seule fois sur deux frappes. Variation demande explicitement une autre carte à défausser et chaque exemplaire est limité à une utilisation par tour. Improvisation en duo demande deux cibles distinctes avant de dépenser l’énergie ou le tempo. Les effets de rangée utilisent les mêmes colonnes que la conquête.
+
+Les barres et les prévisualisations vont de zéro à l’objectif : la puissance ajoute de la conquête, l’ennui en retire trois sans passer sous zéro, et les conquis restent remplis. Le format interne de résistance est conservé pour reprendre les sauvegardes existantes sans migration de leurs calculs.
+
+La collection optionnelle `person.bandLiveDecks` et le snapshot `actor.bandLiveDeck` sont validés à l’import. Les anciennes personnes sans collection utilisent le deck initial. Les anciens spectacles déjà ouverts sans récompense enregistrée gardent leur comportement. Le build téléchargeable utilise une sauvegarde de test séparée et démarre sur un nouveau vrai show avec les decks initiaux.
+
+Validation ciblée : `node --test tests/bandlive-decks.test.mjs` et `node tests/bandlive-decks-browser.test.mjs`.
+
+
+## Public agrandi et choix du répertoire — intégrés en 0.7.18 après le test 0.7.17
+
+La zone du public est agrandie sur ordinateur et mobile : jusqu’à 580 px sur un grand écran, avec des hauteurs adaptées aux écrans courts. Les quatre colonnes et les positions des spectateurs restent identiques ; le défilement reste disponible si nécessaire.
+
+Les vrais spectacles proposent désormais toutes les compositions actives appartenant au groupe. La réservation ne verrouille plus la sélection BandLive. Les deux passages restent en place ; le deuxième propose les chansons non encore jouées, sauf lorsqu’une seule existe. Les résultats enregistrent les chansons réellement choisies. Les replays gardent leur répertoire historique et ne donnent aucun nouvel échange.
+
+À la reprise d’un ancien spectacle encore en cours, le répertoire est déverrouillé sans modifier les cartes, les decks, la pioche, le tempo, la conquête, les tours déjà joués ni la chanson en cours. Les anciens spectacles terminés restent inchangés. Le fichier autonome prépare maintenant un groupe qui dispose déjà de plusieurs chansons.
+
+## Premières parties et tête d’affiche — 0.7.18
+
+La programmation de la soirée indique les groupes réellement réservés, dans l’ordre des créneaux, leurs rôles et leur état. Elle est consultable avant le départ et pendant BandLive. Le rôle du groupe apparaît aussi dans l’en-tête du show.
+
+Après une prestation BandLive, **Continuer la soirée**, **Groupe suivant / terminer la soirée** et **Retour aux dates** ouvrent directement le groupe suivant dans BandLive s’il est compatible et si le module est toujours activé. Une interruption utilise le même enchaînement, sans récompense pour le groupe interrompu. Les créneaux annulés ou les formations absentes suivent les règles existantes du calendrier. Une jam, une setlist de plus de deux compositions ou une formation trop grande reste en classique, avec une explication. Le joueur peut alors choisir BandLive à l’arrivée d’un autre groupe compatible.
+
+Le public est transmis par le circuit normal du jeu : **20 % de l’accueil précédent par spectateur, plafonné à 30 %**. Le public complet du lieu est conservé entre groupes puis projeté vers les 8, 10 ou 12 spectateurs interactifs. Les barres arrondies commencent donc partiellement remplies ; cet accueil initial est affiché dans la programmation. Les bonus de conquête sont redistribués pour chaque prestation. Les nouvelles sauvegardes mémorisent aussi les barres de départ pour un replay fidèle ; les anciens formats restent acceptés.
+
+Chaque groupe garde ses propres musiciens, decks et chansons, deux passages, un résultat individuel et un seul échange de carte facultatif après sa prestation terminée. Continuer par une autre sortie décline aussi l’échange restant. La soirée ne donne pas de résultat ou d’échange supplémentaire global. La simulation classique ne démarre jamais BandLive automatiquement et le module reste désactivé par défaut.
+
+Validation : moteur et sauvegardes des deux groupes, accueil transmis, replay, échanges séparés, interruptions, module désactivé et jam incompatible ; navigateur ordinateur et mobile, trois sorties du bilan, rechargement entre groupes et retour au quartier.

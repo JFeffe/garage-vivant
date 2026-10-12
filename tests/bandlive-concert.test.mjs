@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {restore,step} from '../dist/engine.mjs';
-import {completePerformance,command,nextSlot,skipShow,playTicks} from '../dist/life.mjs';
+import {completePerformance,command,nextSlot,nextBandLiveSlot,skipShow,playTicks} from '../dist/life.mjs';
 import {validatePerformance} from '../dist/stage.mjs';
 import {chooseSong,availableSongs,playCard,endTurn,restoreBandLive} from '../dist/bandlive.mjs';
-import {concertAudienceProfile,resolveBandLiveConcert,beginBandLiveConcert,commitBandLiveConcert,followingConcertPerformance,createConcertReplay} from '../dist/bandlive-concert.mjs';
+import {concertLineup,concertAudienceProfile,unlockBandLiveRepertoire,resolveBandLiveConcert,beginBandLiveConcert,commitBandLiveConcert,followingConcertPerformance,createConcertReplay,exchangeBandLiveCard} from '../dist/bandlive-concert.mjs';
 import {preparedConcert} from './bandlive-concert-helpers.mjs';
 
 function finishWithoutCards(world){
@@ -13,11 +13,50 @@ function finishWithoutCards(world){
   return game;
 }
 
+test('opening acts continue into an interactive headliner with its own deck, songs, welcome and reward after reload',()=>{
+  let {world}=preparedConcert({following:true,followingComposed:true});
+  const lineup=concertLineup(world);assert.deepEqual(lineup.map(b=>b.role),['Première partie','Tête d’affiche']);
+  const nextGroup=world.groups.find(g=>g.id===lineup[1].groupId),musician=world.people.find(p=>p.id===nextGroup.members[0]);
+  musician.bandLiveDecks={[musician.instrument]:['new1','note','note','special','new2']};
+  beginBandLiveConcert(world);finishWithoutCards(world);world=restore(JSON.parse(JSON.stringify(world)));
+  const first=world.performance,oldGame=first.bandLive.game,oldHistory=structuredClone(world.showHistory);
+  const result=nextBandLiveSlot(world);assert.deepEqual(result,{advanced:true,interactive:true,reason:''});
+  const second=world.performance,game=second.bandLive.game;
+  assert.equal(second.role,'Tête d’affiche');assert.equal(game.groupId,nextGroup.id);assert(game.songs.every(s=>s.title==='Le retour des voisins'));
+  assert.deepEqual(game.actors.find(a=>a.id===musician.id).bandLiveDeck,musician.bandLiveDecks[musician.instrument]);
+  assert(game.fans.some(f=>f.hp<f.max));assert.deepEqual(game.initialFanHp,game.fans.map(f=>f.hp));
+  for(const [i,fan] of game.fans.entries()){
+    const fullIndex=Math.floor(i*first.bandLive.originalFans.length/game.fans.length),before=oldGame.fans[Math.floor(fullIndex*oldGame.fans.length/first.bandLive.originalFans.length)];
+    assert.equal(fan.hp,Math.max(1,Math.round(fan.max*(1-Math.min(30,(1-before.hp/before.max)*100*.2)/100))));
+  }
+  assert.equal(first.bandLive.reward.status,'skipped');assert.equal(world.showHistory.length,1);assert.equal(world.showHistory[0].score,oldHistory[0].score);assert.equal(second.bandLive.reward.status,'pending');
+  assert.deepEqual(restore(world),world);assert.deepEqual(createConcertReplay(game).fans.map(f=>f.hp),game.initialFanHp);
+  finishWithoutCards(world);assert.equal(world.showHistory.length,2);
+  assert(exchangeBandLiveCard(world,{actorId:game.actors[0].id,slot:1,kind:'new1'}).ok);
+  assert.deepEqual(nextBandLiveSlot(world),{advanced:false,interactive:false});assert.equal(world.showEventId,null);assert.deepEqual(restore(world),world);
+});
+test('evening continuation respects disabled mode, incompatible jams and interruption without duplicate rewards',()=>{
+  for(const mode of ['disabled','jam','interrupted']){
+    const {world}=preparedConcert({following:true,followingComposed:mode!=='jam'});beginBandLiveConcert(world);
+    const previous=world.performance;
+    if(mode==='interrupted'){chooseSong(previous.bandLive.game,'song-1');assert(command(world,{type:'cancelPerformance',actorId:previous.actors[0].id}).ok);}else finishWithoutCards(world);
+    const result=nextBandLiveSlot(world,previous,mode!=='disabled');assert(result.advanced);assert.equal(result.interactive,mode==='interrupted');
+    if(mode==='jam')assert(result.reason.includes('jams'));
+    assert.equal(world.showHistory.length,mode==='interrupted'?0:1);assert.deepEqual(restore(world),world);
+  }
+});
+test('initial audience welcome is validated, replayed exactly and optional in old saves',()=>{
+  const {world}=preparedConcert();world.performance.fans.forEach(f=>f.meter=20);const {game}=beginBandLiveConcert(world);
+  for(const initialFanHp of [[],game.fans.map(f=>f.max+1),game.fans.map(()=>0),game.fans.map(()=>1.5)])assert.throws(()=>restoreBandLive({...game,initialFanHp}));
+  const replay=createConcertReplay(game);assert.deepEqual(replay.fans.map(f=>f.hp),game.fans.map(f=>f.hp));assert.deepEqual(restoreBandLive(replay),replay);
+  delete game.initialFanHp;assert.deepEqual(restore(world),world);
+});
+
 test('calendar BandLive uses the confirmed, arrived band and reserved compositions, without changing neighbourhood RNG or decks',()=>{
   const {world}=preparedConcert(),before=structuredClone(world),plan=resolveBandLiveConcert(world);
   assert(plan.ready);const result=beginBandLiveConcert(world);assert(result.ok);
   const game=result.game;assert.equal(game.actors.length,before.performance.actors.length);assert.deepEqual(game.actors.map(a=>a.id),before.performance.actors.map(a=>a.id));
-  assert.deepEqual(game.songOrder,['song-1','song-2']);assert.deepEqual(game.songs.map(s=>s.title),before.songs.map(s=>s.title));assert.equal(game.version,3);
+  assert.equal(game.songOrder,null);assert.equal(game.freeSetlist,true);assert.deepEqual(game.songs.map(s=>s.title),before.songs.map(s=>s.title));assert.equal(game.version,3);
   assert.equal(world.rng,before.rng);assert.deepEqual(world.people,before.people);assert.deepEqual(world.groups,before.groups);assert.deepEqual(world.bookings,before.bookings);
   assert.equal(game.fans.length,8);assert(game.fans.every(f=>before.performance.sourceOpportunity.styles.includes(f.favorite)));assert.deepEqual(restore(world),world);
   const snapshot=structuredClone(world);step(world,100);playTicks(world,100000);skipShow(world,true);assert.deepEqual(world,snapshot,'A pending interactive show cannot be simulated or skipped as a classic show');
@@ -30,8 +69,8 @@ test('venues set progressively larger and more resistant audiences; styles outsi
 test('an interactive band inherits the audience welcome of the preceding act',()=>{
   const {world}=preparedConcert();for(const fan of world.performance.fans)fan.meter=20;const {game}=beginBandLiveConcert(world);assert(game.fans.every(f=>f.hp===Math.round(f.max*.8)));assert.deepEqual(restore(world),world);
 });
-test('a booked setlist keeps its order, and a single composition gets a second passage within six turns',()=>{
-  for(const setlistLength of [1,2]){const {world}=preparedConcert({setlistLength});const {game}=beginBandLiveConcert(world);assert.deepEqual(availableSongs(game).map(s=>s.id),['song-1']);assert(!chooseSong(game,'song-2').ok);chooseSong(game,'song-1');for(let i=0;i<3;i++){endTurn(game);commitBandLiveConcert(world,completePerformance);}assert.equal(game.turn,3);assert.equal(world.performance.bandLive.songResults.length,1);assert.deepEqual(availableSongs(game).map(s=>s.id),[setlistLength===1?'song-1':'song-2']);finishWithoutCards(world);assert.equal(game.turn,6);assert.equal(world.showHistory[0].songs.length,2);assert.deepEqual(restore(world),world);}
+test('the active repertoire is offered, and a single composition gets a second passage within six turns',()=>{
+  for(const setlistLength of [1,2]){const {world}=preparedConcert({setlistLength});const {game}=beginBandLiveConcert(world);assert.deepEqual(availableSongs(game).map(s=>s.id),setlistLength===1?['song-1']:['song-1','song-2']);assert(!chooseSong(game,'song-missing').ok);chooseSong(game,'song-1');for(let i=0;i<3;i++){endTurn(game);commitBandLiveConcert(world,completePerformance);}assert.equal(game.turn,3);assert.equal(world.performance.bandLive.songResults.length,1);assert.deepEqual(availableSongs(game).map(s=>s.id),[setlistLength===1?'song-1':'song-2']);finishWithoutCards(world);assert.equal(game.turn,6);assert.equal(world.showHistory[0].songs.length,2);assert.deepEqual(restore(world),world);}
 });
 test('a completed show applies the existing group and musician consequences once, even after reload',()=>{
   const {world,groupId,bookingId}=preparedConcert();beginBandLiveConcert(world);const before=structuredClone(world),game=finishWithoutCards(world),record=world.showHistory[0];
@@ -105,4 +144,13 @@ test('ineligible bookings remain intact, and invalid linked concert saves are re
   for(const mutate of [s=>s.performance.preview=true,s=>s.performance.presentationStarted=true,s=>s.performance.setlist=[null],s=>s.bookings.find(b=>b.performanceId===s.performance.id).setlist=[null]]){const {world}=preparedConcert();mutate(world);const before=structuredClone(world);assert(!beginBandLiveConcert(world).ok);assert.deepEqual(world,before);}
   const oversized=preparedConcert({instruments:['guitar','bass','drums','voice','keys','sax','trumpet']}).world;assert(!beginBandLiveConcert(oversized).ok);assert.equal(oversized.performance.actors.length,7);
   const {world}=preparedConcert();beginBandLiveConcert(world);for(const mutate of [s=>s.performance.bandLive.performanceId='another-show',s=>s.performance.bandLive.game.groupId='other',s=>s.performance.bandLive.game.hand.push(s.performance.bandLive.game.deck[0]),s=>s.performance.bandLive.game.audienceRules.styles=['invalid']]){const bad=structuredClone(world);mutate(bad);assert.throws(()=>restore(bad));}
+});
+
+test('a show offers unbooked active compositions and records the chosen order, not the reservation',()=>{
+ const {world}=preparedConcert({setlistLength:1}),group=world.groups.find(g=>g.id===world.performance.groupId),original=world.songs[0];
+ for(const [id,active] of [[2,true],[3,true],[4,false]]){world.songs.push({...structuredClone(original),id,title:'Répertoire '+id});group.repertoire.push({songId:id,mastery:60,rehearsals:0,active});}world.nextSongId=5;
+ const {game}=beginBandLiveConcert(world);assert.deepEqual(availableSongs(game).map(s=>s.id),['song-1','song-2','song-3']);assert(chooseSong(game,'song-3').ok);for(let i=0;i<3;i++){endTurn(game);commitBandLiveConcert(world,completePerformance);}assert.deepEqual(availableSongs(game).map(s=>s.id),['song-1','song-2']);assert(!chooseSong(game,'song-3').ok);assert(chooseSong(game,'song-2').ok);finishWithoutCards(world);assert.deepEqual(world.showHistory[0].songs.map(s=>s.id),[3,2]);assert.deepEqual(restore(world),world);const replay=createConcertReplay(game);assert.equal(replay.freeSetlist,true);assert.equal(replay.songs.length,3);
+});
+test('an unfinished old locked show unlocks the repertoire without resetting cards, progress or its played song',()=>{
+ const {world}=preparedConcert(),{game}=beginBandLiveConcert(world);game.songOrder=['song-1','song-1'];delete game.freeSetlist;game.songs=game.songs.slice(0,1);chooseSong(game,'song-1');endTurn(game);const before=structuredClone(game);assert.deepEqual(restore(world),world);assert(unlockBandLiveRepertoire(world));assert.equal(game.freeSetlist,true);assert.equal(game.songOrder,null);assert.deepEqual(game.songs[0],before.songs[0]);for(const k of ['rng','actors','cards','hand','deck','discard','fans','turn','section','usedSongs','events'])assert.deepEqual(game[k],before[k],k);assert.deepEqual(restore(world),world);endTurn(game);endTurn(game);commitBandLiveConcert(world,completePerformance);assert.deepEqual(availableSongs(game).map(s=>s.id),['song-2']);finishWithoutCards(world);assert(!unlockBandLiveRepertoire(world));
 });

@@ -5,7 +5,7 @@ import {selectBands} from '../dist/calendar.mjs';
 import {newBag} from '../dist/v7.mjs';
 
 const template=restore(JSON.parse(readFileSync(new URL('v071-world.json',import.meta.url)))).songs[0];
-export function preparedConcert({instruments=['guitar','drums','bass','sax'],setlistLength=2,intention='tight',venue='g1',large=false,following=false}={}) {
+export function preparedConcert({instruments=['guitar','drums','bass','sax'],setlistLength=2,intention='tight',venue='g1',large=false,following=false,followingComposed=false}={}) {
   const world=createWorld(39,Math.max(8,instruments.length));
   for(const [i,p] of world.people.entries()){
     if(instruments[i])p.instrument=instruments[i];
@@ -28,7 +28,11 @@ export function preparedConcert({instruments=['guitar','drums','bass','sax'],set
     if(booked.ok){const b=world.bookings.find(b=>b.id===booked.bookingId);if(b.members.length===instruments.length)break;command(world,{type:'cancelBooking',actorId:group.members[0],bookingId:b.id});}
   }
   if(!booked?.ok)throw Error('Could not reserve test concert.');
-  if(next){let other;for(let i=0;i<40&&!other?.ok;i++)other=command(world,{type:'book',actorId:next.members[0],groupId:next.id,opportunityId:opportunity.id,slotId:opportunity.slots[1].id,setlist:[null],members:next.members,intention:'tight'});if(!other.ok)throw Error('Could not reserve following band.');}
+  if(next){
+    let nextSong=null;
+    if(followingComposed){nextSong=world.nextSongId++;world.songs.push({...structuredClone(template),id:nextSong,projectId:null,title:'Le retour des voisins',genre:'Pop',groupId:next.id,ownerGroupId:next.id,adoptedAt:world.time});next.repertoire=[{songId:nextSong,mastery:60,rehearsals:0,active:true}];}
+    let other;for(let i=0;i<40&&!other?.ok;i++)other=command(world,{type:'book',actorId:next.members[0],groupId:next.id,opportunityId:opportunity.id,slotId:opportunity.slots[1].id,setlist:[nextSong],members:next.members,intention:'tight'});if(!other.ok)throw Error('Could not reserve following band.');
+  }
   if(large)selectBands(world,opportunity);
   const arrived=advanceToBooking(world,booked.bookingId);
   if(!arrived.ok||world.performance?.groupId!==group.id)throw Error('Musicians did not arrive at their concert.');

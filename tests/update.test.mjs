@@ -78,7 +78,7 @@ test('pending practice invitations appear before the bag with actual band and ex
 test('a booked variable-length BandLive reports once and preserves its live snapshot on reload',()=>{
  const {world}=preparedConcert();world.songs[0].turns=5;world.songs[1].turns=4;assert(resolveBandLiveConcert(world).ready);const {game}=beginBandLiveConcert(world);
  for(const f of game.fans)f.hp=f.max=1000;
- while(!['won','lost'].includes(game.phase)){if(game.phase==='choose')chooseSong(game,game.songOrder[game.usedSongs.length]);else endTurn(game);commitBandLiveConcert(world,completePerformance);assert.deepEqual(restore(world),world);}
+ while(!['won','lost'].includes(game.phase)){if(game.phase==='choose')chooseSong(game,(game.songOrder?game.songOrder[game.usedSongs.length]:game.songs.find(s=>!game.usedSongs.includes(s.id))?.id||game.songs[0].id));else endTurn(game);commitBandLiveConcert(world,completePerformance);assert.deepEqual(restore(world),world);}
  assert.equal(game.turn,9);assert.equal(world.showHistory.length,1);assert(!commitBandLiveConcert(world,completePerformance));
 });
 test('a following band can choose BandLive; a jam is blocked for its setlist, not its place in the evening',()=>{

@@ -1,9 +1,9 @@
-import {rule} from './design-rules.mjs?v=0.7.15';
-import { followingConcertPerformance } from './bandlive-concert.mjs?v=0.7.15';
-import { initializeGroupState, proposeMembership, requestRehearsal, adoptSong, refreshGroup, groupsMinute, leaveGroup, dissolveGroup, activeGroup } from './groups.mjs?v=0.7.15';
-import { plateauGain, decadenceCount, availableMusicName, musicName } from "./v71.mjs?v=0.7.15";
-import { editTokens } from "./v7.mjs?v=0.7.15";
-import { initializeV6Person } from "./social.mjs?v=0.7.15";
+import {rule} from './design-rules.mjs?v=0.7.18';
+import { followingConcertPerformance,beginBandLiveConcert,skipBandLiveExchange } from './bandlive-concert.mjs?v=0.7.18';
+import { initializeGroupState, proposeMembership, requestRehearsal, adoptSong, refreshGroup, groupsMinute, leaveGroup, dissolveGroup, activeGroup } from './groups.mjs?v=0.7.18';
+import { plateauGain, decadenceCount, availableMusicName, musicName } from "./v71.mjs?v=0.7.18";
+import { editTokens } from "./v7.mjs?v=0.7.18";
+import { initializeV6Person } from "./social.mjs?v=0.7.18";
 import {
   initializeCalendar,
   upgradeCalendar,
@@ -15,7 +15,7 @@ import {
   morale,
   moraleEffect,
   validateCalendar,
-} from "./calendar.mjs?v=0.7.15";
+} from "./calendar.mjs?v=0.7.18";
 import {
   clamp,
   round,
@@ -33,7 +33,7 @@ import {
   ACTIONS,
   step,
   refreshReputation,
-} from "./engine.mjs?v=0.7.15";
+} from "./engine.mjs?v=0.7.18";
 import {
   CARDS,
   CURSES,
@@ -43,7 +43,7 @@ import {
   createPerformance,
   advancePerformance,
   validatePerformance,
-} from "./stage.mjs?v=0.7.15";
+} from "./stage.mjs?v=0.7.18";
 
 export function initializePerson(p) {
   initializeV6Person(p);
@@ -952,6 +952,17 @@ export function nextSlot(s, previous = s.performance) {
   s.showEventId = null;
   return false;
 }
+// User-driven continuation keeps eligible bands in BandLive. Classic simulation
+// still uses nextSlot directly and never creates an interactive game by itself.
+export function nextBandLiveSlot(s,previous=s.performance,enabled=true){
+  const continuing=!!previous?.bandLive&&enabled;
+  if(previous===s.performance&&previous?.applied)skipBandLiveExchange(s);
+  if(!nextSlot(s,previous))return {advanced:false,interactive:false};
+  if(!continuing)return {advanced:true,interactive:false};
+  const result=beginBandLiveConcert(s);
+  return {advanced:true,interactive:result.ok,reason:result.ok?'':result.message};
+}
+
 export function skipShow(s, all = false) {
   let guard = 0;
   do {
