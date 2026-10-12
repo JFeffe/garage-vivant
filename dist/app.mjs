@@ -1,7 +1,7 @@
-import { placeActivityLabels } from './map-labels.mjs?v=0.7.7';
-import { createBandLiveModule } from './bandlive-view.mjs?v=0.7.7';
-import {beginBandLiveConcert,commitBandLiveConcert,followingConcertPerformance} from './bandlive-concert.mjs?v=0.7.7';
-import {DEFAULT_FILTERS,catalogueControls,catalogueHTML as musicCatalogueHTML,songDetailsHTML} from "./catalogue.mjs?v=0.7.7";
+import { placeActivityLabels } from './map-labels.mjs?v=0.7.8';
+import { createBandLiveModule } from './bandlive-view.mjs?v=0.7.8';
+import {beginBandLiveConcert,commitBandLiveConcert,followingConcertPerformance} from './bandlive-concert.mjs?v=0.7.8';
+import {DEFAULT_FILTERS,catalogueControls,catalogueHTML as musicCatalogueHTML,songDetailsHTML} from "./catalogue.mjs?v=0.7.8";
 let catalogueFilters={...DEFAULT_FILTERS};
 import {
   thresholdsHTML,
@@ -10,13 +10,13 @@ import {
   exchangeTrace,
   sessionHTML,
   rapinHTML,
-} from "./v7-view.mjs?v=0.7.7";
+} from "./v7-view.mjs?v=0.7.8";
 import {
   effectiveTraits,
   updateTraits,
   TRAIT_CATALOG,
   BAG_ACTIONS,
-} from "./v7.mjs?v=0.7.7";
+} from "./v7.mjs?v=0.7.8";
 import {
   createShowClock,
   advanceShowClock,
@@ -26,22 +26,22 @@ import {
   songKey,
   stageGeometry,
   showBeat,
-} from "./show-playback.mjs?v=0.7.7";
+} from "./show-playback.mjs?v=0.7.8";
 import {
   showOverlayHTML,
   showResourcesHTML,
   deckInspectionHTML,
   cardInspectionHTML,
-} from "./show-view.mjs?v=0.7.7";
-import { setupDocSearch } from "./doc-search.mjs?v=0.7.7";
-import { calendarHTML } from "./v6-view.mjs?v=0.7.7";
-import { pendingBooking, eventById } from "./calendar.mjs?v=0.7.7";
-import { editBag } from "./social.mjs?v=0.7.7";
+} from "./show-view.mjs?v=0.7.8";
+import { setupDocSearch } from "./doc-search.mjs?v=0.7.8";
+import { calendarHTML } from "./v6-view.mjs?v=0.7.8";
+import { pendingBooking, eventById } from "./calendar.mjs?v=0.7.8";
+import { editBag } from "./social.mjs?v=0.7.8";
 import {
   profileMarkup,
   changeModule,
   resetLayout,
-} from "./profile-layout.mjs?v=0.7.7";
+} from "./profile-layout.mjs?v=0.7.8";
 import {
   VERSION,
   NEEDS,
@@ -80,7 +80,7 @@ import {
   compositionProject,
   journalEntries,
   chemistryKnowledge,
-} from "./engine.mjs?v=0.7.7";
+} from "./engine.mjs?v=0.7.8";
 import {
   command,
   bandStage,
@@ -96,20 +96,20 @@ import {
   nextSlot,
   skipShow,
   completePerformance,
-} from "./life.mjs?v=0.7.7";
+} from "./life.mjs?v=0.7.8";
 import {
   CARDS,
   CURSES,
   INTENTIONS,
   SHOW_TICKS,
   createPerformance,
-} from "./stage.mjs?v=0.7.7";
-import { resolveShowPlan } from "./show-planning.mjs?v=0.7.7";
+} from "./stage.mjs?v=0.7.8";
+import { resolveShowPlan } from "./show-planning.mjs?v=0.7.8";
 import {
   reconcile,
   createViewPositions,
   withReadingAnchor,
-} from "./ui-state.mjs?v=0.7.7";
+} from "./ui-state.mjs?v=0.7.8";
 import {
   quickHTML,
   skillHTML,
@@ -125,14 +125,14 @@ import {
   drawStage,
   enableAudio,
   playSound,
-} from "./v5-view.mjs?v=0.7.7";
+} from "./v5-view.mjs?v=0.7.8";
 import {
   createPlayback,
   snapSpeed,
   setPlaybackSpeed,
   advancePlayback,
   updatePositions,
-} from "./runtime.mjs?v=0.7.7";
+} from "./runtime.mjs?v=0.7.8";
 const playback = createPlayback();
 const $ = (q) => document.querySelector(q),
   $$ = (q) => [...document.querySelectorAll(q)],
