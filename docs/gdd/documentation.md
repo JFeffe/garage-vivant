@@ -1,6 +1,6 @@
 # DDD — Architecture documentaire et recherche
 
-Version 0.7.5. Le dossier historique `docs/gdd/` contient les DDD par domaine. Garder ces chemins conserve les liens existants; leur titre DDD indique une description des règles livrées.
+Version 0.7.10. Le dossier historique `docs/gdd/` contient les DDD par domaine. Garder ces chemins conserve les liens existants; leur titre DDD indique une description des règles livrées.
 
 ## Carte des domaines
 
@@ -30,7 +30,7 @@ Le [plan V7.2](../PLAN_V7_2.md) conserve les décisions et les hypothèses d’a
 
 ## Plan de test de la V7 complète
 
-Le [plan de test V7 à V7.5](../PLAN_TEST_V7.md) regroupe vérification rapide, règles isolées, boucles de jeu, migrations, expérience multi-graines, interface, audio et publication. Chaque cas donne identifiant, priorité, conditions et résultat attendu. Il distingue réception automatisée déjà effectuée, essais manuels à consigner et quatorze raccords volontairement débranchés. Les suites couvrent le moteur ; les appareils réels et le plaisir de jeu demandent leur propre réception. Le plan n’ajoute aucune mécanique.
+Le [plan de test V7 à V7.10](../PLAN_TEST_V7.md) regroupe vérification rapide, règles isolées, boucles de jeu, migrations, expérience multi-graines, interface, audio et publication. Chaque cas donne identifiant, priorité, conditions et résultat attendu. Il distingue réception automatisée déjà effectuée, essais manuels à consigner et quatorze raccords volontairement débranchés. Les suites couvrent le moteur ; les appareils réels et le plaisir de jeu demandent leur propre réception. Le plan n’ajoute aucune mécanique.
 
 La navigation VitePress donne une entrée directe. Sa recherche indexe le plan complet ; celle du jeu trouve cette rubrique « plan de test » et le lien vers le plan.
 
@@ -59,3 +59,7 @@ La [fiche et navigation d’archives](./groupes.md) sont décrites dans Groupes 
 ## Équilibrage des groupes V7.5
 
 Les [règles de formation et recrutement](./groupes.md) sont la source cherchable des coefficients, délais et protections conservées. Le [bilan V7.5](../BALANCE_V7_5.md) compare les mêmes vingt graines avant/après, avec taille des bands et stabilité. Les données historiques restent distinctes ; la navigation VitePress donne une entrée au bilan, tandis que la recherche du jeu retrouve la rubrique recrutement du DDD. Le [plan complet](../PLAN_TEST_V7.md) ajoute G28–G30 et la réception autonome des groupes au-delà de deux membres.
+
+## Architecture V7.10
+
+Le [bilan V7.10](../BILAN_V7_10.md) regroupe décisions et résultats. Personnages décrit surnom, apparence et suppression; Groupes décrit configurations initiales et persistance; Temps décrit la navigation Shows; Technique décrit rendu partagé, options de carte et compatibilité. Ces DDD alimentent la recherche intégrée et VitePress. Les versions précédentes et leurs rapports bruts restent historiques.

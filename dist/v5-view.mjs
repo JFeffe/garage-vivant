@@ -1,10 +1,12 @@
-import { membershipChance, membershipReason, attachment } from './groups.mjs?v=0.7.9';
-import {drawShowStage} from './show-view.mjs?v=0.7.9';
-export {bandsHTML,rapinHTML,showSetupHTML,showStatusHTML,seasonHTML} from './v6-view.mjs?v=0.7.9';
-import {SKILLS,ACTIONS,EMOTIONS,stamp,round,clamp,groupsOf,compositionProject,scores} from './engine.mjs?v=0.7.9';
-import {CARDS,CURSES,INTENTIONS,activeDeck,availableCards,SHOW_TICKS,PHRASE_TICKS} from './stage.mjs?v=0.7.9';
-import {bandStage,nextCurse,eligibleSongs,availability,isArchivedSong,seasonSummary,acceptance} from './life.mjs?v=0.7.9';
-import {resolveShowPlan} from './show-planning.mjs?v=0.7.9';
+import {decorateCube} from './character-view.mjs?v=0.7.10';
+export {decorateCube} from './character-view.mjs?v=0.7.10';
+import { membershipChance, membershipReason, attachment } from './groups.mjs?v=0.7.10';
+import {drawShowStage} from './show-view.mjs?v=0.7.10';
+export {bandsHTML,rapinHTML,showSetupHTML,showStatusHTML,seasonHTML} from './v6-view.mjs?v=0.7.10';
+import {SKILLS,ACTIONS,EMOTIONS,stamp,round,clamp,groupsOf,compositionProject,scores} from './engine.mjs?v=0.7.10';
+import {CARDS,CURSES,INTENTIONS,activeDeck,availableCards,SHOW_TICKS,PHRASE_TICKS} from './stage.mjs?v=0.7.10';
+import {bandStage,nextCurse,eligibleSongs,availability,isArchivedSong,seasonSummary,acceptance} from './life.mjs?v=0.7.10';
+import {resolveShowPlan} from './show-planning.mjs?v=0.7.10';
 export const escapeHTML = x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const esc=escapeHTML;
 const person=(s,id)=>s.people.find(p=>p.id===id);
@@ -32,21 +34,10 @@ export function deckEditorHTML(p) {
 }
 export function invitationHTML(s,groupId=null){
  const host=person(s,s.playerId),g=groupId?s.groups.find(g=>g.id===groupId):null;
- return `<h2>${g?'Inviter dans « '+esc(g.name)+' »':'Former un groupe avec '+esc(host.name)}</h2><p>Une proposition, puis une acceptation. 48 h après une adhésion réussie ; une proposition par paire chaque 24 h.</p><div class="invitation-list">${s.people.filter(p=>p!==host&&!g?.members.includes(p.id)).map(p=>{const key=[host.id,p.id].sort().join(':'),remaining=(s.groupState.proposals[key]??-1e9)+1440-s.time,reason=membershipReason(s,host,p,g)||(remaining>0?'Nouvelle proposition dans '+round(remaining/60)+' h.':null);return `<div class="invitation-row"><span><b>${esc(p.name)}</b><small>${SKILLS[p.instrument]} · ${esc(p.genre)} · ${round(membershipChance(s,host,p,g)*100)} % d’acceptation</small>${reason?`<small>${esc(reason)}</small>`:''}</span><button data-invite="${p.id}:${groupId||''}" ${reason?'disabled':''}>Proposer</button></div>`;}).join('')}</div>`;
+ return `<h2>${g?'Inviter dans « '+esc(g.name)+' »':'Former un groupe avec '+esc(host.name)}</h2><p>Une proposition, puis une acceptation. Nouvelle formation : 48 h après une adhésion. Recrutement : seul le candidat attend 24 h. Une proposition par paire chaque 24 h.</p><div class="invitation-list">${s.people.filter(p=>p!==host&&!g?.members.includes(p.id)).map(p=>{const key=[host.id,p.id].sort().join(':'),remaining=(s.groupState.proposals[key]??-1e9)+1440-s.time,reason=membershipReason(s,host,p,g)||(remaining>0?'Nouvelle proposition dans '+round(remaining/60)+' h.':null);return `<div class="invitation-row"><span><b>${esc(p.name)}</b><small>${SKILLS[p.instrument]} · ${esc(p.genre)} · ${round(membershipChance(s,host,p,g)*100)} % d’acceptation</small>${reason?`<small>${esc(reason)}</small>`:''}</span><button data-invite="${p.id}:${groupId||''}" ${reason?'disabled':''}>Proposer</button></div>`;}).join('')}</div>`;
 }
 
-export function decorateCube(ctx,x,y,size,p,t=0) {
-  const a=p.identity?.accessory,top=y-size;
-  ctx.save();ctx.lineWidth=Math.max(1,size*.07);ctx.strokeStyle='#33423b';ctx.fillStyle='#39413b';
-  if(a==='hair'){ctx.beginPath();ctx.moveTo(x-size*.42,top+4);ctx.lineTo(x-size*.24,top-5);ctx.lineTo(x+1,top+1);ctx.lineTo(x+size*.32,top-3);ctx.lineTo(x+size*.44,top+5);ctx.fill();}
-  if(a==='glasses'){ctx.strokeRect(x-size*.37,y-size*.57,size*.29,size*.24);ctx.strokeRect(x+size*.08,y-size*.57,size*.29,size*.24);ctx.beginPath();ctx.moveTo(x-size*.08,y-size*.48);ctx.lineTo(x+size*.08,y-size*.48);ctx.stroke();}
-  if(a==='cap'){ctx.fillStyle='#445662';ctx.fillRect(x-size*.5,top-3,size,6);ctx.fillRect(x,top+1,size*.7,3);}
-  if(a==='brows'){ctx.beginPath();ctx.moveTo(x-size*.3,y-size*.65);ctx.lineTo(x-size*.1,y-size*.61);ctx.moveTo(x+size*.1,y-size*.61);ctx.lineTo(x+size*.3,y-size*.65);ctx.stroke();}
-  if(a==='moustache'){ctx.beginPath();ctx.ellipse(x,y-size*.25,size*.23,size*.08,0,0,Math.PI*2);ctx.fill();}
-  if(a==='earring'){ctx.strokeStyle='#f3d78c';ctx.beginPath();ctx.arc(x+size*.48,y-size*.28,size*.09,0,Math.PI*2);ctx.stroke();}
-  if(p.identity?.accent==='scarf'){ctx.fillStyle='#edd19a';ctx.fillRect(x-size*.4,y-3,size*.8,3);ctx.fillRect(x+size*.2,y-3,3,size*.25);}
-  ctx.restore();
-}
+
 const box=(ctx,x,y,w,h,color,r=0)=>{ctx.fillStyle=color;ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill();};
 const text=(ctx,value,x,y,size=12,color='#d9e6d9')=>{ctx.font=`${size}px system-ui`;ctx.textAlign='center';ctx.fillStyle=color;ctx.fillText(value,x,y);};
 export function drawStage(canvas,show,options={}) {return drawShowStage(canvas,show,options,decorateCube);}

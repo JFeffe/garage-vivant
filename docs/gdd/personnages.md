@@ -1,6 +1,6 @@
 # DDD — Personnages, besoins et émotions
 
-Version 0.7.5. Ces règles décrivent le moteur livré; les anciennes propositions se trouvent dans les plans historiques.
+Version 0.7.10. Ces règles décrivent le moteur livré; les anciennes propositions se trouvent dans les plans historiques.
 
 ## Identité et personnalité
 
@@ -58,3 +58,11 @@ La fiche montre les deux courbes, quatre besoins, sac, traits conditionnels, som
 Vue détaillée et Organiser conservent ordre, largeur, colonne et modules masqués dans une préférence locale séparée du monde. Les contrôles en cours d’édition gardent leur focus et leur position. Le catalogue recherchable dans Réglages décrit tous les traits, dont Solitaire et le trait Relax débranché.
 
 Liens : [actions](./actions.md), [sommeil](./sommeil.md), [traits](./traits.md), [interactions](./interactions.md), [raccords](./raccords-v7.md).
+
+## Personnaliser et supprimer · V7.10
+
+Le bouton **Nom et apparence** ouvre l’éditeur. Le nom reste l’identité principale; le surnom facultatif (24 caractères) apparaît entre guillemets sur la carte, la fiche et la liste. Les références et les auteurs utilisent toujours l’identifiant, pas le nom. Couleur, six accessoires existants, foulard et quatre allures sont éditables. `character-view.mjs` centralise le dessin du cube et des accessoires; les portraits de fiche, liste et liens sont générés à partir de cette même apparence. Les shows conservent un instantané de l’identité au début de la représentation. L’allure anime la carte; les portraits restent fixes.
+
+**Supprimer** demande une confirmation. Au moins un voisin reste dans le quartier. Pendant un spectacle, la suppression est refusée sans mutation. Les activités sont fermées, les relations actives et partenaires sont nettoyés, les réservations à venir du personnage sont annulées. Les groupes passent par leur départ normal, avec dissolution définitive sous deux membres; leurs archives restent accessibles. Les compositions et projets conservent l’auteur et son dernier nom. Le rôle joueur passe au premier voisin restant si nécessaire. Aucun remplacement automatique n’est créé.
+
+Un ancien monde sans surnom conserve son contenu et son RNG; le champ facultatif est validé quand présent. Aucune migration de skin ni réinitialisation.

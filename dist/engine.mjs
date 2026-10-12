@@ -1,6 +1,6 @@
-import { GROUP_RULES as GROUP_RULES } from './group-rules.mjs?v=0.7.9';
-import { musicalChemistry, pairEligible, membershipReason, considerMembership, initializeGroupData, resolveInvitation, rehearsalReady, upgradeGroups, validateGroups, leaveGroup } from './groups.mjs?v=0.7.9';
-import { V71_RULES, initializeV71, setupAction, chooseInstrument, shouldLeave, musicName, reserveMusicName, classifySongs, upgradeV71, validateV71, decadenceCount } from "./v71.mjs?v=0.7.9";
+import { GROUP_RULES as GROUP_RULES } from './group-rules.mjs?v=0.7.10';
+import { musicalChemistry, pairEligible, membershipReason, considerMembership, initializeGroupData, resolveInvitation, rehearsalReady, upgradeGroups, validateGroups, leaveGroup } from './groups.mjs?v=0.7.10';
+import { V71_RULES, initializeV71, setupAction, chooseInstrument, shouldLeave, musicName, reserveMusicName, classifySongs, upgradeV71, validateV71, decadenceCount } from "./v71.mjs?v=0.7.10";
 import {
   NEED_DRAIN,
   ACTIVITY_EFFECTS,
@@ -19,13 +19,13 @@ import {
   interactionProbabilities,
   coolRelationV7,
   validateV7,
-} from "./v7.mjs?v=0.7.9";
+} from "./v7.mjs?v=0.7.10";
 import {
   initializeV6Person,
   upgradeV6,
   markGrief,
   repairGrief,
-} from "./social.mjs?v=0.7.9";
+} from "./social.mjs?v=0.7.10";
 import {
   initializePerson,
   initializeGroup,
@@ -41,7 +41,7 @@ import {
   departForShow,
   refreshOpportunity,
   validateLife,
-} from "./life.mjs?v=0.7.9";
+} from "./life.mjs?v=0.7.10";
 export const VERSION = "0.7.3";
 export const NEEDS = {
   energy: "Énergie",
@@ -382,8 +382,8 @@ export function log(s, type, text, ids = [], details = {}) {
     time: s.time,
     type,
     text,
-    ids,
     ...details,
+    ids: [...ids],
     ...(activityId ? { activityId } : {}),
   };
   s.events.unshift(e);
@@ -815,7 +815,8 @@ export function addPerson(s) {
   log(s, "system", `${p.name} s’installe dans le quartier.`, [p.id]);
   return p;
 }
-export function createWorld(seed = 2040, count = 8) {
+export function createWorld(seed = 2040, count = 8, {setup="none"} = {}) {
+  if(!["none","varied","large","medium","small"].includes(setup))throw Error("Configuration de groupes inconnue.");
   const s = {
     version: VERSION,
     time: 480,
@@ -845,11 +846,28 @@ export function createWorld(seed = 2040, count = 8) {
   };
   for (let i = 0; i < count; i++) addPerson(s);
   initializeLife(s);
+  seedStartingGroups(s,setup);
   for (const p of s.people) {
     refreshReputation(s, p);
     decide(s, p);
   }
   return s;
+}
+// Starting setups use real groups and existing relations, never synthetic songs.
+export function seedStartingGroups(s,setup){
+ if(setup==='none'||s.people.length<2)return;
+ const people=[...s.people];for(let i=people.length-1;i>0;i--){const j=Math.floor(rand(s)*(i+1));[people[i],people[j]]=[people[j],people[i]];}
+ const max=Math.min(4,Math.floor(people.length/2));
+ const count=setup==='large'?1:setup==='varied'?1+Math.floor(rand(s)*max):Math.min(2,max);
+ let cursor=0;
+ for(let i=0;i<count;i++){
+  const available=people.length-cursor-2*(count-i-1);
+  const size=setup==='small'?2:setup==='large'?Math.min(6,available):setup==='medium'?Math.min(4,available):2+Math.floor(rand(s)*(Math.min(6,available)-1));
+  const members=people.slice(cursor,cursor+size);cursor+=size;
+  for(const a of members)for(const b of members)if(a!==b){const r=relationship(s,a,b);r.affinity=35+Math.floor(rand(s)*21);r.tension=Math.min(r.tension,10);}
+  const g=createGroup(s,members.map(p=>p.id),{manual:true,origin:'départ'});
+  g.development=35+Math.floor(rand(s)*16);
+ }
 }
 export function groupsOf(s, p) {
   return s.groups.filter((g) => g.members.includes(p.id));
@@ -2054,8 +2072,11 @@ export function advanceSleeping(s) {
   return minutes;
 }
 export function removePerson(s, id) {
-  if (s.people.length <= 1) return;
+  if (s.people.length <= 1) return {ok:false,message:"Il faut conserver au moins un personnage."};
+  if(s.performance?.status==="playing"||s.showEventId)return {ok:false,message:"Termine le spectacle avant de supprimer un personnage."};
   const departing = s.people.find((p) => p.id === id);
+  if(!departing)return {ok:false,message:"Personnage introuvable."};
+  for(const work of [...s.songs,...s.projects])if((work.authors||[work.author]).includes(id)){work.authorNames??={};work.authorNames[id]=departing.name;}
   if (departing) {
     closeActivity(s, departing, "interrupted");
     const row = s.activities.find((x) => x.id === departing.action?.activityId);
@@ -2070,11 +2091,11 @@ export function removePerson(s, id) {
   for (const k of Object.keys(s.rels))
     if (k.split(">").includes(id)) delete s.rels[k];
   for (const p of s.people)
-    if (p.action) p.action.partners = p.action.partners.filter((x) => x !== id);
+    {if (p.action) {p.action.partners = p.action.partners.filter((x) => x !== id);if(p.action.target===id)p.action.target=null;}if(p.nextPartner===id)p.nextPartner=null;if(p.togetherId===id)p.togetherId=null;}
   for (const b of s.bookings) {
     if (
       ["applied", "booked", "assembling"].includes(b.status) &&
-      b.members.filter((id) => s.people.some((p) => p.id === id)).length < 2
+      b.members.includes(id)
     ) {
       b.status = "cancelled";
       refreshOpportunity(s, b.opportunityId);
@@ -2089,7 +2110,8 @@ export function removePerson(s, id) {
     session.members = session.members.filter((member) => member !== id);
   for (const j of s.jams)
     j.participants = j.participants.filter((x) => x !== id);
-  log(s, "system", "Un personnage quitte le quartier.", [id]);
+  log(s, "system", `${departing.name} quitte le quartier.`, [id]);
+  return {ok:true};
 }
 export function scenario(s, name) {
   s.scenario = name;
@@ -2480,6 +2502,7 @@ export function restore(input) {
       ids.has(p.id) ||
       typeof p.name !== "string" ||
       p.name.length > 80 ||
+      (p.nickname!==undefined&&(typeof p.nickname!=="string"||p.nickname.length>24)) ||
       typeof p.color !== "string" ||
       !/^#[0-9a-f]{6}$/i.test(p.color) ||
       !num(p.age, 16, 100) ||

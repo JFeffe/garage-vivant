@@ -1,6 +1,6 @@
 # DDD — Shows, calendrier et public
 
-Version 0.7.5.
+Version 0.7.10.
 
 ## Quatre occasions continues
 
@@ -74,3 +74,7 @@ Après confirmation, aucun nouveau refus ordinaire. L’énergie influence la sc
 À l’heure prévue, attendre au plus vingt minutes si moins de deux membres sont arrivés, puis marquer ce créneau manqué. Aucun remplaçant ou musicien fantôme ; les autres créneaux continuent. Un départ de membre revalide les engagements futurs ; une dissolution les annule. Une prestation déjà en cours et son replay conservent leur snapshot versionné.
 
 Les nouveaux choix de setlist utilisent uniquement les morceaux possédés actifs, ou une improvisation. Un morceau mis de côté après confirmation reste disponible dans cette setlist. Les anciennes setlists confirmées migrées bénéficient d’une exception enregistrée, même si leur ancien répertoire partagé change de propriétaire. Les nouvelles réservations n’obtiennent pas cette exception.
+
+## Consultation et suppression V7.10
+
+Ouvrir Shows conserve la vitesse du quartier. Un spectacle effectif garde son interruption prioritaire du monde. La suppression d’un personnage est bloquée pendant une représentation; hors représentation, elle annule ses réservations à venir plutôt que conserver une formation incomplète. Les historiques de spectacles restent consultables.

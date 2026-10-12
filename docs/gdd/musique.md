@@ -1,6 +1,6 @@
 # DDD — Pratique, Jam et apprentissage
 
-Version 0.7.5. Pratiquer développe la technique et prépare les morceaux. Jam favorise l’expression libre et les rencontres. Composer développe une œuvre persistante : [Compositions et catalogue](./compositions.md).
+Version 0.7.10. Pratiquer développe la technique et prépare les morceaux. Jam favorise l’expression libre et les rencontres. Composer développe une œuvre persistante : [Compositions et catalogue](./compositions.md).
 
 ## Instruments, apprentissage et plateaux
 

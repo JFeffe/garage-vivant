@@ -47,4 +47,6 @@ jobs:
           path: |
             test-results/
             docs/*V7_5.json
+            docs/*V7_10.json
+            docs/BANDLIVE_BALANCE.json
           retention-days: 14

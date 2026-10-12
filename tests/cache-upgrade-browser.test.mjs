@@ -8,7 +8,7 @@ import {chromium} from 'playwright';
 // game and the prior feature build. Missing exports in these old entries make
 // an accidental mixed-version import fail at startup instead of going unnoticed.
 const root=resolve('dist'),modules=(await readdir(root)).filter(name=>name.endsWith('.mjs'));
-const previousVersions=['0.7.4','0.7.5','4'];
+const previousVersions=['0.7.4','0.7.5','0.7.6','0.7.7','0.7.8','0.7.9','4'];
 const staleURLs=modules.flatMap(name=>previousVersions.map(version=>`/${name}?v=${version}`));
 let priming=true,primedRequests=0;
 const server=createServer(async(req,res)=>{

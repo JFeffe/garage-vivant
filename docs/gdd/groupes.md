@@ -1,12 +1,12 @@
 # DDD — Groupes autonomes, attachement et adoption
 
-Version 0.7.5. Le groupe est une entité persistante. Il prend des initiatives virtuelles ; ses membres réalisent les pratiques et spectacles avec leurs besoins et positions. Aucune personnalité, action de sac ou ressource fictive de groupe.
+Version 0.7.10. Le groupe est une entité persistante. Il prend des initiatives virtuelles ; ses membres réalisent les pratiques et spectacles avec leurs besoins et positions. Aucune personnalité, action de sac ou ressource fictive de groupe.
 
 ## Identité et données
 
 `id`, nom unique, date de création, fondateurs permanents, membres actuels, anciens membres et motifs de départ. `state` vaut active ou dissolved ; une dissolution conserve date, raison et dernière formation (`finalMembers`). Les initiatives ont leurs prochaines dates sauvegardées. Les appartenances enregistrent date d’entrée, inconnue pour les anciennes sauvegardes, et prochain examen de départ.
 
-Coordination (`development`) : 0–100, initialement 18. Les [répétitions](./musique.md) et spectacles l’augmentent. Après 48 h sans travail collectif, −0,24/h. Tant qu’elle est supérieure à zéro, une activité peut la faire remonter. Zéro déclenche une dissolution définitive.
+Coordination (`development`) : 0–100, initialement 18 pour une nouvelle formation (35–50 pour les groupes du setup initial). Les [répétitions](./musique.md) et spectacles l’augmentent. Après 48 h sans travail collectif, −0,24/h. Tant qu’elle est supérieure à zéro, une activité peut la faire remonter. Zéro déclenche une dissolution définitive.
 
 Chaque compétence existante affiche moyenne, minimum et maximum des membres actuels sur une échelle commune 0–100. Les marqueurs coïncidents sont réunis ; les détails indiquent les ex æquo. Aucun cumul de talents ne remplace les musiciens réellement présents sur scène. Ces agrégats sont calculés, pas stockés comme des compétences nouvelles.
 
@@ -18,7 +18,7 @@ Les partenaires doivent être éveillés et hors engagement. Créer un nouveau g
 
 Probabilité de proposition autonome :
 
-- Nouvelle formation : `0,28 / (1 + nombre de groupes de l’initiateur²) × max(0,05 ; 1 − meilleur attachement/100)`.
+- Nouvelle formation : `0,315 / (1 + nombre de groupes de l’initiateur²) × max(0,05 ; 1 − meilleur attachement/100)`.
 - Recrutement : `0,12 / (1 + nombre de ses autres groupes²) × max(0,05 ; 1 − meilleur attachement à ces autres groupes/100)`.
 
 Le groupe que l’on cherche à compléter est exclu de la pénalité du recruteur : être attaché à son propre band ne doit pas l’empêcher d’y inviter quelqu’un. Les autres appartenances continuent de freiner une proposition. Ce tirage ne crée rien à lui seul. Une paire reçoit au plus une proposition toutes les 24 h, refus compris, que la proposition soit une formation ou un recrutement.
@@ -27,7 +27,7 @@ Probabilité d’acceptation inchangée :
 
 `borne(0,4 + affinité destinataire→initiateur/200 + amour/400 + chimie/1000 − tension/250 + attrait du groupe/500 ; 0,1 ; 0,95) / (1 + 0,75 × groupes actuels du destinataire) × max(0,1 ; 1 − son meilleur attachement/100)`.
 
-L’attrait utilise le calcul d’attachement au groupe proposé ; pour un duo neuf, Coordination 18 et réputation 0. Une création fixe la date de dernière formation chez les deux fondateurs ; un recrutement fixe seulement celle du nouvel adhérent, sans réinitialiser celle de son recruteur. La grâce initiale de départ reste 48 h pour chaque nouvelle appartenance. Les chances d’acceptation, tirages et décisions sont journalisés. Un refus donne détresse base +3 à l’initiateur. Les invitations manuelles utilisent les mêmes règles et acceptations ; seul le tirage pour émettre une proposition est omis. La création directe de laboratoire reste une intervention explicite et distincte.
+L’attrait utilise le calcul d’attachement au groupe proposé ; pour un duo neuf, Coordination 18 et réputation 0. Une création fixe la date de dernière formation chez les deux fondateurs ; un recrutement fixe seulement celle du nouvel adhérent, sans réinitialiser celle de son recruteur. La grâce initiale de départ est de 72 h pour chaque nouvelle appartenance. Les chances d’acceptation, tirages et décisions sont journalisés. Un refus donne détresse base +3 à l’initiateur. Les invitations manuelles utilisent les mêmes règles et acceptations ; seul le tirage pour émettre une proposition est omis. La création directe de laboratoire reste une intervention explicite et distincte.
 
 Ces réglages V7.5 favorisent la croissance des duos et rendent la première formation un peu plus probable, tout en conservant les freins d’acceptation d’un musicien déjà engagé ailleurs. Il n’existe ni plafond arbitraire d’appartenances ou d’effectif, ni quota de groupes, ni formation ou recrutement forcé. Les tailles trois ou quatre sont une intention d’équilibre, pas une limite ajoutée. [Comparaison sur les mêmes graines](../BALANCE_V7_5.md).
 
@@ -72,7 +72,7 @@ Les commandes manuelles adoptent une œuvre admissible sans tirage de décision,
 
 ## Appels de pratique et file hors sac
 
-Toutes les six heures, chance 50 % de lancer une pratique si un morceau actif existe. Favoriser ceux peu maîtrisés avec poids `1 + (100−maîtrise)/20`. Choisir un garage existant. Au plus une demande ouverte ou en cours par groupe. La commande Répéter crée exactement la même demande ; elle ne termine pas l’action des membres.
+Toutes les six heures, chance de 75 % sous 40 de coordination, sinon 50 %, de lancer une pratique si un morceau actif existe. Favoriser ceux peu maîtrisés avec poids `1 + (100−maîtrise)/20`. Choisir un garage existant. Au plus une demande ouverte ou en cours par groupe. La commande Répéter crée exactement la même demande ; elle ne termine pas l’action des membres.
 
 Chaque membre reçoit une invitation dans sa file personnelle, extérieure au sac, datée et valable 12 h. À la fin d’une action et avant la prochaine pige, examiner les invitations en ordre d’arrivée. Sommeil obligatoire et spectacle confirmé restent prioritaires. Une invalidité, expiration, départ du groupe ou énergie <15 produit un motif ; pas de jeton consommé ni remboursé.
 
@@ -86,7 +86,7 @@ Un membre ayant pigé Pratiquer peut aussi demander à rejoindre une pratique de
 
 ## Départs et dissolution
 
-Chaque appartenance reçoit un délai initial de 48 h, puis un examen toutes les 12 h. Chance 8 % si attachement <20 ; ajouter 15 % si un autre groupe **déjà rejoint** dépasse cet attachement d’au moins 25. Plafond 30 %. Pas de groupe potentiel inventé pour justifier le départ. L’examen est reporté si un spectacle confirmé de ce groupe a lieu dans les prochaines six heures. Au plus un départ autonome par personnage et par minute.
+Chaque appartenance reçoit un délai initial de 72 h, puis un examen toutes les 12 h. Chance 8 % si attachement <20 ; ajouter 15 % si un autre groupe **déjà rejoint** dépasse cet attachement d’au moins 25. Plafond 30 %. Pas de groupe potentiel inventé pour justifier le départ. L’examen est reporté si un spectacle confirmé de ce groupe a lieu dans les prochaines six heures. Au plus un départ autonome par personnage et par minute.
 
 Départ : historique et motif, retrait de l’appartenance, annulation de ses invitations pendantes de ce groupe et fin de sa pratique associée. Les confirmations futures sont revalidées : retirer le membre, ou annuler explicitement si moins de deux participants restent. Le départ manuel utilise la même transition sans tirage.
 
@@ -109,3 +109,11 @@ Les coefficients sont réunis dans `group-rules.mjs`, les politiques et transiti
 ## Réception V7.3
 
 L’admissibilité de l’appel est partagée entre admission, travail et entretien des demandes. À son échéance, aucune minute supplémentaire de maîtrise collective n’est attribuée ; les participants terminent cette action, sans remboursement de jeton. Une ancienne action V7.2 qui a changé de morceau reprend la cible de sa demande avant le prochain travail ; les gains historiques ne sont pas réécrits. Le [bilan des simulations V7.3](../AUDIT_V7_3.md) couvre seize parties de quinze jours et le contrôle de stabilité sur vingt graines.
+
+## Configuration initiale et persistance · V7.10
+
+Une nouvelle partie dans l’interface choisit **Variable** par défaut : de 1 à `min(4, floor(population/2))` groupes, chaque taille entre 2 et 6 selon les voisins encore disponibles. Options explicites : **un grand groupe** (jusqu’à 6 membres), **deux moyens** (jusqu’à 4 chacun), **deux petits** (2 chacun), **aucun**. Une population trop petite réduit le nombre/taille; aucun personnage n’appartient à deux groupes initiaux. La graine détermine répartition, noms, coordination 35–50 et affinités dirigées 35–55 entre membres; tension plafonnée à 10 entre ces membres seulement. Les autres relations restent celles du générateur. Ces liens représentent un passé commun initial, sans fausses chansons, répétitions ou spectacles. Les groupes utilisent ensuite toutes les règles normales et peuvent se dissoudre. Une ancienne partie n’est pas modifiée à l’import.
+
+La proposition de **nouvelle formation** passe de 28 % à **31,5 %**, soit +12,5 % relatif avant les freins existants. Le recrutement reste à 12 %. Ce réglage ne garantit pas un pourcentage identique de groupes supplémentaires dans une trajectoire aléatoire.
+
+Le groupe existant insiste par ses **appels de répétition** : au contrôle toutes les six heures, chance de 75 % si coordination sous 40, sinon 50 %. Il faut une chanson active adoptée; une seule demande ouverte/en cours par groupe, sans empilement ni contournement des refus, sommeil ou spectacles. Aucun gain de coordination sans pratique réelle. Le premier contrôle de départ après une nouvelle adhésion est reporté à **72 h** au lieu de 48 h; les anciens contrôles déjà programmés ne sont pas déplacés. Ensuite les conditions et probabilités restent inchangées, ainsi que la dissolution définitive à zéro. Les albums restent hors périmètre.

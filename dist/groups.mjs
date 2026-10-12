@@ -1,4 +1,4 @@
-import {GROUP_RULES as R} from './group-rules.mjs?v=0.7.9';
+import {GROUP_RULES as R} from './group-rules.mjs?v=0.7.10';
 const clamp=(v,a=0,b=100)=>Math.max(a,Math.min(b,v));
 const mean=xs=>xs.length?xs.reduce((n,x)=>n+x,0)/xs.length:0;
 const person=(s,id)=>s.people.find(p=>p.id===id);
@@ -169,7 +169,7 @@ export function groupsMinute(s,ctx){
  const active=s.groups.filter(g=>activeGroup(g)&&(s.time>=g.nextAdoption||s.time>=g.nextPractice));for(let i=active.length-1;i>0;i--){const j=Math.floor(ctx.random()*(i+1));[active[i],active[j]]=[active[j],active[i]];}
  for(const g of active){
   if(s.time>=g.nextAdoption){g.nextAdoption=s.time+R.decisionMinutes;let songs=s.songs.filter(x=>!adoptionReason(s,g,x));if(songs.some(x=>!x.weak))songs=songs.filter(x=>!x.weak);const song=weighted(songs,x=>1+x.quality/10+(x.genre===g.genre?2:0),ctx.random);if(song&&ctx.random()<clamp(.15+song.quality/200+(song.genre===g.genre?.15:0),.15,.8))adoptSong(s,g,song,ctx);}
-  if(s.time>=g.nextPractice){g.nextPractice=s.time+R.decisionMinutes;const rows=g.repertoire.filter(r=>r.active!==false);if(rows.length&&ctx.random()<R.rehearsalChance){const row=weighted(rows,r=>1+(100-r.mastery)/20,ctx.random);requestRehearsal(s,g,row.songId,ctx.place(),ctx);}}
+  if(s.time>=g.nextPractice){g.nextPractice=s.time+R.decisionMinutes;const rows=g.repertoire.filter(r=>r.active!==false);if(rows.length&&ctx.random()<(g.development<R.fragileCoordination?R.fragileRehearsalChance:R.rehearsalChance)){const row=weighted(rows,r=>1+(100-r.mastery)/20,ctx.random);requestRehearsal(s,g,row.songId,ctx.place(),ctx);}}
  }
  for(const [key,time]of Object.entries(s.groupState.proposals))if(s.time-time>R.pairDelay)delete s.groupState.proposals[key];
 }

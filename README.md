@@ -1,10 +1,12 @@
 [▶ Jouer à Garage vivant](https://jutrasimon.github.io/garage-vivant/)
 
-# Garage vivant · v0.7.9
+# Garage vivant · v0.7.10
 
 Une simulation autonome de musiciens dans une banlieue. Les personnages sont des cubes avec personnalité, émotions, compétences et relations. Ils composent, montent des bands et tentent leur chance devant un public physique. Le joueur peut observer, régler leurs sacs ou intervenir.
 
 [Documentation du jeu](https://jutrasimon.github.io/garage-vivant/docs/) · [Notes de version](https://jutrasimon.github.io/garage-vivant/docs/versions.html#v075) · [Contribuer](CONTRIBUTING.md)
+
+**V7.10 — personnages et groupes :** nom, surnom et apparence cohérente dans les portraits; suppression confirmée; options de carte; Shows consultable sans pause. Configurations initiales variables, propositions de formation +12,5 % et pratiques plus insistantes pour les groupes fragiles. [Design et bilan](docs/BILAN_V7_10.md). Format du monde toujours 0.7.3.
 
 **V7.6 — BandLive :** spectacles interactifs optionnels et répétitions. Activez **Réglages → Activer BandLive** pour afficher l’onglet. [Notes de version](docs/versions.md#v076).
 
@@ -82,7 +84,7 @@ npm run test:browser
 
 Pour jouer localement : `python3 -m http.server 8000 --directory dist`, puis `http://localhost:8000/`. `npm run docs:build` puis `npm run bandlive:test-file` créent `BandLive-test/LANCER-BandLive.html`, un essai autonome à ouvrir dans Chrome avec ses sauvegardes séparées.
 
-`npm run audit:groups` rejoue les 20 graines sur 30 jours, dont trois prolongées à 90 jours, et produit `docs/BALANCE_V7_5.json`, tailles et stabilité comprises. Le build crée la documentation et son index de recherche. Les fichiers de tests moteur/interface/doc couvrent les règles V7.5 et BandLive, imports réels V1–V7, déterminisme, compositions, engagements, setlists, skip/replay, récompenses uniques, 100 jours de calendrier et cohérence documentaire. Chromium couvre ordinateur et tactile, rendu, recherche VitePress et parcours de jeu. Le viewport tactile ne remplace pas un test sur appareil réel.
+`npm run audit:groups` rejoue les 20 graines sur 30 jours, dont trois prolongées à 90 jours, et produit `docs/BALANCE_V7_10.json`, tailles et stabilité comprises. Le build crée la documentation et son index de recherche. Les fichiers de tests moteur/interface/doc couvrent les règles V7.5 et BandLive, imports réels V1–V7, déterminisme, compositions, engagements, setlists, skip/replay, récompenses uniques, 100 jours de calendrier et cohérence documentaire. Chromium couvre ordinateur et tactile, rendu, recherche VitePress et parcours de jeu. Le viewport tactile ne remplace pas un test sur appareil réel.
 
 La CI vérifie les PR sans publier; `main` publie jeu et doc après validation. Captures complètes dans les artefacts `audit-browser-*` ; capture de diagnostic `smoke-failure` en cas d’échec du contrôle rapide. Voir [PLAN_V7_1](docs/PLAN_V7_1.md), [PLAN_V7](docs/PLAN_V7.md), [DDD](docs/gdd/documentation.md), [historique](docs/CHANGELOG.md) et [contribution](CONTRIBUTING.md). L’équilibrage des profils et probabilités reste provisoire et demande un essai avec joueurs.
 

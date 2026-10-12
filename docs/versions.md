@@ -1,5 +1,22 @@
 # Notes de version
 
+## V0.7.10 — Personnages personnalisés et groupes présents dès le départ {#v0710}
+
+12 octobre 2026. [Design, validation et limites](./BILAN_V7_10.md).
+
+- Nom, surnom et apparence accessibles depuis la fiche; portraits partagés avec les accessoires de la carte et des shows.
+- Crédit « Composition : » explicite et cliquable, coauteurs visibles, propriétaire séparé.
+- Suppression confirmée avec crédits et archives conservés; indisponible pendant un spectacle.
+- Options persistantes de carte : actions individuelles et collectives séparées, icônes, noms, émotions, liens, trajets et nuit.
+- Consulter Shows ne met plus le quartier en pause. Jouer un spectacle le suspend toujours.
+- Nouveau quartier : configuration variable de 1 à 4 groupes, ou un grand, deux moyens, deux petits, aucun.
+- Formation : probabilité de proposition 31,5 % au lieu de 28 %, soit +12,5 % relatif. Ce n’est pas une garantie de +12,5 % de groupes observés.
+- Groupes de coordination sous 40 : appel de pratique à 75 % au lieu de 50 % lors du contrôle de six heures, répertoire actif requis. Première évaluation de départ après trois jours au lieu de deux.
+- Albums non implémentés; les raccords laissés débranchés restent identifiés.
+
+
+
+
 ## V0.7.9 — Publication plus rapide et versions cohérentes {#v079}
 
 11 octobre 2026.

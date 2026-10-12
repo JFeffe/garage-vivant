@@ -1,3 +1,7 @@
+# V0.7.10 — 12 octobre 2026
+
+Personnages personnalisables, crédits de composition visibles, options de carte et groupes de départ. Intégration de BandLive et du circuit de publication rapide V0.7.9. Format des sauvegardes inchangé. [Notes complètes](./versions.md#v0710) et [bilan, validations et limites](./BILAN_V7_10.md). Aucun éditeur d’équilibrage ajouté.
+
 # V0.7.9 — 11 octobre 2026
 
 Publication plus rapide et versions cohérentes. [Notes complètes](./versions.md#v079).
