@@ -1,5 +1,5 @@
-import {RULES,STYLES,createBandLive,restoreBandLive,currentSong} from './bandlive.mjs?v=0.7.14';
-import {performanceResult} from './stage.mjs?v=0.7.14';
+import {RULES,STYLES,createBandLive,restoreBandLive,currentSong} from './bandlive.mjs?v=0.7.15';
+import {performanceResult} from './stage.mjs?v=0.7.15';
 
 // Interactive audiences are compact. Calendar capacity and the full audience
 // passed to the next band remain unchanged.
@@ -83,5 +83,5 @@ export function followingConcertPerformance(show) {
 
 export function createConcertReplay(snapshot) {
   const game=restoreBandLive(snapshot);
-  return createBandLive({people:game.actors,groupId:game.groupId,groupName:game.groupName,songs:game.songs,seed:game.seed,audienceSize:game.fans.length,audienceRules:game.audienceRules,songOrder:game.songOrder});
+  return createBandLive({people:game.actors,groupId:game.groupId,groupName:game.groupName,songs:game.songs,seed:game.seed,audienceSize:game.fans.length,audienceRules:game.audienceRules,songOrder:game.songOrder,conquestEffects:game.conquestVersion===1});
 }

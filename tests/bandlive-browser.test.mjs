@@ -97,12 +97,12 @@ try{
   assert.equal(await page.locator('.bl-card-table').count(),0,'No empty reserved hand before choosing a song');
   assert.equal(await page.locator('.bl-arena > .bl-song-choice [data-bl-song]').count(),1,'Song choice stays compact above the stage');
   assert(await page.locator('.bl-arena').evaluate(el=>el.clientWidth>=innerWidth-20),'Arena uses the available width');
-  assert(await page.locator('.bl-audience-viewport').evaluate(el=>el.scrollHeight<=el.clientHeight+1),'Entire desktop crowd is exposed');
+  assert(await page.locator('.bl-audience-viewport').evaluate(el=>el.scrollHeight>el.clientHeight),'Conquest rows remain reachable in the public scroller');
   await page.screenshot({path:'test-results/bandlive-redesign-choose.png'});
   await page.locator('[data-bl-song]').click();assert.equal(await page.locator('.bl-card').count(),5);for(const card of await page.locator('[data-bl-card]').all())assert(await card.evaluate(el=>el.closest('.bl-musician').querySelector('[data-bl-actor]').dataset.blActor===el.dataset.blCard.split(':')[0]),'Cards stay attached to their musician');
   await page.screenshot({path:'test-results/bandlive-redesign-play.png'});await page.close();
 
-  // Desktop exposes the full crowd; narrow screens keep a separate public scroller.
+  // The conquest board scrolls independently, keeping every row reachable beside the cards.
   for(const sample of [
     {width:1440,height:1000,members:2,fans:3},
     {width:1280,height:720,members:3,fans:6},
@@ -119,7 +119,7 @@ try{
     const fixed=await stageGeometry(page),publicViewport=page.locator('.bl-audience-viewport');
     await publicViewport.evaluate(el=>el.scrollTop=el.scrollHeight);
     assert.deepEqual(await stageGeometry(page),fixed,`${width}×${height}: public scrolling keeps musicians and cards fixed`);
-    if(fans>8&&width<1000)assert(await audienceOffset(page)>0,'Narrow screens retain public scrolling');if(width>=1000)assert.equal(await audienceOffset(page),0,'Desktop shows the entire crowd without nested scrolling');
+    if(fans>8)assert(await audienceOffset(page)>0,'Large conquest crowds retain public scrolling');
     assert.equal(await page.locator('.bl-viewport').evaluate(el=>el.scrollTop),0,'The horizontal stage never scrolls vertically');
     assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'The stage cannot widen the document');
     await centerFan(page,targetId);

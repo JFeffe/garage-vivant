@@ -1,4 +1,4 @@
-import {songTurns} from './song-rules.mjs?v=0.7.14';
+import {songTurns} from './song-rules.mjs?v=0.7.15';
 // BandLive keeps its own RNG and decks. Concert outcomes are connected separately.
 export const RULES = Object.freeze({minMembers:2,maxMembers:6,minAudience:3,maxAudience:12,energy:3,hand:5,turns:6,songTurns:3,tempoMax:10,finale:3,boredom:3,styleBonus:2,soloBonus:3});
 export const STYLES = Object.freeze(['Indie','Punk','Folk','Métal','Jazz','Électro','Ska','Pop']);
@@ -14,6 +14,35 @@ export const SPECIALS = Object.freeze(Object.fromEntries(Object.entries({
   percussion:{name:'Roulement',cost:1,target:'audience',tempo:1,boost:5,description:'+1 tempo. +5 puissance à la prochaine carte de puissance du tour.'},
 }).map(([key,value])=>[key,Object.freeze(value)])));
 export const NOTE = Object.freeze({name:'Note',cost:1,target:'single',power:6,description:'6 puissance sur un spectateur.'});
+
+export const CONQUEST_EFFECTS = Object.freeze({
+  shock:{name:'Onde de choc',icon:'✺',description:'3 puissance aux voisins immédiats (gauche, droite, devant et derrière).'},
+  wave:{name:'Vague d’enthousiasme',icon:'↔',description:'2 puissance aux autres spectateurs de la même rangée.'},
+  pierce:{name:'Percée dans la foule',icon:'↓',description:'4 puissance derrière, dans la même colonne. Continue si la cible est conquise ; traverse les spectateurs déjà conquis.'},
+  spotlight:{name:'Sous les projecteurs',icon:'✦',description:'Les voisins immédiats subissent +2 puissance par carte jusqu’à la fin du tour. Non cumulable.'},
+  chorus:{name:'Chœur du public',icon:'♫',description:'Les autres spectateurs de la rangée adoptent le style de la chanson actuelle jusqu’à sa fin.'},
+});
+export const audienceColumns=game=>game.conquestVersion===1?Math.min(4,game.fans.length):game.fans.length>6?Math.ceil(game.fans.length/2):game.fans.length;
+export const favoriteStyle=fan=>fan.chorusStyle||fan.favorite;
+// Board positions are independent of screen size and never collapse after a conquest.
+export function conquestTargets(game,fan){
+  if(game.conquestVersion!==1)return [];
+  const index=game.fans.indexOf(fan),cols=audienceColumns(game),row=Math.floor(index/cols),col=index%cols;
+  if(index<0)return [];
+  if(fan.effect==='pierce'){
+    const targets=[];
+    for(let i=index+cols;i<game.fans.length;i+=cols){const f=game.fans[i];if(f.hp===0)continue;targets.push(f);if(f.hp>4)break;}
+    return targets;
+  }
+  return game.fans.filter((f,i)=>f!==fan&&f.hp>0&&(['wave','chorus'].includes(fan.effect)?Math.floor(i/cols)===row:Math.abs(Math.floor(i/cols)-row)+Math.abs(i%cols-col)===1));
+}
+function assignConquestEffects(game){
+  // A separate seeded shuffle leaves the card draw and world RNG unchanged.
+  const rng={rng:(game.seed^0x9e3779b9)>>>0},keys=shuffle(rng,Object.keys(CONQUEST_EFFECTS));
+  const effects=shuffle(rng,Array.from({length:game.fans.length},(_,i)=>keys[i%keys.length]));
+  game.conquestVersion=1;
+  game.fans.forEach((fan,i)=>fan.effect=effects[i]);
+}
 
 function random(game) {
   game.rng=(Math.imul(1664525,game.rng)+1013904223)>>>0;
@@ -42,7 +71,7 @@ function createAudience(songs,count,rules=null){
 }
 
 export function createBandLive(options) { return createGame(options,RULES.maxMembers); }
-function createGame({people,groupId=null,groupName='Le band du quartier',songs,seed=2040,audienceSize=RULES.minAudience,audienceRules=null,songOrder=null},memberLimit) {
+function createGame({people,groupId=null,groupName='Le band du quartier',songs,seed=2040,audienceSize=RULES.minAudience,audienceRules=null,songOrder=null,conquestEffects=true},memberLimit) {
   if(!Array.isArray(people)||people.length<RULES.minMembers||people.length>memberLimit||people.some(p=>!p||typeof p.id!=='string'||!p.id||typeof p.name!=='string'||!SPECIALS[p.instrument])||new Set(people.map(p=>p.id)).size!==people.length)throw Error('Choisis de deux à six musiciens du groupe.');
   if(!Array.isArray(songs)||!songs.length||new Set(songs.map(s=>s.id)).size!==songs.length||songs.some(s=>!s||!s.id||!s.title||!s.style||s.turns!==undefined&&![3,4,5].includes(s.turns)))throw Error('Choisis une chanson du répertoire.');
   if(groupId!==null&&(typeof groupId!=='string'||!groupId))throw Error('Groupe invalide.');
@@ -56,6 +85,7 @@ function createGame({people,groupId=null,groupName='Le band du quartier',songs,s
   shuffle(game,game.deck);
   // Preserve ENCORE's varied opening hand, without looping for a two-person band.
   if(actors.length>=3)for(let tries=0;tries<100&&new Set(game.deck.slice(-5).map(id=>cardById(game,id).actorId)).size<3;tries++)shuffle(game,game.deck);
+  if(conquestEffects)assignConquestEffects(game);
   return game;
 }
 export const passageTurns=game=>game.version>=4?songTurns(currentSong(game)):RULES.songTurns;
@@ -84,6 +114,7 @@ function startTurn(game) {
 }
 export function chooseSong(game,id) {
   if(game.phase!=='choose'||!availableSongs(game).some(song=>song.id===id))return {ok:false,message:'Cette chanson ne peut pas être choisie.'};
+  game.fans.forEach(fan=>{delete fan.chorusStyle;delete fan.spotlight;});
   game.songId=id;game.usedSongs.push(id);game.section=0;
   if(game.turn)game.tempo=Math.max(0,game.tempo-2);
   startTurn(game);
@@ -96,10 +127,32 @@ export function canPlay(game,id) {
 export function powerAgainst(game,card,fan) {
   const definition=cardDefinition(card);
   if(!Object.hasOwn(definition,'power'))return 0;
-  return definition.power+(definition.useTempo?game.tempo:0)+game.boost+(fan.favorite===currentSong(game)?.style?RULES.styleBonus:0)+(definition.solo&&fan.intent==='solo'?RULES.soloBonus:0);
+  return definition.power+(definition.useTempo?game.tempo:0)+game.boost+(favoriteStyle(fan)===currentSong(game)?.style?RULES.styleBonus:0)+(fan.spotlight?2:0)+(definition.solo&&fan.intent==='solo'?RULES.soloBonus:0);
 }
-function conquer(game,fan) {
-  if(fan.hp===0&&!fan.conquered){fan.conquered=true;log(game,`${fan.name} est conquis !`);}
+function conquer(game,fan,queue) {
+  if(fan.hp===0&&!fan.conquered){fan.conquered=true;log(game,`${fan.name} est conquis !`);if(game.conquestVersion===1)queue.push(fan);}
+}
+function resolveConquests(game,queue){
+  const events=[];
+  for(let i=0;i<queue.length;i++){
+    const fan=queue[i],effect=CONQUEST_EFFECTS[fan.effect],targets=conquestTargets(game,fan),hits=[];
+    for(const target of targets){
+      if(['shock','wave','pierce'].includes(fan.effect)){
+        const power={shock:3,wave:2,pierce:4}[fan.effect],before=target.hp;
+        target.hp=Math.max(0,before-power);hits.push({id:target.id,before,after:target.hp,gain:before-target.hp,power});conquer(game,target,queue);
+      }else if(fan.effect==='spotlight')target.spotlight=true;
+      else if(fan.effect==='chorus')target.chorusStyle=currentSong(game).style;
+    }
+    const event={id:game.events.length+1,type:'conquest',turn:game.turn,fanId:fan.id,name:effect.name,effect:fan.effect,targets:targets.map(f=>f.id),hits};
+    game.events.push(event);events.push(event);
+    log(game,`${fan.name} · ${effect.name} : ${targets.length?targets.map(f=>f.name).join(', '):'aucune cible restante'}.`);
+  }
+  return events;
+}
+// Use the real resolver on a copy so previews include chains and never consume resources.
+export function previewCard(game,id,targetId=null){
+  const after=structuredClone(game),result=playCard(after,id,targetId);
+  return result.ok?{...result,game:after}:result;
 }
 function checkVictory(game) {
   if(game.fans.every(fan=>fan.hp===0)){game.phase='won';log(game,'Tout le public est conquis. Show réussi !');return true;}
@@ -112,26 +165,31 @@ export function playCard(game,id,targetId=null) {
   const powerCard=Object.hasOwn(definition,'power'),targets=powerCard?(definition.target==='single'?[fan]:game.fans.filter(f=>f.hp>0)):[];
   // Snapshot power before consuming tempo or the next-card bonus. Zero-power
   // Improvisation still is a power card and consumes those resources.
-  const hits=targets.map(f=>({id:f.id,before:f.hp,power:powerAgainst(game,card,f)}));
+  const queue=[],hits=targets.map(f=>({id:f.id,before:f.hp,power:powerAgainst(game,card,f)}));
   game.energy-=definition.cost;game.hand.splice(game.hand.indexOf(id),1);game.discard.push(id);game.played++;
-  for(const hit of hits){const f=game.fans.find(f=>f.id===hit.id);f.hp=Math.max(0,f.hp-hit.power);hit.after=f.hp;hit.gain=hit.before-hit.after;conquer(game,f);}
+  for(const hit of hits){const f=game.fans.find(f=>f.id===hit.id);f.hp=Math.max(0,f.hp-hit.power);hit.after=f.hp;hit.gain=hit.before-hit.after;conquer(game,f,queue);}
   if(powerCard){game.boost=0;if(definition.useTempo)game.tempo=0;}
   if(definition.tempo)game.tempo=Math.min(RULES.tempoMax,game.tempo+definition.tempo);
   if(definition.boost)game.boost+=definition.boost;
   const event={id:game.events.length+1,type:'card',turn:game.turn,cardId:id,actorId:card.actorId,name:definition.name,hits,tempo:game.tempo,boost:game.boost};
   game.events.push(event);log(game,`${definition.name} · ${INSTRUMENTS[card.instrument]}${hits.length?' : '+hits.map(h=>`${game.fans.find(f=>f.id===h.id).name} −${h.power}`).join(', '):''}.`);
+  const effects=resolveConquests(game,queue);
   checkVictory(game);
-  return {ok:true,event};
+  return {ok:true,event,effects};
 }
 export function endTurn(game) {
   if(game.phase!=='play')return {ok:false,message:'Le tour est déjà terminé.'};
   game.discard.push(...game.hand.splice(0));game.boost=0;
   if(game.section===passageTurns(game)){
-    const hits=game.fans.filter(f=>f.hp>0).map(f=>{const before=f.hp;f.hp=Math.max(0,f.hp-RULES.finale);conquer(game,f);return {id:f.id,before,after:f.hp,gain:before-f.hp,power:RULES.finale};});
+    const queue=[];
+    const hits=game.fans.filter(f=>f.hp>0).map(f=>{const before=f.hp;f.hp=Math.max(0,f.hp-RULES.finale);conquer(game,f,queue);return {id:f.id,before,after:f.hp,gain:before-f.hp,power:RULES.finale};});
     game.events.push({id:game.events.length+1,type:'finale',turn:game.turn,hits});
     log(game,'Finale : 3 puissance sur tout le public.');
+    resolveConquests(game,queue);
+    game.fans.forEach(fan=>{delete fan.chorusStyle;delete fan.spotlight;});
     if(checkVictory(game))return {ok:true};
   }
+  game.fans.forEach(fan=>{delete fan.spotlight;});
   for(const fan of game.fans)if(fan.hp>0&&fan.intent==='bored'){fan.hp=Math.min(fan.max,fan.hp+RULES.boredom);log(game,`${fan.name} s’ennuie : +3 à sa barre.`);}
   if(game.usedSongs.length===2&&game.section===passageTurns(game)){game.phase='lost';log(game,'Fin du show. Il reste du public à conquérir.');}
   else if(game.section===passageTurns(game)){game.phase='choose';log(game,'Choisis la chanson du deuxième passage. Son départ retire 2 tempo.');}
@@ -164,6 +222,13 @@ export function restoreBandLive(input) {
   if(game.phase==='choose'&&game.turn>0&&(lengths.length!==1||game.section!==lengths[0]))fail();
   if(game.phase==='play'&&(!currentSong(game)||game.turn<1||game.section<1)||game.phase==='lost'&&(game.usedSongs.length!==2||game.section!==lengths.at(-1)))fail();
   if(!Array.isArray(game.fans)||game.fans.length<RULES.minAudience||game.fans.length>RULES.maxAudience||new Set(game.fans.map(f=>f?.id)).size!==game.fans.length||game.fans.some(f=>!f||typeof f.id!=='string'||!f.id||typeof f.name!=='string'||!Number.isInteger(f.max)||f.max<1||f.max>1000||!Number.isInteger(f.hp)||f.hp<0||f.hp>f.max||!['bored','solo'].includes(f.intent)||!(game.audienceRules?.styles||game.songs.map(s=>s.style)).includes(f.favorite)||!!f.conquered!==(f.hp===0)))fail();
+  if(game.conquestVersion!==undefined&&game.conquestVersion!==1)fail();
+  for(const fan of game.fans){
+    if(game.conquestVersion===1){
+      if(!Object.hasOwn(CONQUEST_EFFECTS,fan.effect)||fan.spotlight!==undefined&&fan.spotlight!==true||fan.chorusStyle!==undefined&&(game.turn===0||fan.chorusStyle!==currentSong(game)?.style))fail();
+      if((game.phase==='choose'||game.turn===0)&&(fan.spotlight!==undefined||fan.chorusStyle!==undefined))fail();
+    }else if(fan.effect!==undefined||fan.spotlight!==undefined||fan.chorusStyle!==undefined)fail();
+  }
   if((game.phase==='won')!==game.fans.every(f=>f.hp===0)||!Array.isArray(game.logs)||game.logs.length>1000||game.logs.some(line=>typeof line!=='string')||!Array.isArray(game.events)||game.events.length>500)fail();
   return game;
 }

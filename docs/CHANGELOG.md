@@ -1,3 +1,7 @@
+# V0.7.15 — 12 octobre 2026
+
+BandLive : bonus de conquête dans le public. [Notes complètes](./versions.md#v0715).
+
 # V0.7.14 — 12 octobre 2026
 
 Des mini-personnages bien droits. [Notes complètes](./versions.md#v0714).

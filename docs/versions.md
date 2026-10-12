@@ -1,5 +1,21 @@
 # Notes de version
 
+## V0.7.15 — BandLive : bonus de conquête dans le public {#v0715}
+
+12 octobre 2026.
+
+BandLive : cinq bonus de conquête, un par spectateur, visibles sous leur barre. Activer le module dans **Réglages → Activer BandLive**, puis lancer un nouveau show ou une nouvelle répétition.
+
+- **Onde de choc** : 3 puissance aux voisins immédiats, sans diagonales.
+- **Vague d’enthousiasme** : 2 puissance aux autres spectateurs de la rangée.
+- **Percée dans la foule** : 4 puissance derrière, avec continuation si la cible est conquise.
+- **Sous les projecteurs** : +2 puissance par carte sur les voisins pendant le tour, non cumulable.
+- **Chœur du public** : les autres spectateurs de la rangée adoptent le style de la chanson jusqu’à sa fin.
+
+Le public garde ses rangées et colonnes sur tous les écrans. Les zones sont surlignées au survol ou au focus ; les bonus actifs sont affichés. La prévisualisation calcule aussi les réactions en chaîne. Les effets se déclenchent une seule fois, après la carte ou la finale ; conquérir tout le public gagne immédiatement.
+
+Les anciens shows et leurs replays conservent leurs règles. Les nouveaux effets, leur progression et les bonus temporaires sont conservés au rechargement et dans l’export du quartier. Le spectacle classique garde ses règles.
+
 ## V0.7.14 — Des mini-personnages bien droits {#v0714}
 
 12 octobre 2026.

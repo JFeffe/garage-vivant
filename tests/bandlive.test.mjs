@@ -102,7 +102,7 @@ test('every collective power card reaches the extra rows, and victory waits for 
     const before=g.fans.map(f=>f.hp),event=play(g,0,'audience');assert.equal(event.hits.length,9);assert.deepEqual(event.hits.map(h=>h.id),g.fans.slice(3).map(f=>f.id));
     assert(g.fans.slice(3).every((f,i)=>f.hp<before[i+3]));assert.equal(g.phase,'play');assert.deepEqual(restoreBandLive(g),g);
     endTurn(g);endTurn(g);for(const fan of g.fans.slice(3)){fan.hp=3;fan.intent='bored';}
-    endTurn(g);assert.equal(g.phase,'won');assert.equal(g.events.at(-1).hits.length,9);assert(g.fans.every(f=>f.hp===0&&f.conquered));assert.deepEqual(restoreBandLive(g),g);
+    endTurn(g);assert.equal(g.phase,'won');assert.equal(g.events.findLast(e=>e.type==='finale').hits.length,9);assert(g.fans.every(f=>f.hp===0&&f.conquered));assert.deepEqual(restoreBandLive(g),g);
   }
   const g=game(['guitar','drums'],12),before=g.fans.map(f=>f.hp);play(g,0,'f11','note');assert(g.fans[11].hp<before[11]);assert.deepEqual(g.fans.slice(0,11).map(f=>f.hp),before.slice(0,11));
 });

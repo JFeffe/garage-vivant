@@ -1,13 +1,13 @@
-import {songQualityHTML} from './song-rules.mjs?v=0.7.14';
-import {groupLinkHTML} from './group-link.mjs?v=0.7.14';
-import {mountDesignDashboard} from './design-dashboard.mjs?v=0.7.14';
-import {characterPortrait,characterName,drawCharacter,ACCESSORIES,MOVEMENTS} from './character-view.mjs?v=0.7.14';
-import {readMapOptions,saveMapOptions,mapOptionsHTML,MAP_DEFAULTS} from './map-options.mjs?v=0.7.14';
+import {songQualityHTML} from './song-rules.mjs?v=0.7.15';
+import {groupLinkHTML} from './group-link.mjs?v=0.7.15';
+import {mountDesignDashboard} from './design-dashboard.mjs?v=0.7.15';
+import {characterPortrait,characterName,drawCharacter,ACCESSORIES,MOVEMENTS} from './character-view.mjs?v=0.7.15';
+import {readMapOptions,saveMapOptions,mapOptionsHTML,MAP_DEFAULTS} from './map-options.mjs?v=0.7.15';
 const mapOptions=readMapOptions(localStorage);
-import { placeActivityLabels } from './map-labels.mjs?v=0.7.14';
-import { createBandLiveModule } from './bandlive-view.mjs?v=0.7.14';
-import {beginBandLiveConcert,commitBandLiveConcert,followingConcertPerformance} from './bandlive-concert.mjs?v=0.7.14';
-import {compositionCreditHTML,DEFAULT_FILTERS,catalogueControls,catalogueHTML as musicCatalogueHTML,songDetailsHTML} from "./catalogue.mjs?v=0.7.14";
+import { placeActivityLabels } from './map-labels.mjs?v=0.7.15';
+import { createBandLiveModule } from './bandlive-view.mjs?v=0.7.15';
+import {beginBandLiveConcert,commitBandLiveConcert,followingConcertPerformance} from './bandlive-concert.mjs?v=0.7.15';
+import {compositionCreditHTML,DEFAULT_FILTERS,catalogueControls,catalogueHTML as musicCatalogueHTML,songDetailsHTML} from "./catalogue.mjs?v=0.7.15";
 let catalogueFilters={...DEFAULT_FILTERS};
 import {
   thresholdsHTML,
@@ -16,13 +16,13 @@ import {
   exchangeTrace,
   sessionHTML,
   rapinHTML,
-} from "./v7-view.mjs?v=0.7.14";
+} from "./v7-view.mjs?v=0.7.15";
 import {
   effectiveTraits,
   updateTraits,
   TRAIT_CATALOG,
   BAG_ACTIONS,
-} from "./v7.mjs?v=0.7.14";
+} from "./v7.mjs?v=0.7.15";
 import {
   createShowClock,
   advanceShowClock,
@@ -32,22 +32,22 @@ import {
   songKey,
   stageGeometry,
   showBeat,
-} from "./show-playback.mjs?v=0.7.14";
+} from "./show-playback.mjs?v=0.7.15";
 import {
   showOverlayHTML,
   showResourcesHTML,
   deckInspectionHTML,
   cardInspectionHTML,
-} from "./show-view.mjs?v=0.7.14";
-import { setupDocSearch } from "./doc-search.mjs?v=0.7.14";
-import { calendarHTML } from "./v6-view.mjs?v=0.7.14";
-import { pendingBooking, eventById } from "./calendar.mjs?v=0.7.14";
-import { editBag } from "./social.mjs?v=0.7.14";
+} from "./show-view.mjs?v=0.7.15";
+import { setupDocSearch } from "./doc-search.mjs?v=0.7.15";
+import { calendarHTML } from "./v6-view.mjs?v=0.7.15";
+import { pendingBooking, eventById } from "./calendar.mjs?v=0.7.15";
+import { editBag } from "./social.mjs?v=0.7.15";
 import {
   profileMarkup,
   changeModule,
   resetLayout,
-} from "./profile-layout.mjs?v=0.7.14";
+} from "./profile-layout.mjs?v=0.7.15";
 import {
   VERSION,
   NEEDS,
@@ -86,7 +86,7 @@ import {
   compositionProject,
   journalEntries,
   chemistryKnowledge,
-} from "./engine.mjs?v=0.7.14";
+} from "./engine.mjs?v=0.7.15";
 import {
   command,
   bandStage,
@@ -102,20 +102,20 @@ import {
   nextSlot,
   skipShow,
   completePerformance,
-} from "./life.mjs?v=0.7.14";
+} from "./life.mjs?v=0.7.15";
 import {
   CARDS,
   CURSES,
   INTENTIONS,
   SHOW_TICKS,
   createPerformance,
-} from "./stage.mjs?v=0.7.14";
-import { resolveShowPlan } from "./show-planning.mjs?v=0.7.14";
+} from "./stage.mjs?v=0.7.15";
+import { resolveShowPlan } from "./show-planning.mjs?v=0.7.15";
 import {
   reconcile,
   createViewPositions,
   withReadingAnchor,
-} from "./ui-state.mjs?v=0.7.14";
+} from "./ui-state.mjs?v=0.7.15";
 import {
   quickHTML,
   skillHTML,
@@ -130,14 +130,14 @@ import {
   drawStage,
   enableAudio,
   playSound,
-} from "./v5-view.mjs?v=0.7.14";
+} from "./v5-view.mjs?v=0.7.15";
 import {
   createPlayback,
   snapSpeed,
   setPlaybackSpeed,
   advancePlayback,
   updatePositions,
-} from "./runtime.mjs?v=0.7.14";
+} from "./runtime.mjs?v=0.7.15";
 const playback = createPlayback();
 const $ = (q) => document.querySelector(q),
   $$ = (q) => [...document.querySelectorAll(q)],

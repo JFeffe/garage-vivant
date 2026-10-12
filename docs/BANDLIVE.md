@@ -89,7 +89,7 @@ Les tests de calendrier couvrent les confirmations et déplacements réels, la s
 
 Le preview appelle le même calcul que la carte jouée : puissance de base, tempo consommable, bonus de prochaine puissance, style favori et attente de Solo. Il affiche la résistance restante après plafonnement à zéro et ne consomme rien. Les cartes collectives prévisualisent toutes leurs cibles. Les piles consultables sont regroupées par musicien, sans ordre de tirage.
 
-Les réactions « Explosion », « En transe » et « Ému aux larmes » sont dérivées visuellement du spectateur conquis. Elles n’ajoutent aucune zone, réceptivité, propagation, dégât ou récompense. La transe respecte la préférence de réduction des animations. Compétences, affinités, besoins et qualité du quartier ne modifient pas les dégâts BandLive. Les raccords existants au calendrier et au bilan sont conservés; les durées de composition demandées constituent le seul nouveau paramètre musical transmis.
+Les nouveaux shows attribuent un bonus de conquête réel à chaque spectateur (voir ci-dessous). Les anciennes réactions « Explosion », « En transe » et « Ému aux larmes » restent des animations : leur apparence ne définit pas le bonus. Compétences, affinités, besoins et qualité du quartier ne modifient pas les dégâts BandLive. Les raccords existants au calendrier et au bilan sont conservés.
 
 L’éligibilité d’un vrai show est expliquée dans la préparation et près du bouton : deux à six musiciens, une ou deux compositions sans jam, engagement valide, première chanson non commencée. Le rang du band dans la soirée n’est pas une condition. Une setlist incompatible reste jouable dans le mode classique.
 
@@ -99,4 +99,26 @@ Le format BandLive 4 accepte deux passages de trois à cinq tours. Les formats 1
 
 Le plateau utilise toute la largeur disponible. Chaque musicien conserve ses propres cartes sous son personnage ; aucun panneau de main commune. Sur grand écran, le public est entièrement visible, sans défilement interne. Les petits écrans conservent un plateau horizontal et une foule défilante pour garder des cibles utilisables. Le choix de chanson ne réserve plus un espace de cartes vide.
 
-Le preview affiche **X dégâts** et **Résistance restante : Y / maximum**, au-dessus de la carte déplacée. Les cartes collectives affichent les résultats par spectateur. Les calculs, règles, sauvegardes et réactions cosmétiques restent inchangés.
+Le preview affiche **X dégâts** et **Résistance restante : Y / maximum**, au-dessus de la carte déplacée. Les cartes collectives affichent les résultats par spectateur. Le preview inclut aussi les réactions en chaîne des nouveaux bonus de conquête, sans modifier le show ni sa sauvegarde.
+
+## Bonus de conquête (0.7.15)
+
+Chaque spectateur d’un **nouveau show** possède exactement un effet, indiqué sous sa barre avant sa conquête. Le tirage dépend de la graine du show et répartit les cinq effets aussi équitablement que la taille du public le permet. Il ne change ni les cartes pigées ni le hasard du quartier.
+
+| Effet | À la conquête, une seule fois |
+|---|---|
+| Onde de choc | 3 puissance aux voisins immédiats encore à conquérir : gauche, droite, devant et derrière, sans diagonales. |
+| Vague d’enthousiasme | 2 puissance aux autres spectateurs encore à conquérir de la même rangée. |
+| Percée dans la foule | 4 puissance au spectateur derrière, dans la même colonne. Traverse les spectateurs déjà conquis et continue si la nouvelle cible est conquise. S’arrête sur le premier survivant ou au fond de la foule. |
+| Sous les projecteurs | Les voisins immédiats subissent +2 puissance par carte de puissance jusqu’à la fin du tour. Plusieurs projecteurs ne se cumulent pas. |
+| Chœur du public | Les autres spectateurs de la rangée adoptent le style de la chanson actuelle jusqu’à sa fin. Utilise le bonus de style habituel de +2, sans le doubler. |
+
+Le public forme des rangées de **quatre places maximum**, identiques sur ordinateur et téléphone. Le devant est du côté des musiciens ; derrière signifie vers le bas de l’écran. Les places des spectateurs conquis restent occupées. Les cibles sont surlignées au survol ou au focus d’un spectateur non conquis ; son infobulle détaille l’effet et les bonus temporaires actifs.
+
+Une carte termine tous ses effets avant les conquêtes : on calcule d’abord toutes ses cibles avec les bonus présents avant la carte, puis on consomme les ressources. Les conquêtes simultanées déclenchent ensuite leur effet dans l’ordre des places (de gauche à droite, du devant au fond). Les nouvelles conquêtes sont ajoutées à la suite de cette file. Chaque spectateur déclenche une seule fois. Les dégâts d’effet sont fixes : ni tempo, ni style, ni projecteurs ne les amplifient. Les finales peuvent aussi déclencher des effets, avant l’ennui. Les projecteurs expirent à la fin du tour ; le chœur expire à la fin du passage, même si la même chanson est reprise.
+
+Le preview utilise une copie du même moteur et montre tous les dégâts directs et secondaires, la résistance finale et les nouveaux bonus temporaires. Une victoire par réaction en chaîne termine le show et applique le bilan normal une seule fois.
+
+Le format de sauvegarde du quartier est inchangé. Le champ optionnel `conquestVersion: 1` distingue les nouveaux shows ; chaque spectateur y conserve son effet et ses statuts. Les shows et replays historiques sans ce champ gardent leurs règles d’origine, sans ajouter rétroactivement de bonus. Recharger ou exporter/importer conserve exactement les effets. Les nouveaux shows et répétitions utilisent les bonus.
+
+Validation ciblée : `node --test tests/bandlive-conquest.test.mjs` et `node tests/bandlive-conquest-browser.test.mjs` (zones, chaînes, durée, preview, reprise, ancien format, bilan du calendrier et trois tailles d’écran).
