@@ -1,6 +1,6 @@
 # DDD — Admission, échanges et activités communes
 
-Version 0.7.4. Demander à rejoindre une activité est une admission. Une fois admis, les échanges produisent directement un résultat. Les partenaires restent libres de quitter.
+Version 0.7.5. Demander à rejoindre une activité est une admission. Une fois admis, les échanges produisent directement un résultat. Les partenaires restent libres de quitter.
 
 ## Admission initiale
 

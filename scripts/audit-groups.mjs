@@ -3,17 +3,21 @@ import {createWorld,step,restore,VERSION} from '../dist/engine.mjs';
 import {skipShow,nextSlot} from '../dist/life.mjs';
 import {activeGroups,attachment} from '../dist/groups.mjs';
 import {GROUP_RULES} from '../dist/group-rules.mjs';
+import {RELEASE_VERSION} from '../dist/release.mjs';
+const output=process.argv[2]||'docs/BALANCE_V7_5.json';
 const seeds=[2040,...Array.from({length:18},(_,i)=>i+1),713],mean=xs=>xs.reduce((a,b)=>a+b,0)/(xs.length||1),runs=[],extended=[];
 for(const seed of seeds){
- const s=createWorld(seed,8),start=s.time;let first=null,checkpoints=[];
+ const s=createWorld(seed,8),start=s.time;let first=null,firstTrio=null,maxGroupSize=0,checkpoints=[];
  while(s.time<start+30*1440){
   // The existing skip command resolves real performances; this never creates a band or changes relations to arrange a test.
   if(s.performance?.status==='playing'){skipShow(s,true);nextSlot(s);}step(s);
   if(first===null&&s.groups.length)first=(s.time-start)/1440;
+  const sizes=s.groups.filter(g=>g.state==='active').map(g=>g.members.length);
+  maxGroupSize=Math.max(maxGroupSize,...sizes);if(firstTrio===null&&sizes.some(n=>n>=3))firstTrio=(s.time-start)/1440;
   const elapsed=s.time-start;
   if([3,5,10,30].some(d=>elapsed===d*1440)){
    const mature=s.people.filter(p=>Math.max(0,...activeGroups(s,p.id).map(g=>attachment(s,p,g).value))>=60);
-   checkpoints.push({day:elapsed/1440,formed:s.groups.length,active:s.groups.filter(g=>g.state==='active').length,survivors7d:s.groups.filter(g=>g.state==='active'&&s.time-g.created>=10080).length,mature:mature.length,matureSingle:mature.filter(p=>activeGroups(s,p.id).length===1).length,multi:s.people.filter(p=>activeGroups(s,p.id).length>1).length,maxMembership:Math.max(...s.people.map(p=>activeGroups(s,p.id).length)),affinity:mean(Object.values(s.rels).map(r=>r.affinity)),tension:mean(Object.values(s.rels).map(r=>r.tension)),metrics:structuredClone(s.groupState.metrics)});
+   checkpoints.push({day:elapsed/1440,formed:s.groups.length,active:s.groups.filter(g=>g.state==='active').length,groupSizes:sizes,survivors7d:s.groups.filter(g=>g.state==='active'&&s.time-g.created>=10080).length,mature:mature.length,matureSingle:mature.filter(p=>activeGroups(s,p.id).length===1).length,multi:s.people.filter(p=>activeGroups(s,p.id).length>1).length,maxMembership:Math.max(...s.people.map(p=>activeGroups(s,p.id).length)),affinity:mean(Object.values(s.rels).map(r=>r.affinity)),tension:mean(Object.values(s.rels).map(r=>r.tension)),metrics:structuredClone(s.groupState.metrics)});
    restore(s);
   }
  }
@@ -24,11 +28,12 @@ for(const seed of seeds){
   while(s.time<start+90*1440){if(s.performance?.status==='playing'){skipShow(s,true);nextSlot(s);}step(s);}
   restore(s);
   const mature=s.people.filter(p=>Math.max(0,...activeGroups(s,p.id).map(g=>attachment(s,p,g).value))>=60);
-  extended.push({seed,day:90,active:s.groups.filter(g=>g.state==='active').length,survivors30d:s.groups.filter(g=>g.state==='active'&&s.time-g.created>=30*1440).length,mature:mature.length,matureSingle:mature.filter(p=>activeGroups(s,p.id).length===1).length,maxMembership:Math.max(...s.people.map(p=>activeGroups(s,p.id).length)),metrics:structuredClone(s.groupState.metrics)});
+  extended.push({seed,day:90,active:s.groups.filter(g=>g.state==='active').length,groupSizes:s.groups.filter(g=>g.state==='active').map(g=>g.members.length),survivors30d:s.groups.filter(g=>g.state==='active'&&s.time-g.created>=30*1440).length,mature:mature.length,matureSingle:mature.filter(p=>activeGroups(s,p.id).length===1).length,maxMembership:Math.max(...s.people.map(p=>activeGroups(s,p.id).length)),metrics:structuredClone(s.groupState.metrics)});
  }
- runs.push({seed,firstGroup:first,checkpoints});console.log(seed,first?.toFixed(2),checkpoints.at(-1).active);
+ runs.push({seed,firstGroup:first,firstTrio,maxGroupSize,checkpoints});console.log(seed,first?.toFixed(2),checkpoints.at(-1).groupSizes);
 }
 const formed10=runs.filter(r=>r.firstGroup!==null&&r.firstGroup<=10).length,last=runs.map(r=>r.checkpoints.at(-1)),mature=last.reduce((n,r)=>n+r.mature,0),matureSingle=last.reduce((n,r)=>n+r.matureSingle,0);
-const result={version:VERSION,seeds,rules:GROUP_RULES,protocol:'8 personnages, paramètres par défaut, 30 jours écoulés et prolongement à 90 jours des graines 2040, 1 et 2 ; commandes de saut des spectacles existantes, aucune intervention sur groupes ou relations.',summary:{formedBy3:runs.filter(r=>r.firstGroup!==null&&r.firstGroup<=3).length,formedBy5:runs.filter(r=>r.firstGroup!==null&&r.firstGroup<=5).length,formedBy10:formed10,total:runs.length,failedSeeds:runs.filter(r=>r.firstGroup===null||r.firstGroup>10).map(r=>r.seed),active30:last.reduce((n,r)=>n+r.active,0),survivors7d:last.reduce((n,r)=>n+r.survivors7d,0),mature,matureSingle,maxMembership:Math.max(...last.map(r=>r.maxMembership)),practiceStarts:last.reduce((n,r)=>n+r.metrics.practices,0),departures:last.reduce((n,r)=>n+r.metrics.departures,0)},runs,extended};
-writeFileSync('docs/BALANCE_V7_3.json',JSON.stringify(result,null,2)+'\n');console.log(result.summary);
-if(formed10<16||mature===0||matureSingle<=mature/2)process.exitCode=1;
+const groupSizes=last.flatMap(r=>r.groupSizes),result={version:VERSION,release:RELEASE_VERSION,seeds,rules:GROUP_RULES,protocol:'8 personnages, paramètres par défaut, 30 jours écoulés et prolongement à 90 jours des graines 2040, 1 et 2 ; commandes de saut des spectacles existantes, aucune intervention sur groupes ou relations.',summary:{formedBy3:runs.filter(r=>r.firstGroup!==null&&r.firstGroup<=3).length,formedBy5:runs.filter(r=>r.firstGroup!==null&&r.firstGroup<=5).length,formedBy10:formed10,total:runs.length,failedSeeds:runs.filter(r=>r.firstGroup===null||r.firstGroup>10).map(r=>r.seed),trioBy10:runs.filter(r=>r.firstTrio!==null&&r.firstTrio<=10).length,trioBy30:runs.filter(r=>r.firstTrio!==null&&r.firstTrio<=30).length,sizes30:Object.fromEntries([...new Set(groupSizes)].sort((a,b)=>a-b).map(n=>[n,groupSizes.filter(x=>x===n).length])),active30:last.reduce((n,r)=>n+r.active,0),survivors7d:last.reduce((n,r)=>n+r.survivors7d,0),mature,matureSingle,maxMembership:Math.max(...last.map(r=>r.maxMembership)),practiceStarts:last.reduce((n,r)=>n+r.metrics.practices,0),departures:last.reduce((n,r)=>n+r.metrics.departures,0)},runs,extended};
+writeFileSync(output,JSON.stringify(result,null,2)+'\n');console.log(result.summary);
+// Regression gates for this cohort, never quotas applied to the simulation.
+if(formed10<16||mature===0||matureSingle<=mature/2||result.summary.trioBy30<16||groupSizes.filter(n=>n>=3).length<=groupSizes.length/2)process.exitCode=1;

@@ -1,6 +1,6 @@
 # DDD — Raccords et limites V7.2
 
-Version 0.7.4. Ce registre décrit les consommateurs réellement actifs et ceux qui restent débranchés. Le mandat autorise ces limites lorsqu’elles sont identifiées et ne cassent pas la partie ; aucune mécanique de remplacement ne les masque.
+Version 0.7.5. Ce registre décrit les consommateurs réellement actifs et ceux qui restent débranchés. Le mandat autorise ces limites lorsqu’elles sont identifiées et ne cassent pas la partie ; aucune mécanique de remplacement ne les masque.
 
 ## Carte des raccords actifs
 
