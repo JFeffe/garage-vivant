@@ -6,7 +6,7 @@ import {createConcertReplay,beginBandLiveConcert,commitBandLiveConcert} from '..
 import {completePerformance} from '../dist/life.mjs';
 import {preparedConcert} from './bandlive-concert-helpers.mjs';
 function fixture(count=12,instrument='guitar'){
- const world=createWorld(301,4),g=createBandLive({people:world.people.map(p=>({...p,instrument})),songs:[{id:'punk',title:'Le rappel',style:'Punk',turns:3}],seed:9,audienceSize:count});
+ const world=createWorld(301,4),g=createBandLive({persistentReactions:false,people:world.people.map(p=>({...p,instrument})),songs:[{id:'punk',title:'Le rappel',style:'Punk',turns:3}],seed:9,audienceSize:count});
  chooseSong(g,'punk');for(const f of g.fans){f.max=f.hp=100;f.favorite='Punk';f.effect='spotlight';}return g;
 }
 function note(g,instrument){
@@ -18,13 +18,13 @@ function kill(g,index,effect){g.fans[index].effect=effect;g.fans[index].hp=1;ret
 
 test('Every new spectator has exactly one seeded effect; distribution is balanced without changing card RNG',()=>{
  const w=createWorld(302,4),options={people:w.people,songs:[{id:'x',title:'X',style:'Punk'}],seed:12},before=structuredClone(w);
- const legacy=createBandLive({...options,conquestEffects:false});
+ const legacy=createBandLive({persistentReactions:false,...options,conquestEffects:false});
  for(const audienceSize of [3,5,8,10,12]){
-  const g=createBandLive({...options,audienceSize});assert.equal(g.conquestVersion,1);assert(g.fans.every(f=>Object.hasOwn(CONQUEST_EFFECTS,f.effect)));
-  assert.deepEqual(g.deck,legacy.deck);assert.equal(g.rng,legacy.rng);assert.deepEqual(g,createBandLive({...options,audienceSize}));assert.deepEqual(restoreBandLive(g),g);
+  const g=createBandLive({persistentReactions:false,...options,audienceSize});assert.equal(g.conquestVersion,1);assert(g.fans.every(f=>Object.hasOwn(CONQUEST_EFFECTS,f.effect)));
+  assert.deepEqual(g.deck,legacy.deck);assert.equal(g.rng,legacy.rng);assert.deepEqual(g,createBandLive({persistentReactions:false,...options,audienceSize}));assert.deepEqual(restoreBandLive(g),g);
   const counts=Object.keys(CONQUEST_EFFECTS).map(k=>g.fans.filter(f=>f.effect===k).length);assert(Math.max(...counts)-Math.min(...counts)<=1);
  }assert.deepEqual(w,before);
- const types=new Set();for(let seed=1;seed<30;seed++)createBandLive({...options,seed:seed*7919}).fans.forEach(f=>types.add(f.effect));assert.equal(types.size,5);
+ const types=new Set();for(let seed=1;seed<30;seed++)createBandLive({persistentReactions:false,...options,seed:seed*7919}).fans.forEach(f=>types.add(f.effect));assert.equal(types.size,5);
 });
 test('Shock is orthogonal without row wrapping, and wave touches only its own row',()=>{
  const g=fixture();assert.equal(audienceColumns(g),4);g.fans[3].effect='shock';assert.deepEqual(conquestTargets(g,g.fans[3]).map(f=>f.id),['f2','f7']);

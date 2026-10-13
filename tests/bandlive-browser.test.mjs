@@ -21,7 +21,7 @@ for(const g of [group,largeGroup])g.repertoire=world.songs.filter(s=>s.ownerGrou
 assert.deepEqual(restore(world),world);
 const actors=world.people.slice(0,6).map((p,i)=>({...p,instrument:['guitar','drums','bass','sax','keys','voice'][i]}));
 function fixture(audienceSize=3,memberCount=4){
-  const game=createBandLive({people:actors.slice(0,memberCount),groupName:group.name,songs:[{id:'punk',title:'Rébellion nocturne',style:'Punk'},{id:'pop',title:'Sous les néons',style:'Pop'}],seed:12,audienceSize});chooseSong(game,'punk');game.tempo=4;
+  const game=createBandLive({persistentReactions:false,people:actors.slice(0,memberCount),groupName:group.name,songs:[{id:'punk',title:'Rébellion nocturne',style:'Punk'},{id:'pop',title:'Sous les néons',style:'Pop'}],seed:12,audienceSize});chooseSong(game,'punk');game.tempo=4;
   const hand=[0,3,8,13,18].filter(i=>game.cards[i]).map(i=>game.cards[i].id);game.deck=game.cards.map(c=>c.id).filter(id=>!hand.includes(id));game.hand=hand;return game;
 }
 async function load(page,state=null,sourceWorld=world){
@@ -87,13 +87,13 @@ try{
   await drag(page,note,'.bl-audience',{x:10,y:10});assert.deepEqual(await data(page),before,'A single-target card dropped on empty crowd space is not spent');
   await drag(page,bass,'.bl-audience',{x:10,y:10});let after=await data(page);assert.equal(after.energy,3);assert.equal(after.tempo,5);assert.equal(after.boost,3);assert.equal(after.hand.length,4);
   await drag(page,note,'[data-bl-fan="f0"]');after=await data(page);assert.equal(after.energy,2);assert.equal(after.boost,0);assert.equal(after.fans[0].hp,13);assert.equal(after.tempo,5);
-  await drag(page,sax,'.bl-audience',{x:10,y:10});after=await data(page);assert.deepEqual(after.fans.map(f=>f.hp),[6,15,20]);assert.equal(after.energy,1);assert.equal(after.tempo,0);assert.equal(after.hand.length,2);
+  await drag(page,sax,'.bl-audience',{x:10,y:10});after=await data(page);assert.deepEqual(after.fans.map(f=>f.hp),[6,15,20]);assert.equal(after.energy,0);assert.equal(after.tempo,0);assert.equal(after.hand.length,2);
   await page.locator('[data-bl-actor]').first().hover();assert((await page.locator('#bandlive-tooltip').textContent()).includes('Maîtrise'));await page.locator('[data-bl-actor]').first().click();assert.equal(await page.locator('#dialog').evaluate(el=>el.open),false);
   await page.locator('[data-bl-fan="f0"]').hover();assert((await page.locator('#bandlive-tooltip').textContent()).includes('Conquête'));await page.locator('[data-bl-fan="f0"]').click();assert.equal(await page.locator('#dialog').evaluate(el=>el.open),false);
   await page.locator('[data-bl-fan="f0"] [data-bl-style]').hover();assert.equal((await page.locator('#bandlive-tooltip').textContent()).trim(),'Punk');
   await page.reload();await page.locator('#bandlive-nav').click();assert.deepEqual(await data(page),after,'Reload resumes the same turn and hand');
   await page.screenshot({path:'test-results/bandlive-desktop.png'});
-  await page.locator(`[data-bl-card="${before.cards[8].id}"]`).focus();await page.keyboard.press('Enter');await page.locator('.bl-audience').focus();await page.keyboard.press('Enter');await idle(page);assert.equal((await data(page)).energy,0,'Keyboard selection plays a preparation');assert.equal((await data(page)).tempo,4);
+  await page.locator(`[data-bl-card="${before.cards[8].id}"]`).focus();await page.keyboard.press('Enter');await page.locator('.bl-audience').focus();await page.keyboard.press('Enter');await idle(page);assert.equal((await data(page)).energy,0,'No preparation can be paid after the 2-energy sax card');assert.equal((await data(page)).tempo,0);
   await page.locator('#bl-end').click();const next=await data(page);assert.equal(next.turn,2);assert.equal(next.energy,3);assert.equal(next.hand.length,5);assert.equal(next.boost,0);
   await page.close();
 

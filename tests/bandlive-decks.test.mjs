@@ -8,7 +8,7 @@ import {beginBandLiveConcert,commitBandLiveConcert,exchangeBandLiveCard,skipBand
 import {preparedConcert} from './bandlive-concert-helpers.mjs';
 function fixture(instrument='guitar',kind='new1'){
  const people=createWorld(41,4).people.slice(0,2);people[0].instrument=instrument;people[0].bandLiveDecks={[instrument]:[kind,'note','note','special','special']};
- const g=createBandLive({people,songs:[{id:'a',title:'A',style:'Punk'}],audienceSize:12,seed:7,audienceRules:{styles:['Jazz','Punk'],resistancePercent:100}});chooseSong(g,'a');
+ const g=createBandLive({persistentReactions:false,people,songs:[{id:'a',title:'A',style:'Punk'}],audienceSize:12,seed:7,audienceRules:{styles:['Jazz','Punk'],resistancePercent:100}});chooseSong(g,'a');
  g.fans.forEach(f=>{f.hp=f.max=100;f.favorite='Jazz';f.intent='solo';});
  return {g,id:g.cards[0].id};
 }
@@ -25,36 +25,36 @@ test('instrument changes retain independent personal decks and export/import pre
 test('new shows bring only the active instrument deck and replays retain the original snapshot',()=>{
  const {world}=preparedConcert();world.people[0].bandLiveDecks={guitar:['new1','new2','note','special','special'],keys:['new2','new2','note','special','special']};const {game}=beginBandLiveConcert(world);assert.deepEqual(game.cards.filter(c=>c.actorId===world.people[0].id).map(c=>c.kind),world.people[0].bandLiveDecks.guitar);world.people[0].bandLiveDecks.guitar[0]='special';const replay=createConcertReplay(game);assert.equal(replay.cards.find(c=>c.actorId===world.people[0].id).kind,'new1');assert.deepEqual(restoreBandLive(game),game);
 });
-test('Riff and Montée require the previous card from another musician in the same turn',()=>{
- for(const instrument of ['guitar','drums']){const {g,id}=fixture(instrument);const other=g.cards.find(c=>c.actorId!==g.cards[0].actorId&&c.kind==='note');use(g,other.id,'f8');const r=use(g,id);if(instrument==='guitar')assert.equal(r.event.hits[0].power,8);else assert.equal(g.tempo,5);endTurn(g);g.fans.forEach(f=>f.intent='bored');use(g,id);if(instrument==='guitar')assert.equal(g.events.findLast(e=>e.type==='card').hits[0].power,5);else assert.equal(g.tempo,8);}
+test('tempo thresholds amplify guitar and voice without spending, and sax draws only above its threshold',()=>{
+ for(const [instrument,low,high] of [['guitar',5,8],['voice',3,5]]){const {g,id}=fixture(instrument);assert.equal(use(g,id).event.hits[0].power,low);g.tempo=4;assert.equal(use(g,id).event.hits[0].power,high);assert.equal(g.tempo,4);}
+ const {g,id}=fixture('sax');g.tempo=3;give(g,id);const n=g.hand.length;assert.equal(use(g,id).event.hits[0].power,5);assert.equal(g.hand.length,n);assert.equal(g.tempo,3);
+ g.tempo=2;give(g,id);const before=g.hand.length;use(g,id);assert.equal(g.hand.length,before-1);
 });
-test('direct conquest rewards ignore chain conquests and grant once per card',()=>{
- const {g,id}=fixture('percussion','new2');g.fans[0].hp=4;g.fans[0].effect='shock';g.fans[1].hp=3;g.fans[1].effect='wave';give(g,id);const hand=g.hand.length;use(g,id);assert.equal(g.hand.length,hand);assert.equal(g.tempo,1);assert(g.fans[1].conquered);
- const other=fixture('voice','new2');other.g.fans.slice(0,5).forEach(f=>{f.hp=4;f.effect='spotlight';});use(other.g,other.id);assert.equal(other.g.tempo,3);
- const solo=fixture('guitar','new2');solo.g.fans[0].hp=12;solo.g.fans[0].intent='bored';give(solo.g,solo.id);const n=solo.g.hand.length;use(solo.g,solo.id);assert.equal(solo.g.hand.length,n);
+test('all four consuming cards spend a bounded amount once across their targets',()=>{
+ for(const [instrument,power,left,count] of [['guitar',16,2,1],['voice',6,3,12],['keys',5,4,4],['sax',7,2,2]]){
+  const {g,id}=fixture(instrument,'new2');g.tempo=6;const r=use(g,id,'f0',instrument==='sax'?{secondTargetId:'f5'}:{});assert.equal(r.event.hits.length,count);assert(r.event.hits.every(h=>h.power===power));assert.equal(g.tempo,left);
+ }
+ const {g,id}=fixture('sax','new2');give(g,id);const before=structuredClone(g);assert(!playCard(g,id,'f0',{secondTargetId:'f0'}).ok);assert.deepEqual(g,before);
 });
-test('Ligne porteuse draws and prepares the next power card; Contretemps also produces tempo',()=>{
- const {g,id}=fixture('bass');give(g,id);const n=g.hand.length;use(g,id);assert.equal(g.hand.length,n);assert.equal(g.boost,3);const note=g.cards.find(c=>c.kind==='note');assert.equal(use(g,note.id).event.hits[0].power,9);assert.equal(g.boost,0);
- const c=fixture('drums','new2');assert.equal(use(c.g,c.id).event.hits[0].power,4);assert.equal(c.g.tempo,2);
+test('reliable preparation draws and gains tempo, with a hard cap of ten',()=>{
+ for(const [instrument,amount] of [['drums',3],['keys',2]]){const {g,id}=fixture(instrument);give(g,id);const n=g.hand.length;use(g,id);assert.equal(g.tempo,amount);assert.equal(g.hand.length,n);g.tempo=9;use(g,id);assert.equal(g.tempo,10);}
+ const {g,id}=fixture('drums','new2');assert.equal(use(g,id).event.hits[0].power,3);assert.equal(g.tempo,2);
 });
-test('row effects respect geometry; turn style and boredom prevention expire after end turn',()=>{
- const bass=fixture('bass','new2');bass.g.fans.forEach(f=>{f.hp=50;f.intent='bored';});use(bass.g,bass.id,'f4');assert.deepEqual(bass.g.fans.slice(4,8).map(f=>f.hp),[47,47,47,47]);endTurn(bass.g);assert.deepEqual(bass.g.fans.slice(4,8).map(f=>f.hp),[47,47,47,47]);assert.equal(bass.g.fans[0].hp,53);assert(bass.g.fans.every(f=>!f.noBoredom));
- const voice=fixture('voice');use(voice.g,voice.id,'f4');assert.equal(voice.g.fans.filter(f=>f.turnStyle==='Punk').length,4);voice.g.fans[4].chorusStyle='Punk';endTurn(voice.g);assert(voice.g.fans.every(f=>!f.turnStyle));assert.equal(voice.g.fans[4].chorusStyle,'Punk');
+test('bass protects a row and trumpet changes its style through the end of the turn',()=>{
+ const bass=fixture('bass');bass.g.fans.forEach(f=>{f.hp=50;f.intent='bored';});use(bass.g,bass.id,'f4');assert.equal(bass.g.tempo,2);endTurn(bass.g);assert.deepEqual(bass.g.fans.slice(4,8).map(f=>f.hp),[50,50,50,50]);assert.equal(bass.g.fans[0].hp,53);assert(bass.g.fans.every(f=>!f.noBoredom));
+ const horn=fixture('trumpet','new2');use(horn.g,horn.id,'f4');assert.equal(horn.g.tempo,2);assert.equal(horn.g.fans.filter(f=>f.turnStyle==='Punk').length,4);endTurn(horn.g);assert(horn.g.fans.every(f=>!f.turnStyle));
 });
-test('Accord ouvert does not wrap rows and Percée cuivrée skips conquered spectators',()=>{
- const keys=fixture('keys');assert.deepEqual(use(keys.g,keys.id,'f3').event.hits.map(h=>[h.id,h.power]),[['f3',4],['f2',2]]);
- const horn=fixture('trumpet','new2');horn.g.fans[4].hp=0;horn.g.fans[4].conquered=true;assert.deepEqual(use(horn.g,horn.id).event.hits.map(h=>[h.id,h.power]),[['f0',8],['f8',4]]);
- const accent=fixture('trumpet');accent.g.fans[1].hp=0;accent.g.fans[1].conquered=true;assert.equal(use(accent.g,accent.id).event.hits[0].power,8);
+test('relay ignores its own musician, stacks, applies once to each target, then expires',()=>{
+ const {g,id}=fixture('bass','new2');use(g,id);use(g,id);assert.equal(g.relayBoosts.length,2);
+ const same=g.cards.find(c=>c.actorId===g.cards[0].actorId&&c.kind==='note');assert.equal(use(g,same.id).event.hits[0].power,6);assert.equal(g.relayBoosts.length,2);
+ const other=g.cards.find(c=>c.actorId!==same.actorId&&c.kind==='note');assert.equal(use(g,other.id).event.hits[0].power,14);assert.equal(g.relayBoosts.length,0);use(g,id);endTurn(g);assert.equal(g.relayBoosts.length,0);
 });
-test('Variation requires a different discard, is bounded per copy per turn and survives reload',()=>{
- const {g,id}=fixture('keys','new2');give(g,id);const before=structuredClone(g);assert(!playCard(g,id,'audience',{discardId:id}).ok);assert.deepEqual(g,before);const discardId=g.hand.find(x=>x!==id);use(g,id,'audience',{discardId});give(g,id);assert(!canPlay(g,id));assert(!canPlay(restoreBandLive(g),id));endTurn(g);give(g,id);assert(canPlay(g,id));
+test('trumpet checks already conquered neighbours and percussion rewards direct conquests only',()=>{
+ const horn=fixture('trumpet');assert.equal(use(horn.g,horn.id).event.hits[0].power,4);assert.equal(horn.g.tempo,1);horn.g.fans[1].hp=0;horn.g.fans[1].conquered=true;use(horn.g,horn.id);assert.equal(horn.g.tempo,4);
+ const {g,id}=fixture('percussion','new2');g.fans[0].hp=4;g.fans[0].effect='shock';g.fans[1].hp=3;g.fans[1].effect='wave';use(g,id);assert.equal(g.tempo,3);assert(g.fans[1].conquered);
 });
-test('sax threshold does not spend tempo; duo requires two distinct targets and consumes at most four',()=>{
- const phrase=fixture('sax');phrase.g.tempo=4;assert.equal(use(phrase.g,phrase.id).event.hits[0].power,8);assert.equal(phrase.g.tempo,4);
- const {g,id}=fixture('sax','new2');g.tempo=6;give(g,id);const before=structuredClone(g);assert(!playCard(g,id,'f0',{secondTargetId:'f0'}).ok);assert.deepEqual(g,before);assert.deepEqual(use(g,id,'f0',{secondTargetId:'f5'}).event.hits.map(h=>[h.id,h.power]),[['f0',7],['f5',7]]);assert.equal(g.tempo,2);
-});
-test('Double frappe applies preparation, style and spotlight bonuses once across both strikes',()=>{
- const {g,id}=fixture('percussion');g.boost=3;g.fans[0].favorite='Punk';g.fans[0].spotlight=true;const r=use(g,id);assert.equal(r.event.hits.length,2);assert.equal(r.event.hits.reduce((n,h)=>n+h.power,0),13);assert.equal(g.fans[0].hp,87);assert.equal(g.boost,0);
+test('percussion alternation requires another musician immediately before it in this turn',()=>{
+ const {g,id}=fixture('percussion');use(g,id);assert.equal(g.tempo,2);const other=g.cards.find(c=>c.actorId!==g.cards[0].actorId&&c.kind==='note');use(g,other.id,'f8');use(g,id);assert.equal(g.tempo,6);endTurn(g);use(g,id);assert.equal(g.tempo,8);
 });
 test('a completed losing show offers exactly one exchange across reload, preserving deck size and replay',()=>{
  const {world}=preparedConcert();beginBandLiveConcert(world);assert(!exchangeBandLiveCard(world,{actorId:world.people[0].id,slot:0,kind:'new1'}).ok);const g=finish(world),w=restore(JSON.parse(JSON.stringify(world))),actor=g.actors[0],before=structuredClone(g);assert.equal(w.performance.bandLive.reward.status,'pending');assert(exchangeBandLiveCard(w,{actorId:actor.id,slot:0,kind:'new1'}).ok);assert.equal(musicianDeck(w.people.find(p=>p.id===actor.id),actor.instrument)[0],'new1');assert.equal(w.performance.bandLive.game.cards[0].kind,'note');assert.deepEqual(w.performance.bandLive.game,before);assert.equal(w.showHistory[0].bandLiveReward.status,'claimed');assert.deepEqual(restore(w),w);assert(!exchangeBandLiveCard(w,{actorId:actor.id,slot:1,kind:'new2'}).ok);assert(!skipBandLiveExchange(w));assert.equal(createConcertReplay(w.performance.bandLive.game).cards[0].kind,'note');
@@ -65,6 +65,6 @@ test('exchange uses the played instrument even after a change, rejects outsiders
 });
 
 test('boredom prevention also lasts through the finale and a won show grants one exchange',()=>{
- const {g,id}=fixture('bass','new2');endTurn(g);endTurn(g);g.fans.forEach(f=>{f.hp=50;f.intent='bored';});use(g,id,'f4');endTurn(g);assert.equal(g.phase,'choose');assert.equal(g.fans[4].hp,44);assert.equal(g.fans[0].hp,50);assert(g.fans.every(f=>!f.noBoredom));restoreBandLive(g);
+ const {g,id}=fixture('bass','new1');endTurn(g);endTurn(g);g.fans.forEach(f=>{f.hp=50;f.intent='bored';});use(g,id,'f4');endTurn(g);assert.equal(g.phase,'choose');assert.equal(g.fans[4].hp,47);assert.equal(g.fans[0].hp,50);assert(g.fans.every(f=>!f.noBoredom));restoreBandLive(g);
  const {world}=preparedConcert();const {game}=beginBandLiveConcert(world);chooseSong(game,'song-1');game.fans.forEach(f=>f.hp=1);const card=game.cards.find(c=>c.instrument==='sax'&&c.kind==='special');give(game,card.id);game.tempo=4;playCard(game,card.id,'audience');assert.equal(game.phase,'won');commitBandLiveConcert(world,completePerformance);const a=game.actors[0];assert(exchangeBandLiveCard(world,{actorId:a.id,slot:0,kind:'new1'}).ok);assert(!exchangeBandLiveCard(world,{actorId:a.id,slot:1,kind:'new2'}).ok);restore(world);
 });
