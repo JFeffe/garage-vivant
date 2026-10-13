@@ -1,3 +1,7 @@
+# V0.7.20 — 12 octobre 2026
+
+BandLive : tempo, réactions persistantes et simulation. [Notes complètes](./versions.md#v0720).
+
 # V0.7.19 — 12 octobre 2026
 
 BandLive · scène Minuit et visée. [Notes complètes](./versions.md#v0719).

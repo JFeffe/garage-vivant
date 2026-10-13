@@ -8,7 +8,7 @@ import {resolveBandLivePlan,createBandLiveFromWorld} from '../dist/bandlive-rost
 const songs=[{id:'punk',title:'Rébellion nocturne',style:'Punk'},{id:'pop',title:'Sous les néons',style:'Pop'}];
 function game(instruments=['guitar','drums','bass','sax'],audienceSize=RULES.minAudience){
   const world=createWorld(205,8),people=instruments.map((instrument,i)=>({...world.people[i],instrument}));
-  const result=createBandLive({people,songs,seed:12,audienceSize});chooseSong(result,'punk');return result;
+  const result=createBandLive({persistentReactions:false,people,songs,seed:12,audienceSize});chooseSong(result,'punk');return result;
 }
 function putInHand(g,actor,kind='special'){
   const card=g.cards.find(c=>c.actorId===g.actors[actor].id&&c.kind===kind);
@@ -20,7 +20,7 @@ function play(g,actor,target='f0',kind='special'){const id=putInHand(g,actor,kin
 
 test('the eight approved specialties and equal five-card contributions',()=>{
   assert.deepEqual(Object.entries(SPECIALS).map(([i,c])=>[i,c.cost,c.power??null,c.tempo??0,c.boost??0,!!c.useTempo]),[
-    ['guitar',2,8,0,0,true],['drums',1,null,4,0,false],['bass',0,null,1,3,false],['voice',2,5,0,0,false],['keys',1,2,2,0,false],['sax',1,0,0,0,true],['trumpet',0,null,2,0,false],['percussion',1,null,1,5,false],
+    ['guitar',2,8,0,0,true],['drums',1,null,4,0,false],['bass',0,null,1,3,false],['voice',2,5,0,0,false],['keys',1,2,2,0,false],['sax',2,0,0,0,true],['trumpet',0,null,2,0,false],['percussion',1,null,1,5,false],
   ]);
   for(const instruments of [Object.keys(SPECIALS).slice(0,6),Object.keys(SPECIALS).slice(6)]){
     const g=game(instruments);assert.equal(g.cards.length,instruments.length*5);
@@ -34,7 +34,7 @@ test('Solo consumes all tempo and the power bonus, and respects the spectator in
 });
 test('Saxophone consumes tempo once, applying its full amount to every remaining spectator',()=>{
   const g=game();g.tempo=7;g.boost=3;
-  const event=play(g,3,'audience');assert.deepEqual(event.hits.map(h=>h.power),[12,10,10]);assert.deepEqual(g.fans.map(f=>f.hp),[12,10,15]);assert.equal(g.tempo,0);assert.equal(g.boost,0);assert.equal(g.energy,2);
+  const event=play(g,3,'audience');assert.deepEqual(event.hits.map(h=>h.power),[12,10,10]);assert.deepEqual(g.fans.map(f=>f.hp),[12,10,15]);assert.equal(g.tempo,0);assert.equal(g.boost,0);assert.equal(g.energy,1);
 });
 test('zero-tempo Improvisation is a power card and consumes the next-card bonus',()=>{
   const g=game();g.boost=3;
@@ -79,19 +79,19 @@ test('JSON resume is deterministic and rejects duplicate cards or illegal resour
   const badTurn=structuredClone(g);badTurn.turn=6;badTurn.phase='choose';assert.throws(()=>restoreBandLive(badTurn));
 });
 test('BandLive snapshots do not mutate the world, original decks or world RNG',()=>{
-  const world=createWorld(205,8),before=structuredClone(world),g=createBandLive({people:world.people.slice(0,4),songs,seed:12});chooseSong(g,'punk');endTurn(g);
+  const world=createWorld(205,8),before=structuredClone(world),g=createBandLive({persistentReactions:false,people:world.people.slice(0,4),songs,seed:12});chooseSong(g,'punk');endTurn(g);
   assert.deepEqual(world,before);assert.notEqual(g.actors[0].needs,world.people[0].needs);
-  assert.deepEqual(createBandLive({people:world.people.slice(0,4),songs,seed:12}),createBandLive({people:world.people.slice(0,4),songs,seed:12}));
+  assert.deepEqual(createBandLive({persistentReactions:false,people:world.people.slice(0,4),songs,seed:12}),createBandLive({persistentReactions:false,people:world.people.slice(0,4),songs,seed:12}));
 });
 
 test('three to twelve spectators survive JSON resume without changing the band, decks or world RNG',()=>{
   const world=createWorld(205,8),before=structuredClone(world),options={people:world.people.slice(0,4),songs,seed:12},baseline=createBandLive(options);
   assert.deepEqual(baseline.fans.map(f=>[f.name,f.hp]),[['Lou',24],['Pat',20],['Kim',25]]);
   for(const audienceSize of [3,4,6,9,12]){
-    const g=createBandLive({...options,audienceSize});assert.equal(g.fans.length,audienceSize);assert.equal(new Set(g.fans.map(f=>f.id)).size,audienceSize);assert.equal(new Set(g.fans.map(f=>f.name)).size,audienceSize);
+    const g=createBandLive({persistentReactions:false,...options,audienceSize});assert.equal(g.fans.length,audienceSize);assert.equal(new Set(g.fans.map(f=>f.id)).size,audienceSize);assert.equal(new Set(g.fans.map(f=>f.name)).size,audienceSize);
     assert.deepEqual(g.deck,baseline.deck);assert.equal(g.rng,baseline.rng);chooseSong(g,'punk');endTurn(g);assert.deepEqual(restoreBandLive(JSON.parse(JSON.stringify(g))),g);
   }
-  for(const audienceSize of [2,13,3.5,null,'6'])assert.throws(()=>createBandLive({...options,audienceSize}),/spectateurs/);
+  for(const audienceSize of [2,13,3.5,null,'6'])assert.throws(()=>createBandLive({persistentReactions:false,...options,audienceSize}),/spectateurs/);
   for(const fans of [[],baseline.fans.slice(0,2),Array(13).fill(baseline.fans[0]),[...baseline.fans,baseline.fans[0]],[null,...baseline.fans.slice(1)]])assert.throws(()=>restoreBandLive({...baseline,fans}));
   assert.deepEqual(world,before);
 });
@@ -109,20 +109,20 @@ test('every collective power card reaches the extra rows, and victory waits for 
 
 test('new formations have two to six musicians, while an actual V1 rehearsal remains resumable',()=>{
   const world=createWorld(205,8);
-  for(const size of [1,7,8])assert.throws(()=>createBandLive({people:world.people.slice(0,size),songs}),/six/);
-  assert.equal(createBandLive({people:world.people.slice(0,6),songs}).cards.length,30);
+  for(const size of [1,7,8])assert.throws(()=>createBandLive({persistentReactions:false,people:world.people.slice(0,size),songs}),/six/);
+  assert.equal(createBandLive({persistentReactions:false,people:world.people.slice(0,6),songs}).cards.length,30);
   const legacy=JSON.parse(readFileSync(new URL('bandlive-v1.json',import.meta.url))),resumed=restoreBandLive(legacy);
   assert.deepEqual(resumed,legacy);assert.equal(resumed.actors.length,8);endTurn(resumed);assert.equal(resumed.turn,2);
   const forged=structuredClone(legacy);forged.version=2;forged.groupId=null;assert.throws(()=>restoreBandLive(forged));
 });
 test('a single real song can be reprised without changing the six-turn rules or its identity',()=>{
-  const g=createBandLive({people:createWorld(205,4).people,songs:[songs[0]],groupId:'g1'});
+  const g=createBandLive({persistentReactions:false,people:createWorld(205,4).people,songs:[songs[0]],groupId:'g1'});
   chooseSong(g,'punk');endTurn(g);endTurn(g);endTurn(g);assert.equal(g.phase,'choose');assert(chooseSong(g,'punk').ok);
   assert.equal(g.turn,4);assert.deepEqual(g.usedSongs,['punk','punk']);assert.deepEqual(restoreBandLive(g),g);
   endTurn(g);endTurn(g);endTurn(g);assert.equal(g.phase,'lost');assert.equal(g.turn,6);
 });
 test('every repertoire song is selectable, while a multi-song show cannot repeat its first song',()=>{
-  const options=[...songs,{id:'jazz',title:'Une troisième chanson',style:'Jazz'}],g=createBandLive({people:createWorld(205,4).people,songs:options});
+  const options=[...songs,{id:'jazz',title:'Une troisième chanson',style:'Jazz'}],g=createBandLive({persistentReactions:false,people:createWorld(205,4).people,songs:options});
   assert(chooseSong(g,'jazz').ok);endTurn(g);endTurn(g);endTurn(g);assert(!chooseSong(g,'jazz').ok);assert(chooseSong(g,'punk').ok);assert.deepEqual(restoreBandLive(g),g);
 });
 function connectedWorld(){return restore(JSON.parse(readFileSync(new URL('v071-world.json',import.meta.url))));}

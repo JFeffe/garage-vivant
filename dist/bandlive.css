@@ -104,3 +104,14 @@ body.bandlive-mode header nav{gap:16px}.workspace.bandlive-layout{grid-template-
 @media(min-width:1000px){.bl-conquest-board .bl-audience-viewport{height:clamp(340px,calc(100dvh - 430px),580px)}}
 @media(min-width:700px) and (max-height:800px){.bl-conquest-board .bl-audience-viewport{height:clamp(230px,calc(100dvh - 450px),350px)}}
 .bl-arena>.bl-song-choice{flex-wrap:wrap}.bl-arena>.bl-song-choice>b{flex-basis:100%;max-width:none}.bl-arena>.bl-song-choice>button{flex:1 1 260px;max-width:480px}
+
+/* Keep turn controls beside the band, visible while the page is scrolled. */
+.bl-arena{overflow:visible}.bl-hud{position:sticky;top:0;z-index:20;border-radius:12px 12px 0 0;grid-template-columns:minmax(0,1fr) auto}
+.bl-hud>div:first-child{min-width:0}.bl-hud h2{overflow-wrap:anywhere}
+.bl-top-controls{display:flex;align-content:start;align-items:start;justify-content:flex-end;flex-wrap:wrap;gap:7px;max-width:470px}
+.bl-top-controls button,.bl-top-controls summary{font-size:11px;padding:9px 11px;min-height:36px;white-space:normal}
+.bl-top-controls .bl-piles{position:relative}.bl-top-controls .bl-piles summary{border:1px solid #aec59266;border-radius:5px;max-width:240px;color:#e9eedf}
+.bl-top-controls .bl-piles>div{position:absolute;right:0;top:100%;width:min(360px,80vw);max-height:45dvh;overflow:auto;z-index:25;border:1px solid #aec59266;box-shadow:0 8px 24px #0008}
+.bl-song-progress{display:flex;gap:8px;flex:1;min-width:0}.bl-song-slot{display:flex;flex-direction:column;gap:3px;padding:6px 10px;border:1px solid #aec59244;border-radius:5px;flex:1;min-width:100px;max-width:220px}
+.bl-song-slot small{font-size:10px}.bl-song-slot b{font-size:14px}.bl-song-slot em{font-size:10px;font-style:normal;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bl-song-slot.is-current{border-color:#e9bd58;background:#e9bd5810}
+@media(max-width:700px){.bl-hud{padding:12px;gap:10px;grid-template-columns:1fr}.bl-top-controls{max-width:none;justify-content:flex-start;grid-row:2}.bl-top-controls button,.bl-top-controls summary{padding:7px 9px;font-size:10px}.bl-top-controls .bl-piles summary{max-width:160px}.bl-resources{gap:8px 12px}.bl-song-progress{flex-basis:100%;order:5}.bl-song-slot{max-width:none}.bl-top-controls .bl-piles>div{right:0;left:auto}}

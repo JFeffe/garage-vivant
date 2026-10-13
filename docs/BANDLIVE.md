@@ -27,7 +27,7 @@ Les identités, couleurs, instruments, styles et informations des musiciens prov
 | Basse | Soutien | 0 | +1 tempo et +3 à la prochaine carte de puissance du tour. |
 | Chant | Refrain | 2 | 5 puissance sur chaque spectateur. |
 | Clavier | Accord | 1 | +2 tempo et 2 puissance sur chaque spectateur. |
-| Saxophone | Improvisation | 1 | Tout le tempo en puissance sur chaque spectateur. Consomme le tempo. |
+| Saxophone | Improvisation | 2 | Tout le tempo en puissance sur chaque spectateur. Consomme le tempo. |
 | Trompette | Fanfare | 0 | +2 tempo. |
 | Percussions | Roulement | 1 | +1 tempo et +5 à la prochaine carte de puissance du tour. |
 
@@ -134,7 +134,7 @@ Chaque musicien possède cinq cartes pour chacun de ses instruments. Un instrume
 
 Après un vrai spectacle BandLive terminé, gagné ou perdu, un échange facultatif est proposé : choisir un participant, une des cinq cartes de son deck, puis une des trois spéciales de l’instrument joué. Les doublons sont autorisés ; remplacer une carte par elle-même est inutile et bloqué. Un seul échange pour tout le groupe et tout le spectacle, conservé après rechargement. Continuer sans échange passe définitivement ce choix. Aucune récompense pour un spectacle interrompu, une répétition ou un replay. Le spectacle classique n’est pas concerné.
 
-Les deux nouvelles spéciales par instrument sont décrites dans le sélecteur d’échange et la référence des cartes. Alternance signifie la carte précédente jouée dans le même tour par un autre musicien. Les récompenses de carte comptent uniquement ses conquêtes directes, jamais les chaînes. Double frappe répartit les bonus une seule fois sur deux frappes. Variation demande explicitement une autre carte à défausser et chaque exemplaire est limité à une utilisation par tour. Improvisation en duo demande deux cibles distinctes avant de dépenser l’énergie ou le tempo. Les effets de rangée utilisent les mêmes colonnes que la conquête.
+Les deux spéciales par instrument privilégient les synergies de tempo. Batterie, basse, trompette et percussions en produisent ; guitare, chant et sax en bénéficient ou le consomment ; clavier fait les deux. Les decks initiaux restent identiques. Improvisation du sax coûte désormais 2 énergie. Les seuils se vérifient avant la carte et le tempo collectif est consommé une seule fois. Passage de relais réserve +4 puissance à la prochaine carte de puissance d’un autre musicien, pendant ce tour. Les conquêtes de Frappe syncopée excluent les réactions en chaîne. Écho mélodique demande deux cibles distinctes avant de payer. Les rangées utilisent les mêmes colonnes que la conquête.
 
 Les barres et les prévisualisations vont de zéro à l’objectif : la puissance ajoute de la conquête, l’ennui en retire trois sans passer sous zéro, et les conquis restent remplis. Le format interne de résistance est conservé pour reprendre les sauvegardes existantes sans migration de leurs calculs.
 
@@ -162,3 +162,30 @@ Le public est transmis par le circuit normal du jeu : **20 % de l’accueil pré
 Chaque groupe garde ses propres musiciens, decks et chansons, deux passages, un résultat individuel et un seul échange de carte facultatif après sa prestation terminée. Continuer par une autre sortie décline aussi l’échange restant. La soirée ne donne pas de résultat ou d’échange supplémentaire global. La simulation classique ne démarre jamais BandLive automatiquement et le module reste désactivé par défaut.
 
 Validation : moteur et sauvegardes des deux groupes, accueil transmis, replay, échanges séparés, interruptions, module désactivé et jam incompatible ; navigateur ordinateur et mobile, trois sorties du bilan, rechargement entre groupes et retour au quartier.
+
+
+## Réactions persistantes — 0.7.20 (testées en privé)
+
+Un nouveau spectacle attribue un statut aléatoire à chaque spectateur. Il persiste entre tours et chansons jusqu’au déclenchement effectif ; un autre statut différent est alors tiré au hasard, sans réagir à l’action qui vient de remplacer le précédent. Les spectateurs conquis cessent de réagir. Les bonus de conquête restent séparés, fixes et uniques.
+
+| Statut | Déclenchement |
+|---|---|
+| S’ennuie | En fin de tour, perd 3 conquête. Aucun changement de statut si protégé ou déjà à zéro. |
+| Attentif | La prochaine carte de puissance qui le touche reçoit +3. |
+| Distrait | La prochaine carte de puissance qui le touche reçoit −3, sans résultat négatif. |
+| Attend du rythme | Après 3 tempo réellement gagnés dans le même tour pendant ce statut, gagne 3 conquête en fin de tour. Dépenser ensuite le tempo ne l’annule pas ; le surplus au plafond ne compte pas. |
+| Veut de la variété | La carte de puissance d’un deuxième musicien distinct dans le même tour reçoit +3. |
+| Se laisse entraîner | Si un voisin orthogonal est conquis pendant ce statut, gagne 3 conquête en fin de tour, une fois. |
+
+Les compteurs de conditions repartent à zéro au début du tour, pas le statut. Le hasard des réactions est indépendant de la pioche et sauvegardé. La prévisualisation applique le même moteur. Les spectacles déjà commencés dans un ancien build gardent leurs anciennes réactions jusqu’à leur fin ; les nouveaux spectacles utilisent les six statuts.
+
+Validation : `tests/bandlive-reactions.test.mjs`, cartes, conquête, sauvegardes et interface mobile/ordinateur. Intégration avec la scène Minuit, proposée en PR après validation privée.
+
+
+## Commandes et simulation — 0.7.20
+
+Fin du tour, Son, Voir les cartes et Simuler le show sont regroupés en haut à droite des informations du groupe et du morceau. L’en-tête reste visible au défilement. Sur téléphone, les commandes occupent la ligne juste sous ces informations. Les deux emplacements « Chanson 1/2 » et « Chanson 2/2 » affichent les tours de leur propre chanson ; une durée inconnue reste « À choisir », sans inventer un total.
+
+Pour un vrai show dont le répertoire dépasse six chansons actives, les six propositions sont sélectionnées par durée décroissante, puis par nombre de spectateurs du lieu aimant leur style. Les égalités restantes gardent l’ordre du répertoire. Le joueur choisit toujours les deux passages parmi ces propositions. Les groupes de six chansons ou moins gardent tout leur choix.
+
+Simuler le show joue automatiquement le reste du spectacle, y compris les choix de chansons et les cibles de cartes, avec les mêmes règles et bonus. La stratégie est déterministe et ne garantit pas la victoire. Chaque passage est enregistré, le bilan et les conséquences sont appliqués une seule fois, puis l’échange de carte habituel reste disponible. Aucune récompense en répétition. Le fichier privé démarre dans un nouveau quartier normal ; activer BandLive dans Réglages, puis utiliser les groupes et les réservations du jeu.

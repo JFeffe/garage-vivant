@@ -1,5 +1,17 @@
 # Notes de version
 
+## V0.7.20 — BandLive : tempo, réactions persistantes et simulation {#v0720}
+
+12 octobre 2026.
+
+- Les 16 cartes acquises évoluent autour du tempo ; les decks initiaux restent identiques. Improvisation du sax coûte 2 énergie.
+- Six réactions du public persistent jusqu’à leur effet, puis sont remplacées par un autre statut aléatoire : S’ennuie, Attentif, Distrait, Attend du rythme, Veut de la variété et Se laisse entraîner. Les bonus de conquête sont conservés.
+- Fin du tour, Son et Voir les cartes passent en haut près du groupe et restent visibles. Deux emplacements indiquent la durée et la progression de chaque chanson.
+- Simuler le show joue automatiquement les cartes et les passages restants, puis affiche le bilan et l’échange habituel, sans garantir la victoire.
+- Pour plus de six chansons actives, les six propositions les plus longues sont retenues, départagées par compatibilité avec le public.
+- La scène Minuit, la visée, les cartes en éventail et les réglages de disposition de la version 0.7.19 sont conservés.
+- Le fichier autonome démarre dans le quartier normal. BandLive reste facultatif et activable dans Réglages. Les anciens spectacles en cours conservent leurs anciennes réactions jusqu’à leur fin.
+
 ## V0.7.19 — BandLive · scène Minuit et visée {#v0719}
 
 12 octobre 2026.

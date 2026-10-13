@@ -52,3 +52,5 @@
 .drag-release{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:8px;padding:4px 6px;border-radius:8px;background:#b5efcf14;color:#baf6d3;font-size:9px;font-weight:750;letter-spacing:.2px}.drag-release>span{font-size:12px;line-height:1}
 .drag-card-feedback.invalid.has-target .drag-feedback-surface{border-color:#ffc49e;background:linear-gradient(145deg,#493548,#302a3e)}.drag-card-feedback.invalid.has-target .drag-outcome-main{font-size:12px;color:#ffccad;letter-spacing:0}.drag-card-feedback.invalid .drag-release{display:none}
 @keyframes feedback-enter{0%{opacity:0;transform:translateY(4px) scale(.91)}65%{opacity:1;transform:translateY(-1px) scale(1.025)}100%{opacity:1;transform:none}}@keyframes feedback-spark{50%{transform:translateY(-2px) scale(1.15);opacity:.65}}@media(prefers-reduced-motion:reduce){.drag-feedback-surface,.drag-gain:after{animation:none}}
+
+.bl-minuit .bl-intent{white-space:normal;max-width:125px;min-width:65px;text-align:center;font-size:9px;line-height:1.2;padding:3px 6px}

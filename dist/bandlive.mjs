@@ -1,9 +1,10 @@
-import {songTurns} from './song-rules.mjs?v=0.7.19';
+import {REACTIONS,initializeReactions,clearReactionProgress,rerollReaction,reactionPower,hitReaction} from './bandlive-reactions.mjs?v=0.7.20';
+import {songTurns} from './song-rules.mjs?v=0.7.20';
 // BandLive keeps its own RNG and decks. Concert outcomes are connected separately.
 export const RULES = Object.freeze({minMembers:2,maxMembers:6,minAudience:3,maxAudience:12,energy:3,hand:5,turns:6,songTurns:3,tempoMax:10,finale:3,boredom:3,styleBonus:2,soloBonus:3});
 export const STYLES = Object.freeze(['Indie','Punk','Folk','Métal','Jazz','Électro','Ska','Pop']);
-import {INSTRUMENTS,SPECIALS,NOTE,definitionFor,musicianDeck,validateDeck} from './bandlive-cards.mjs?v=0.7.19';
-export {INSTRUMENTS,SPECIALS,NOTE} from './bandlive-cards.mjs?v=0.7.19';
+import {INSTRUMENTS,SPECIALS,NOTE,definitionFor,musicianDeck,validateDeck} from './bandlive-cards.mjs?v=0.7.20';
+export {INSTRUMENTS,SPECIALS,NOTE} from './bandlive-cards.mjs?v=0.7.20';
 
 export const CONQUEST_EFFECTS = Object.freeze({
   shock:{name:'Onde de choc',icon:'✺',description:'3 puissance aux voisins immédiats (gauche, droite, devant et derrière).'},
@@ -61,7 +62,7 @@ function createAudience(songs,count,rules=null){
 }
 
 export function createBandLive(options) { return createGame(options,RULES.maxMembers); }
-function createGame({people,groupId=null,groupName='Le band du quartier',songs,seed=2040,audienceSize=RULES.minAudience,audienceRules=null,songOrder=null,conquestEffects=true,freeSetlist=false},memberLimit) {
+function createGame({people,groupId=null,groupName='Le band du quartier',songs,seed=2040,audienceSize=RULES.minAudience,audienceRules=null,songOrder=null,conquestEffects=true,freeSetlist=false,persistentReactions=true},memberLimit) {
   if(!Array.isArray(people)||people.length<RULES.minMembers||people.length>memberLimit||people.some(p=>!p||typeof p.id!=='string'||!p.id||typeof p.name!=='string'||!SPECIALS[p.instrument])||new Set(people.map(p=>p.id)).size!==people.length)throw Error('Choisis de deux à six musiciens du groupe.');
   if(!Array.isArray(songs)||!songs.length||new Set(songs.map(s=>s.id)).size!==songs.length||songs.some(s=>!s||!s.id||!s.title||!s.style||s.turns!==undefined&&![3,4,5].includes(s.turns)))throw Error('Choisis une chanson du répertoire.');
   if(groupId!==null&&(typeof groupId!=='string'||!groupId))throw Error('Groupe invalide.');
@@ -77,6 +78,7 @@ function createGame({people,groupId=null,groupName='Le band du quartier',songs,s
   // Preserve ENCORE's varied opening hand, without looping for a two-person band.
   if(actors.length>=3)for(let tries=0;tries<100&&new Set(game.deck.slice(-5).map(id=>cardById(game,id).actorId)).size<3;tries++)shuffle(game,game.deck);
   if(conquestEffects)assignConquestEffects(game);
+  if(persistentReactions)initializeReactions(game);
   return game;
 }
 export const passageTurns=game=>game.version>=4?songTurns(currentSong(game)):RULES.songTurns;
@@ -99,7 +101,9 @@ function draw(game,count) {
 }
 function startTurn(game) {
   game.phase='play';game.turn++;game.section++;game.energy=RULES.energy;game.boost=0;
-  game.fans.forEach((fan,i)=>fan.intent=(game.turn+i)%2?'bored':'solo');
+  if(game.reactionVersion===1)game.fans.forEach(clearReactionProgress);
+  else game.fans.forEach((fan,i)=>fan.intent=(game.turn+i)%2?'bored':'solo');
+  game.relayBoosts=[];
   draw(game,RULES.hand);
   log(game,`Tour ${game.turn} · ${currentSong(game).title} · ${sectionName(game)}.`);
 }
@@ -130,10 +134,10 @@ export function cardTargets(game,card,fan,second){
 export function powerAgainst(game,card,fan,base=cardDefinition(card).power) {
   const d=cardDefinition(card);
   if(!Object.hasOwn(d,'power'))return 0;
-  return base+(d.useTempo?game.tempo:0)+(d.consumeTempo?Math.min(game.tempo,d.consumeTempo):0)+game.boost+(favoriteStyle(fan)===currentSong(game)?.style?RULES.styleBonus:0)+(fan.spotlight?2:0)+(d.solo&&fan.intent==='solo'?RULES.soloBonus:0)+(alternates(game,card)?d.alternatePower||0:0)+(game.tempo>=d.tempoThreshold?d.thresholdPower||0:0)+(d.conqueredNeighborPower&&game.fans.some(f=>f.hp===0&&neighboring(game,fan,f))?d.conqueredNeighborPower:0);
+  return Math.max(0,base+(d.useTempo?game.tempo:0)+(d.consumeTempo?Math.min(game.tempo,d.consumeTempo)*(d.tempoMultiplier||1):0)+game.boost+(game.relayBoosts||[]).filter(b=>b.actorId!==card.actorId).reduce((n,b)=>n+b.power,0)+(favoriteStyle(fan)===currentSong(game)?.style?RULES.styleBonus:0)+(fan.spotlight?2:0)+(d.solo&&fan.intent==='solo'?RULES.soloBonus:0)+(alternates(game,card)?d.alternatePower||0:0)+(game.tempo>=d.tempoThreshold?d.thresholdPower||0:0)+(d.conqueredNeighborPower&&game.fans.some(f=>f.hp===0&&neighboring(game,fan,f))?d.conqueredNeighborPower:0)+reactionPower(game,fan,card.actorId));
 }
 function conquer(game,fan,queue) {
-  if(fan.hp===0&&!fan.conquered){fan.conquered=true;log(game,`${fan.name} est conquis !`);if(game.conquestVersion===1)queue.push(fan);}
+  if(fan.hp===0&&!fan.conquered){fan.conquered=true;if(game.reactionVersion===1)for(const other of game.fans)if(other.hp>0&&other.intent==='following'&&neighboring(game,fan,other))other.reactionNeighbor=true;log(game,`${fan.name} est conquis !`);if(game.conquestVersion===1)queue.push(fan);}
 }
 function resolveConquests(game,queue){
   const events=[];
@@ -167,35 +171,40 @@ export function playCard(game,id,targetId=null,{secondTargetId=null,discardId=nu
   if(d.target==='single'&&(!fan||fan.hp===0))return {ok:false,message:'Choisis un spectateur encore à conquérir.'};
   if(d.twoTargets&&(!second||second===fan||second.hp===0))return {ok:false,message:'Choisis deux spectateurs distincts encore à conquérir.'};
   if(d.discard&&(!game.hand.includes(discardId)||discardId===id))return {ok:false,message:'Choisis une autre carte de ta main à défausser.'};
-  const powerCard=Object.hasOwn(d,'power'),targets=cardTargets(game,card,fan,second),alternate=alternates(game,card);
+  const powerCard=Object.hasOwn(d,'power'),targets=cardTargets(game,card,fan,second),alternate=alternates(game,card),threshold=game.tempo>=d.tempoThreshold,neighbor=fan&&game.fans.some(f=>f.hp===0&&neighboring(game,fan,f)),triggered=[];
   // Snapshot every target before effects, resource consumption or conquest chains.
   const planned=powerCard?targets.map((f,i)=>({id:f.id,power:powerAgainst(game,card,f,i>0&&d.secondaryPower!==undefined?d.secondaryPower:d.power)})):[],queue=[],hits=[];
   game.energy-=d.cost;game.hand.splice(game.hand.indexOf(id),1);game.discard.push(id);game.played++;
   if(d.discard){game.hand.splice(game.hand.indexOf(discardId),1);game.discard.push(discardId);}
   for(const hit of planned){
     const f=game.fans.find(f=>f.id===hit.id),strikes=d.strikes||1;
+    if(hitReaction(game,f,card.actorId))triggered.push(f);
     for(let n=0;n<strikes&&f.hp>0;n++){
       const power=Math.floor(hit.power/strikes)+(n<hit.power%strikes?1:0),before=f.hp;
       f.hp=Math.max(0,f.hp-power);hits.push({id:f.id,before,after:f.hp,gain:before-f.hp,power});conquer(game,f,queue);
     }
   }
   const directConquests=new Set(hits.filter(h=>h.after===0).map(h=>h.id)).size;
-  if(powerCard){game.boost=0;if(d.useTempo)game.tempo=0;else if(d.consumeTempo)game.tempo=Math.max(0,game.tempo-d.consumeTempo);}
-  const tempo=(d.tempo||0)+(alternate?d.alternateTempo||0:0)+Math.min(d.tempoCap||0,directConquests*(d.tempoOnConquest||0));
-  game.tempo=Math.min(RULES.tempoMax,game.tempo+tempo);
+  if(powerCard){game.relayBoosts=(game.relayBoosts||[]).filter(b=>b.actorId===card.actorId);game.boost=0;if(d.useTempo)game.tempo=0;else if(d.consumeTempo)game.tempo=Math.max(0,game.tempo-d.consumeTempo);}
+  const tempo=(d.tempo||0)+(neighbor?d.neighborTempo||0:0)+(alternate?d.alternateTempo||0:0)+Math.min(d.tempoCap||0,directConquests*(d.tempoOnConquest||0));
+  const gained=Math.min(RULES.tempoMax-game.tempo,tempo);
+  game.tempo+=gained;
+  if(game.reactionVersion===1)for(const f of game.fans)if(f.hp>0&&f.intent==='rhythm')f.reactionTempo=Math.min(3,f.reactionTempo+gained);
   if(d.boost)game.boost+=d.boost;
+  if(d.relayBoost){game.relayBoosts??=[];game.relayBoosts.push({actorId:card.actorId,power:d.relayBoost});}
   for(const f of targets.filter(f=>f.hp>0)){if(d.turnStyle)f.turnStyle=currentSong(game).style;if(d.noBoredom)f.noBoredom=true;}
   // Draw before resolving chains: their conquests never award the card's rewards.
-  draw(game,(d.draw||0)+(directConquests?d.drawOnConquest||0:0));
+  draw(game,(d.draw||0)+(threshold?d.thresholdDraw||0:0)+(directConquests?d.drawOnConquest||0:0));
   const event={id:game.events.length+1,type:'card',turn:game.turn,cardId:id,actorId:card.actorId,name:d.name,hits,tempo:game.tempo,boost:game.boost,...(discardId?{discardId}:{}),...(secondTargetId?{secondTargetId}:{})};
   game.events.push(event);log(game,`${d.name} · ${INSTRUMENTS[card.instrument]}${hits.length?' : '+hits.map(h=>`${game.fans.find(f=>f.id===h.id).name} +${h.gain} conquête`).join(', '):''}.`);
   const effects=resolveConquests(game,queue);
+  for(const f of triggered){log(game,`${f.name} · ${REACTIONS[f.intent].name} déclenché.`);if(f.hp>0)rerollReaction(game,f);}
   checkVictory(game);
   return {ok:true,event,effects};
 }
 export function endTurn(game) {
   if(game.phase!=='play')return {ok:false,message:'Le tour est déjà terminé.'};
-  game.discard.push(...game.hand.splice(0));game.boost=0;
+  game.discard.push(...game.hand.splice(0));game.boost=0;game.relayBoosts=[];
   if(game.section===passageTurns(game)){
     const queue=[];
     const hits=game.fans.filter(f=>f.hp>0).map(f=>{const before=f.hp;f.hp=Math.max(0,f.hp-RULES.finale);conquer(game,f,queue);return {id:f.id,before,after:f.hp,gain:before-f.hp,power:RULES.finale};});
@@ -206,8 +215,29 @@ export function endTurn(game) {
     if(checkVictory(game))return {ok:true};
   }
   game.fans.forEach(fan=>{delete fan.spotlight;});
-  for(const fan of game.fans)if(fan.hp>0&&fan.intent==='bored'&&!fan.noBoredom){fan.hp=Math.min(fan.max,fan.hp+RULES.boredom);log(game,`${fan.name} s’ennuie : −3 conquête.`);}
+  if(game.reactionVersion===1){
+    const triggered=new Set();
+    // One trigger per spectator in this end-of-turn batch. Chains may satisfy
+    // an existing neighbour reaction, but never a freshly rerolled one.
+    for(let pass=0;pass<game.fans.length;pass++){
+      const queue=[];let changed=false;
+      for(const fan of game.fans){
+        if(fan.hp===0||triggered.has(fan.id))continue;
+        const bored=fan.intent==='bored'&&!fan.noBoredom&&fan.hp<fan.max;
+        const gain=fan.intent==='rhythm'&&fan.reactionTempo>=3||fan.intent==='following'&&fan.reactionNeighbor;
+        if(!bored&&!gain)continue;
+        const before=fan.hp;fan.hp=bored?Math.min(fan.max,fan.hp+3):Math.max(0,fan.hp-3);
+        triggered.add(fan.id);changed=true;
+        game.events.push({id:game.events.length+1,type:'reaction',turn:game.turn,fanId:fan.id,name:REACTIONS[fan.intent].name,hits:[{id:fan.id,before,after:fan.hp,gain:before-fan.hp,power:bored?-3:3}]});
+        log(game,`${fan.name} · ${REACTIONS[fan.intent].name} : ${bored?'−':'+'}${Math.abs(before-fan.hp)} conquête.`);
+        conquer(game,fan,queue);
+      }
+      resolveConquests(game,queue);if(!changed)break;
+    }
+    for(const fan of game.fans)if(triggered.has(fan.id)&&fan.hp>0)rerollReaction(game,fan);
+  }else {for(const fan of game.fans)if(fan.hp>0&&fan.intent==='bored'&&!fan.noBoredom){fan.hp=Math.min(fan.max,fan.hp+RULES.boredom);log(game,`${fan.name} s’ennuie : −3 conquête.`);}}
   game.fans.forEach(fan=>{delete fan.turnStyle;delete fan.noBoredom;});
+  if(checkVictory(game))return {ok:true};
   if(game.usedSongs.length===2&&game.section===passageTurns(game)){game.phase='lost';log(game,'Fin du show. Il reste du public à conquérir.');}
   else if(game.section===passageTurns(game)){game.phase='choose';log(game,'Choisis la chanson du deuxième passage. Son départ retire 2 tempo.');}
   else startTurn(game);
@@ -239,8 +269,14 @@ export function restoreBandLive(input) {
   if(game.turn>0&&(!lengths.length||game.songId!==game.usedSongs.at(-1)||game.section<1||game.section>lengths.at(-1)||game.turn!==lengths.slice(0,-1).reduce((n,x)=>n+x,0)+game.section))fail();
   if(game.phase==='choose'&&game.turn>0&&(lengths.length!==1||game.section!==lengths[0]))fail();
   if(game.phase==='play'&&(!currentSong(game)||game.turn<1||game.section<1)||game.phase==='lost'&&(game.usedSongs.length!==2||game.section!==lengths.at(-1)))fail();
-  if(!Array.isArray(game.fans)||game.fans.length<RULES.minAudience||game.fans.length>RULES.maxAudience||new Set(game.fans.map(f=>f?.id)).size!==game.fans.length||game.fans.some(f=>!f||typeof f.id!=='string'||!f.id||typeof f.name!=='string'||!Number.isInteger(f.max)||f.max<1||f.max>1000||!Number.isInteger(f.hp)||f.hp<0||f.hp>f.max||!['bored','solo'].includes(f.intent)||!(game.audienceRules?.styles||game.songs.map(s=>s.style)).includes(f.favorite)||!!f.conquered!==(f.hp===0)))fail();
+  if(!Array.isArray(game.fans)||game.fans.length<RULES.minAudience||game.fans.length>RULES.maxAudience||new Set(game.fans.map(f=>f?.id)).size!==game.fans.length||game.fans.some(f=>!f||typeof f.id!=='string'||!f.id||typeof f.name!=='string'||!Number.isInteger(f.max)||f.max<1||f.max>1000||!Number.isInteger(f.hp)||f.hp<0||f.hp>f.max||!(game.reactionVersion===1?Object.keys(REACTIONS):['bored','solo']).includes(f.intent)||!(game.audienceRules?.styles||game.songs.map(s=>s.style)).includes(f.favorite)||!!f.conquered!==(f.hp===0)))fail();
   for(const f of game.fans){if(f.turnStyle!==undefined&&(game.turn===0||game.phase==='choose'||f.turnStyle!==currentSong(game)?.style)||f.noBoredom!==undefined&&(f.noBoredom!==true||game.turn===0||game.phase==='choose'))fail();}
+  if(game.reactionVersion!==undefined&&game.reactionVersion!==1)fail();
+  if(game.reactionVersion===1){
+    if(!Number.isInteger(game.reactionRng)||game.reactionRng<0||game.reactionRng>4294967295)fail();
+    for(const f of game.fans)if(!Array.isArray(f.reactionActors)||f.reactionActors.length>game.actors.length||new Set(f.reactionActors).size!==f.reactionActors.length||f.reactionActors.some(id=>!game.actors.some(a=>a.id===id))||!Number.isInteger(f.reactionTempo)||f.reactionTempo<0||f.reactionTempo>3||typeof f.reactionNeighbor!=='boolean')fail();
+  }
+  if(game.relayBoosts!==undefined&&(!Array.isArray(game.relayBoosts)||game.relayBoosts.length>500||game.relayBoosts.some(b=>!b||!game.actors.some(a=>a.id===b.actorId)||b.power!==4)))fail();
   if(game.initialFanHp!==undefined&&(!Array.isArray(game.initialFanHp)||game.initialFanHp.length!==game.fans.length||game.initialFanHp.some((hp,i)=>!Number.isInteger(hp)||hp<1||hp>game.fans[i].max)))fail();
   if(game.freeSetlist!==undefined&&(game.freeSetlist!==true||game.songOrder!==null||game.version<3))fail();
   if(game.conquestVersion!==undefined&&game.conquestVersion!==1)fail();
