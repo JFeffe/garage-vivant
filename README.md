@@ -2,6 +2,8 @@
 
 # Garage vivant · v0.7.20
 
+**Essai local en cours : public en pack.** Ouvrir `BandLive-test/LANCER-Public-pack.html`, puis choisir BandLive ou le show classique. Les sauvegardes de test sont séparées. La branche `experiment/public-en-pack` adapte les effets de proximité et les collisions, sans publication. [Règles et guide de test](docs/PUBLIC_PACK_TEST.md). Construire le lanceur : `npm run docs:build`, puis `npm run crowd:test-file`.
+
 Une simulation autonome de musiciens dans une banlieue. Les personnages sont des cubes avec personnalité, émotions, compétences et relations. Ils composent, montent des bands et tentent leur chance devant un public physique. Le joueur peut observer, régler leurs sacs ou intervenir.
 
 [Documentation du jeu](https://jutrasimon.github.io/garage-vivant/docs/) · [Notes de version](https://jutrasimon.github.io/garage-vivant/docs/versions.html#v075) · [Contribuer](CONTRIBUTING.md)

@@ -1,4 +1,11 @@
 /* The game rules stay in bandlive.mjs; this layer only presents their state. */
+.bl-pack-zone{fill:#e8d7a112;stroke:#e8d7a1;stroke-width:2;stroke-dasharray:6 5}
+.bl-pack-push{fill:none;stroke:#f7aac9;stroke-width:3}
+.bl-pack-destination{fill:#f7aac966;stroke:#f7aac9;stroke-width:2}
+.bl-pack .bl-fan{z-index:2}.bl-pack .bl-fan:hover,.bl-pack .bl-fan:focus-visible{z-index:6}
+.bl-minuit.bl-pack .bl-fan{width:76px;height:98px}
+.bl-minuit.bl-pack .bl-fan .bl-cube{width:74px;height:74px}
+.bl-minuit.bl-pack .bl-resistance{width:68px;left:4px}
 .bl-minuit{position:relative;height:clamp(480px,calc(100dvh - 225px),760px);padding:0!important;isolation:isolate;background:#203943;overflow:hidden}
 .bl-scene-canvas{position:absolute;inset:0;display:block;width:100%;height:100%;z-index:0;pointer-events:none}
 .bl-minuit .bl-effects{z-index:11;pointer-events:none}.bl-minuit .bl-stage-sign{display:none}

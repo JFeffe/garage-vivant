@@ -3,6 +3,15 @@ export const FAN_BODY=Object.freeze({w:86,h:112});
 export const ACTOR_BODY=Object.freeze({w:132.5,h:110});
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 
+// Fit the entire logical scene, including hands and the full crowd, into its viewport.
+export function fitScene(width,height,members,crowdHeight=420){
+  const rows=width<650&&members>3?2:1,columns=Math.ceil(members/rows);
+  const sceneWidth=Math.max(800,columns*148+160),crowdTop=rows===2?560:330,sceneHeight=crowdTop+crowdHeight+10;
+  const aside=width>=900?160:width>=650?130:0,top=width<650?84:0;
+  const scale=Math.max(.05,Math.min((width-aside-12)/sceneWidth,(height-top-8)/sceneHeight,1.65));
+  return {rows,columns,width:sceneWidth,height:sceneHeight,crowdTop,scale,left:Math.max(0,(width-aside-sceneWidth*scale)/2),top:top+Math.max(0,(height-top-sceneHeight*scale)/2)};
+}
+
 // These slots present the engine's topology. They never reorder game.fans.
 export function stageLayout(width,memberCount,fanCount,columns,compact=false){
   const area=width>=1300?width-230:width,stage={left:65,right:area-65,top:75,bottom:212};

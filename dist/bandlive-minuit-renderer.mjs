@@ -50,22 +50,22 @@ export function createMinuitRenderer({getReducedEffects}){
     if(!host||!host.clientWidth||!host.clientHeight)return;
     width=host.clientWidth;height=host.clientHeight;renderer.setSize(width,height,false);
     const aspect=width/height,halfW=Math.max(9.2,5.8*aspect);camera.left=-halfW;camera.right=halfW;camera.top=halfW/aspect;camera.bottom=-halfW/aspect;camera.updateProjectionMatrix();camera.updateMatrixWorld(true);
-    const area=width>=1300?width-230:width,unit=width/(camera.right-camera.left),edge=floorPoint(area/2,237,.44);stage.position.set(edge.x,0,edge.z+1.79);stage.scale.x=(area-60)/(17*unit);
+    const area=width>=1300?width-230:width,unit=width/(camera.right-camera.left),rows=Number(host.dataset.blRows)||1,edge=floorPoint(area/2,237+230*(rows-1),.44);stage.position.set(edge.x,0,edge.z+1.79);stage.scale.x=(area-60)/(17*unit);stage.scale.z=rows===2?1.8:1;
     const left=floorPoint(40,20,4.18),right=floorPoint(area-40,20,4.18);rail.position.copy(left).lerp(right,.5);rail.scale.x=right.x-left.x;
     bulbs.forEach((b,i)=>b.position.copy(floorPoint(50+(area-100)*i/11,46,3.5)));
     lamps.forEach((l,i)=>{l.anchor=floorPoint(65+(area-130)*(i+.5)/game.actors.length,22,4.1);l.fixture.position.copy(l.anchor);});
   }
   function paint(ms){
     frame=null;if(!host?.isConnected||host.closest('.view')?.hidden)return;
-    const rect=host.getBoundingClientRect(),crowd=host.querySelector('.bl-audience-viewport').getBoundingClientRect(),unit=width/(camera.right-camera.left),reduced=getReducedEffects()||matchMedia('(prefers-reduced-motion: reduce)').matches,t=ms/1000;
+    const rect=host.getBoundingClientRect(),crowd=host.querySelector('.bl-audience-viewport').getBoundingClientRect(),scale=rect.width/width,unit=width/(camera.right-camera.left),reduced=getReducedEffects()||matchMedia('(prefers-reduced-motion: reduce)').matches,t=ms/1000;
     for(const p of entries){
       const f=3.15+((p.index*.61803398875)%1)*1.35,movement=p.person.identity?.movement,amplitude=movement==='calm'?.6:movement==='flamboyant'?1.2:1;
       const dx=reduced?0:Math.sin(t*f*.73+p.phase)*amplitude*(p.actor?1.1:1.5),dy=reduced?0:-Math.max(0,Math.sin(t*f*1.73+p.phase))*amplitude*2;
       p.element.style.setProperty('--bl-dance-x',dx+'px');p.element.style.setProperty('--bl-dance-y',dy+'px');
-      const r=p.image.getBoundingClientRect(),x=r.left+r.width/2-rect.left,y=r.top+r.height/2-rect.top;
-      p.sprite.position.copy(floorPoint(x,y,p.actor?1.6:1));p.sprite.scale.set(r.width/unit,r.height/unit,1);p.sprite.material.rotation=reduced?0:Math.sin(t*f+p.phase)*.045;
-      const visible=p.actor||r.top+r.height/2>crowd.top+10&&r.top+r.height/2<crowd.bottom-10;p.sprite.visible=p.shadow.visible=visible;
-      const foot=floorPoint(x,y+r.height*.34,p.actor?.6:0);p.shadow.position.copy(foot);p.shadow.position.y-=.035;p.shadow.scale.setScalar(r.width/unit*.30);
+      const r=p.image.getBoundingClientRect(),x=(r.left+r.width/2-rect.left)/scale,y=(r.top+r.height/2-rect.top)/scale;
+      p.sprite.position.copy(floorPoint(x,y,p.actor?1.6:1));p.sprite.scale.set(r.width/scale/unit,r.height/scale/unit,1);p.sprite.material.rotation=reduced?0:Math.sin(t*f+p.phase)*.045;
+      const visible=p.actor||r.top+r.height/2>crowd.top+10*scale&&r.top+r.height/2<crowd.bottom-10*scale;p.sprite.visible=p.shadow.visible=visible;
+      const foot=floorPoint(x,y+r.height/scale*.34,p.actor?.6:0);p.shadow.position.copy(foot);p.shadow.position.y-=.035;p.shadow.scale.setScalar(r.width/scale/unit*.30);
       if(p.instrument)p.instrument.position.copy(foot);
     }
     for(const l of lamps){const target=l.entry.instrument.position,attribute=l.beam.geometry.getAttribute('position');spotlightVertices(l.anchor,{x:target.x,y:target.y-.034,z:target.z+.2},1.15,attribute.array);attribute.needsUpdate=true;l.pool.position.set(target.x,target.y-.035,target.z+.2);}

@@ -1,5 +1,7 @@
 # BandLive · module optionnel de spectacle
 
+**Branche d’essai locale — public en pack :** les nouveaux shows utilisent les positions réelles, des zones de proximité et des poussées après les conquêtes. Les descriptions historiques de rangées et colonnes ci-dessous concernent les anciennes sauvegardes. Voir [les règles du pack et le lanceur des deux modes](PUBLIC_PACK_TEST.md). Les spectacles classiques partagent désormais le placement irrégulier et les collisions de foule.
+
 BandLive relie les musiciens du quartier au spectacle jouable d’ENCORE. Activer **BandLive** dans **Réglages** fait apparaître son onglet et **Essayer BandLive** dans la préparation des Shows. L’option est désactivée par défaut et peut être retirée à tout moment.
 
 BandLive peut maintenant jouer un **vrai spectacle réservé**, avec les conséquences du calendrier, ou une **répétition sans récompense**. Les groupes actifs du quartier alimentent les deux parcours. Depuis **Groupes**, **Jouer avec BandLive** ouvre directement la préparation actuelle du groupe choisi, même après un import de quartier. Son nom, ses membres actuels et les compositions actives de son répertoire proviennent du monde. La formation libre et les chansons inventées pour le prototype ne sont plus proposées.

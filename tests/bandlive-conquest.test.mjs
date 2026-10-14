@@ -6,7 +6,7 @@ import {createConcertReplay,beginBandLiveConcert,commitBandLiveConcert} from '..
 import {completePerformance} from '../dist/life.mjs';
 import {preparedConcert} from './bandlive-concert-helpers.mjs';
 function fixture(count=12,instrument='guitar'){
- const world=createWorld(301,4),g=createBandLive({persistentReactions:false,people:world.people.map(p=>({...p,instrument})),songs:[{id:'punk',title:'Le rappel',style:'Punk',turns:3}],seed:9,audienceSize:count});
+ const world=createWorld(301,4),g=createBandLive({crowdPhysics:false,persistentReactions:false,people:world.people.map(p=>({...p,instrument})),songs:[{id:'punk',title:'Le rappel',style:'Punk',turns:3}],seed:9,audienceSize:count});
  chooseSong(g,'punk');for(const f of g.fans){f.max=f.hp=100;f.favorite='Punk';f.effect='spotlight';}return g;
 }
 function note(g,instrument){

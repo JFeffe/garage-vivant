@@ -115,7 +115,7 @@ export function followingConcertPerformance(show) {
 
 export function createConcertReplay(snapshot) {
   const game=restoreBandLive(snapshot);
-  const replay=createBandLive({people:game.actors,groupId:game.groupId,groupName:game.groupName,songs:game.songs,seed:game.seed,audienceSize:game.fans.length,audienceRules:game.audienceRules,songOrder:game.songOrder,freeSetlist:game.freeSetlist===true,persistentReactions:game.reactionVersion===1,conquestEffects:game.conquestVersion===1});
+  const replay=createBandLive({people:game.actors,groupId:game.groupId,groupName:game.groupName,songs:game.songs,seed:game.seed,audienceSize:game.fans.length,audienceRules:game.audienceRules,songOrder:game.songOrder,freeSetlist:game.freeSetlist===true,persistentReactions:game.reactionVersion===1,conquestEffects:game.conquestVersion===1,crowdPhysics:game.crowdVersion===1});
   if(game.initialFanHp){replay.initialFanHp=[...game.initialFanHp];replay.fans.forEach((fan,i)=>fan.hp=game.initialFanHp[i]);}
   return replay;
 }

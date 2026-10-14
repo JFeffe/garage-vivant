@@ -1,5 +1,6 @@
 import { decadenceCount } from "./v71.mjs?v=0.7.20";
 import {restoreBandLive} from './bandlive.mjs?v=0.7.20';
+import {createPack,stepCrowd} from './crowd-physics.mjs?v=0.7.20';
 // New songs match the two broad V7 axes; legacy performances keep exact matching.
 export function emotionCompatible(song,fan,version=7){return song===fan||version>=7&&(song==='exaltation'&&['joy','excitement','affection'].includes(fan)||song==='distress'&&['sadness','anger','fear'].includes(fan));}
 // The stage is a deterministic simulation. Rendering and audio never change it.
@@ -69,7 +70,7 @@ export function activeDeck(p) {
 function random(s) {s.rng=(Math.imul(s.rng,1664525)+1013904223)>>>0;return s.rng/4294967296;}
 function shuffled(s, xs) {const a=[...xs];for(let i=a.length-1;i>0;i--){const j=Math.floor(random(s)*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
-export function createPerformance({id, seed, people, group, song, opportunity, intention='tight', preview=false,totalTicks=SHOW_TICKS}) {
+export function createPerformance({id, seed, people, group, song, opportunity, intention='tight', preview=false,totalTicks=SHOW_TICKS,crowdPhysics=true}) {
   if(people.length<2 || !INTENTIONS[intention]) throw Error('Il faut au moins deux musiciens et une intention valide.');
   const s = {id,rulesVersion:71,totalTicks,rng:seed>>>0,seed:seed>>>0,tick:0,status:'playing',applied:false,preview,groupId:group.id,groupName:group.name,opportunityId:opportunity.id,opportunityName:opportunity.name,sourceOpportunity:{...opportunity},genre:song.genre,song:{id:song.id,title:song.title,quality:song.quality,intensity:song.intensity||0,emotion:song.emotion,tone:song.tone},mastery:group.repertoire?.find(r=>r.songId===song.id)?.mastery||0,morale:group.stageMorale??60,development:group.development||0,intention,actors:[],fans:[],cues:[],nextCue:0,impacts:[],zones:[],events:[],support:0,crescendo:0,result:null};
   // Bass and drums prepare first. This order is visible in the show’s explanation.
@@ -85,6 +86,7 @@ export function createPerformance({id, seed, people, group, song, opportunity, i
     const x=180+col*(n>12?105:142)+(random(s)-.5)*32,y=280+row*(n>12?70:105)+(random(s)-.5)*20;
     s.fans.push({id:`f${i}`,name:['Lou','Pat','Kim','Ari','Mel','Val','Rémi','Jess','Cam','Fred','Robin','Jo'][i%12]+(i>=12?' '+(i+1):''),x,y,homeX:x,homeY:y,vx:0,vy:0,meter:0,style:preferences[Math.floor(random(s)*preferences.length)],instrument:instruments[Math.floor(random(s)*instruments.length)],emotion:['excitement','affection','joy'][Math.floor(random(s)*3)],reaction:['euphoria','emotion','trance'][Math.floor(random(s)*3)],reacted:false,reactedAt:null,receptivity:1,color:['#c798ac','#d6b15a','#78a89b','#8696c7'][i%4]});
   }
+  if(crowdPhysics){s.crowdVersion=1;const pack=createPack(n,s.seed,{spread:1.5});s.fans.forEach((f,i)=>Object.assign(f,pack[i]));}
   for(let phrase=0;phrase<5;phrase++) s.actors.forEach((actor,i)=>s.cues.push({tick:phrase*(totalTicks/5)+86+Math.floor(i*(totalTicks/5*.625)/s.actors.length),phrase,actorId:actor.id,cardId:actor.hand[phrase]}));
   s.initialFans=JSON.parse(JSON.stringify(s.fans));return s;
 }
@@ -180,7 +182,8 @@ export function advancePerformance(s, ticks=1) {
     while(s.nextCue<s.cues.length && s.cues[s.nextCue].tick<=s.tick) cast(s,s.cues[s.nextCue++]);
     const due=s.impacts.filter(h=>h.tick<=s.tick);s.impacts=s.impacts.filter(h=>h.tick>s.tick);
     for(const hit of due) impact(s,hit);
-    for(const fan of s.fans) {
+    if(s.crowdVersion===1)stepCrowd(s.fans,{returnHome:true});
+    else for(const fan of s.fans) {
       fan.vx+=(fan.homeX-fan.x)*.6/60;fan.vy+=(fan.homeY-fan.y)*.6/60;
       fan.vx*=.965;fan.vy*=.965;
       fan.x=limit(fan.x+fan.vx/60,135,875);fan.y=limit(fan.y+fan.vy/60,250,600);
@@ -191,6 +194,7 @@ export function advancePerformance(s, ticks=1) {
 }
 export function validatePerformance(s) {
   const number=(v,min,max)=>Number.isFinite(v)&&v>=min&&v<=max;
+  if(s?.crowdVersion!==undefined&&s.crowdVersion!==1)throw Error('Physique de spectacle invalide.');
   if(s?.totalTicks!==undefined&&![2160,3600].includes(s.totalTicks))throw Error('Durée de spectacle invalide.');
   if(!s || !['playing','finished'].includes(s.status) || !Number.isInteger(s.tick) || !number(s.tick,0,s.totalTicks||2160) || !Number.isInteger(s.rng) || !INTENTIONS[s.intention] || !Array.isArray(s.actors) || s.actors.length<2 || s.actors.length>24 || !Array.isArray(s.fans) || s.fans.length<8 || s.fans.length>36 || !Array.isArray(s.cues) || s.cues.length!==s.actors.length*5 || !Number.isInteger(s.nextCue) || !number(s.nextCue,0,s.cues.length) || !Array.isArray(s.events) || !Array.isArray(s.zones) || !Array.isArray(s.impacts) || !s.song || !number(s.mastery,0,100) || !number(s.development,0,100) || !number(s.song.quality,0,100)) throw Error('Spectacle invalide.');
   const ids=new Set();

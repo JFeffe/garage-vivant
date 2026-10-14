@@ -8,7 +8,7 @@ import {beginBandLiveConcert,commitBandLiveConcert,exchangeBandLiveCard,skipBand
 import {preparedConcert} from './bandlive-concert-helpers.mjs';
 function fixture(instrument='guitar',kind='new1'){
  const people=createWorld(41,4).people.slice(0,2);people[0].instrument=instrument;people[0].bandLiveDecks={[instrument]:[kind,'note','note','special','special']};
- const g=createBandLive({persistentReactions:false,people,songs:[{id:'a',title:'A',style:'Punk'}],audienceSize:12,seed:7,audienceRules:{styles:['Jazz','Punk'],resistancePercent:100}});chooseSong(g,'a');
+ const g=createBandLive({crowdPhysics:false,persistentReactions:false,people,songs:[{id:'a',title:'A',style:'Punk'}],audienceSize:12,seed:7,audienceRules:{styles:['Jazz','Punk'],resistancePercent:100}});chooseSong(g,'a');
  g.fans.forEach(f=>{f.hp=f.max=100;f.favorite='Jazz';f.intent='solo';});
  return {g,id:g.cards[0].id};
 }

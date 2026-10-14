@@ -9,7 +9,7 @@ export function createBandLiveInspection({root,lookup,blocked}){
     const top=Math.max(96,(root.querySelector('.bl-viewport')?.getBoundingClientRect().top||84)+12);panel.style.top=top+'px';panel.style.maxHeight=Math.max(160,innerHeight-top-14)+'px';
     panel.querySelector('.preview-cost').textContent=card.cost;panel.querySelector('.preview-title').textContent=card.name;
     panel.querySelector('.preview-art').innerHTML=art;panel.querySelector('.preview-owner').textContent=owner+' · '+instrument;
-    panel.querySelector('.preview-description').textContent=card.description;panel.querySelector('.preview-target').textContent=card.twoTargets?'Deux spectateurs distincts':card.shape==='row'?'Une rangée':card.shape==='sides'?'Une cible et ses voisins':card.shape==='behind'?'Une cible et derrière':card.target==='single'?'Un spectateur':'Zone du public';
+    panel.querySelector('.preview-description').textContent=card.description;panel.querySelector('.preview-target').textContent=card.twoTargets?'Deux spectateurs distincts':card.shape==='near'?'La cible et les spectateurs proches':card.shape==='row'?'Une rangée':card.shape==='sides'?'Une cible et ses voisins':card.shape==='behind'?'Une cible et derrière':card.target==='single'?'Un spectateur':'Zone du public';
     root.querySelectorAll('.bl-inspecting').forEach(el=>el.classList.remove('bl-inspecting'));root.querySelector('[data-bl-card="'+CSS.escape(id)+'"]')?.classList.add('bl-inspecting');
     if(!lock)panel.querySelector('.preview-outcome').hidden=true;
   }

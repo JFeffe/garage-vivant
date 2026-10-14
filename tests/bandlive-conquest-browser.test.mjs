@@ -1,13 +1,13 @@
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
 import {readFile,mkdir} from 'node:fs/promises';
-import {resolve,extname} from 'node:path';
+import {resolve,extname,sep} from 'node:path';
 import {chromium} from 'playwright';
 import {createWorld} from '../dist/engine.mjs';
 import {createBandLive,chooseSong,previewCard} from '../dist/bandlive.mjs';
-const root=resolve('dist'),server=createServer(async(req,res)=>{try{const path=resolve(root,'.'+(req.url.split('?')[0]==='/'?'/index.html':req.url.split('?')[0]));if(!path.startsWith(root+'/'))throw Error();res.setHeader('Content-Type',({'.html':'text/html','.mjs':'text/javascript','.css':'text/css','.json':'application/json'})[extname(path)]||'application/octet-stream');res.end(await readFile(path));}catch{res.writeHead(404);res.end();}});
+const root=resolve('dist'),server=createServer(async(req,res)=>{try{const path=resolve(root,'.'+(req.url.split('?')[0]==='/'?'/index.html':req.url.split('?')[0]));if(!path.startsWith(root+sep))throw Error();res.setHeader('Content-Type',({'.html':'text/html','.mjs':'text/javascript','.css':'text/css','.json':'application/json'})[extname(path)]||'application/octet-stream');res.end(await readFile(path));}catch{res.writeHead(404);res.end();}});
 await new Promise(r=>server.listen(0,'127.0.0.1',r));const url=`http://127.0.0.1:${server.address().port}/`,browser=await chromium.launch(),errors=[];
-const world=createWorld(401,4),g=createBandLive({persistentReactions:false,people:world.people.map(p=>({...p,instrument:'guitar'})),songs:[{id:'x',title:'Le chœur du quartier',style:'Punk',turns:3}],seed:7,audienceSize:12});chooseSong(g,'x');
+const world=createWorld(401,4),g=createBandLive({crowdPhysics:false,persistentReactions:false,people:world.people.map(p=>({...p,instrument:'guitar'})),songs:[{id:'x',title:'Le chœur du quartier',style:'Punk',turns:3}],seed:7,audienceSize:12});chooseSong(g,'x');
 g.fans.forEach(f=>{f.hp=f.max=100;f.effect='spotlight';});g.fans[0].effect='shock';g.fans[0].hp=1;g.fans[1].effect='wave';g.fans[1].hp=2;
 const id=g.cards[0].id;for(const pile of ['hand','deck','discard'])g[pile]=g[pile].filter(x=>x!==id);while(g.hand.length>=5)g.deck.push(g.hand.pop());g.hand.push(id);
 const expected=previewCard(g,id,'f0').game;

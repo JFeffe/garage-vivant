@@ -25,8 +25,8 @@ export function resolveBandLivePlan(world,draft,{canStart=true}={}) {
   return {groups,group,people,members,songs,ready:!reason,reason};
 }
 
-export function createBandLiveFromWorld(world,draft) {
+export function createBandLiveFromWorld(world,draft,{crowdPhysics=true}={}) {
   const plan=resolveBandLivePlan(world,draft);
   if(!plan.ready)throw Error(plan.reason);
-  return createBandLive({people:plan.members,groupId:plan.group.id,groupName:plan.group.name,songs:plan.songs,seed:draft.seed,audienceSize:draft.audienceSize});
+  return createBandLive({people:plan.members,groupId:plan.group.id,groupName:plan.group.name,songs:plan.songs,seed:draft.seed,audienceSize:draft.audienceSize,crowdPhysics});
 }

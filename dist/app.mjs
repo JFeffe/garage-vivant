@@ -1831,9 +1831,11 @@ function renderShows() {
   $("#stop-show").textContent = show.preview
     ? "Arrêter l’essai"
     : "Interrompre le show";
-  replacePreserving("#show-status", showStatusHTML(world) + bandLive.concertEntryHTML(show));
+  replacePreserving("#show-status", showStatusHTML(world));
+  replacePreserving("#show-mode-entry", bandLive.concertEntryHTML(show));
+  replacePreserving("#show-evening-entry", bandLive.eveningHTML(show));
   $("#show-pause").textContent = showReady(show)
-    ? "▶ Lancer le show"
+    ? "▶ Show classique"
     : showPaused
       ? "▶ Reprendre"
       : "Ⅱ Pause";
@@ -2682,7 +2684,7 @@ function finishLive() {
   save();
 }
 function nextEveningSlot(previous=world.performance){
-  const result=nextBandLiveSlot(world,previous,bandLive.enabled());
+  const result=nextBandLiveSlot(world,previous,false);
   if(result.reason)notify(`Le groupe suivant joue en spectacle classique. ${result.reason}`);
   return result.advanced;
 }
@@ -2826,5 +2828,5 @@ $('#map-controls').innerHTML=mapOptionsHTML(mapOptions);
 
 function personBandLiveDecks(p){
   const instruments=[p.instrument,...Object.keys(p.bandLiveDecks||{}).filter(i=>i!==p.instrument)];
-  return `<details id="bandlive-person-decks"><summary>DECKS BANDLIVE · ${instruments.length} instrument(s)</summary><p>5 cartes par instrument. Un échange possible après chaque spectacle BandLive terminé.</p>${instruments.map(i=>`<h4>${SKILLS[i]}${i===p.instrument?' · instrument actuel':''}</h4><ul>${musicianDeck(p,i).map(kind=>{const c=definitionFor(i,kind);return `<li><b>${esc(c.name)}</b> · ${c.cost} énergie<br><small>${esc(c.description)}</small></li>`;}).join('')}</ul>`).join('')}</details>`;
+  return `<details id="bandlive-person-decks"><summary>DECKS BANDLIVE · ${instruments.length} instrument(s)</summary><p>5 cartes par instrument. Un échange possible après chaque spectacle BandLive terminé.</p>${instruments.map(i=>`<h4>${SKILLS[i]}${i===p.instrument?' · instrument actuel':''}</h4><ul>${musicianDeck(p,i).map(kind=>{const c=definitionFor(i,kind,true);return `<li><b>${esc(c.name)}</b> · ${c.cost} énergie<br><small>${esc(c.description)}</small></li>`;}).join('')}</ul>`).join('')}</details>`;
 }

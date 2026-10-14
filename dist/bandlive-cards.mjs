@@ -24,7 +24,10 @@ export const NEW_SPECIALS = Object.freeze({
 export const CARD_KINDS=Object.freeze(['note','special','new1','new2']);
 export const starterDeck=()=>['note','note','note','special','special'];
 export const specialChoices=instrument=>['special','new1','new2'].map(kind=>({kind,...definitionFor(instrument,kind)}));
-export function definitionFor(instrument,kind){return kind==='note'?NOTE:kind==='special'?SPECIALS[instrument]:NEW_SPECIALS[instrument]?.[kind==='new1'?0:kind==='new2'?1:-1];}
+export function definitionFor(instrument,kind,crowdPhysics=false){
+  const d=kind==='note'?NOTE:kind==='special'?SPECIALS[instrument]:NEW_SPECIALS[instrument]?.[kind==='new1'?0:kind==='new2'?1:-1];
+  return crowdPhysics&&d?{...d,...(d.shape==='row'?{shape:'near'}:{}),description:d.description.replace('de la rangée ciblée','des spectateurs proches de la cible').replaceAll('sur une rangée','sur la cible et les spectateurs proches').replace('Une rangée adopte','La cible et les spectateurs proches adoptent').replace('un voisin immédiat','un spectateur proche')}:d;
+}
 export function validateDeck(deck){if(!Array.isArray(deck)||deck.length!==5||deck.some(k=>!CARD_KINDS.includes(k)))throw Error('Deck BandLive invalide.');return deck;}
 export function validatePersonDecks(person){
   if(person.bandLiveDecks===undefined)return;

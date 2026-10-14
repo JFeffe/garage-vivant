@@ -470,6 +470,7 @@ export function command(s, cmd) {
         intention: old.intention,
         preview: true,
         totalTicks: old.totalTicks || 2160,
+        crowdPhysics: old.crowdVersion===1,
       });
       if (old.initialFans) {
         s.performance.fans = JSON.parse(JSON.stringify(old.initialFans));
@@ -846,6 +847,7 @@ export function playTicks(s, ticks) {
       song,
       opportunity: old.sourceOpportunity,
       intention: old.intention,
+      crowdPhysics: old.crowdVersion===1,
     });
     Object.assign(next, {
       fans: old.fans.map((f) => ({ ...f })),

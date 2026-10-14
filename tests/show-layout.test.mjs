@@ -47,7 +47,7 @@ try{
       if(phase==='impact'){const bangs=await page.evaluate(()=>window.bangBounds);assert(bangs.length>0);for(const b of bangs)assert(b.left>=0&&b.right<=b.width,'BANG and its combo multiplier fit the canvas, including on a small phone');}
       const layout=await page.evaluate(()=>{
         const box=s=>{const el=document.querySelector(s);if(!el)return null;const r=el.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height};};
-        return {arena:box('.stage-shell'),card:box('.hero-card'),dock:box('.card-foreground'),header:box('header'),field:box('.stage-field'),controls:['#show-status','#show-resources','#show-pause','#show-speed','#skip-show','#sound'].map(box),scroll:document.querySelector('#main').scrollHeight-document.querySelector('#main').clientHeight};
+        return {arena:box('.stage-shell'),card:box('.hero-card'),dock:box('.card-foreground'),header:box('header'),field:box('.stage-field'),controls:['#show-status','#show-resources','#show-pause','#show-speed','.show-options>summary','#sound'].map(box),scroll:document.querySelector('#main').scrollHeight-document.querySelector('#main').clientHeight};
       });
       assert.equal(layout.scroll,0,'The show never needs an outside scroll');
       assert(layout.arena.width>=viewport.width-1&&layout.arena.height>=viewport.height-layout.header.height-1);
@@ -67,7 +67,7 @@ try{
         assert.equal(x,115+actorIndex*670/3,'The shot starts at the active musician');
       }
       if(!captures.has(phase)){captures.add(phase);await page.screenshot({path:`test-results/v064-${phase}-${viewport.width}-${viewport.height}.png`});}
-      if(state===late&&viewport.width===1440){await page.locator('.show-story>summary').click();assert.equal(await page.locator('.show-history-card').count(),state.events.filter(e=>e.type==='card').length);await page.locator('.show-history-card').first().click();assert(await page.locator('#dialog').evaluate(e=>e.open));await page.keyboard.press('Escape');assert.equal(await page.locator('#show-pause').textContent(),'▶ Reprendre');await page.locator('.show-story>summary').click();}
+      if(state===late&&viewport.width===1440){await page.locator('.show-options>summary').click();await page.locator('.show-story>summary').click();assert.equal(await page.locator('.show-history-card').count(),state.events.filter(e=>e.type==='card').length);await page.locator('.show-history-card').first().click();assert(await page.locator('#dialog').evaluate(e=>e.open));await page.keyboard.press('Escape');assert.equal(await page.locator('#show-pause').textContent(),'▶ Reprendre');await page.locator('.show-story>summary').click();}
       if(state===selected[0])for(const deck of await page.locator('[data-stage-deck]').all())await deck.click({trial:true});
     }
     await page.screenshot({path:`test-results/v064-layout-${viewport.width}-${viewport.height}.png`});await page.close();

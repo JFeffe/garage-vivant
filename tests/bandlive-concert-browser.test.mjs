@@ -23,7 +23,8 @@ async function load(page,world,{enabled=true,rehearsal=null}={}){
   await page.addInitScript(({world,state})=>{if(!localStorage.getItem('garage-vivant-v1'))localStorage.setItem('garage-vivant-v1',JSON.stringify(world));if(!localStorage.getItem('garage-vivant-bandlive-v1'))localStorage.setItem('garage-vivant-bandlive-v1',JSON.stringify(state));},{world,state:{enabled,game:rehearsal}});
   await page.goto(url);await page.locator('#profile .profile-head').waitFor({state:'attached'});if(await page.locator('#speed').isVisible())await page.locator('#speed').fill('0');
 }
-async function start(page){await page.locator('[data-view="shows"]').click();await page.locator('[data-bandlive-concert]').click();await page.locator('[data-bl-song]').first().click();}
+async function openMenu(page,selector){if(!await page.locator(selector).evaluate(el=>el.open))await page.locator(selector+'>summary').click();}
+async function start(page){await page.locator('[data-view="shows"]').click();assert(await page.locator('[data-bandlive-concert]').isVisible());await page.locator('[data-bandlive-concert]').click();await page.locator('[data-bl-song]').first().click();}
 async function finish(page){
   for(let i=0;i<10;i++){const game=await liveData(page);if(['won','lost'].includes(game.phase))return;if(game.phase==='choose')await page.locator('[data-bl-song]').first().click();else await page.locator('#bl-end').click();}
   throw Error('Interactive concert did not finish within six turns.');
@@ -51,7 +52,7 @@ try{
   await page.locator('[data-view="settings"]').click();await page.locator('#bandlive-enabled').uncheck();assert(await page.locator('#bandlive-nav').isVisible());await page.locator('#bandlive-nav').click();assert.deepEqual(await liveData(page),mid);await page.reload();assert(await page.locator('#bandlive-view').isVisible());assert.deepEqual(await liveData(page),mid);
   await finish(page);await page.locator('#bl-return').click();assert(await page.locator('#map-view').isVisible());assert(await page.locator('#bandlive-nav').isHidden());assert.equal((await worldData(page)).showHistory.length,1);await page.close();
 
-  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});await load(page,preparedConcert({following:true}).world);await start(page);await finish(page);assert((await page.locator('#bl-return').textContent()).includes('soirée'));await page.locator('#bl-return').click();assert(await page.locator('#shows-view').isVisible());const next=await worldData(page);assert.equal(next.performance.fans.length,12);assert(!next.performance.bandLive);assert.equal(next.showHistory.length,1);await page.locator('#skip-show').click();await page.locator('#next-slot').click();assert(await page.locator('#map-view').isVisible());assert.equal((await worldData(page)).showHistory.length,2);await page.close();
+  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});await load(page,preparedConcert({following:true}).world);await start(page);await finish(page);assert((await page.locator('#bl-return').textContent()).includes('soirée'));await page.locator('#bl-return').click();assert(await page.locator('#shows-view').isVisible());const next=await worldData(page);assert.equal(next.performance.fans.length,12);assert(!next.performance.bandLive);assert.equal(next.showHistory.length,1);await openMenu(page,'.show-options');await page.locator('#skip-show').click();await page.locator('#next-slot').click();assert(await page.locator('#map-view').isVisible());assert.equal((await worldData(page)).showHistory.length,2);await page.close();
 
   for(const exit of ['#next-slot','[data-return-preparation]']){
     page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});
@@ -73,7 +74,7 @@ try{
     assert.deepEqual(advanced.groups.find(g=>g.id===previous.groupId),completed.groups.find(g=>g.id===previous.groupId),'Shows navigation must not grant band rewards twice');
     assert.deepEqual(restore(advanced),advanced);
     await page.reload();assert.equal((await worldData(page)).performance.fans.length,12);
-    await page.locator('#skip-show').click();assert.equal((await worldData(page)).showHistory.length,2);
+    await openMenu(page,'.show-options');await page.locator('#skip-show').click();assert.equal((await worldData(page)).showHistory.length,2);
     await page.locator('#next-slot').click();assert(await page.locator('#map-view').isVisible());await page.close();
   }
 
@@ -81,11 +82,11 @@ try{
   const interruptedGame=await liveData(page),interruptionNote=interruptedGame.hand.find(id=>interruptedGame.cards.find(c=>c.id===id).kind==='note');
   await page.locator(`[data-bl-card="${interruptionNote}"]`).click({position:{x:30,y:45}});await page.locator('[data-bl-fan="f0"]').click();await idle(page);
   const interrupted=await worldData(page),interruptedId=interrupted.performance.bandLive.bookingId,damagedFan=interrupted.performance.bandLive.game.fans[0];
-  assert(damagedFan.hp<damagedFan.max);await page.locator('#bl-cancel').click();
+  assert(damagedFan.hp<damagedFan.max);await openMenu(page,'.bl-show-menu');await page.locator('#bl-cancel').click();
   const continued=await worldData(page);assert(await page.locator('#shows-view').isVisible());
   assert(!continued.performance.bandLive);assert.equal(continued.performance.fans.length,12);assert(continued.performance.fans[0].meter>0);
   assert.equal(continued.showHistory.length,0);assert.equal(continued.bookings.find(b=>b.id===interruptedId).status,'cancelled');restore(continued);
-  await page.locator('#skip-show').click();assert.equal((await worldData(page)).showHistory.length,1);await page.close();
+  await openMenu(page,'.show-options');await page.locator('#skip-show').click();assert.equal((await worldData(page)).showHistory.length,1);await page.close();
 
   for(const exit of ['#bl-return','#next-slot','[data-return-preparation]']){
     const touch=exit==='[data-return-preparation]';
@@ -96,6 +97,8 @@ try{
     await finish(page);await page.reload();
     if(exit!=='#bl-return')await page.locator('[data-view="shows"]').click();
     await page.locator(exit).click();
+    assert(await page.locator('#shows-view').isVisible());assert(!(await worldData(page)).performance.bandLive);
+    await page.locator('[data-bandlive-concert]').click();
     assert(await page.locator('#bandlive-view').isVisible());
     assert((await page.locator('.bl-hud .eyebrow').textContent()).includes('Tête d’affiche'));
     const headliner=await liveData(page);assert.equal(headliner.phase,'choose');assert(headliner.fans.some(f=>f.hp<f.max));
@@ -115,11 +118,12 @@ try{
   const wonSource=preparedConcert({intention:'wild'}).world,{game}=beginBandLiveConcert(wonSource);chooseSong(game,'song-1');for(const fan of game.fans)fan.hp=1;const sax=game.cards.find(c=>c.instrument==='sax'&&c.kind==='special');for(const pile of ['hand','deck','discard'])game[pile]=game[pile].filter(id=>id!==sax.id);while(game.hand.length>=5)game.deck.push(game.hand.pop());game.hand.push(sax.id);game.tempo=4;restore(wonSource);
   page=await browser.newPage({reducedMotion:'reduce',viewport:{width:430,height:932},isMobile:true,hasTouch:true});await load(page,wonSource);await page.locator(`[data-bl-card="${sax.id}"]`).tap({position:{x:30,y:45}});await page.locator('.bl-audience').tap({position:{x:10,y:10}});await idle(page);assert.equal((await liveData(page)).phase,'won');assert.equal((await worldData(page)).showHistory[0].score,100);assert(await page.locator('.bl-concert-result').isVisible());assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await page.screenshot({path:'test-results/bandlive-calendar-touch-result.png'});await page.locator('#bl-return').click();assert(await page.locator('#map-view').isVisible());await page.close();
 
-  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});await load(page,preparedConcert().world);await start(page);await page.locator('#bl-cancel').click();assert(await page.locator('#map-view').isVisible());assert.equal((await worldData(page)).showHistory.length,0);assert.equal((await worldData(page)).performance,null);await page.close();
+  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});await load(page,preparedConcert().world);await start(page);await openMenu(page,'.bl-show-menu');await page.locator('#bl-cancel').click();assert(await page.locator('#map-view').isVisible());assert.equal((await worldData(page)).showHistory.length,0);assert.equal((await worldData(page)).performance,null);await page.close();
 
   const imported=preparedConcert().world;const importedGame=beginBandLiveConcert(imported).game;chooseSong(importedGame,'song-1');endTurn(importedGame);
   page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});await load(page,createWorld(12,8),{enabled:false,rehearsal});await page.locator('[data-view="settings"]').click();await page.locator('#import-file').setInputFiles({name:'concert-en-cours.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(imported))});await page.waitForFunction(()=>document.querySelector('#toast').textContent.includes('Monde importé'));await page.locator('#bandlive-nav').click();assert.deepEqual(await liveData(page),importedGame);assert.deepEqual(await rehearsalData(page),rehearsal);await finish(page);await page.locator('#bl-return').click();assert(await page.locator('#bandlive-nav').isHidden());assert.equal((await worldData(page)).showHistory.length,1);await page.close();
 
-  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});await load(page,preparedConcert().world,{enabled:false});await page.locator('[data-view="shows"]').click();assert.equal(await page.locator('[data-bandlive-concert]').count(),0);await page.locator('#skip-show').click();assert.equal((await worldData(page)).showHistory.length,1);assert(!(await worldData(page)).showHistory[0].mode);await page.close();
+  page=await browser.newPage({reducedMotion:'reduce',viewport:{width:1440,height:1000}});await load(page,preparedConcert().world,{enabled:false});await page.locator('[data-view="shows"]').click();assert(await page.locator('[data-bandlive-concert]').isVisible());assert(await page.locator('#show-pause').isVisible());await openMenu(page,'.show-options');await page.locator('#skip-show').click();assert.equal((await worldData(page)).showHistory.length,1);assert(!(await worldData(page)).showHistory[0].mode);await page.close();
+  page=await browser.newPage({reducedMotion:'reduce'});await load(page,preparedConcert().world,{enabled:false});await start(page);assert((await worldData(page)).performance.bandLive);await finish(page);assert.equal((await worldData(page)).showHistory.length,1);await page.close();
   assert.deepEqual(errors,[]);console.log('Calendar BandLive browser passed: booked band and setlist, drag/drop, hover, exact reload, separate rehearsal, real result once, return and clock, history replay, disable while playing, following classic band through all result exits, interrupted audience welcome, touch victory and result layout, interruption and default-off classic show.');
 }finally{await browser.close();server.close();}
